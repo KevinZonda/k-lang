@@ -1,4 +1,3 @@
-// DELETE THIS CONTENT IF YOU PUT COMBINED GRAMMAR IN Parser TAB
 lexer grammar V2Lexer;
 
 LBrack  : '{';
