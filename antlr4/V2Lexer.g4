@@ -43,7 +43,7 @@ Else : 'else';
 For  : 'for';
 Match : 'match';
 Break : 'break';
-Continue : 'continue';
+Continue : 'next' | 'pass' | 'continue';
 
 IntegerLiteral : ('-')? [0-9]+ ;
 NumberLiteral  : ('-')? [0-9]+ ('.' [0-9]+)? ;

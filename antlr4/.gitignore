@@ -1,2 +1,5 @@
 .antlr
 gen
+*.go
+*.interp
+*.tokens
