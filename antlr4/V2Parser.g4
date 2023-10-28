@@ -2,7 +2,7 @@ parser grammar V2Parser;
 options { tokenVocab=V2Lexer; }
 
 program
-    : openBlock (structBlock | funcBlock | stmt)* EOF
+    : openBlock (structBlock | funcBlock | stmt | expr)* EOF
     ;
 
 openBlock : openStmt*;
@@ -31,10 +31,12 @@ indexes : index*;
 
 lambda : LParen funcSignArgs RParen type? codeBlock;
 
+binaryOper : Equals | NotEq | Greater | Less | GreaterEq | LessEq | Or | And | Add | Sub | Mul | Div | Mod;
+
 expr
     : funcCall
     | Not expr
-    | expr BinaryOper expr
+    | expr binaryOper expr
     | literal
     | LParen expr RParen
     | Identity
@@ -50,7 +52,7 @@ stmtWithSep : stmt sep*;
 
 openStmt : Open StringLiteral (As Identity)?;
 
-literal : IntegerLiteral | NumberLiteral | StringLiteral | arrayInitializer | mapInitializer | structInitializer;
+literal : True | False | IntegerLiteral | NumberLiteral | StringLiteral | arrayInitializer | mapInitializer | structInitializer;
 literalWithLambda : literal | lambda;
 
 arrayInitializer : type? LSquare (expr Comma?)* RSquare;

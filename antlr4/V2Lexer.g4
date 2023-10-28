@@ -10,7 +10,6 @@ Comma   : ',';
 Col     : ':';
 Semi    : ';';
 
-BinaryOper : Equals | NotEq | Greater | Less | GreaterEq | LessEq | Or | And | Add | Sub | Mul | Div | Mod;
 Equals    : '==';
 NotEq     : '!=';
 GreaterEq : '>=';
@@ -44,6 +43,9 @@ For  : 'for';
 Match : 'match';
 Break : 'break';
 Continue : 'next' | 'pass' | 'continue';
+
+True : 'true' ;
+False : 'false' ;
 
 IntegerLiteral : ('-')? [0-9]+ ;
 NumberLiteral  : ('-')? [0-9]+ ('.' [0-9]+)? ;
