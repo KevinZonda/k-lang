@@ -1,0 +1,24 @@
+# Build Output
+out/
+
+# Private File
+*_priv.go
+
+# Dynamic Library
+*.dll
+*.so
+*.dylib
+
+# Binary
+*.exe
+*.exe~
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories (remove the comment below to include it)
+vendor/
+
+# Go workspace file
+go.work
