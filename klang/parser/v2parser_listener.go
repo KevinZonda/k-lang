@@ -1,4 +1,4 @@
-// Code generated from .//antlr4//V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
+// Code generated from ./antlr4/V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
 
 package parser // V2Parser
 
@@ -52,6 +52,9 @@ type V2ParserListener interface {
 
 	// EnterLambda is called when entering the lambda production.
 	EnterLambda(c *LambdaContext)
+
+	// EnterBinaryOper is called when entering the binaryOper production.
+	EnterBinaryOper(c *BinaryOperContext)
 
 	// EnterExpr is called when entering the expr production.
 	EnterExpr(c *ExprContext)
@@ -166,6 +169,9 @@ type V2ParserListener interface {
 
 	// ExitLambda is called when exiting the lambda production.
 	ExitLambda(c *LambdaContext)
+
+	// ExitBinaryOper is called when exiting the binaryOper production.
+	ExitBinaryOper(c *BinaryOperContext)
 
 	// ExitExpr is called when exiting the expr production.
 	ExitExpr(c *ExprContext)
