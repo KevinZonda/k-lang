@@ -14,11 +14,11 @@ type WrappedParser struct {
 	errors []string
 }
 
-func (p *WrappedParser) Ast() *tree.Ast {
+func (p *WrappedParser) Ast() tree.Ast {
 	return p.
 		parser.
 		Program().
-		Accept(visitor.New()).(*tree.Ast)
+		Accept(visitor.New()).(tree.Ast)
 }
 
 // region Getter & Setter
