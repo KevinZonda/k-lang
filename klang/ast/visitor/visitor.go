@@ -78,7 +78,7 @@ func (v *AntlrVisitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 func (v *AntlrVisitor) VisitBinaryExpr(ctx *parser.ExprContext) interface{} {
 	// fmt.Println("VisitBinaryExpr")
 	if ctx.GetChildCount() != 3 {
-		panic("VisitBinaryExpr : Invalid child count : " + string(ctx.GetChildCount()))
+		panic("VisitBinaryExpr : Invalid child count : " + fmt.Sprint(ctx.GetChildCount()))
 	}
 	oper := ctx.GetChild(1).(*parser.BinaryOperContext)
 

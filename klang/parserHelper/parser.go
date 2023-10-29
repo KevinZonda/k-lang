@@ -51,3 +51,7 @@ func FromLexer(l *parser.V2Lexer) *WrappedParser {
 }
 
 //endregion
+
+func Ast(s string) tree.Ast {
+	return FromString(s).Ast()
+}

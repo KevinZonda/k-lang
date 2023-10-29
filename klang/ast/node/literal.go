@@ -13,7 +13,7 @@ type IntLiteral struct {
 }
 
 func (i *IntLiteral) TokenValue() string {
-	return string(i.Value)
+	return fmt.Sprint(i.Value)
 }
 
 func (i *IntLiteral) expr() {}
