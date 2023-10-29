@@ -72,6 +72,10 @@ func (v *BaseV2ParserVisitor) VisitBinaryOper(ctx *BinaryOperContext) interface{
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseV2ParserVisitor) VisitUnaryOper(ctx *UnaryOperContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseV2ParserVisitor) VisitExpr(ctx *ExprContext) interface{} {
 	return v.VisitChildren(ctx)
 }

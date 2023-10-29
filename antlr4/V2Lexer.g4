@@ -47,8 +47,8 @@ Continue : 'next' | 'pass' | 'continue';
 True : 'true' ;
 False : 'false' ;
 
-IntegerLiteral : ('-')? [0-9]+ ;
-NumberLiteral  : ('-')? [0-9]+ ('.' [0-9]+)? ;
+IntegerLiteral : [0-9]+ ;
+NumberLiteral  : [0-9]+ ('.' [0-9]+)? ;
 StringLiteral  : '"' .*? '"' ;
 
 

@@ -32,10 +32,10 @@ indexes : index*;
 lambda : LParen funcSignArgs RParen type? codeBlock;
 
 binaryOper : Equals | NotEq | Greater | Less | GreaterEq | LessEq | Or | And | Add | Sub | Mul | Div | Mod;
-
+unaryOper : Add | Sub | Not;
 expr
     : funcCall
-    | Not expr
+    | unaryOper expr
     | expr binaryOper expr
     | literal
     | LParen expr RParen

@@ -3,3 +3,5 @@
 .idea/
 .cr/
 .fleet/
+gen/
+.DS_Store

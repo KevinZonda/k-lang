@@ -56,6 +56,9 @@ type V2ParserListener interface {
 	// EnterBinaryOper is called when entering the binaryOper production.
 	EnterBinaryOper(c *BinaryOperContext)
 
+	// EnterUnaryOper is called when entering the unaryOper production.
+	EnterUnaryOper(c *UnaryOperContext)
+
 	// EnterExpr is called when entering the expr production.
 	EnterExpr(c *ExprContext)
 
@@ -172,6 +175,9 @@ type V2ParserListener interface {
 
 	// ExitBinaryOper is called when exiting the binaryOper production.
 	ExitBinaryOper(c *BinaryOperContext)
+
+	// ExitUnaryOper is called when exiting the unaryOper production.
+	ExitUnaryOper(c *UnaryOperContext)
 
 	// ExitExpr is called when exiting the expr production.
 	ExitExpr(c *ExprContext)

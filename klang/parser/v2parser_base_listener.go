@@ -117,6 +117,12 @@ func (s *BaseV2ParserListener) EnterBinaryOper(ctx *BinaryOperContext) {}
 // ExitBinaryOper is called when production binaryOper is exited.
 func (s *BaseV2ParserListener) ExitBinaryOper(ctx *BinaryOperContext) {}
 
+// EnterUnaryOper is called when production unaryOper is entered.
+func (s *BaseV2ParserListener) EnterUnaryOper(ctx *UnaryOperContext) {}
+
+// ExitUnaryOper is called when production unaryOper is exited.
+func (s *BaseV2ParserListener) ExitUnaryOper(ctx *UnaryOperContext) {}
+
 // EnterExpr is called when production expr is entered.
 func (s *BaseV2ParserListener) EnterExpr(ctx *ExprContext) {}
 

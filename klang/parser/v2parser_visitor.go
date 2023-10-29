@@ -56,6 +56,9 @@ type V2ParserVisitor interface {
 	// Visit a parse tree produced by V2Parser#binaryOper.
 	VisitBinaryOper(ctx *BinaryOperContext) interface{}
 
+	// Visit a parse tree produced by V2Parser#unaryOper.
+	VisitUnaryOper(ctx *UnaryOperContext) interface{}
+
 	// Visit a parse tree produced by V2Parser#expr.
 	VisitExpr(ctx *ExprContext) interface{}
 
