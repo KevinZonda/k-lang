@@ -1,3 +1,4 @@
 #!/bin/bash
-
-go build -v -o ./klang/out/klang ./klang/main/*.go
+cd ./klang
+go build -v -o ./out/klang ./main/*.go
+cd ..
