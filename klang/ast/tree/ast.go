@@ -1,3 +1,3 @@
-package ast
+package tree
 
 type Ast struct{}

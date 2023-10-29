@@ -1,7 +1,8 @@
 package parserHelper
 
 import (
-	"git.cs.bham.ac.uk/xxs166/uob-project/klang/ast"
+	"git.cs.bham.ac.uk/xxs166/uob-project/klang/ast/tree"
+	"git.cs.bham.ac.uk/xxs166/uob-project/klang/ast/visitor"
 	"git.cs.bham.ac.uk/xxs166/uob-project/klang/parser"
 	"github.com/antlr4-go/antlr/v4"
 )
@@ -13,11 +14,11 @@ type WrappedParser struct {
 	errors []string
 }
 
-func (p *WrappedParser) Ast() *ast.Ast {
+func (p *WrappedParser) Ast() *tree.Ast {
 	return p.
 		parser.
 		Program().
-		Accept(newVisitor()).(*ast.Ast)
+		Accept(visitor.New()).(*tree.Ast)
 }
 
 // region Getter & Setter
