@@ -56,7 +56,7 @@ func v2lexerLexerInit() {
 		"Struct", "Map", "Function", "Return", "Case", "Default", "Open", "As",
 		"If", "Else", "For", "Match", "Break", "Continue", "True", "False",
 		"IntegerLiteral", "NumberLiteral", "StringLiteral", "Not", "Assign",
-		"Identity", "WS", "NewLine",
+		"Identifier", "WS", "NewLine",
 	}
 	staticData.RuleNames = []string{
 		"LBrack", "RBrack", "LParen", "RParen", "LSquare", "RSquare", "Comma",
@@ -65,7 +65,7 @@ func v2lexerLexerInit() {
 		"Struct", "Map", "Function", "Return", "Case", "Default", "Open", "As",
 		"If", "Else", "For", "Match", "Break", "Continue", "True", "False",
 		"IntegerLiteral", "NumberLiteral", "StringLiteral", "Not", "Assign",
-		"Identity", "WS", "NewLine",
+		"Identifier", "WS", "NewLine",
 	}
 	staticData.PredictionContextCache = antlr.NewPredictionContextCache()
 	staticData.serializedATN = []int32{
@@ -293,7 +293,7 @@ const (
 	V2LexerStringLiteral  = 43
 	V2LexerNot            = 44
 	V2LexerAssign         = 45
-	V2LexerIdentity       = 46
+	V2LexerIdentifier     = 46
 	V2LexerWS             = 47
 	V2LexerNewLine        = 48
 )

@@ -62,7 +62,7 @@ const (
 	StringLiteral
 	Not
 	Assign
-	Identity
+	Identifier
 	WS
 	NewLine
 )

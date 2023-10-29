@@ -7,7 +7,7 @@ program
 
 openBlock : openStmt*;
 structBlock
-    : Struct Identity declareBlock
+    : Struct Identifier declareBlock
     ;
 
 funcBlock
@@ -16,11 +16,11 @@ funcBlock
 
 codeBlock : LBrack stmtWithSep* RBrack;
 declareBlock : LBrack declareStmt* RBrack;
-funcSig : Identity LParen funcSignArgs? RParen type?;
-funcSignArgs : type Identity (Comma type Identity)*;
+funcSig : Identifier LParen funcSignArgs? RParen type?;
+funcSignArgs : type Identifier (Comma type Identifier)*;
 
-type: Map | Function | Identity (LSquare RSquare)?;
-var : Identity (Dot Identity)*;
+type: Map | Function | Identifier (LSquare RSquare)?;
+var : Identifier (Dot Identifier)*;
 vars
     : var (Comma vars)*
     ;
@@ -39,7 +39,7 @@ expr
     | expr binaryOper expr
     | literal
     | LParen expr RParen
-    | Identity
+    | Identifier
     ;
 
 exprWithLambda : lambda | expr;
@@ -50,7 +50,7 @@ funcCallArgs : expr (Comma expr)*;
 
 stmtWithSep : stmt sep*;
 
-openStmt : Open StringLiteral (As Identity)?;
+openStmt : Open StringLiteral (As Identifier)?;
 
 literal : True | False | IntegerLiteral | NumberLiteral | StringLiteral | arrayInitializer | mapInitializer | structInitializer;
 literalWithLambda : literal | lambda;
@@ -59,7 +59,7 @@ arrayInitializer : type? LSquare (expr Comma?)* RSquare;
 mapInitializer : Map LBrack mapPair* RBrack;
 mapPair : LParen expr Comma exprWithLambda RParen | expr To exprWithLambda;
 structInitializer : type LBrack (structElementInitializer Comma?)* RBrack;
-structElementInitializer : Identity Comma expr;
+structElementInitializer : Identifier Comma expr;
 
 stmt
     : declareStmt

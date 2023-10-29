@@ -6,3 +6,7 @@ type Identifier struct {
 	Token token.Token
 	Value string
 }
+
+func (i *Identifier) TokenValue() string {
+	return i.Value
+}

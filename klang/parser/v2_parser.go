@@ -46,7 +46,7 @@ func v2parserParserInit() {
 		"Struct", "Map", "Function", "Return", "Case", "Default", "Open", "As",
 		"If", "Else", "For", "Match", "Break", "Continue", "True", "False",
 		"IntegerLiteral", "NumberLiteral", "StringLiteral", "Not", "Assign",
-		"Identity", "WS", "NewLine",
+		"Identifier", "WS", "NewLine",
 	}
 	staticData.RuleNames = []string{
 		"program", "openBlock", "structBlock", "funcBlock", "codeBlock", "declareBlock",
@@ -322,7 +322,7 @@ const (
 	V2ParserStringLiteral  = 43
 	V2ParserNot            = 44
 	V2ParserAssign         = 45
-	V2ParserIdentity       = 46
+	V2ParserIdentifier     = 46
 	V2ParserWS             = 47
 	V2ParserNewLine        = 48
 )
@@ -889,7 +889,7 @@ type IStructBlockContext interface {
 
 	// Getter signatures
 	Struct() antlr.TerminalNode
-	Identity() antlr.TerminalNode
+	Identifier() antlr.TerminalNode
 	DeclareBlock() IDeclareBlockContext
 
 	// IsStructBlockContext differentiates from other interfaces.
@@ -932,8 +932,8 @@ func (s *StructBlockContext) Struct() antlr.TerminalNode {
 	return s.GetToken(V2ParserStruct, 0)
 }
 
-func (s *StructBlockContext) Identity() antlr.TerminalNode {
-	return s.GetToken(V2ParserIdentity, 0)
+func (s *StructBlockContext) Identifier() antlr.TerminalNode {
+	return s.GetToken(V2ParserIdentifier, 0)
 }
 
 func (s *StructBlockContext) DeclareBlock() IDeclareBlockContext {
@@ -996,7 +996,7 @@ func (p *V2Parser) StructBlock() (localctx IStructBlockContext) {
 	}
 	{
 		p.SetState(99)
-		p.Match(V2ParserIdentity)
+		p.Match(V2ParserIdentifier)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
@@ -1544,7 +1544,7 @@ type IFuncSigContext interface {
 	GetParser() antlr.Parser
 
 	// Getter signatures
-	Identity() antlr.TerminalNode
+	Identifier() antlr.TerminalNode
 	LParen() antlr.TerminalNode
 	RParen() antlr.TerminalNode
 	FuncSignArgs() IFuncSignArgsContext
@@ -1586,8 +1586,8 @@ func NewFuncSigContext(parser antlr.Parser, parent antlr.ParserRuleContext, invo
 
 func (s *FuncSigContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *FuncSigContext) Identity() antlr.TerminalNode {
-	return s.GetToken(V2ParserIdentity, 0)
+func (s *FuncSigContext) Identifier() antlr.TerminalNode {
+	return s.GetToken(V2ParserIdentifier, 0)
 }
 
 func (s *FuncSigContext) LParen() antlr.TerminalNode {
@@ -1668,7 +1668,7 @@ func (p *V2Parser) FuncSig() (localctx IFuncSigContext) {
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(124)
-		p.Match(V2ParserIdentity)
+		p.Match(V2ParserIdentifier)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
@@ -1742,8 +1742,8 @@ type IFuncSignArgsContext interface {
 	// Getter signatures
 	AllType_() []ITypeContext
 	Type_(i int) ITypeContext
-	AllIdentity() []antlr.TerminalNode
-	Identity(i int) antlr.TerminalNode
+	AllIdentifier() []antlr.TerminalNode
+	Identifier(i int) antlr.TerminalNode
 	AllComma() []antlr.TerminalNode
 	Comma(i int) antlr.TerminalNode
 
@@ -1824,12 +1824,12 @@ func (s *FuncSignArgsContext) Type_(i int) ITypeContext {
 	return t.(ITypeContext)
 }
 
-func (s *FuncSignArgsContext) AllIdentity() []antlr.TerminalNode {
-	return s.GetTokens(V2ParserIdentity)
+func (s *FuncSignArgsContext) AllIdentifier() []antlr.TerminalNode {
+	return s.GetTokens(V2ParserIdentifier)
 }
 
-func (s *FuncSignArgsContext) Identity(i int) antlr.TerminalNode {
-	return s.GetToken(V2ParserIdentity, i)
+func (s *FuncSignArgsContext) Identifier(i int) antlr.TerminalNode {
+	return s.GetToken(V2ParserIdentifier, i)
 }
 
 func (s *FuncSignArgsContext) AllComma() []antlr.TerminalNode {
@@ -1882,7 +1882,7 @@ func (p *V2Parser) FuncSignArgs() (localctx IFuncSignArgsContext) {
 	}
 	{
 		p.SetState(134)
-		p.Match(V2ParserIdentity)
+		p.Match(V2ParserIdentifier)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
@@ -1910,7 +1910,7 @@ func (p *V2Parser) FuncSignArgs() (localctx IFuncSignArgsContext) {
 		}
 		{
 			p.SetState(137)
-			p.Match(V2ParserIdentity)
+			p.Match(V2ParserIdentifier)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
@@ -1948,7 +1948,7 @@ type ITypeContext interface {
 	// Getter signatures
 	Map() antlr.TerminalNode
 	Function() antlr.TerminalNode
-	Identity() antlr.TerminalNode
+	Identifier() antlr.TerminalNode
 	LSquare() antlr.TerminalNode
 	RSquare() antlr.TerminalNode
 
@@ -1996,8 +1996,8 @@ func (s *TypeContext) Function() antlr.TerminalNode {
 	return s.GetToken(V2ParserFunction, 0)
 }
 
-func (s *TypeContext) Identity() antlr.TerminalNode {
-	return s.GetToken(V2ParserIdentity, 0)
+func (s *TypeContext) Identifier() antlr.TerminalNode {
+	return s.GetToken(V2ParserIdentifier, 0)
 }
 
 func (s *TypeContext) LSquare() antlr.TerminalNode {
@@ -2070,11 +2070,11 @@ func (p *V2Parser) Type_() (localctx ITypeContext) {
 			}
 		}
 
-	case V2ParserIdentity:
+	case V2ParserIdentifier:
 		p.EnterOuterAlt(localctx, 3)
 		{
 			p.SetState(146)
-			p.Match(V2ParserIdentity)
+			p.Match(V2ParserIdentifier)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
@@ -2131,8 +2131,8 @@ type IVarContext interface {
 	GetParser() antlr.Parser
 
 	// Getter signatures
-	AllIdentity() []antlr.TerminalNode
-	Identity(i int) antlr.TerminalNode
+	AllIdentifier() []antlr.TerminalNode
+	Identifier(i int) antlr.TerminalNode
 	AllDot() []antlr.TerminalNode
 	Dot(i int) antlr.TerminalNode
 
@@ -2172,12 +2172,12 @@ func NewVarContext(parser antlr.Parser, parent antlr.ParserRuleContext, invoking
 
 func (s *VarContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *VarContext) AllIdentity() []antlr.TerminalNode {
-	return s.GetTokens(V2ParserIdentity)
+func (s *VarContext) AllIdentifier() []antlr.TerminalNode {
+	return s.GetTokens(V2ParserIdentifier)
 }
 
-func (s *VarContext) Identity(i int) antlr.TerminalNode {
-	return s.GetToken(V2ParserIdentity, i)
+func (s *VarContext) Identifier(i int) antlr.TerminalNode {
+	return s.GetToken(V2ParserIdentifier, i)
 }
 
 func (s *VarContext) AllDot() []antlr.TerminalNode {
@@ -2226,7 +2226,7 @@ func (p *V2Parser) Var_() (localctx IVarContext) {
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(153)
-		p.Match(V2ParserIdentity)
+		p.Match(V2ParserIdentifier)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
@@ -2250,7 +2250,7 @@ func (p *V2Parser) Var_() (localctx IVarContext) {
 		}
 		{
 			p.SetState(155)
-			p.Match(V2ParserIdentity)
+			p.Match(V2ParserIdentifier)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
@@ -3416,7 +3416,7 @@ type IExprContext interface {
 	Literal() ILiteralContext
 	LParen() antlr.TerminalNode
 	RParen() antlr.TerminalNode
-	Identity() antlr.TerminalNode
+	Identifier() antlr.TerminalNode
 	BinaryOper() IBinaryOperContext
 
 	// IsExprContext differentiates from other interfaces.
@@ -3552,8 +3552,8 @@ func (s *ExprContext) RParen() antlr.TerminalNode {
 	return s.GetToken(V2ParserRParen, 0)
 }
 
-func (s *ExprContext) Identity() antlr.TerminalNode {
-	return s.GetToken(V2ParserIdentity, 0)
+func (s *ExprContext) Identifier() antlr.TerminalNode {
+	return s.GetToken(V2ParserIdentifier, 0)
 }
 
 func (s *ExprContext) BinaryOper() IBinaryOperContext {
@@ -3672,7 +3672,7 @@ func (p *V2Parser) expr(_p int) (localctx IExprContext) {
 	case 5:
 		{
 			p.SetState(204)
-			p.Match(V2ParserIdentity)
+			p.Match(V2ParserIdentifier)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
@@ -4583,7 +4583,7 @@ type IOpenStmtContext interface {
 	Open() antlr.TerminalNode
 	StringLiteral() antlr.TerminalNode
 	As() antlr.TerminalNode
-	Identity() antlr.TerminalNode
+	Identifier() antlr.TerminalNode
 
 	// IsOpenStmtContext differentiates from other interfaces.
 	IsOpenStmtContext()
@@ -4633,8 +4633,8 @@ func (s *OpenStmtContext) As() antlr.TerminalNode {
 	return s.GetToken(V2ParserAs, 0)
 }
 
-func (s *OpenStmtContext) Identity() antlr.TerminalNode {
-	return s.GetToken(V2ParserIdentity, 0)
+func (s *OpenStmtContext) Identifier() antlr.TerminalNode {
+	return s.GetToken(V2ParserIdentifier, 0)
 }
 
 func (s *OpenStmtContext) GetRuleContext() antlr.RuleContext {
@@ -4707,7 +4707,7 @@ func (p *V2Parser) OpenStmt() (localctx IOpenStmtContext) {
 		}
 		{
 			p.SetState(249)
-			p.Match(V2ParserIdentity)
+			p.Match(V2ParserIdentifier)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
@@ -5102,7 +5102,7 @@ func (p *V2Parser) LiteralWithLambda() (localctx ILiteralWithLambdaContext) {
 	}
 
 	switch p.GetTokenStream().LA(1) {
-	case V2ParserLSquare, V2ParserMap, V2ParserFunction, V2ParserTrue, V2ParserFalse, V2ParserIntegerLiteral, V2ParserNumberLiteral, V2ParserStringLiteral, V2ParserIdentity:
+	case V2ParserLSquare, V2ParserMap, V2ParserFunction, V2ParserTrue, V2ParserFalse, V2ParserIntegerLiteral, V2ParserNumberLiteral, V2ParserStringLiteral, V2ParserIdentifier:
 		p.EnterOuterAlt(localctx, 1)
 		{
 			p.SetState(262)
@@ -5964,7 +5964,7 @@ func (p *V2Parser) StructInitializer() (localctx IStructInitializerContext) {
 	}
 	_la = p.GetTokenStream().LA(1)
 
-	for _la == V2ParserIdentity {
+	for _la == V2ParserIdentifier {
 		{
 			p.SetState(305)
 			p.StructElementInitializer()
@@ -6025,7 +6025,7 @@ type IStructElementInitializerContext interface {
 	GetParser() antlr.Parser
 
 	// Getter signatures
-	Identity() antlr.TerminalNode
+	Identifier() antlr.TerminalNode
 	Comma() antlr.TerminalNode
 	Expr() IExprContext
 
@@ -6065,8 +6065,8 @@ func NewStructElementInitializerContext(parser antlr.Parser, parent antlr.Parser
 
 func (s *StructElementInitializerContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *StructElementInitializerContext) Identity() antlr.TerminalNode {
-	return s.GetToken(V2ParserIdentity, 0)
+func (s *StructElementInitializerContext) Identifier() antlr.TerminalNode {
+	return s.GetToken(V2ParserIdentifier, 0)
 }
 
 func (s *StructElementInitializerContext) Comma() antlr.TerminalNode {
@@ -6125,7 +6125,7 @@ func (p *V2Parser) StructElementInitializer() (localctx IStructElementInitialize
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(316)
-		p.Match(V2ParserIdentity)
+		p.Match(V2ParserIdentifier)
 		if p.HasError() {
 			// Recognition error - abort rule
 			goto errorExit
