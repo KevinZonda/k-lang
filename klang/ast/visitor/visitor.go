@@ -51,6 +51,9 @@ func (v *AntlrVisitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 	if ctx.BinaryOper() != nil {
 		return v.VisitBinaryExpr(ctx)
 	}
+	if ctx.UnaryOper() != nil {
+		return v.VisitUnaryExpr(ctx)
+	}
 	if ctx.Literal() != nil {
 		return v.VisitLiteral(ctx.GetChild(0).(*parser.LiteralContext))
 	}
@@ -73,6 +76,19 @@ func (v *AntlrVisitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 	//	}
 	//}
 	return nil
+}
+
+func (v *AntlrVisitor) VisitUnaryExpr(ctx *parser.ExprContext) interface{} {
+	if ctx.GetChildCount() != 2 {
+		panic("VisitUnaryExpr : Invalid child count : " + fmt.Sprint(ctx.GetChildCount()))
+	}
+	oper := ctx.GetChild(0).(*parser.UnaryOperContext)
+
+	return &node.UnaryExpr{
+		Token: token.FromAntlrToken(oper.GetStart()),
+		Oper:  oper.GetText(),
+		Expr:  v.VisitExpr(ctx.GetChild(1).(*parser.ExprContext)).(node.Expr),
+	}
 }
 
 func (v *AntlrVisitor) VisitBinaryExpr(ctx *parser.ExprContext) interface{} {

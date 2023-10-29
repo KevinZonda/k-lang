@@ -7,7 +7,7 @@ import (
 )
 
 func TestParenthesesExpr(t *testing.T) {
-	ast := parserHelper.Ast("(1+2.2) * (3 - 8)")
+	ast := parserHelper.Ast("(1+2.2) * (3 -8)")
 	if len(ast) != 1 {
 		t.Error("Expected 1 node, got", len(ast))
 	}

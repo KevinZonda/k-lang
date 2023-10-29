@@ -26,7 +26,6 @@ const (
 	Comma
 	Col
 	Semi
-	BinaryOper
 	Equals
 	NotEq
 	GreaterEq
@@ -56,6 +55,8 @@ const (
 	Match
 	Break
 	Continue
+	True
+	False
 	IntegerLiteral
 	NumberLiteral
 	StringLiteral
