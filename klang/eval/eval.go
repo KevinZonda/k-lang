@@ -42,6 +42,22 @@ func (e *Eval) EvalBinOperExpr(n *node.BinaryOperExpr) any {
 		return binaryOperEval.Div(left, right)
 	case token.Mod:
 		return binaryOperEval.Mod(left, right)
+	case token.And:
+		return binaryOperEval.And(left, right)
+	case token.Equals:
+		return binaryOperEval.Eq(left, right)
+	case token.NotEq:
+		return !binaryOperEval.Eq(left, right)
+	case token.Or:
+		return binaryOperEval.Or(left, right)
+	case token.Less:
+		return binaryOperEval.Less(left, right)
+	case token.LessEq:
+		return binaryOperEval.LessEq(left, right)
+	case token.Greater:
+		return binaryOperEval.Greater(left, right)
+	case token.GreaterEq:
+		return binaryOperEval.GreaterEq(left, right)
 	}
 	panic("not implemented")
 }
@@ -94,6 +110,10 @@ func (e *Eval) EvalIntLiteral(n *node.IntLiteral) int {
 	return n.Value
 }
 
+func (e *Eval) EvalBoolLiteral(n *node.BoolLiteral) bool {
+	return n.Value
+}
+
 func (e *Eval) EvalExpr(n node.Expr) any {
 	switch n.(type) {
 	case *node.BinaryOperExpr:
@@ -106,6 +126,8 @@ func (e *Eval) EvalExpr(n node.Expr) any {
 		return e.EvalFloatLiteral(n.(*node.FloatLiteral))
 	case *node.StringLiteral:
 		return e.EvalStringLiteral(n.(*node.StringLiteral))
+	case *node.BoolLiteral:
+		return e.EvalBoolLiteral(n.(*node.BoolLiteral))
 	default:
 		panic("not implemented")
 	}
