@@ -40,5 +40,4 @@ func (c *errorListener) SyntaxError(recognizer antlr.Recognizer, offendingSymbol
 		msg:    msg,
 	}
 	c.Errors = append(c.Errors, synE)
-	fmt.Println("CodeError:", synE.Error())
 }
