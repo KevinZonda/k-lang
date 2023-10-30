@@ -22,7 +22,7 @@ func New() *AntlrVisitor {
 func (v *AntlrVisitor) VisitProgram(ctx *parser.ProgramContext) any {
 	var block []node.Node
 	for _, t := range ctx.GetChildren() {
-		fmt.Println(reflect.TypeOf(t))
+		// fmt.Println(reflect.TypeOf(t))
 		switch t.(type) {
 		case *parser.OpenBlockContext:
 			continue
