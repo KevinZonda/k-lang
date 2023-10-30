@@ -3,12 +3,13 @@ package node
 import "git.cs.bham.ac.uk/xxs166/uob-project/klang/ast/token"
 
 type AssignStmt struct {
-	Lhs struct {
-		Type token.Token
+	Token token.Token
+	Lhs   struct {
+		Type *Identifier
 		Name *Identifier
 	}
 	Rhs struct {
-		Type token.Token
+		Value Expr
 	}
 }
 

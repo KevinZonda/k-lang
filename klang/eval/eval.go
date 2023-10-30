@@ -1,7 +1,6 @@
 package eval
 
 import (
-	"fmt"
 	"git.cs.bham.ac.uk/xxs166/uob-project/klang/ast/node"
 	"git.cs.bham.ac.uk/xxs166/uob-project/klang/ast/tree"
 	"git.cs.bham.ac.uk/xxs166/uob-project/klang/eval/binaryOperEval"
@@ -28,7 +27,6 @@ func (e *Eval) Do() {
 }
 
 func (e *Eval) EvalBinOperExpr(n *node.BinaryOperExpr) any {
-	fmt.Println("EvalBinOperExpr")
 	left := e.EvalExpr(n.Left)
 	right := e.EvalExpr(n.Right)
 	switch n.Oper {

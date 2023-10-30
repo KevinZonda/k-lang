@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	p := parserHelper.FromString("(1 + 2.1) * (3+4)+\"114514\"\n struct x { int a }")
+	p := parserHelper.FromString("\"Value: \" + ((1 + 2.1) * (3+4))\n struct x { int a }")
 	ast := p.Ast()
 	for idx, node := range ast {
 		bs, _ := json.MarshalIndent(node, "", "    ")
@@ -16,5 +16,5 @@ func main() {
 	}
 	e := eval.New(ast)
 	e.Do()
-	fmt.Println("Evaluated as", e.It())
+	fmt.Println("Evaluated ->", e.It())
 }

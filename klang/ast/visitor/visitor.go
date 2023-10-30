@@ -20,7 +20,6 @@ func New() *AntlrVisitor {
 }
 
 func (v *AntlrVisitor) VisitProgram(ctx *parser.ProgramContext) any {
-	fmt.Println("VisitProgram")
 	var block []node.Node
 	for _, t := range ctx.GetChildren() {
 		fmt.Println(reflect.TypeOf(t))
@@ -35,7 +34,6 @@ func (v *AntlrVisitor) VisitProgram(ctx *parser.ProgramContext) any {
 			continue
 		case *parser.ExprContext:
 			expr := v.VisitExpr(t.(*parser.ExprContext)).(node.Expr)
-			fmt.Println("-> expr: ", expr)
 			block = append(block, expr)
 			continue
 		case *antlr.TerminalNodeImpl:
@@ -127,9 +125,10 @@ func (v *AntlrVisitor) VisitLiteral(ctx *parser.LiteralContext) interface{} {
 			Value: val,
 		}
 	case parser.V2ParserStringLiteral:
+		txt := ctx.GetStart().GetText()
 		return &node.StringLiteral{
 			Token: token.FromAntlrToken(ctx.GetStart()),
-			Value: ctx.GetStart().GetText(),
+			Value: txt[1 : len(txt)-1],
 		}
 	case parser.V2ParserTrue:
 		return &node.BoolLiteral{
