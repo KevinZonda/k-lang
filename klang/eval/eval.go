@@ -2,6 +2,7 @@ package eval
 
 import (
 	"git.cs.bham.ac.uk/xxs166/uob-project/klang/ast/node"
+	"git.cs.bham.ac.uk/xxs166/uob-project/klang/ast/token"
 	"git.cs.bham.ac.uk/xxs166/uob-project/klang/ast/tree"
 	"git.cs.bham.ac.uk/xxs166/uob-project/klang/eval/binaryOperEval"
 )
@@ -29,16 +30,17 @@ func (e *Eval) Do() {
 func (e *Eval) EvalBinOperExpr(n *node.BinaryOperExpr) any {
 	left := e.EvalExpr(n.Left)
 	right := e.EvalExpr(n.Right)
-	switch n.Oper {
-	case "+":
+
+	switch n.Token.Kind {
+	case token.Add:
 		return binaryOperEval.Add(left, right)
-	case "-":
+	case token.Sub:
 		return binaryOperEval.Sub(left, right)
-	case "*":
+	case token.Mul:
 		return binaryOperEval.Mul(left, right)
-	case "/", "div":
+	case token.Div:
 		return binaryOperEval.Div(left, right)
-	case "%", "mod":
+	case token.Mod:
 		return binaryOperEval.Mod(left, right)
 	}
 	panic("not implemented")
@@ -47,7 +49,7 @@ func (e *Eval) EvalBinOperExpr(n *node.BinaryOperExpr) any {
 func (e *Eval) EvalUnaryExpr(n *node.UnaryOperExpr) any {
 	val := e.EvalExpr(n.Expr)
 	factor := 1
-	if n.Oper == "-" {
+	if n.Token.Kind == token.Sub || n.Token.Kind == token.Not {
 		factor = -1
 	}
 
@@ -56,6 +58,11 @@ func (e *Eval) EvalUnaryExpr(n *node.UnaryOperExpr) any {
 		return val.(float64) * float64(factor)
 	case int:
 		return val.(int) * factor
+	case bool:
+		if factor == 1 {
+			return val
+		}
+		return !val.(bool)
 	default:
 		panic("not supported type")
 	}
