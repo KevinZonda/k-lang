@@ -18,9 +18,9 @@ func TestSingleExpressionParse(t *testing.T) {
 	if expr.TokenValue() != "+" {
 		t.Error("Expected +, got", expr.TokenValue())
 	}
-	e, ok := expr.(*node.InfixExpr)
+	e, ok := expr.(*node.BinaryOperExpr)
 	if !ok {
-		t.Error("Expected InfixExpr, got", expr)
+		t.Error("Expected BinaryOperExpr, got", expr)
 	}
 	if e.Left.TokenValue() != "1" {
 		t.Error("Expected 1, got", e.Left.TokenValue())

@@ -18,9 +18,9 @@ func TestUnaryOperExpr(t *testing.T) {
 	if expr.TokenValue() != "-" {
 		t.Error("Expected -, got", expr.TokenValue())
 	}
-	e, ok := expr.(*node.UnaryExpr)
+	e, ok := expr.(*node.UnaryOperExpr)
 	if !ok {
-		t.Error("Expected UnaryExpr, got", expr)
+		t.Error("Expected UnaryOperExpr, got", expr)
 	}
 	if e.Expr.TokenValue() != "1" {
 		t.Error("Expected 1, got", e.Expr.TokenValue())

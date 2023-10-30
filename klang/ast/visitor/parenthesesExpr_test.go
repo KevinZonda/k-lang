@@ -19,10 +19,10 @@ func TestParenthesesExpr(t *testing.T) {
 		t.Error("Expected +, got", expr.TokenValue())
 	}
 
-	e, ok := expr.(*node.InfixExpr)
+	e, ok := expr.(*node.BinaryOperExpr)
 
 	if !ok {
-		t.Error("Expected InfixExpr, got", expr)
+		t.Error("Expected BinaryOperExpr, got", expr)
 	}
 	if e.Left.TokenValue() != "+" {
 		t.Error("Expected +, got", e.Left.TokenValue())
@@ -33,7 +33,7 @@ func TestParenthesesExpr(t *testing.T) {
 	if e.Oper != "*" {
 		t.Error("Expected *, got", e.Oper)
 	}
-	lhs := e.Left.(*node.InfixExpr)
+	lhs := e.Left.(*node.BinaryOperExpr)
 	if lhs.Left.TokenValue() != "1" {
 		t.Error("Expected 1, got", lhs.Left.TokenValue())
 	}
@@ -44,7 +44,7 @@ func TestParenthesesExpr(t *testing.T) {
 		t.Error("Expected +, got", lhs.Oper)
 	}
 
-	rhs := e.Right.(*node.InfixExpr)
+	rhs := e.Right.(*node.BinaryOperExpr)
 	if rhs.Left.TokenValue() != "3" {
 		t.Error("Expected 3, got", rhs.Left.TokenValue())
 	}

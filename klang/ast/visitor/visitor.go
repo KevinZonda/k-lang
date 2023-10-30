@@ -84,7 +84,7 @@ func (v *AntlrVisitor) VisitUnaryExpr(ctx *parser.ExprContext) interface{} {
 	}
 	oper := ctx.GetChild(0).(*parser.UnaryOperContext)
 
-	return &node.UnaryExpr{
+	return &node.UnaryOperExpr{
 		Token: token.FromAntlrToken(oper.GetStart()),
 		Oper:  oper.GetText(),
 		Expr:  v.VisitExpr(ctx.GetChild(1).(*parser.ExprContext)).(node.Expr),
@@ -98,7 +98,7 @@ func (v *AntlrVisitor) VisitBinaryExpr(ctx *parser.ExprContext) interface{} {
 	}
 	oper := ctx.GetChild(1).(*parser.BinaryOperContext)
 
-	return &node.InfixExpr{
+	return &node.BinaryOperExpr{
 		Token: token.FromAntlrToken(oper.GetStart()),
 		Left:  v.VisitExpr(ctx.GetChild(0).(*parser.ExprContext)).(node.Expr),
 		Oper:  oper.GetText(),
