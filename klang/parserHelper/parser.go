@@ -11,7 +11,8 @@ import (
 type WrappedParser struct {
 	lexer  *parser.V2Lexer
 	parser *parser.V2Parser
-	errors []string
+	lexE   *errorListener
+	parE   *errorListener
 }
 
 func (p *WrappedParser) Ast() tree.Ast {
@@ -23,8 +24,16 @@ func (p *WrappedParser) Ast() tree.Ast {
 
 // region Getter & Setter
 
-func (p *WrappedParser) Errors() []string {
-	return p.errors
+func (p *WrappedParser) LexerErrors() []CodeError {
+	return p.lexE.Errors
+}
+
+func (p *WrappedParser) ParserErrors() []CodeError {
+	return p.parE.Errors
+}
+
+func (p *WrappedParser) Errors() []CodeError {
+	return append(p.LexerErrors(), p.ParserErrors()...)
 }
 
 func (p *WrappedParser) Lexer() *parser.V2Lexer {
@@ -44,10 +53,23 @@ func FromString(s string) *WrappedParser {
 }
 
 func FromLexer(l *parser.V2Lexer) *WrappedParser {
-	return &WrappedParser{
-		lexer:  l,
-		parser: parser.NewV2Parser(antlr.NewCommonTokenStream(l, antlr.TokenDefaultChannel)),
+	w := &WrappedParser{
+		lexE: &errorListener{},
+		parE: &errorListener{},
 	}
+
+	l.RemoveErrorListeners()
+	l.AddErrorListener(w.lexE)
+
+	w.lexer = l
+
+	p := parser.NewV2Parser(antlr.NewCommonTokenStream(l, antlr.TokenDefaultChannel))
+
+	p.RemoveErrorListeners()
+	p.AddErrorListener(w.parE)
+	w.parser = p
+
+	return w
 }
 
 //endregion
