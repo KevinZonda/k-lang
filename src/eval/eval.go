@@ -11,20 +11,20 @@ import (
 )
 
 type Eval struct {
-	ast               tree.Ast
-	globalObjTable    obj.Table
-	objTableHierarchy []obj.Table
+	ast      tree.Ast
+	objTable *obj.TableStack
 }
 
 func (e *Eval) It() any {
-	return e.globalObjTable["it"]
+	v, _ := e.objTable.Get("it")
+	return v
 }
 
 func (e *Eval) Do() {
 	for _, n := range e.ast {
 		switch n.(type) {
 		case node.Expr:
-			e.globalObjTable["it"] = e.EvalExpr(n.(node.Expr))
+			e.objTable.Set("it", e.EvalExpr(n.(node.Expr)))
 		default:
 			panic("not implemented")
 		}
@@ -121,7 +121,11 @@ func (e *Eval) EvalBoolLiteral(n *node.BoolLiteral) bool {
 }
 
 func (e *Eval) EvalIdentifier(n *node.Identifier) any {
-	panic("Not Implemented")
+	v, ok := e.objTable.Get(n.Value)
+	if ok {
+		return v
+	}
+	panic("No Var Found")
 }
 
 func (e *Eval) EvalExpr(n node.Expr) any {
@@ -147,10 +151,8 @@ func (e *Eval) EvalExpr(n node.Expr) any {
 }
 
 func New(ast tree.Ast) *Eval {
-	t := make(map[string]any)
 	return &Eval{
-		ast:               ast,
-		globalObjTable:    t,
-		objTableHierarchy: []obj.Table{t},
+		ast:      ast,
+		objTable: &obj.TableStack{},
 	}
 }
