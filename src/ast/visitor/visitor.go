@@ -155,15 +155,14 @@ func (v *AntlrVisitor) VisitLiteral(ctx *parser.LiteralContext) interface{} {
 			Token: token.FromAntlrToken(ctx.GetStart()),
 			Value: false,
 		}
-	case parser.V2ParserRULE_arrayInitializer:
-		fmt.Println("-> ARRAY  : ", ctx.GetStart().GetText())
-	case parser.V2ParserRULE_mapInitializer:
-		fmt.Println("-> MAP    : ", ctx.GetStart().GetText())
 	case parser.V2ParserRULE_structInitializer:
 		fmt.Println("-> STRUCT : ", ctx.GetStart().GetText())
 	default:
 		if ctx.ArrayInitializer() != nil {
 			return v.VisitArrayInitializer(ctx.ArrayInitializer().(*parser.ArrayInitializerContext))
+		}
+		if ctx.MapInitializer() != nil {
+			return v.VisitMapInitializer(ctx.MapInitializer().(*parser.MapInitializerContext))
 		}
 		fmt.Println("VisitLiteralBlock : Unknown type")
 		fmt.Println("-> text     : ", ctx.GetStart().GetText())
@@ -172,6 +171,29 @@ func (v *AntlrVisitor) VisitLiteral(ctx *parser.LiteralContext) interface{} {
 		panic("VisitLiteralBlock : Unknown type")
 	}
 	panic("Unimplemented")
+}
+
+func (v *AntlrVisitor) VisitMapInitializer(ctx *parser.MapInitializerContext) interface{} {
+	pairs := ctx.AllMapPair()
+	var arr []*node.MapPairLiteral
+	for _, e := range pairs {
+		arr = append(arr, v.VisitMapPairInitializer(e.(*parser.MapPairContext)).(*node.MapPairLiteral))
+	}
+	return &node.MapLiteral{
+		Token: token.FromAntlrToken(ctx.GetStart()),
+		Value: arr,
+	}
+}
+
+func (v *AntlrVisitor) VisitMapPairInitializer(ctx *parser.MapPairContext) interface{} {
+	if ctx.MapPair() != nil {
+		return v.VisitMapPairInitializer(ctx.MapPair().(*parser.MapPairContext))
+	}
+	return &node.MapPairLiteral{
+		Token: token.FromAntlrToken(ctx.GetStart()),
+		Key:   v.VisitExpr(ctx.Expr().(*parser.ExprContext)).(node.Expr),
+		Value: v.VisitExprWithLambda(ctx.ExprWithLambda().(*parser.ExprWithLambdaContext)).(node.Expr),
+	}
 }
 
 func (v *AntlrVisitor) VisitArrayInitializer(ctx *parser.ArrayInitializerContext) interface{} {

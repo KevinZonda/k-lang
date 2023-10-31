@@ -23,9 +23,9 @@ func (i *IntLiteral) String() string {
 	return fmt.Sprintf("(%d:int)", i.Value)
 }
 
-//endregion
-
 var _ Expr = (*IntLiteral)(nil)
+
+//endregion
 
 //region Float
 
@@ -90,6 +90,8 @@ var _ Expr = (*BoolLiteral)(nil)
 
 //endregion
 
+//region ArrayLiteral
+
 type ArrayLiteral struct {
 	Token token.Token
 	Value []Expr
@@ -102,3 +104,32 @@ func (a *ArrayLiteral) TokenValue() string {
 func (a *ArrayLiteral) expr() {}
 
 var _ Expr = (*ArrayLiteral)(nil)
+
+//endregion
+
+type MapPairLiteral struct {
+	Key   Expr
+	Value Expr
+	Token token.Token
+}
+
+func (m *MapPairLiteral) TokenValue() string {
+	return m.Token.Value
+}
+
+func (m *MapPairLiteral) expr() {}
+
+var _ Expr = (*MapPairLiteral)(nil)
+
+type MapLiteral struct {
+	Token token.Token
+	Value []*MapPairLiteral
+}
+
+func (m *MapLiteral) TokenValue() string {
+	return m.Token.Value
+}
+
+func (m *MapLiteral) expr() {}
+
+var _ Expr = (*MapLiteral)(nil)
