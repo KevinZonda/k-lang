@@ -35,11 +35,11 @@ func repl(context string) {
 		panic(err)
 	}
 	defer func() {
+		rl.Close()
 		if r := recover(); r != nil {
 			fmt.Println("Recover from panic:", r)
+			repl(context)
 		}
-		rl.Close()
-		repl(context)
 	}()
 	for {
 		line, err := rl.Readline()
@@ -48,7 +48,7 @@ func repl(context string) {
 		}
 
 		switch line {
-		case "exit", "quit", "q", "e":
+		case ":exit", ":quit", ":q", ":e":
 			return
 		case ":context", ":ctx":
 			fmt.Println(context)
