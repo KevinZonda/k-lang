@@ -20,10 +20,8 @@ funcSig : Identifier LParen funcSignArgs? RParen type?;
 funcSignArgs : type Identifier (Comma type Identifier)*;
 
 type: Map | Function | Identifier (LSquare RSquare)?;
-var : Identifier (Dot Identifier)*;
-vars
-    : var (Comma vars)*
-    ;
+var : baseVar (Dot baseVar)*; // x.y[X].z
+baseVar : Identifier indexes?;
 
 index : LSquare expr RSquare;
 indexes : index+;
@@ -73,7 +71,7 @@ stmt
     ;
 
 declareStmt
-    : type vars;
+    : type Identifier (Comma Identifier)*;
 
 assgnStmt
     : type? var indexes? Assign exprWithLambda

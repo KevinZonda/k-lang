@@ -81,11 +81,11 @@ func (s *BaseV2ParserListener) EnterVar(ctx *VarContext) {}
 // ExitVar is called when production var is exited.
 func (s *BaseV2ParserListener) ExitVar(ctx *VarContext) {}
 
-// EnterVars is called when production vars is entered.
-func (s *BaseV2ParserListener) EnterVars(ctx *VarsContext) {}
+// EnterBaseVar is called when production baseVar is entered.
+func (s *BaseV2ParserListener) EnterBaseVar(ctx *BaseVarContext) {}
 
-// ExitVars is called when production vars is exited.
-func (s *BaseV2ParserListener) ExitVars(ctx *VarsContext) {}
+// ExitBaseVar is called when production baseVar is exited.
+func (s *BaseV2ParserListener) ExitBaseVar(ctx *BaseVarContext) {}
 
 // EnterIndex is called when production index is entered.
 func (s *BaseV2ParserListener) EnterIndex(ctx *IndexContext) {}

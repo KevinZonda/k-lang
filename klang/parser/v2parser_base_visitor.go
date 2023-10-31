@@ -48,7 +48,7 @@ func (v *BaseV2ParserVisitor) VisitVar(ctx *VarContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseV2ParserVisitor) VisitVars(ctx *VarsContext) interface{} {
+func (v *BaseV2ParserVisitor) VisitBaseVar(ctx *BaseVarContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
