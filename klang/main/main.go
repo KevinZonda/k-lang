@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"git.cs.bham.ac.uk/xxs166/uob-project/klang/eval"
+	"git.cs.bham.ac.uk/xxs166/uob-project/klang/main/cli"
 	"git.cs.bham.ac.uk/xxs166/uob-project/klang/parserHelper"
+	"github.com/KevinZonda/GoX/pkg/iox"
 	"github.com/chzyer/readline"
 	"reflect"
 )
@@ -12,7 +14,16 @@ import (
 var debug bool = false
 
 func main() {
-	repl("")
+	cli.ParseParam()
+	switch cli.Ctx().Command() {
+	case "ast <input> <output>":
+		ast(cli.Param().Ast.Input, cli.Param().Ast.Output)
+	case "repl":
+		repl("")
+	default:
+		panic(cli.Ctx().Command())
+	}
+
 }
 
 func repl(context string) {
@@ -78,4 +89,17 @@ func repl(context string) {
 		context = buffer
 	}
 
+}
+
+func ast(input string, output string) {
+	txt, err := iox.ReadAllText(input)
+	if err != nil {
+		panic(err)
+	}
+	ast := parserHelper.Ast(txt)
+	bs, err := json.MarshalIndent(ast, "", "    ")
+	if err != nil {
+		panic(err)
+	}
+	err = iox.WriteAllText(output, string(bs))
 }
