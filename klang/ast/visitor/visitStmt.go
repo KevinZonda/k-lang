@@ -1,12 +1,9 @@
 package visitor
 
 import (
-	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/ast/token"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/parser"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/utils/jout"
-	"reflect"
 )
 
 func (v *AntlrVisitor) VisitStmt(ctx *parser.StmtContext) interface{} {
@@ -18,16 +15,12 @@ func (v *AntlrVisitor) VisitStmt(ctx *parser.StmtContext) interface{} {
 }
 
 func (v *AntlrVisitor) VisitAssignStmt(ctx *parser.AssignStmtContext) interface{} {
-	for i, n := range ctx.GetChildren() {
-		fmt.Println(i, n, reflect.TypeOf(n))
-	}
 	n := node.AssignStmt{
 		Token: token.FromAntlrToken(ctx.Assign().GetSymbol()),
 		Type:  v.VisitType(ctx.Type_().(*parser.TypeContext)).(*node.Identifier),
 		Var:   v.VisitVar(ctx.Var_().(*parser.VarContext)).(*node.Variable),
 		Value: v.VisitExprWithLambda(ctx.ExprWithLambda().(*parser.ExprWithLambdaContext)).(node.Expr),
 	}
-	jout.Println(n)
 	return &n
 }
 
