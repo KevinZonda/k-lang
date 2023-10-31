@@ -18,10 +18,11 @@ Greater   : '>';
 Less      : '<';
 Or        : '||' | 'or';
 And       : '&&' | 'and';
-Add       : '+';
-Sub       : '-';
+Pow       : '^' | '**' | 'pow';
 Mul       : '*';
 Div       : '/';
+Add       : '+';
+Sub       : '-';
 Mod       : '%' | 'mod';
 Dot       : '.';
 

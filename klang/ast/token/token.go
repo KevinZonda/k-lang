@@ -17,7 +17,8 @@ func FromAntlrToken(t antlr.Token) Token {
 }
 
 const (
-	LBrack Kind = iota + 1
+	EOF         = antlr.TokenEOF
+	LBrack Kind = iota
 	RBrack
 	LParen
 	RParen
@@ -34,10 +35,11 @@ const (
 	Less
 	Or
 	And
-	Add
-	Sub
+	Pow
 	Mul
 	Div
+	Add
+	Sub
 	Mod
 	Dot
 	To

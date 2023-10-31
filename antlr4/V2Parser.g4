@@ -2,7 +2,7 @@ parser grammar V2Parser;
 options { tokenVocab=V2Lexer; }
 
 program
-    : openBlock (structBlock | funcBlock | stmt | expr)* EOF
+    : openBlock ((structBlock | funcBlock | stmt | expr) (sep*))* EOF
     ;
 
 openBlock : openStmt*;
@@ -14,7 +14,7 @@ funcBlock
     : Function funcSig codeBlock
     ;
 
-codeBlock : LBrack stmtWithSep* RBrack;
+codeBlock : LBrack (stmt sep*)* RBrack;
 declareBlock : LBrack declareStmt* RBrack;
 funcSig : Identifier LParen funcSignArgs? RParen type?;
 funcSignArgs : type Identifier (Comma type Identifier)*;
@@ -31,7 +31,7 @@ indexes : index*;
 
 lambda : LParen funcSignArgs RParen type? codeBlock;
 
-binaryOper : Equals | NotEq | Greater | Less | GreaterEq | LessEq | Or | And | Add | Sub | Mul | Div | Mod;
+binaryOper : Equals | NotEq | Greater | Less | GreaterEq | LessEq | Or | And | Pow | Mul | Div | Mod | Add | Sub;
 unaryOper : Add | Sub | Not;
 expr
     : funcCall

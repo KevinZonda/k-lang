@@ -38,6 +38,8 @@ func (e *Eval) EvalBinOperExpr(n *node.BinaryOperExpr) any {
 		return binaryOperEval.Sub(left, right)
 	case token.Mul:
 		return binaryOperEval.Mul(left, right)
+	case token.Pow:
+		return binaryOperEval.Pow(left, right)
 	case token.Div:
 		return binaryOperEval.Div(left, right)
 	case token.Mod:
