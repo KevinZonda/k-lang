@@ -122,6 +122,14 @@ func (e *Eval) EvalBoolLiteral(n *node.BoolLiteral) bool {
 	return n.Value
 }
 
+func (e *Eval) EvalArrayLiteral(n *node.ArrayLiteral) []any {
+	var arr []any
+	for _, v := range n.Value {
+		arr = append(arr, e.EvalExpr(v))
+	}
+	return arr
+}
+
 func (e *Eval) EvalIdentifier(n *node.Identifier) any {
 	v, ok := e.objTable.Get(n.Value)
 	if ok {
@@ -162,6 +170,8 @@ func (e *Eval) EvalExpr(n node.Expr) any {
 		return e.EvalBoolLiteral(n.(*node.BoolLiteral))
 	case *node.Identifier:
 		return e.EvalIdentifier(n.(*node.Identifier))
+	case *node.ArrayLiteral:
+		return e.EvalArrayLiteral(n.(*node.ArrayLiteral))
 	default:
 		fmt.Println(reflect.TypeOf(n))
 		panic("not implemented")

@@ -89,3 +89,16 @@ func (b *BoolLiteral) String() string {
 var _ Expr = (*BoolLiteral)(nil)
 
 //endregion
+
+type ArrayLiteral struct {
+	Token token.Token
+	Value []Expr
+}
+
+func (a *ArrayLiteral) TokenValue() string {
+	return a.Token.Value
+}
+
+func (a *ArrayLiteral) expr() {}
+
+var _ Expr = (*ArrayLiteral)(nil)

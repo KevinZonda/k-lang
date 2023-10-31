@@ -162,6 +162,9 @@ func (v *AntlrVisitor) VisitLiteral(ctx *parser.LiteralContext) interface{} {
 	case parser.V2ParserRULE_structInitializer:
 		fmt.Println("-> STRUCT : ", ctx.GetStart().GetText())
 	default:
+		if ctx.ArrayInitializer() != nil {
+			return v.VisitArrayInitializer(ctx.ArrayInitializer().(*parser.ArrayInitializerContext))
+		}
 		fmt.Println("VisitLiteralBlock : Unknown type")
 		fmt.Println("-> text     : ", ctx.GetStart().GetText())
 		fmt.Println("-> tokenType: ", ctx.GetStart().GetTokenType())
@@ -169,4 +172,16 @@ func (v *AntlrVisitor) VisitLiteral(ctx *parser.LiteralContext) interface{} {
 		panic("VisitLiteralBlock : Unknown type")
 	}
 	panic("Unimplemented")
+}
+
+func (v *AntlrVisitor) VisitArrayInitializer(ctx *parser.ArrayInitializerContext) interface{} {
+	exprs := ctx.AllExpr()
+	var arr []node.Expr
+	for _, e := range exprs {
+		arr = append(arr, v.VisitExpr(e.(*parser.ExprContext)).(node.Expr))
+	}
+	return &node.ArrayLiteral{
+		Token: token.FromAntlrToken(ctx.GetStart()),
+		Value: arr,
+	}
 }

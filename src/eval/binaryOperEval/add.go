@@ -27,7 +27,25 @@ func Add(left any, right any) any {
 	if r, ok := intAddAny(right, left); ok {
 		return r
 	}
+
+	// arr + arr
+	if r, ok := arrAndArr(left, right); ok {
+		return r
+	}
 	panic(fmt.Sprintf("cannot add %T and %T", left, right))
+}
+
+func arrAndArr(left, right any) (any, bool) {
+	switch left.(type) {
+	case []any:
+		switch right.(type) {
+		case []any:
+			return append(left.([]any), right.([]any)...), true
+		default:
+			return append(left.([]any), right), true
+		}
+	}
+	return nil, false
 }
 
 func strAddAny(left, right any) (string, bool) {
