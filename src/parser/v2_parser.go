@@ -46,7 +46,7 @@ func v2parserParserInit() {
 		"To", "Struct", "Map", "Function", "Return", "Case", "Default", "Open",
 		"As", "If", "Else", "For", "Match", "Break", "Continue", "True", "False",
 		"IntegerLiteral", "NumberLiteral", "StringLiteral", "Not", "Assign",
-		"Identifier", "WS", "NewLine",
+		"Identifier", "Comment", "WS", "NewLine",
 	}
 	staticData.RuleNames = []string{
 		"program", "openBlock", "structBlock", "funcBlock", "codeBlock", "declareBlock",
@@ -59,7 +59,7 @@ func v2parserParserInit() {
 	}
 	staticData.PredictionContextCache = antlr.NewPredictionContextCache()
 	staticData.serializedATN = []int32{
-		4, 1, 49, 434, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
+		4, 1, 50, 434, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
 		4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 2, 9, 7, 9, 2, 10, 7,
 		10, 2, 11, 7, 11, 2, 12, 7, 12, 2, 13, 7, 13, 2, 14, 7, 14, 2, 15, 7, 15,
 		2, 16, 7, 16, 2, 17, 7, 17, 2, 18, 7, 18, 2, 19, 7, 19, 2, 20, 7, 20, 2,
@@ -108,7 +108,7 @@ func v2parserParserInit() {
 		10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44,
 		46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 0, 6, 1,
 		0, 16, 17, 1, 0, 19, 20, 1, 0, 21, 22, 2, 0, 21, 22, 45, 45, 2, 0, 8, 8,
-		25, 25, 2, 0, 9, 9, 49, 49, 471, 0, 78, 1, 0, 0, 0, 2, 101, 1, 0, 0, 0,
+		25, 25, 2, 0, 9, 9, 50, 50, 471, 0, 78, 1, 0, 0, 0, 2, 101, 1, 0, 0, 0,
 		4, 104, 1, 0, 0, 0, 6, 108, 1, 0, 0, 0, 8, 112, 1, 0, 0, 0, 10, 127, 1,
 		0, 0, 0, 12, 136, 1, 0, 0, 0, 14, 145, 1, 0, 0, 0, 16, 163, 1, 0, 0, 0,
 		18, 165, 1, 0, 0, 0, 20, 173, 1, 0, 0, 0, 22, 177, 1, 0, 0, 0, 24, 182,
@@ -341,8 +341,9 @@ const (
 	V2ParserNot            = 45
 	V2ParserAssign         = 46
 	V2ParserIdentifier     = 47
-	V2ParserWS             = 48
-	V2ParserNewLine        = 49
+	V2ParserComment        = 48
+	V2ParserWS             = 49
+	V2ParserNewLine        = 50
 )
 
 // V2Parser rules.

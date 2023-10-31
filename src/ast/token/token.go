@@ -65,6 +65,7 @@ const (
 	Not
 	Assign
 	Identifier
+	Comment
 	WS
 	NewLine
 )

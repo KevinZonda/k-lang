@@ -56,6 +56,7 @@ StringLiteral  : '"' .*? '"' ;
 Not       : '!' | 'not';
 Assign    : ':=';
 Identifier: [a-zA-Z_][a-zA-Z_0-9]* ;
+Comment   : '#' ~[\r\n]* -> skip ;
 WS: [ \t\n\r\f]+ -> skip ;
 
 NewLine   : '\r'? '\n' | '\r';
