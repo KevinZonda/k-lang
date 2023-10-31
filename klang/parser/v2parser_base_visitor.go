@@ -52,10 +52,6 @@ func (v *BaseV2ParserVisitor) VisitVars(ctx *VarsContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseV2ParserVisitor) VisitVarWithIdx(ctx *VarWithIdxContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
 func (v *BaseV2ParserVisitor) VisitIndex(ctx *IndexContext) interface{} {
 	return v.VisitChildren(ctx)
 }

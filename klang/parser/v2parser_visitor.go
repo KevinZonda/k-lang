@@ -41,9 +41,6 @@ type V2ParserVisitor interface {
 	// Visit a parse tree produced by V2Parser#vars.
 	VisitVars(ctx *VarsContext) interface{}
 
-	// Visit a parse tree produced by V2Parser#varWithIdx.
-	VisitVarWithIdx(ctx *VarWithIdxContext) interface{}
-
 	// Visit a parse tree produced by V2Parser#index.
 	VisitIndex(ctx *IndexContext) interface{}
 

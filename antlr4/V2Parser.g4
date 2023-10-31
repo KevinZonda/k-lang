@@ -24,10 +24,9 @@ var : Identifier (Dot Identifier)*;
 vars
     : var (Comma vars)*
     ;
-varWithIdx : var indexes;
 
 index : LSquare expr RSquare;
-indexes : index*;
+indexes : index+;
 
 lambda : LParen funcSignArgs RParen type? codeBlock;
 
@@ -40,6 +39,7 @@ expr
     | literal
     | LParen expr RParen
     | Identifier
+    | expr indexes
     ;
 
 exprWithLambda : lambda | expr;
@@ -76,7 +76,7 @@ declareStmt
     : type vars;
 
 assgnStmt
-    : type? varWithIdx Assign exprWithLambda
+    : type? var indexes? Assign exprWithLambda
     ;
 
 ifStmt

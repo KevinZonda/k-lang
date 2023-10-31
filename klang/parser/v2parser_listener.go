@@ -41,9 +41,6 @@ type V2ParserListener interface {
 	// EnterVars is called when entering the vars production.
 	EnterVars(c *VarsContext)
 
-	// EnterVarWithIdx is called when entering the varWithIdx production.
-	EnterVarWithIdx(c *VarWithIdxContext)
-
 	// EnterIndex is called when entering the index production.
 	EnterIndex(c *IndexContext)
 
@@ -160,9 +157,6 @@ type V2ParserListener interface {
 
 	// ExitVars is called when exiting the vars production.
 	ExitVars(c *VarsContext)
-
-	// ExitVarWithIdx is called when exiting the varWithIdx production.
-	ExitVarWithIdx(c *VarWithIdxContext)
 
 	// ExitIndex is called when exiting the index production.
 	ExitIndex(c *IndexContext)
