@@ -17,7 +17,7 @@ func (v *AntlrVisitor) VisitStmt(ctx *parser.StmtContext) interface{} {
 func (v *AntlrVisitor) VisitAssignStmt(ctx *parser.AssignStmtContext) interface{} {
 	n := node.AssignStmt{
 		Token: token.FromAntlrToken(ctx.Assign().GetSymbol()),
-		Type:  v.VisitType(ctx.Type_().(*parser.TypeContext)).(*node.Identifier),
+		Type:  typeCastToPtr[node.Identifier](v.VisitType(typeCastToPtr[parser.TypeContext](ctx.Type_()))),
 		Var:   v.VisitVar(ctx.Var_().(*parser.VarContext)).(*node.Variable),
 		Value: v.VisitExprWithLambda(ctx.ExprWithLambda().(*parser.ExprWithLambdaContext)).(node.Expr),
 	}

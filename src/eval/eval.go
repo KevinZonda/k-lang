@@ -25,6 +25,8 @@ func (e *Eval) Do() {
 		switch n.(type) {
 		case node.Expr:
 			e.objTable.Set("it", e.EvalExpr(n.(node.Expr)))
+		case node.Stmt:
+			e.EvalStmt(n.(node.Stmt))
 		default:
 			panic("not implemented")
 		}
@@ -126,6 +128,22 @@ func (e *Eval) EvalIdentifier(n *node.Identifier) any {
 		return v
 	}
 	panic("No Var Found")
+}
+
+func (e *Eval) EvalStmt(n node.Stmt) any {
+	switch n.(type) {
+	case *node.AssignStmt:
+		return e.EvalAssignStmt(n.(*node.AssignStmt))
+	}
+	panic("not implemented")
+}
+
+func (e *Eval) EvalAssignStmt(n *node.AssignStmt) any {
+	v := e.EvalExpr(n.Value)
+	// TODO: arr
+	baseV := n.Var.Value[len(n.Var.Value)-1]
+	e.objTable.Set(baseV.Name.Value, v)
+	return v
 }
 
 func (e *Eval) EvalExpr(n node.Expr) any {
