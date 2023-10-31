@@ -11,3 +11,9 @@ func Println(items ...any) {
 		fmt.Println(string(bs))
 	}
 }
+
+func PrintAndRet[T any](item T) T {
+	Println(item)
+	return item
+
+}

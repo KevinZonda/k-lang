@@ -10,3 +10,7 @@ type Identifier struct {
 func (i *Identifier) TokenValue() string {
 	return i.Value
 }
+
+func (i *Identifier) expr() {}
+
+var _ Expr = (*Identifier)(nil)

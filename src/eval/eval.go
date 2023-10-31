@@ -1,26 +1,30 @@
 package eval
 
 import (
+	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/binaryOperEval"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
+	"reflect"
 )
 
 type Eval struct {
-	ast tree.Ast
-	it  any
+	ast               tree.Ast
+	globalObjTable    obj.Table
+	objTableHierarchy []obj.Table
 }
 
 func (e *Eval) It() any {
-	return e.it
+	return e.globalObjTable["it"]
 }
 
 func (e *Eval) Do() {
 	for _, n := range e.ast {
 		switch n.(type) {
 		case node.Expr:
-			e.it = e.EvalExpr(n.(node.Expr))
+			e.globalObjTable["it"] = e.EvalExpr(n.(node.Expr))
 		default:
 			panic("not implemented")
 		}
@@ -116,6 +120,10 @@ func (e *Eval) EvalBoolLiteral(n *node.BoolLiteral) bool {
 	return n.Value
 }
 
+func (e *Eval) EvalIdentifier(n *node.Identifier) any {
+	panic("Not Implemented")
+}
+
 func (e *Eval) EvalExpr(n node.Expr) any {
 	switch n.(type) {
 	case *node.BinaryOperExpr:
@@ -130,13 +138,19 @@ func (e *Eval) EvalExpr(n node.Expr) any {
 		return e.EvalStringLiteral(n.(*node.StringLiteral))
 	case *node.BoolLiteral:
 		return e.EvalBoolLiteral(n.(*node.BoolLiteral))
+	case *node.Identifier:
+		return e.EvalIdentifier(n.(*node.Identifier))
 	default:
+		fmt.Println(reflect.TypeOf(n))
 		panic("not implemented")
 	}
 }
 
 func New(ast tree.Ast) *Eval {
+	t := make(map[string]any)
 	return &Eval{
-		ast: ast,
+		ast:               ast,
+		globalObjTable:    t,
+		objTableHierarchy: []obj.Table{t},
 	}
 }

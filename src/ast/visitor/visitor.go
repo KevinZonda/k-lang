@@ -2,13 +2,14 @@ package visitor
 
 import (
 	"fmt"
+	"reflect"
+	"strconv"
+
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parser"
 	"github.com/antlr4-go/antlr/v4"
-	"reflect"
-	"strconv"
 )
 
 type AntlrVisitor struct {
@@ -22,7 +23,6 @@ func New() *AntlrVisitor {
 func (v *AntlrVisitor) VisitProgram(ctx *parser.ProgramContext) any {
 	var block []node.Node
 	for _, t := range ctx.GetChildren() {
-		// fmt.Println(reflect.TypeOf(t))
 		switch t.(type) {
 		case *parser.OpenBlockContext:
 			continue
@@ -59,6 +59,14 @@ func (v *AntlrVisitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 	}
 	if ctx.LParen() != nil {
 		return v.VisitExpr(ctx.GetChild(1).(*parser.ExprContext))
+	}
+	if ctx.GetChildCount() == 1 {
+		// TODO: ID
+		n := ctx.GetChild(0).(*antlr.TerminalNodeImpl)
+		return &node.Identifier{
+			Token: token.FromAntlrToken(n.GetSymbol()),
+			Value: n.GetText(),
+		}
 	}
 	//for _, t := range ctx.GetChildren() {
 	//	fmt.Println("->", reflect.TypeOf(t))
