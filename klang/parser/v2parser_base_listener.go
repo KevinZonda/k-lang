@@ -213,11 +213,11 @@ func (s *BaseV2ParserListener) EnterDeclareStmt(ctx *DeclareStmtContext) {}
 // ExitDeclareStmt is called when production declareStmt is exited.
 func (s *BaseV2ParserListener) ExitDeclareStmt(ctx *DeclareStmtContext) {}
 
-// EnterAssgnStmt is called when production assgnStmt is entered.
-func (s *BaseV2ParserListener) EnterAssgnStmt(ctx *AssgnStmtContext) {}
+// EnterAssignStmt is called when production assignStmt is entered.
+func (s *BaseV2ParserListener) EnterAssignStmt(ctx *AssignStmtContext) {}
 
-// ExitAssgnStmt is called when production assgnStmt is exited.
-func (s *BaseV2ParserListener) ExitAssgnStmt(ctx *AssgnStmtContext) {}
+// ExitAssignStmt is called when production assignStmt is exited.
+func (s *BaseV2ParserListener) ExitAssignStmt(ctx *AssignStmtContext) {}
 
 // EnterIfStmt is called when production ifStmt is entered.
 func (s *BaseV2ParserListener) EnterIfStmt(ctx *IfStmtContext) {}

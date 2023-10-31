@@ -104,8 +104,8 @@ type V2ParserListener interface {
 	// EnterDeclareStmt is called when entering the declareStmt production.
 	EnterDeclareStmt(c *DeclareStmtContext)
 
-	// EnterAssgnStmt is called when entering the assgnStmt production.
-	EnterAssgnStmt(c *AssgnStmtContext)
+	// EnterAssignStmt is called when entering the assignStmt production.
+	EnterAssignStmt(c *AssignStmtContext)
 
 	// EnterIfStmt is called when entering the ifStmt production.
 	EnterIfStmt(c *IfStmtContext)
@@ -221,8 +221,8 @@ type V2ParserListener interface {
 	// ExitDeclareStmt is called when exiting the declareStmt production.
 	ExitDeclareStmt(c *DeclareStmtContext)
 
-	// ExitAssgnStmt is called when exiting the assgnStmt production.
-	ExitAssgnStmt(c *AssgnStmtContext)
+	// ExitAssignStmt is called when exiting the assignStmt production.
+	ExitAssignStmt(c *AssignStmtContext)
 
 	// ExitIfStmt is called when exiting the ifStmt production.
 	ExitIfStmt(c *IfStmtContext)

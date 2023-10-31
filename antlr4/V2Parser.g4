@@ -41,7 +41,7 @@ expr
     ;
 
 exprWithLambda : lambda | expr;
-exprOrAssign : expr | assgnStmt;
+exprOrAssign : expr | assignStmt;
 
 funcCall : var LParen funcCallArgs? RParen ;
 funcCallArgs : expr (Comma expr)*;
@@ -61,7 +61,7 @@ structElementInitializer : Identifier Comma expr;
 
 stmt
     : declareStmt
-    | assgnStmt
+    | assignStmt
     | jumpStmt
     | ifStmt
     | loopStmt
@@ -73,8 +73,8 @@ stmt
 declareStmt
     : type Identifier (Comma Identifier)*;
 
-assgnStmt
-    : type? var indexes? Assign exprWithLambda
+assignStmt
+    : type? var Assign exprWithLambda
     ;
 
 ifStmt
