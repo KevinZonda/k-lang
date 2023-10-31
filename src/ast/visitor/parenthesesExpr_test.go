@@ -3,8 +3,8 @@ package visitor_test
 import (
 	"testing"
 
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/ast/node"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/parserHelper"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 )
 
 func TestParenthesesExpr(t *testing.T) {

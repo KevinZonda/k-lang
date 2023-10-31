@@ -1,7 +1,7 @@
 package visitor_test
 
 import (
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/parserHelper"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"testing"
 )
 

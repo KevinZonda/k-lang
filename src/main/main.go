@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"reflect"
 
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/eval"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/main/cli"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/parserHelper"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/cli"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"github.com/KevinZonda/GoX/pkg/iox"
 	"github.com/chzyer/readline"
 )

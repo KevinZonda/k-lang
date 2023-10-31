@@ -18,11 +18,11 @@ endif
 
 go:
 ifeq ($(OS),Windows_NT)
-	@echo '=== Klang Builder ==='
-	.\scripts\klang.bat
+	@echo '=== Source Code Builder ==='
+	.\scripts\src.bat
 else
-	echo '=== Klang Builder ==='
-	./scripts/klang.sh
+	echo '=== Source Code Builder ==='
+	./scripts/src.sh
 endif
 
 all:

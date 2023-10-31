@@ -1,10 +1,10 @@
 package eval
 
 import (
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/ast/node"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/ast/token"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/ast/tree"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/eval/binaryOperEval"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/binaryOperEval"
 )
 
 type Eval struct {

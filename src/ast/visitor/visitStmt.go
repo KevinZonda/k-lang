@@ -1,9 +1,9 @@
 package visitor
 
 import (
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/ast/node"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/ast/token"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/parser"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parser"
 )
 
 func (v *AntlrVisitor) VisitStmt(ctx *parser.StmtContext) interface{} {

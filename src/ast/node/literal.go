@@ -3,7 +3,7 @@ package node
 import (
 	"fmt"
 
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/ast/token"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
 )
 
 //region Int

@@ -1,9 +1,9 @@
 package parserHelper
 
 import (
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/ast/tree"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/ast/visitor"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/parser"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/visitor"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parser"
 	"github.com/antlr4-go/antlr/v4"
 )
 
