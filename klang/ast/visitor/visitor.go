@@ -2,14 +2,13 @@ package visitor
 
 import (
 	"fmt"
-	"reflect"
-	"strconv"
-
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/ast/token"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/ast/tree"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/parser"
 	"github.com/antlr4-go/antlr/v4"
+	"reflect"
+	"strconv"
 )
 
 type AntlrVisitor struct {
@@ -32,6 +31,8 @@ func (v *AntlrVisitor) VisitProgram(ctx *parser.ProgramContext) any {
 		case *parser.FuncBlockContext:
 			continue
 		case *parser.StmtContext:
+			stmt := v.VisitStmt(t.(*parser.StmtContext)).(node.Stmt)
+			block = append(block, stmt)
 			continue
 		case *parser.ExprContext:
 			expr := v.VisitExpr(t.(*parser.ExprContext)).(node.Expr)
@@ -107,6 +108,11 @@ func (v *AntlrVisitor) VisitBinaryExpr(ctx *parser.ExprContext) interface{} {
 
 func (v *AntlrVisitor) VisitLiteral(ctx *parser.LiteralContext) interface{} {
 	switch ctx.GetStart().GetTokenType() {
+	case parser.V2ParserIdentifier:
+		return &node.Identifier{
+			Token: token.FromAntlrToken(ctx.GetStart()),
+			Value: ctx.GetStart().GetText(),
+		}
 	case parser.V2ParserIntegerLiteral:
 		val, err := strconv.Atoi(ctx.GetStart().GetText())
 		if err != nil {
