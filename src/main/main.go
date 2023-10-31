@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"reflect"
 
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
@@ -43,7 +44,7 @@ func repl(context string) {
 	for {
 		line, err := rl.Readline()
 		if err != nil {
-			break
+			os.Exit(1)
 		}
 
 		switch line {
