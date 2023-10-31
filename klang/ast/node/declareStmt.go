@@ -1,6 +1,6 @@
 package node
 
-import "git.cs.bham.ac.uk/xxs166/uob-project/klang/ast/token"
+import "git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/ast/token"
 
 type DeclareStmt struct {
 	Type token.Token

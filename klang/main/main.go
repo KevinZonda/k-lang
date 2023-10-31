@@ -3,12 +3,13 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"git.cs.bham.ac.uk/xxs166/uob-project/klang/eval"
-	"git.cs.bham.ac.uk/xxs166/uob-project/klang/main/cli"
-	"git.cs.bham.ac.uk/xxs166/uob-project/klang/parserHelper"
+	"reflect"
+
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/eval"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/main/cli"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/klang/parserHelper"
 	"github.com/KevinZonda/GoX/pkg/iox"
 	"github.com/chzyer/readline"
-	"reflect"
 )
 
 var debug bool = false

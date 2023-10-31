@@ -1,4 +1,4 @@
-module git.cs.bham.ac.uk/xxs166/uob-project/klang
+module git.cs.bham.ac.uk/projects-2023-24/xxs166/klang
 
 go 1.21.2
 
