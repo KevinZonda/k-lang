@@ -5,9 +5,16 @@ import "github.com/alecthomas/kong"
 type ParamModel struct {
 	Repl struct{} `cmd:"" description:"Start REPL"`
 	Ast  struct {
-		Input  string `arg:"" description:"Input file"`
-		Output string `arg:"" description:"Output file"`
+		Input  string `arg:"" description:"Input file" type:"path"`
+		Output string `arg:"" description:"Output file" default:"" type:"path"`
 	} `cmd:"" description:"Parse input file to AST"`
+	Run struct {
+		Input string `arg:"" type:"path"`
+	} `cmd:""`
+	Compile struct {
+		Input  string `arg:"" type:"path"`
+		Output string `arg:"" optional:"" type:"path"`
+	} `cmd:""`
 }
 
 var param *ParamModel

@@ -4,7 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 	"reflect"
+	"strings"
+
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/compressor"
 
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/cli"
@@ -22,10 +26,40 @@ func main() {
 		ast(cli.Param().Ast.Input, cli.Param().Ast.Output)
 	case "repl":
 		repl("")
+	case "compile <input> <output>":
+		compile(cli.Param().Compile.Input, cli.Param().Compile.Output)
+	case "run <input>":
+		run(cli.Param().Run.Input)
 	default:
 		panic(cli.Ctx().Command())
 	}
+}
 
+func compile(input string, output string) {
+	if output == "" {
+		output = strings.TrimSuffix(input, filepath.Ext(input)) + ".ast"
+	}
+
+	str, e := iox.ReadAllText(input)
+	if e != nil {
+		panic(e)
+	}
+	ast := parserHelper.Ast(str)
+	e = iox.WriteAllBytes(output, compressor.Compress(ast))
+	if e != nil {
+		panic(e)
+	}
+}
+
+func run(input string) {
+	bs, e := iox.ReadAllByte(input)
+	if e != nil {
+		panic(e)
+	}
+	ast := compressor.Decompress(bs)
+	ev := eval.New(ast)
+	ev.Do()
+	fmt.Println("Evaluated ->", ev.It())
 }
 
 func repl(context string) {
