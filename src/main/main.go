@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/consoleReader"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -14,7 +15,6 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/cli"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"github.com/KevinZonda/GoX/pkg/iox"
-	"github.com/chzyer/readline"
 )
 
 var debug bool = false
@@ -64,7 +64,7 @@ func run(input string) {
 }
 
 func repl(context string) {
-	rl, err := readline.New("> ")
+	rl, err := consoleReader.New("> ")
 	var it any
 	if err != nil {
 		panic(err)
