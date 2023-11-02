@@ -7,6 +7,7 @@ import (
 )
 
 type BinaryOperExpr struct {
+	baseExpr
 	Token token.Token
 	Left  Expr
 	Oper  string
@@ -16,8 +17,6 @@ type BinaryOperExpr struct {
 func (i *BinaryOperExpr) TokenValue() string {
 	return i.Oper
 }
-
-func (i *BinaryOperExpr) expr() {}
 
 func (i *BinaryOperExpr) String() string {
 	return fmt.Sprintf("{LHS=%s\nOper=%s\nRHS=%s}\n", i.Left, i.Oper, i.Right)

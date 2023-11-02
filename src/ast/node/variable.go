@@ -6,6 +6,7 @@ import (
 )
 
 type Variable struct {
+	baseExpr
 	Token token.Token
 	Value []*BaseVariable
 }
@@ -18,11 +19,8 @@ func (v *Variable) TokenValue() string {
 	return strings.Join(n, ".")
 }
 
-func (v *Variable) expr() {}
-
-var _ Expr = (*Variable)(nil)
-
 type BaseVariable struct {
+	baseExpr
 	Token token.Token
 	Name  *Identifier
 	Index []Expr
@@ -38,7 +36,3 @@ func (v *BaseVariable) String() string {
 func (v *BaseVariable) TokenValue() string {
 	return "BaseVariable"
 }
-
-func (v *BaseVariable) expr() {}
-
-var _ Expr = (*BaseVariable)(nil)

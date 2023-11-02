@@ -14,8 +14,6 @@ func NewUnmarshal() *zson.UnmarshalContext {
 
 		node.DeclareStmt{},
 
-		node.ExprStmt{},
-
 		node.Identifier{},
 
 		node.ArrayLiteral{},
