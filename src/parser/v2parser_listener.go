@@ -113,6 +113,15 @@ type V2ParserListener interface {
 	// EnterLoopStmt is called when entering the loopStmt production.
 	EnterLoopStmt(c *LoopStmtContext)
 
+	// EnterCStyleFor is called when entering the cStyleFor production.
+	EnterCStyleFor(c *CStyleForContext)
+
+	// EnterIterFor is called when entering the iterFor production.
+	EnterIterFor(c *IterForContext)
+
+	// EnterWhileStyleFor is called when entering the whileStyleFor production.
+	EnterWhileStyleFor(c *WhileStyleForContext)
+
 	// EnterMatchStmt is called when entering the matchStmt production.
 	EnterMatchStmt(c *MatchStmtContext)
 
@@ -229,6 +238,15 @@ type V2ParserListener interface {
 
 	// ExitLoopStmt is called when exiting the loopStmt production.
 	ExitLoopStmt(c *LoopStmtContext)
+
+	// ExitCStyleFor is called when exiting the cStyleFor production.
+	ExitCStyleFor(c *CStyleForContext)
+
+	// ExitIterFor is called when exiting the iterFor production.
+	ExitIterFor(c *IterForContext)
+
+	// ExitWhileStyleFor is called when exiting the whileStyleFor production.
+	ExitWhileStyleFor(c *WhileStyleForContext)
 
 	// ExitMatchStmt is called when exiting the matchStmt production.
 	ExitMatchStmt(c *MatchStmtContext)

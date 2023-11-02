@@ -82,9 +82,14 @@ ifStmt
     ;
 
 loopStmt
-    : For LParen exprOrAssign? Semi expr? Semi expr? RParen codeBlock
-    | For LParen expr? RParen codeBlock
+    : iterFor
+    | cStyleFor
+    | whileStyleFor
     ;
+
+cStyleFor : For LParen exprOrAssign? Semi expr? Semi expr? RParen codeBlock;
+iterFor : For LParen type? Identifier Col expr RParen codeBlock;
+whileStyleFor : For (LParen expr? RParen)? codeBlock;
 
 matchStmt
     : Match LParen expr RParen LBrack matchCase* RBrack

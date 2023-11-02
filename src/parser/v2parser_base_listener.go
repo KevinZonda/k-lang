@@ -231,6 +231,24 @@ func (s *BaseV2ParserListener) EnterLoopStmt(ctx *LoopStmtContext) {}
 // ExitLoopStmt is called when production loopStmt is exited.
 func (s *BaseV2ParserListener) ExitLoopStmt(ctx *LoopStmtContext) {}
 
+// EnterCStyleFor is called when production cStyleFor is entered.
+func (s *BaseV2ParserListener) EnterCStyleFor(ctx *CStyleForContext) {}
+
+// ExitCStyleFor is called when production cStyleFor is exited.
+func (s *BaseV2ParserListener) ExitCStyleFor(ctx *CStyleForContext) {}
+
+// EnterIterFor is called when production iterFor is entered.
+func (s *BaseV2ParserListener) EnterIterFor(ctx *IterForContext) {}
+
+// ExitIterFor is called when production iterFor is exited.
+func (s *BaseV2ParserListener) ExitIterFor(ctx *IterForContext) {}
+
+// EnterWhileStyleFor is called when production whileStyleFor is entered.
+func (s *BaseV2ParserListener) EnterWhileStyleFor(ctx *WhileStyleForContext) {}
+
+// ExitWhileStyleFor is called when production whileStyleFor is exited.
+func (s *BaseV2ParserListener) ExitWhileStyleFor(ctx *WhileStyleForContext) {}
+
 // EnterMatchStmt is called when production matchStmt is entered.
 func (s *BaseV2ParserListener) EnterMatchStmt(ctx *MatchStmtContext) {}
 

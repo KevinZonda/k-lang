@@ -113,6 +113,15 @@ type V2ParserVisitor interface {
 	// Visit a parse tree produced by V2Parser#loopStmt.
 	VisitLoopStmt(ctx *LoopStmtContext) interface{}
 
+	// Visit a parse tree produced by V2Parser#cStyleFor.
+	VisitCStyleFor(ctx *CStyleForContext) interface{}
+
+	// Visit a parse tree produced by V2Parser#iterFor.
+	VisitIterFor(ctx *IterForContext) interface{}
+
+	// Visit a parse tree produced by V2Parser#whileStyleFor.
+	VisitWhileStyleFor(ctx *WhileStyleForContext) interface{}
+
 	// Visit a parse tree produced by V2Parser#matchStmt.
 	VisitMatchStmt(ctx *MatchStmtContext) interface{}
 

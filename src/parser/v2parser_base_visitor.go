@@ -148,6 +148,18 @@ func (v *BaseV2ParserVisitor) VisitLoopStmt(ctx *LoopStmtContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseV2ParserVisitor) VisitCStyleFor(ctx *CStyleForContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseV2ParserVisitor) VisitIterFor(ctx *IterForContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseV2ParserVisitor) VisitWhileStyleFor(ctx *WhileStyleForContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseV2ParserVisitor) VisitMatchStmt(ctx *MatchStmtContext) interface{} {
 	return v.VisitChildren(ctx)
 }
