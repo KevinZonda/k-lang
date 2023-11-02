@@ -1,6 +1,7 @@
 package eval
 
 import (
+	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
@@ -21,6 +22,10 @@ func (e *Eval) run() any {
 			e.EvalExpr(n.(node.Expr))
 		case node.Stmt:
 			e.EvalStmt(n.(node.Stmt))
+			_, ok := e.objTable.GetAtTop("0")
+			if ok {
+				break
+			}
 		case *node.FuncBlock:
 			fb := n.(*node.FuncBlock)
 			e.funcTable.Set(fb.Name.Value, fb)
@@ -44,6 +49,11 @@ func (e *Eval) Do() {
 			e.objTable.Set("it", e.EvalExpr(n.(node.Expr)))
 		case node.Stmt:
 			e.EvalStmt(n.(node.Stmt))
+			v, ok := e.objTable.GetAtTop("0")
+			if ok {
+				fmt.Println("Program returned: ", v)
+				// Program Exit
+			}
 		case *node.FuncBlock:
 			fb := n.(*node.FuncBlock)
 			e.funcTable.Set(fb.Name.Value, fb)

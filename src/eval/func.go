@@ -33,10 +33,14 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) any {
 		e.objTable.Set(funcArg.Name.Value, args[i])
 	}
 	fe := new((tree.Ast)(fn.Body.Nodes), e.objTable, e.funcTable)
-	ret := fe.run()
+	_ = fe.run()
+	retV, retOk := fe.objTable.GetAtTop("0")
 	e.objTable.Pop()
 	e.funcTable.Pop()
-	return ret
+	if retOk {
+		return retV
+	}
+	return nil
 }
 
 func (e *Eval) EvalMain() any {

@@ -58,3 +58,17 @@ func (t *TableStack) Set(key string, val any) {
 		t.q[len(t.q)-1][key] = val
 	}
 }
+
+func (t *TableStack) SetAtTop(key string, val any) {
+	if t.Empty() {
+		t.PushEmpty()
+	}
+	t.q[len(t.q)-1][key] = val
+}
+
+func (t *TableStack) GetAtTop(key string) (any, bool) {
+	if t.Empty() {
+		return nil, false
+	}
+	return t.q[len(t.q)-1][key], true
+}

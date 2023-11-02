@@ -10,8 +10,18 @@ func (e *Eval) EvalStmt(n node.Stmt) any {
 		return e.EvalIfStmt(n.(*node.IfStmt))
 	case *node.FuncCall:
 		return e.EvalFuncCall(n.(*node.FuncCall))
+	case *node.ReturnStmt:
+		return e.EvalReturnStmt(n.(*node.ReturnStmt))
 	}
 	panic("not implemented")
+}
+
+func (e *Eval) EvalReturnStmt(n *node.ReturnStmt) any {
+	e.objTable.SetAtTop("0", nil)
+	if n.Value != nil {
+		e.objTable.SetAtTop("0", e.EvalExpr(n.Value))
+	}
+	return nil
 }
 
 func (e *Eval) EvalIfStmt(n *node.IfStmt) any {
