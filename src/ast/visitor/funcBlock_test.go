@@ -13,4 +13,16 @@ fn add(int x, int y) float {
 }
 `)
 	jout.Println(ast)
+	ast = parserHelper.Ast(`
+fn add() float {
+    y := x + 1
+}
+`)
+	jout.Println(ast)
+	ast = parserHelper.Ast(`
+fn add() {
+    y := x + 1
+}
+`)
+	jout.Println(ast)
 }
