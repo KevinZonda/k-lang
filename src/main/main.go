@@ -112,7 +112,23 @@ func repl(context string) {
 			continue
 		}
 
-		buffer := context + "\n" + line
+		buffer := context
+
+		if strings.HasSuffix(line, "\\") {
+			for strings.HasSuffix(line, "\\") {
+				buffer += "\n" + strings.TrimSuffix(line, "\\")
+				rl.SetPrompt("| ")
+				line, err = rl.Readline()
+				if err != nil {
+					panic(err)
+				}
+			}
+			buffer += "\n" + line
+			rl.SetPrompt("> ")
+		} else {
+			buffer += "\n" + line
+		}
+
 		parser := parserHelper.FromString(buffer)
 		ast := parser.Ast()
 		if len(parser.Errors()) > 0 {

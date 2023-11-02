@@ -18,7 +18,7 @@ Greater   : '>';
 Less      : '<';
 Or        : '||' | 'or';
 And       : '&&' | 'and';
-Pow       : '^' | '**' | 'pow';
+Pow       : '^' | '**';
 Mul       : '*';
 Div       : '/';
 Add       : '+';
