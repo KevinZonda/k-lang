@@ -20,8 +20,35 @@ func (v *AntlrVisitor) VisitStmt(ctx *parser.StmtContext) interface{} {
 	if ctx.IfStmt() != nil {
 		return v.VisitIfStmt(ctx.IfStmt().(*parser.IfStmtContext))
 	}
+	if ctx.JumpStmt() != nil {
+		return v.VisitJumpStmt(ctx.JumpStmt().(*parser.JumpStmtContext))
+	}
 	panic("implement me")
 
+}
+
+func (v *AntlrVisitor) VisitJumpStmt(ctx *parser.JumpStmtContext) interface{} {
+	if ctx.Return() != nil {
+		ret := node.ReturnStmt{
+			Token: token.FromAntlrToken(ctx.GetStart()),
+		}
+		if ctx.Expr() != nil {
+			ret.Value = v.VisitExpr(ctx.Expr().(*parser.ExprContext)).(node.Expr)
+		}
+		return &ret
+	}
+	if ctx.Break() != nil {
+		return &node.BreakStmt{
+			Token: token.FromAntlrToken(ctx.GetStart()),
+		}
+	}
+
+	if ctx.Continue() != nil {
+		return &node.ContinueStmt{
+			Token: token.FromAntlrToken(ctx.GetStart()),
+		}
+	}
+	panic("Unknown jumpStmt")
 }
 
 func (v *AntlrVisitor) VisitIfStmt(ctx *parser.IfStmtContext) interface{} {
