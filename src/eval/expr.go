@@ -26,6 +26,8 @@ func (e *Eval) EvalExpr(n node.Expr) any {
 		return e.EvalIdentifier(n.(*node.Identifier))
 	case *node.ArrayLiteral:
 		return e.EvalArrayLiteral(n.(*node.ArrayLiteral))
+	case *node.FuncCall:
+		return e.EvalFuncCall(n.(*node.FuncCall))
 	default:
 		fmt.Println(reflect.TypeOf(n))
 		panic("not implemented")

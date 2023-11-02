@@ -6,6 +6,8 @@ func (e *Eval) EvalStmt(n node.Stmt) any {
 	switch n.(type) {
 	case *node.AssignStmt:
 		return e.EvalAssignStmt(n.(*node.AssignStmt))
+	case *node.FuncCall:
+		return e.EvalFuncCall(n.(*node.FuncCall))
 	}
 	panic("not implemented")
 }
