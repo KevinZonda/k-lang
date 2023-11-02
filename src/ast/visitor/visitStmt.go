@@ -8,6 +8,9 @@ import (
 )
 
 func (v *AntlrVisitor) VisitStmt(ctx *parser.StmtContext) interface{} {
+	if ctx.FuncCall() != nil {
+		return v.VisitFuncCall(ctx.FuncCall().(*parser.FuncCallContext))
+	}
 	if ctx.AssignStmt() != nil {
 		return v.VisitAssignStmt(ctx.AssignStmt().(*parser.AssignStmtContext))
 	}

@@ -26,3 +26,12 @@ fn add() {
 `)
 	jout.Println(ast)
 }
+
+func TestFuncCall(t *testing.T) {
+	ast := parserHelper.Ast(`
+add()`)
+	jout.Println(ast)
+	ast = parserHelper.Ast(`
+add(1, 2)`)
+	jout.Println(ast)
+}
