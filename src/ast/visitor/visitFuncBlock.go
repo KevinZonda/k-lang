@@ -14,17 +14,27 @@ func (v *AntlrVisitor) VisitFuncBlock(ctx *parser.FuncBlockContext) interface{} 
 }
 
 func (v *AntlrVisitor) VisitFuncSig(ctx *parser.FuncSigContext) interface{} {
-	ctx.FuncSignArgs()
-	return &node.FuncBlock{
+	fb := &node.FuncBlock{
 		// Token: token.FromAntlrToken(ctx.GetStart()),
-		Args:    v.VisitFuncSignArgs(ctx.FuncSignArgs().(*parser.FuncSignArgsContext)).([]*node.FuncArg),
-		Name:    v.visitIdentifier(ctx.Identifier()),
-		RetType: v.VisitType(ctx.Type_().(*parser.TypeContext)).(*node.Identifier),
+		Name: v.visitIdentifier(ctx.Identifier()),
 	}
+
+	args := v.VisitFuncSignArgs(typeCastToPtr[parser.FuncSignArgsContext](ctx.FuncSignArgs()))
+	ret := v.VisitType(typeCastToPtr[parser.TypeContext](ctx.Type_()))
+	if args != nil {
+		fb.Args = args.([]*node.FuncArg)
+	}
+	if ret != nil {
+		fb.RetType = ret.(*node.Identifier)
+	}
+	return fb
 }
 
 func (v *AntlrVisitor) VisitFuncSignArgs(ctx *parser.FuncSignArgsContext) interface{} {
 	// []*node.FuncArg
+	if ctx == nil {
+		return nil
+	}
 	ts := ctx.AllType_()
 	vs := ctx.AllIdentifier()
 	var rst []*node.FuncArg

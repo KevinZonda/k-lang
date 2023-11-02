@@ -7,8 +7,9 @@ import (
 )
 
 type Eval struct {
-	ast      tree.Ast
-	objTable *obj.TableStack
+	ast       tree.Ast
+	objTable  *obj.TableStack
+	funcTable *obj.StackImpl[*node.FuncBlock]
 }
 
 func (e *Eval) It() any {
@@ -23,6 +24,9 @@ func (e *Eval) Do() {
 			e.objTable.Set("it", e.EvalExpr(n.(node.Expr)))
 		case node.Stmt:
 			e.EvalStmt(n.(node.Stmt))
+		case *node.FuncBlock:
+			fb := n.(*node.FuncBlock)
+			e.funcTable.Set(fb.Name.Value, fb)
 		default:
 			panic("not implemented")
 		}
@@ -31,7 +35,8 @@ func (e *Eval) Do() {
 
 func New(ast tree.Ast) *Eval {
 	return &Eval{
-		ast:      ast,
-		objTable: &obj.TableStack{},
+		ast:       ast,
+		objTable:  &obj.TableStack{},
+		funcTable: &obj.StackImpl[*node.FuncBlock]{},
 	}
 }
