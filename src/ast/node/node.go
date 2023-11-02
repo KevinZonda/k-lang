@@ -13,3 +13,8 @@ type Stmt interface {
 	Node
 	stmt() // flag to show is stmt
 }
+
+type Block interface {
+	Node
+	block() // flag to show is block
+}

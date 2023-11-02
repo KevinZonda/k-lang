@@ -24,6 +24,8 @@ func (v *AntlrVisitor) VisitProgram(ctx *parser.ProgramContext) any {
 		case *parser.StructBlockContext:
 			continue
 		case *parser.FuncBlockContext:
+			fx := v.VisitFuncBlock(t.(*parser.FuncBlockContext)).(node.Block)
+			block = append(block, fx)
 			continue
 		case *parser.StmtContext:
 			stmt := v.VisitStmt(t.(*parser.StmtContext)).(node.Stmt)
@@ -40,3 +42,4 @@ func (v *AntlrVisitor) VisitProgram(ctx *parser.ProgramContext) any {
 	}
 	return tree.Ast(block)
 }
+

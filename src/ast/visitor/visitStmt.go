@@ -4,6 +4,7 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parser"
+	"github.com/antlr4-go/antlr/v4"
 )
 
 func (v *AntlrVisitor) VisitStmt(ctx *parser.StmtContext) interface{} {
@@ -24,18 +25,19 @@ func (v *AntlrVisitor) VisitAssignStmt(ctx *parser.AssignStmtContext) interface{
 	return &n
 }
 
+func (v *AntlrVisitor) visitIdentifier(n antlr.TerminalNode) *node.Identifier {
+	return &node.Identifier{
+		Token: token.FromAntlrToken(n.GetSymbol()),
+		Value: n.GetText(),
+	}
+}
+
 func (v *AntlrVisitor) VisitType(ctx *parser.TypeContext) any {
 	// fmt.Println("VisitType")
 	if ctx == nil || ctx.Identifier() == nil {
 		return nil
 	}
-	n := ctx.Identifier()
-	id := node.Identifier{
-		Token: token.FromAntlrToken(n.GetSymbol()),
-		Value: n.GetText(),
-	}
-	// fmt.Println(id)
-	return &id
+	return v.visitIdentifier(ctx.Identifier())
 }
 
 func (v *AntlrVisitor) VisitVar(ctx *parser.VarContext) any {
