@@ -51,6 +51,9 @@ func (e *Eval) Do() {
 			panic("not implemented")
 		}
 	}
+
+	e.EvalMain()
+
 }
 
 func New(ast tree.Ast) *Eval {

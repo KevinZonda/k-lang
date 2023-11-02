@@ -39,6 +39,20 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) any {
 	return ret
 }
 
+func (e *Eval) EvalMain() any {
+	fn, ok := e.funcTable.Get("main")
+	if !ok {
+		return nil
+	}
+	e.objTable.PushEmpty()
+	e.funcTable.PushEmpty()
+	fe := new((tree.Ast)(fn.Body.Nodes), e.objTable, e.funcTable)
+	ret := fe.run()
+	e.objTable.Pop()
+	e.funcTable.Pop()
+	return ret
+}
+
 func (e *Eval) EvalCodeBlock(fc *node.CodeBlock) any {
 	e.objTable.PushEmpty()
 	e.funcTable.PushEmpty()
