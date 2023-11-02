@@ -6,10 +6,27 @@ func (e *Eval) EvalStmt(n node.Stmt) any {
 	switch n.(type) {
 	case *node.AssignStmt:
 		return e.EvalAssignStmt(n.(*node.AssignStmt))
+	case *node.IfStmt:
+		return e.EvalIfStmt(n.(*node.IfStmt))
 	case *node.FuncCall:
 		return e.EvalFuncCall(n.(*node.FuncCall))
 	}
 	panic("not implemented")
+}
+
+func (e *Eval) EvalIfStmt(n *node.IfStmt) any {
+	con := e.EvalExpr(n.Condition)
+	switch con.(type) {
+	case bool:
+		if con.(bool) {
+			return e.EvalCodeBlock(n.IfTrue)
+		}
+		if n.IfFalse != nil {
+			return e.EvalCodeBlock(n.IfFalse)
+		}
+		return nil
+	}
+	panic("NOT BOOL")
 }
 
 func (e *Eval) EvalAssignStmt(n *node.AssignStmt) any {

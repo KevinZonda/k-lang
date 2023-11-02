@@ -17,8 +17,25 @@ func (v *AntlrVisitor) VisitStmt(ctx *parser.StmtContext) interface{} {
 	if ctx.CodeBlock() != nil {
 		return v.VisitCodeBlock(ctx.CodeBlock().(*parser.CodeBlockContext))
 	}
+	if ctx.IfStmt() != nil {
+		return v.VisitIfStmt(ctx.IfStmt().(*parser.IfStmtContext))
+	}
 	panic("implement me")
 
+}
+
+func (v *AntlrVisitor) VisitIfStmt(ctx *parser.IfStmtContext) interface{} {
+	cdx := ctx.AllCodeBlock()
+	i := node.IfStmt{
+		Token:     token.FromAntlrToken(ctx.GetStart()),
+		IfTrue:    v.VisitCodeBlock(cdx[0].(*parser.CodeBlockContext)).(*node.CodeBlock),
+		Condition: v.VisitExpr(ctx.Expr().(*parser.ExprContext)).(node.Expr),
+	}
+	if len(cdx) == 2 {
+		i.IfFalse = v.VisitCodeBlock(cdx[1].(*parser.CodeBlockContext)).(*node.CodeBlock)
+	}
+
+	return &i
 }
 
 func (v *AntlrVisitor) VisitAssignStmt(ctx *parser.AssignStmtContext) interface{} {
