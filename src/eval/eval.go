@@ -12,6 +12,24 @@ type Eval struct {
 	funcTable *obj.StackImpl[*node.FuncBlock]
 }
 
+func (e *Eval) run() any {
+	for _, n := range e.ast {
+		switch n.(type) {
+		case node.Expr:
+			e.EvalExpr(n.(node.Expr))
+		case node.Stmt:
+			e.EvalStmt(n.(node.Stmt))
+		case *node.FuncBlock:
+			fb := n.(*node.FuncBlock)
+			e.funcTable.Set(fb.Name.Value, fb)
+		default:
+			panic("not implemented")
+		}
+	}
+	val, _ := e.objTable.Get("0") // 0 is reserved place for return value
+	return val
+}
+
 func (e *Eval) It() any {
 	v, _ := e.objTable.Get("it")
 	return v
@@ -38,5 +56,13 @@ func New(ast tree.Ast) *Eval {
 		ast:       ast,
 		objTable:  &obj.TableStack{},
 		funcTable: &obj.StackImpl[*node.FuncBlock]{},
+	}
+}
+
+func new(ast tree.Ast, objTable *obj.TableStack, funcTable *obj.StackImpl[*node.FuncBlock]) *Eval {
+	return &Eval{
+		ast:       ast,
+		objTable:  objTable,
+		funcTable: funcTable,
 	}
 }

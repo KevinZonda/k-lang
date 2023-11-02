@@ -2,6 +2,7 @@ package eval
 
 import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/builtin"
 )
 
@@ -21,5 +22,19 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) any {
 		args = append(args, e.EvalExpr(expr))
 	}
 
-	return e.EvalBuiltInCall(fc, args)
+	funcName := fc.Caller.Value[0].Name.Value
+	fn, ok := e.funcTable.Get(funcName)
+	if !ok {
+		return e.EvalBuiltInCall(fc, args)
+	}
+	e.objTable.PushEmpty()
+	e.funcTable.PushEmpty()
+	for i, funcArg := range fn.Args {
+		e.objTable.Set(funcArg.Name.Value, args[i])
+	}
+	fe := new((tree.Ast)(fn.Body.Nodes), e.objTable, e.funcTable)
+	ret := fe.run()
+	e.objTable.Pop()
+	e.funcTable.Pop()
+	return ret
 }

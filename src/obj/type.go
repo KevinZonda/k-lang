@@ -8,6 +8,10 @@ func (t *StackImpl[T]) Push(n map[string]T) {
 	t.q = append(t.q, n)
 }
 
+func (t *StackImpl[T]) PushEmpty() {
+	t.q = append(t.q, make(map[string]T))
+}
+
 func (t *StackImpl[T]) Pop() map[string]T {
 	n := t.q[len(t.q)-1]
 	t.q = t.q[:len(t.q)-1]

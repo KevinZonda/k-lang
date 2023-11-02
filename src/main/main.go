@@ -18,6 +18,7 @@ import (
 )
 
 var debug bool = false
+var printIt bool = false
 
 func main() {
 	cli.ParseParam()
@@ -98,6 +99,14 @@ func repl(context string) {
 			debug = false
 			fmt.Println("Debug: OFF")
 			continue
+		case "-it":
+			printIt = false
+			fmt.Println("Print it: OFF")
+			continue
+		case "+it":
+			printIt = true
+			fmt.Println("Print it: ON")
+			continue
 		case ":type", ":t":
 			fmt.Println("Type: ", reflect.TypeOf(it))
 			continue
@@ -120,7 +129,9 @@ func repl(context string) {
 		}
 		e := eval.New(ast)
 		e.Do()
-		fmt.Println("Evaluated ->", e.It())
+		if printIt {
+			fmt.Println("Evaluated ->", e.It())
+		}
 		it = e.It()
 		context = buffer
 	}

@@ -12,6 +12,10 @@ func (t *TableStack) Push(n Table) {
 	t.q = append(t.q, n)
 }
 
+func (t *TableStack) PushEmpty() {
+	t.q = append(t.q, make(Table))
+}
+
 func (t *TableStack) Pop() Table {
 	n := t.q[len(t.q)-1]
 	t.q = t.q[:len(t.q)-1]
