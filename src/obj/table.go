@@ -49,6 +49,12 @@ func (t *TableStack) Set(key string, val any) {
 		v[key] = val
 		t.q = append(t.q, v)
 	} else {
+		for i := len(t.q) - 1; i >= 0; i-- {
+			if _, ok := t.q[i][key]; ok {
+				t.q[i][key] = val
+				return
+			}
+		}
 		t.q[len(t.q)-1][key] = val
 	}
 }
