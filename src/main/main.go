@@ -3,11 +3,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/consoleReader"
 	"os"
 	"path/filepath"
 	"reflect"
 	"strings"
+
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/consoleReader"
 
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/compressor"
 

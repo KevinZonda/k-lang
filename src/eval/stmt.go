@@ -1,6 +1,9 @@
 package eval
 
-import "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
+import (
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
+)
 
 func (e *Eval) EvalStmt(n node.Stmt) any {
 	switch n.(type) {
@@ -12,8 +15,40 @@ func (e *Eval) EvalStmt(n node.Stmt) any {
 		return e.EvalFuncCall(n.(*node.FuncCall))
 	case *node.ReturnStmt:
 		return e.EvalReturnStmt(n.(*node.ReturnStmt))
+	case *node.WhileStyleFor:
+		return e.EvalWhileForStmt(n.(*node.WhileStyleFor))
+	case *node.BreakStmt:
+		return nil
 	}
 	panic("not implemented")
+}
+
+func (e *Eval) EvalWhileForStmt(n *node.WhileStyleFor) any {
+	var r any
+	for {
+		if n.ConditionExpr != nil {
+			rst := e.EvalExpr(n.ConditionExpr).(bool)
+			if !rst {
+				return nil
+			}
+		}
+		r = e.EvalLoopCodeBlock(n.Body)
+	}
+	return r
+}
+
+func (e *Eval) EvalLoopCodeBlock(fc *node.CodeBlock) (val any) {
+	e.objTable.PushEmpty()
+	e.funcTable.PushEmpty()
+	fe := new((tree.Ast)(fc.Nodes), e.objTable, e.funcTable)
+	_ = fe.run()
+	val, ok := fe.objTable.GetAtTop("0")
+	if !ok {
+		val = nil
+	}
+	e.objTable.Pop()
+	e.funcTable.Pop()
+	return val
 }
 
 func (e *Eval) EvalReturnStmt(n *node.ReturnStmt) any {

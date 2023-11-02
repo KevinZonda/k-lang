@@ -4,11 +4,12 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 )
 
 func New(prompt string) (IConsoleReader, error) {
 	return NewSimpleConsoleReader(prompt), nil
-	// return readline.New(prompt)
+	//return readline.New(prompt)
 }
 
 type IConsoleReader interface {
@@ -39,5 +40,10 @@ func (s *SimpleConsoleReader) SetPrompt(prompt string) {
 
 func (s *SimpleConsoleReader) Readline() (string, error) {
 	fmt.Print(s.prompt)
-	return s.scanner.ReadString('\n')
+	v, e := s.scanner.ReadString('\n')
+	if e != nil {
+		return v, e
+	}
+	v = strings.TrimRight(v, "\r\n"+string(rune(13)))
+	return v, e
 }
