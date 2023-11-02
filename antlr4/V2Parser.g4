@@ -87,7 +87,7 @@ loopStmt
     | whileStyleFor
     ;
 
-cStyleFor : For LParen exprOrAssign? Semi expr? Semi expr? RParen codeBlock;
+cStyleFor : For LParen onInit=exprOrAssign? Semi onCondition=expr? Semi onEnd=expr? RParen codeBlock;
 iterFor : For LParen type? Identifier Col expr RParen codeBlock;
 whileStyleFor : For (LParen expr? RParen)? codeBlock;
 

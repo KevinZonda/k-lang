@@ -7426,6 +7426,24 @@ type ICStyleForContext interface {
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
 
+	// GetOnInit returns the onInit rule contexts.
+	GetOnInit() IExprOrAssignContext
+
+	// GetOnCondition returns the onCondition rule contexts.
+	GetOnCondition() IExprContext
+
+	// GetOnEnd returns the onEnd rule contexts.
+	GetOnEnd() IExprContext
+
+	// SetOnInit sets the onInit rule contexts.
+	SetOnInit(IExprOrAssignContext)
+
+	// SetOnCondition sets the onCondition rule contexts.
+	SetOnCondition(IExprContext)
+
+	// SetOnEnd sets the onEnd rule contexts.
+	SetOnEnd(IExprContext)
+
 	// Getter signatures
 	For() antlr.TerminalNode
 	LParen() antlr.TerminalNode
@@ -7443,7 +7461,10 @@ type ICStyleForContext interface {
 
 type CStyleForContext struct {
 	antlr.BaseParserRuleContext
-	parser antlr.Parser
+	parser      antlr.Parser
+	onInit      IExprOrAssignContext
+	onCondition IExprContext
+	onEnd       IExprContext
 }
 
 func NewEmptyCStyleForContext() *CStyleForContext {
@@ -7472,6 +7493,18 @@ func NewCStyleForContext(parser antlr.Parser, parent antlr.ParserRuleContext, in
 }
 
 func (s *CStyleForContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *CStyleForContext) GetOnInit() IExprOrAssignContext { return s.onInit }
+
+func (s *CStyleForContext) GetOnCondition() IExprContext { return s.onCondition }
+
+func (s *CStyleForContext) GetOnEnd() IExprContext { return s.onEnd }
+
+func (s *CStyleForContext) SetOnInit(v IExprOrAssignContext) { s.onInit = v }
+
+func (s *CStyleForContext) SetOnCondition(v IExprContext) { s.onCondition = v }
+
+func (s *CStyleForContext) SetOnEnd(v IExprContext) { s.onEnd = v }
 
 func (s *CStyleForContext) For() antlr.TerminalNode {
 	return s.GetToken(V2ParserFor, 0)
@@ -7628,7 +7661,10 @@ func (p *V2Parser) CStyleFor() (localctx ICStyleForContext) {
 	if (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&210007129849896) != 0 {
 		{
 			p.SetState(389)
-			p.ExprOrAssign()
+
+			var _x = p.ExprOrAssign()
+
+			localctx.(*CStyleForContext).onInit = _x
 		}
 
 	}
@@ -7650,7 +7686,10 @@ func (p *V2Parser) CStyleFor() (localctx ICStyleForContext) {
 	if (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&210007129849896) != 0 {
 		{
 			p.SetState(393)
-			p.expr(0)
+
+			var _x = p.expr(0)
+
+			localctx.(*CStyleForContext).onCondition = _x
 		}
 
 	}
@@ -7672,7 +7711,10 @@ func (p *V2Parser) CStyleFor() (localctx ICStyleForContext) {
 	if (int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&210007129849896) != 0 {
 		{
 			p.SetState(397)
-			p.expr(0)
+
+			var _x = p.expr(0)
+
+			localctx.(*CStyleForContext).onEnd = _x
 		}
 
 	}

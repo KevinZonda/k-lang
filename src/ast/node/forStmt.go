@@ -8,8 +8,33 @@ type CStyleFor struct {
 	InitialExpr   Expr
 	ConditionExpr Expr
 	AfterIterExpr Expr
+	Body          *CodeBlock
 }
 
 func (c *CStyleFor) TokenValue() string {
+	return c.Token.Value
+}
+
+type WhileStyleFor struct {
+	baseStmt
+	Token         token.Token
+	ConditionExpr Expr
+	Body          *CodeBlock
+}
+
+func (c *WhileStyleFor) TokenValue() string {
+	return c.Token.Value
+}
+
+type IterStyleFor struct {
+	baseStmt
+	Token    token.Token
+	Type     *Identifier
+	Variable *Identifier
+	Iterator Expr
+	Body     *CodeBlock
+}
+
+func (c *IterStyleFor) TokenValue() string {
 	return c.Token.Value
 }
