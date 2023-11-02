@@ -15,6 +15,8 @@ type Eval struct {
 func (e *Eval) run() any {
 	for _, n := range e.ast {
 		switch n.(type) {
+		case *node.CodeBlock:
+			e.EvalCodeBlock(n.(*node.CodeBlock))
 		case node.Expr:
 			e.EvalExpr(n.(node.Expr))
 		case node.Stmt:

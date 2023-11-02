@@ -14,6 +14,9 @@ func (v *AntlrVisitor) VisitStmt(ctx *parser.StmtContext) interface{} {
 	if ctx.AssignStmt() != nil {
 		return v.VisitAssignStmt(ctx.AssignStmt().(*parser.AssignStmtContext))
 	}
+	if ctx.CodeBlock() != nil {
+		return v.VisitCodeBlock(ctx.CodeBlock().(*parser.CodeBlockContext))
+	}
 	panic("implement me")
 
 }

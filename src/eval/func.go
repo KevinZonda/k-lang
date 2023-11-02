@@ -38,3 +38,13 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) any {
 	e.funcTable.Pop()
 	return ret
 }
+
+func (e *Eval) EvalCodeBlock(fc *node.CodeBlock) any {
+	e.objTable.PushEmpty()
+	e.funcTable.PushEmpty()
+	fe := new((tree.Ast)(fc.Nodes), e.objTable, e.funcTable)
+	ret := fe.run()
+	e.objTable.Pop()
+	e.funcTable.Pop()
+	return ret
+}
