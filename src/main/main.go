@@ -115,7 +115,7 @@ func repl(context *eval.Eval) {
 			continue
 		}
 
-		buffer, err := consoleReader.MultipleLine(rl, "> ", "| ")
+		buffer, err := consoleReader.MultipleLine(rl, line, "> ", "| ")
 
 		parser := parserHelper.FromString(buffer)
 
