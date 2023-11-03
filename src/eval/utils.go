@@ -34,22 +34,19 @@ func (e *Eval) frameEnd() {
 	e.funcTable.Pop()
 }
 
-func (e *Eval) frameEndWithRetBreakContinue() any {
-	retV, hasVal := e.objTable.GetAtTop(reserved.Return)
-	isBreak := e.objTable.HasKeyAtTop(reserved.Break)
-	ifContinue := e.objTable.HasKeyAtTop(reserved.Continue)
+func (e *Eval) frameEndWith(keys ...string) {
+	m := e.objTable.Pop()
+	e.funcTable.Pop()
+	for _, key := range keys {
+		if v, ok := m[key]; ok {
+			e.objTable.SetAtTop(key, v)
+		}
+	}
+}
 
-	e.frameEnd()
-	
-	if hasVal {
-		e.objTable.SetAtTop(reserved.Return, retV)
-	}
-	if isBreak {
-		e.objTable.SetAtTop(reserved.Break, nil)
-	}
-	if ifContinue {
-		e.objTable.SetAtTop(reserved.Continue, nil)
-	}
+func (e *Eval) frameEndWithAll() any {
+	e.frameEndWith(reserved.Return, reserved.Break, reserved.Continue)
+	retV, _ := e.objTable.Peek()[reserved.Return]
 	return retV
 }
 
