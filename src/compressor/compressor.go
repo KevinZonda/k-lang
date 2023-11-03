@@ -2,10 +2,11 @@ package compressor
 
 import (
 	"bytes"
+	"io"
+
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
 	"github.com/andybalholm/brotli"
 	"github.com/brimdata/zed/zson"
-	"io"
 )
 
 func serialise(a tree.Ast) string {

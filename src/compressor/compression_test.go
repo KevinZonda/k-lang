@@ -9,7 +9,14 @@ import (
 )
 
 func TestCompressAst(t *testing.T) {
-	v := parserHelper.Ast("x := 11")
+	v := parserHelper.Ast(`
+fn foo(int x) {
+  return x + x
+}
+
+a := foo(11)
+
+`)
 	r := compressor.Compress(v)
 	fmt.Println(r)
 	fmt.Println("Size: ", len(r))

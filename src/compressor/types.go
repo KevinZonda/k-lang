@@ -14,7 +14,19 @@ func NewUnmarshal() *zson.UnmarshalContext {
 
 		node.DeclareStmt{},
 
+		node.CStyleFor{},
+		node.IterStyleFor{},
+		node.WhileStyleFor{},
+
+		node.CodeBlock{},
+		node.FuncArg{},
+		node.FuncBlock{},
+
+		node.FuncCall{},
+
 		node.Identifier{},
+
+		node.IfStmt{},
 
 		node.ArrayLiteral{},
 		node.BoolLiteral{},
@@ -24,9 +36,9 @@ func NewUnmarshal() *zson.UnmarshalContext {
 		node.MapPairLiteral{},
 		node.StringLiteral{},
 
+		node.ReturnStmt{},
+		
 		node.Struct{},
-		node.UnaryOperExpr{},
-
 		node.UnaryOperExpr{},
 	)
 	return um
