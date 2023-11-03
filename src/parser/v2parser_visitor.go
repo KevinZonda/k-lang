@@ -32,6 +32,9 @@ type V2ParserVisitor interface {
 	// Visit a parse tree produced by V2Parser#funcSignArgs.
 	VisitFuncSignArgs(ctx *FuncSignArgsContext) interface{}
 
+	// Visit a parse tree produced by V2Parser#funcSignArgItem.
+	VisitFuncSignArgItem(ctx *FuncSignArgItemContext) interface{}
+
 	// Visit a parse tree produced by V2Parser#type.
 	VisitType(ctx *TypeContext) interface{}
 

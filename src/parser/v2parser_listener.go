@@ -32,6 +32,9 @@ type V2ParserListener interface {
 	// EnterFuncSignArgs is called when entering the funcSignArgs production.
 	EnterFuncSignArgs(c *FuncSignArgsContext)
 
+	// EnterFuncSignArgItem is called when entering the funcSignArgItem production.
+	EnterFuncSignArgItem(c *FuncSignArgItemContext)
+
 	// EnterType is called when entering the type production.
 	EnterType(c *TypeContext)
 
@@ -157,6 +160,9 @@ type V2ParserListener interface {
 
 	// ExitFuncSignArgs is called when exiting the funcSignArgs production.
 	ExitFuncSignArgs(c *FuncSignArgsContext)
+
+	// ExitFuncSignArgItem is called when exiting the funcSignArgItem production.
+	ExitFuncSignArgItem(c *FuncSignArgItemContext)
 
 	// ExitType is called when exiting the type production.
 	ExitType(c *TypeContext)

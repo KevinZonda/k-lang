@@ -35,16 +35,22 @@ func (v *AntlrVisitor) VisitFuncSignArgs(ctx *parser.FuncSignArgsContext) interf
 	if ctx == nil {
 		return nil
 	}
-	ts := ctx.AllType_()
-	vs := ctx.AllIdentifier()
+	ts := ctx.AllFuncSignArgItem()
 	var rst []*node.FuncArg
-	for i, t := range ts {
-		rst = append(rst, &node.FuncArg{
-			Type: v.VisitType(t.(*parser.TypeContext)).(*node.Identifier),
-			Name: v.visitIdentifier(vs[i]),
-		})
+	for _, t := range ts {
+		rst = append(rst, v.VisitFuncSignArgItem(t.(*parser.FuncSignArgItemContext)).(*node.FuncArg))
 	}
 	return rst
+}
+
+func (v *AntlrVisitor) VisitFuncSignArgItem(ctx *parser.FuncSignArgItemContext) any {
+	a := node.FuncArg{
+		Name: v.visitIdentifier(ctx.Identifier()),
+	}
+	if ctx.Type_() != nil {
+		a.Type = v.VisitType(ctx.Type_().(*parser.TypeContext)).(*node.Identifier)
+	}
+	return &a
 }
 
 func (v *AntlrVisitor) VisitCodeBlock(ctx *parser.CodeBlockContext) interface{} {

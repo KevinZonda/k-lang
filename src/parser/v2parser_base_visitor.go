@@ -40,6 +40,10 @@ func (v *BaseV2ParserVisitor) VisitFuncSignArgs(ctx *FuncSignArgsContext) interf
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseV2ParserVisitor) VisitFuncSignArgItem(ctx *FuncSignArgItemContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseV2ParserVisitor) VisitType(ctx *TypeContext) interface{} {
 	return v.VisitChildren(ctx)
 }

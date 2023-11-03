@@ -69,6 +69,12 @@ func (s *BaseV2ParserListener) EnterFuncSignArgs(ctx *FuncSignArgsContext) {}
 // ExitFuncSignArgs is called when production funcSignArgs is exited.
 func (s *BaseV2ParserListener) ExitFuncSignArgs(ctx *FuncSignArgsContext) {}
 
+// EnterFuncSignArgItem is called when production funcSignArgItem is entered.
+func (s *BaseV2ParserListener) EnterFuncSignArgItem(ctx *FuncSignArgItemContext) {}
+
+// ExitFuncSignArgItem is called when production funcSignArgItem is exited.
+func (s *BaseV2ParserListener) ExitFuncSignArgItem(ctx *FuncSignArgItemContext) {}
+
 // EnterType is called when production type is entered.
 func (s *BaseV2ParserListener) EnterType(ctx *TypeContext) {}
 
