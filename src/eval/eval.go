@@ -63,22 +63,4 @@ func (e *Eval) Do() {
 	}
 
 	e.EvalMain()
-
-}
-
-func New(ast tree.Ast) *Eval {
-	return &Eval{
-		ast:       ast,
-		objTable:  &obj.TableStack{},
-		funcTable: &obj.StackImpl[*node.FuncBlock]{},
-	}
-}
-
-func (e *Eval) new(ast tree.Ast) *Eval {
-	return &Eval{
-		ast:       ast,
-		objTable:  e.objTable,
-		funcTable: e.funcTable,
-		loopLvl:   e.loopLvl,
-	}
 }
