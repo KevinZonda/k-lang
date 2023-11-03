@@ -15,6 +15,16 @@ type Eval struct {
 	loopLvl   int
 }
 
+func (e *Eval) LoadContext(o *Eval) {
+	if o == nil {
+		e.objTable = &obj.TableStack{}
+		e.funcTable = &obj.StackImpl[*node.FuncBlock]{}
+		return
+	}
+	e.objTable = o.objTable
+	e.funcTable = o.funcTable
+}
+
 func (e *Eval) run() any {
 	for _, n := range e.ast {
 		switch n.(type) {

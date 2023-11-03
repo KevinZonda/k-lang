@@ -27,7 +27,7 @@ func main() {
 	case "ast <input> <output>":
 		ast(cli.Param().Ast.Input, cli.Param().Ast.Output)
 	case "repl":
-		repl("")
+		repl(nil)
 	case "compile <input> <output>":
 		compile(cli.Param().Compile.Input, cli.Param().Compile.Output)
 	case "run <input>":
@@ -64,9 +64,10 @@ func run(input string) {
 	fmt.Println("Evaluated ->", ev.It())
 }
 
-func repl(context string) {
+func repl(context *eval.Eval) {
 	rl, err := consoleReader.New("> ")
 	var it any
+	var history []string
 	if err != nil {
 		panic(err)
 	}
@@ -86,11 +87,13 @@ func repl(context string) {
 		switch line {
 		case ":exit", ":quit", ":q", ":e":
 			return
-		case ":context", ":ctx":
-			fmt.Println(context)
+		case ":history":
+			for i, h := range history {
+				fmt.Println("[", i, "] ->", h)
+			}
 			continue
 		case ":clear", ":c":
-			context = ""
+			context = nil
 			continue
 		case "+debug", "+d":
 			debug = true
@@ -113,31 +116,34 @@ func repl(context string) {
 			continue
 		}
 
-		buffer := context
+		buffer := ""
 
 		if strings.HasSuffix(line, "\\") {
 			for strings.HasSuffix(line, "\\") {
-				buffer += "\n" + strings.TrimSuffix(line, "\\")
+				buffer += strings.TrimSuffix(line, "\\") + "\n"
 				rl.SetPrompt("| ")
 				line, err = rl.Readline()
 				if err != nil {
 					panic(err)
 				}
 			}
-			buffer += "\n" + line
+			buffer += line
 			rl.SetPrompt("> ")
 		} else {
-			buffer += "\n" + line
+			buffer = line
 		}
 
 		parser := parserHelper.FromString(buffer)
-		ast := parser.Ast()
+
 		if len(parser.Errors()) > 0 {
 			for _, e := range parser.Errors() {
 				fmt.Println("Error:", e.Error())
 			}
 			continue
 		}
+
+		history = append(history, buffer)
+		ast := parser.Ast()
 		if debug {
 			for idx, node := range ast {
 				bs, _ := json.MarshalIndent(node, "", "    ")
@@ -145,12 +151,13 @@ func repl(context string) {
 			}
 		}
 		e := eval.New(ast)
+		e.LoadContext(context)
 		e.Do()
 		if printIt {
 			fmt.Println("Evaluated ->", e.It())
 		}
 		it = e.It()
-		context = buffer
+		context = e
 	}
 
 }
