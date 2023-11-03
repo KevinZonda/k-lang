@@ -6,10 +6,11 @@ import (
 )
 
 type Variable struct {
-	baseExpr
 	Token token.Token
 	Value []*BaseVariable
 }
+
+func (v *Variable) expr() {}
 
 func (v *Variable) TokenValue() string {
 	var n []string
@@ -20,11 +21,12 @@ func (v *Variable) TokenValue() string {
 }
 
 type BaseVariable struct {
-	baseExpr
 	Token token.Token
 	Name  *Identifier
 	Index []Expr
 }
+
+func (b *BaseVariable) expr() {}
 
 func (v *BaseVariable) String() string {
 	if len(v.Index) > 0 {

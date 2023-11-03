@@ -9,10 +9,11 @@ import (
 //region Int
 
 type IntLiteral struct {
-	baseExpr
 	Token token.Token
 	Value int
 }
+
+func (i *IntLiteral) expr() {}
 
 func (i *IntLiteral) TokenValue() string {
 	return fmt.Sprint(i.Value)
@@ -27,10 +28,11 @@ func (i *IntLiteral) String() string {
 //region Float
 
 type FloatLiteral struct {
-	baseExpr
 	Token token.Token
 	Value float64
 }
+
+func (f *FloatLiteral) expr() {}
 
 func (f *FloatLiteral) TokenValue() string {
 	return f.Token.Value
@@ -45,10 +47,11 @@ func (f *FloatLiteral) String() string {
 //region String
 
 type StringLiteral struct {
-	baseExpr
 	Token token.Token
 	Value string
 }
+
+func (s *StringLiteral) expr() {}
 
 func (s *StringLiteral) TokenValue() string {
 	return s.Value
@@ -63,10 +66,11 @@ func (s *StringLiteral) String() string {
 //region Bool
 
 type BoolLiteral struct {
-	baseExpr
 	Token token.Token
 	Value bool
 }
+
+func (b *BoolLiteral) expr() {}
 
 func (b *BoolLiteral) TokenValue() string {
 	return fmt.Sprint(b.Value)
@@ -81,10 +85,11 @@ func (b *BoolLiteral) String() string {
 //region ArrayLiteral
 
 type ArrayLiteral struct {
-	baseExpr
 	Token token.Token
 	Value []Expr
 }
+
+func (a *ArrayLiteral) expr() {}
 
 func (a *ArrayLiteral) TokenValue() string {
 	return a.Token.Value
@@ -93,21 +98,23 @@ func (a *ArrayLiteral) TokenValue() string {
 //endregion
 
 type MapPairLiteral struct {
-	baseExpr
 	Key   Expr
 	Value Expr
 	Token token.Token
 }
+
+func (m *MapPairLiteral) expr() {}
 
 func (m *MapPairLiteral) TokenValue() string {
 	return m.Token.Value
 }
 
 type MapLiteral struct {
-	baseExpr
 	Token token.Token
 	Value []*MapPairLiteral
 }
+
+func (m *MapLiteral) expr() {}
 
 func (m *MapLiteral) TokenValue() string {
 	return m.Token.Value

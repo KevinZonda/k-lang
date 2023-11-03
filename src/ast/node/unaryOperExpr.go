@@ -7,7 +7,6 @@ import (
 )
 
 type UnaryOperExpr struct {
-	baseExpr
 	Token token.Token
 	Oper  string
 	Expr  Expr
@@ -20,3 +19,5 @@ func (u *UnaryOperExpr) TokenValue() string {
 func (u *UnaryOperExpr) String() string {
 	return "(" + u.Oper + fmt.Sprint(u.Expr) + ")"
 }
+
+func (u *UnaryOperExpr) expr() {}

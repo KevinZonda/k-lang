@@ -3,7 +3,6 @@ package node
 import "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
 
 type CStyleFor struct {
-	baseStmt
 	Token         token.Token
 	InitialExpr   Expr
 	ConditionExpr Expr
@@ -15,8 +14,9 @@ func (c *CStyleFor) TokenValue() string {
 	return c.Token.Value
 }
 
+func (c *CStyleFor) stmt() {}
+
 type WhileStyleFor struct {
-	baseStmt
 	Token         token.Token
 	ConditionExpr Expr
 	Body          *CodeBlock
@@ -26,8 +26,9 @@ func (c *WhileStyleFor) TokenValue() string {
 	return c.Token.Value
 }
 
+func (a *WhileStyleFor) stmt() {}
+
 type IterStyleFor struct {
-	baseStmt
 	Token    token.Token
 	Type     *Identifier
 	Variable *Identifier
@@ -38,3 +39,4 @@ type IterStyleFor struct {
 func (c *IterStyleFor) TokenValue() string {
 	return c.Token.Value
 }
+func (a *IterStyleFor) stmt() {}

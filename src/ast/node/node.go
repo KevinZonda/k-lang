@@ -18,11 +18,3 @@ type Block interface {
 	Node
 	block() // flag to show is block
 }
-
-type baseStmt struct{}
-
-func (b baseStmt) stmt() {}
-
-type baseExpr struct{}
-
-func (e baseExpr) expr() {}

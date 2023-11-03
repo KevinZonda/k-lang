@@ -7,12 +7,13 @@ import (
 )
 
 type BinaryOperExpr struct {
-	baseExpr
 	Token token.Token
 	Left  Expr
 	Oper  string
 	Right Expr
 }
+
+func (a *BinaryOperExpr) expr() {}
 
 func (i *BinaryOperExpr) TokenValue() string {
 	return i.Oper
