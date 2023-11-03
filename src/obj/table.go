@@ -26,6 +26,21 @@ func (t *TableStack) Peek() Table {
 	return t.q[len(t.q)-1]
 }
 
+func (t *TableStack) HasKeyAtTop(key string) bool {
+	if t.Empty() {
+		return false
+	}
+	_, ok := t.q[len(t.q)-1][key]
+	return ok
+}
+
+func (t *TableStack) RemoveKeyAtTop(key string) {
+	if t.Empty() {
+		return
+	}
+	delete(t.q[len(t.q)-1], key)
+}
+
 func (t *TableStack) Len() int {
 	return len(t.q)
 }
@@ -70,5 +85,6 @@ func (t *TableStack) GetAtTop(key string) (any, bool) {
 	if t.Empty() {
 		return nil, false
 	}
-	return t.q[len(t.q)-1][key], true
+	v, ok := t.q[len(t.q)-1][key]
+	return v, ok
 }

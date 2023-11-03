@@ -11,6 +11,7 @@ type Eval struct {
 	ast       tree.Ast
 	objTable  *obj.TableStack
 	funcTable *obj.StackImpl[*node.FuncBlock]
+	loopLvl   int
 }
 
 func (e *Eval) run() any {
@@ -22,8 +23,7 @@ func (e *Eval) run() any {
 			e.EvalExpr(n.(node.Expr))
 		case node.Stmt:
 			e.EvalStmt(n.(node.Stmt))
-			_, ok := e.objTable.GetAtTop("0")
-			if ok {
+			if e.objTable.HasKeyAtTop("0") || e.objTable.HasKeyAtTop("1") {
 				break
 			}
 		case *node.FuncBlock:
@@ -74,10 +74,11 @@ func New(ast tree.Ast) *Eval {
 	}
 }
 
-func new(ast tree.Ast, objTable *obj.TableStack, funcTable *obj.StackImpl[*node.FuncBlock]) *Eval {
+func (e *Eval) new(ast tree.Ast) *Eval {
 	return &Eval{
 		ast:       ast,
-		objTable:  objTable,
-		funcTable: funcTable,
+		objTable:  e.objTable,
+		funcTable: e.funcTable,
+		loopLvl:   e.loopLvl,
 	}
 }

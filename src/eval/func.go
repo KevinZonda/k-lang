@@ -27,16 +27,15 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) any {
 	if !ok {
 		return e.EvalBuiltInCall(fc, args)
 	}
-	e.objTable.PushEmpty()
-	e.funcTable.PushEmpty()
+
+	e.frameStart()
 	for i, funcArg := range fn.Args {
 		e.objTable.Set(funcArg.Name.Value, args[i])
 	}
-	fe := new((tree.Ast)(fn.Body.Nodes), e.objTable, e.funcTable)
+	fe := e.new((tree.Ast)(fn.Body.Nodes))
 	_ = fe.run()
 	retV, retOk := fe.objTable.GetAtTop("0")
-	e.objTable.Pop()
-	e.funcTable.Pop()
+	e.frameEnd()
 	if retOk {
 		return retV
 	}
@@ -48,21 +47,39 @@ func (e *Eval) EvalMain() any {
 	if !ok {
 		return nil
 	}
-	e.objTable.PushEmpty()
-	e.funcTable.PushEmpty()
-	fe := new((tree.Ast)(fn.Body.Nodes), e.objTable, e.funcTable)
+	e.frameStart()
+	fe := e.new((tree.Ast)(fn.Body.Nodes))
 	ret := fe.run()
-	e.objTable.Pop()
-	e.funcTable.Pop()
+	e.frameEnd()
 	return ret
 }
 
 func (e *Eval) EvalCodeBlock(fc *node.CodeBlock) any {
+	e.frameStart()
+	fe := e.new((tree.Ast)(fc.Nodes))
+	_ = fe.run()
+	e.frameEndWithRetAndBreak()
+	return nil
+}
+
+func (e *Eval) frameStart() {
 	e.objTable.PushEmpty()
 	e.funcTable.PushEmpty()
-	fe := new((tree.Ast)(fc.Nodes), e.objTable, e.funcTable)
-	ret := fe.run()
+}
+
+func (e *Eval) frameEnd() {
 	e.objTable.Pop()
 	e.funcTable.Pop()
-	return ret
+}
+
+func (e *Eval) frameEndWithRetAndBreak() {
+	retV, hasVal := e.objTable.GetAtTop("0")
+	isBreak := e.objTable.HasKeyAtTop("1")
+	e.frameEnd()
+	if hasVal {
+		e.objTable.SetAtTop("0", retV)
+	}
+	if isBreak {
+		e.objTable.SetAtTop("1", nil)
+	}
 }

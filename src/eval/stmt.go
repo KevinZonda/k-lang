@@ -18,37 +18,48 @@ func (e *Eval) EvalStmt(n node.Stmt) any {
 	case *node.WhileStyleFor:
 		return e.EvalWhileForStmt(n.(*node.WhileStyleFor))
 	case *node.BreakStmt:
-		return nil
+		return e.EvalBreakStmt(n.(*node.BreakStmt))
 	}
 	panic("not implemented")
 }
 
 func (e *Eval) EvalWhileForStmt(n *node.WhileStyleFor) any {
-	var r any
+	e.loopLvl = e.loopLvl + 1
 	for {
 		if n.ConditionExpr != nil {
 			rst := e.EvalExpr(n.ConditionExpr).(bool)
 			if !rst {
+				e.loopLvl = e.loopLvl - 1
 				return nil
 			}
 		}
-		r = e.EvalLoopCodeBlock(n.Body)
+		_ = e.EvalLoopCodeBlock(n.Body)
+		if e.objTable.HasKeyAtTop("0") {
+			e.loopLvl = e.loopLvl - 1
+			return nil
+		}
+		if e.objTable.HasKeyAtTop("1") {
+			e.loopLvl = e.loopLvl - 1
+			e.objTable.RemoveKeyAtTop("1")
+			return nil
+		}
 	}
-	return r
 }
 
-func (e *Eval) EvalLoopCodeBlock(fc *node.CodeBlock) (val any) {
-	e.objTable.PushEmpty()
-	e.funcTable.PushEmpty()
-	fe := new((tree.Ast)(fc.Nodes), e.objTable, e.funcTable)
+func (e *Eval) EvalLoopCodeBlock(fc *node.CodeBlock) any {
+	e.frameStart()
+	fe := e.new((tree.Ast)(fc.Nodes))
 	_ = fe.run()
-	val, ok := fe.objTable.GetAtTop("0")
-	if !ok {
-		val = nil
+	e.frameEndWithRetAndBreak()
+	return nil
+}
+
+func (e *Eval) EvalBreakStmt(n *node.BreakStmt) any {
+	if e.loopLvl <= 0 {
+		return nil
 	}
-	e.objTable.Pop()
-	e.funcTable.Pop()
-	return val
+	e.objTable.SetAtTop("1", true)
+	return nil
 }
 
 func (e *Eval) EvalReturnStmt(n *node.ReturnStmt) any {
