@@ -12,6 +12,26 @@ func New(prompt string) (IConsoleReader, error) {
 	//return readline.New(prompt)
 }
 
+func MultipleLine(rl IConsoleReader, defaultPrompt string, multiPrompt string) (string, error) {
+	line, err := rl.Readline()
+	buffer := ""
+	if strings.HasSuffix(line, "\\") {
+		for strings.HasSuffix(line, "\\") {
+			buffer += strings.TrimSuffix(line, "\\") + "\n"
+			rl.SetPrompt(multiPrompt)
+			line, err = rl.Readline()
+			if err != nil {
+				return "", err
+			}
+		}
+		buffer += line
+		rl.SetPrompt(defaultPrompt)
+	} else {
+		buffer = line
+	}
+	return buffer, err
+}
+
 type IConsoleReader interface {
 	SetPrompt(prompt string)
 	Readline() (string, error)

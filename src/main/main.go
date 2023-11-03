@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/utils/jout"
+	"github.com/KevinZonda/GoX/pkg/panicx"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -43,21 +45,18 @@ func compile(input string, output string) {
 	}
 
 	str, e := iox.ReadAllText(input)
-	if e != nil {
-		panic(e)
-	}
+	panicx.PanicIfNotNil(e, e)
+
 	ast := parserHelper.Ast(str)
+
 	e = iox.WriteAllBytes(output, compressor.Compress(ast))
-	if e != nil {
-		panic(e)
-	}
+	panicx.PanicIfNotNil(e, e)
 }
 
 func run(input string) {
 	bs, e := iox.ReadAllByte(input)
-	if e != nil {
-		panic(e)
-	}
+	panicx.PanicIfNotNil(e, e)
+
 	ast := compressor.Decompress(bs)
 	ev := eval.New(ast)
 	ev.Do()
@@ -66,13 +65,13 @@ func run(input string) {
 
 func repl(context *eval.Eval) {
 	rl, err := consoleReader.New("> ")
+	panicx.PanicIfNotNil(err, err)
+
 	var it any
 	var history []string
-	if err != nil {
-		panic(err)
-	}
+
 	defer func() {
-		rl.Close()
+		_ = rl.Close()
 		if r := recover(); r != nil {
 			fmt.Println("Recover from panic:", r)
 			repl(context)
@@ -116,28 +115,13 @@ func repl(context *eval.Eval) {
 			continue
 		}
 
-		buffer := ""
-
-		if strings.HasSuffix(line, "\\") {
-			for strings.HasSuffix(line, "\\") {
-				buffer += strings.TrimSuffix(line, "\\") + "\n"
-				rl.SetPrompt("| ")
-				line, err = rl.Readline()
-				if err != nil {
-					panic(err)
-				}
-			}
-			buffer += line
-			rl.SetPrompt("> ")
-		} else {
-			buffer = line
-		}
+		buffer, err := consoleReader.MultipleLine(rl, "> ", "| ")
 
 		parser := parserHelper.FromString(buffer)
 
 		if len(parser.Errors()) > 0 {
 			for _, e := range parser.Errors() {
-				fmt.Println("Error:", e.Error())
+				fmt.Println("[Error]", e.Error())
 			}
 			continue
 		}
@@ -146,8 +130,8 @@ func repl(context *eval.Eval) {
 		ast := parser.Ast()
 		if debug {
 			for idx, node := range ast {
-				bs, _ := json.MarshalIndent(node, "", "    ")
-				fmt.Println(idx, "->", string(bs))
+				fmt.Print("[", idx, "] -> ")
+				jout.Println(node)
 			}
 		}
 		e := eval.New(ast)
@@ -164,13 +148,12 @@ func repl(context *eval.Eval) {
 
 func ast(input string, output string) {
 	txt, err := iox.ReadAllText(input)
-	if err != nil {
-		panic(err)
-	}
+	panicx.PanicIfNotNil(err, err)
+
 	ast := parserHelper.Ast(txt)
 	bs, err := json.MarshalIndent(ast, "", "    ")
-	if err != nil {
-		panic(err)
-	}
+	panicx.PanicIfNotNil(err, err)
+
 	err = iox.WriteAllText(output, string(bs))
+	panicx.PanicIfNotNil(err, err)
 }
