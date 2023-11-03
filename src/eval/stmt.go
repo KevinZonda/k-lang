@@ -2,6 +2,7 @@ package eval
 
 import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
 )
 
 func (e *Eval) EvalStmt(n node.Stmt) any {
@@ -18,6 +19,8 @@ func (e *Eval) EvalStmt(n node.Stmt) any {
 		return e.EvalWhileForStmt(n.(*node.WhileStyleFor))
 	case *node.BreakStmt:
 		return e.EvalBreakStmt(n.(*node.BreakStmt))
+	case *node.ContinueStmt:
+		return e.EvalContinueStmt(n.(*node.ContinueStmt))
 	}
 	panic("not implemented")
 }
@@ -26,14 +29,22 @@ func (e *Eval) EvalBreakStmt(n *node.BreakStmt) any {
 	if e.loopLvl <= 0 {
 		return nil
 	}
-	e.objTable.SetAtTop("1", true)
+	e.objTable.SetAtTop(reserved.Break, true)
+	return nil
+}
+
+func (e *Eval) EvalContinueStmt(n *node.ContinueStmt) any {
+	if e.loopLvl <= 0 {
+		return nil
+	}
+	e.objTable.SetAtTop(reserved.Continue, true)
 	return nil
 }
 
 func (e *Eval) EvalReturnStmt(n *node.ReturnStmt) any {
-	e.objTable.SetAtTop("0", nil)
+	e.objTable.SetAtTop(reserved.Return, nil)
 	if n.Value != nil {
-		e.objTable.SetAtTop("0", e.EvalExpr(n.Value))
+		e.objTable.SetAtTop(reserved.Return, e.EvalExpr(n.Value))
 	}
 	return nil
 }

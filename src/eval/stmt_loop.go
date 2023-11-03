@@ -17,6 +17,10 @@ func (e *Eval) EvalWhileForStmt(n *node.WhileStyleFor) any {
 			}
 		}
 		_ = e.EvalLoopCodeBlock(n.Body)
+		if e.objTable.HasKeyAtTop(reserved.Continue) {
+			e.objTable.RemoveKeyAtTop(reserved.Continue)
+			continue
+		}
 		if e.objTable.HasKeyAtTop(reserved.Return) {
 			e.loopLvl--
 			return nil
@@ -33,6 +37,6 @@ func (e *Eval) EvalLoopCodeBlock(fc *node.CodeBlock) any {
 	e.frameStart()
 	fe := e.new((tree.Ast)(fc.Nodes))
 	_ = fe.run()
-	e.frameEndWithRetAndBreak()
+	e.frameEndWithRetBreakContinue()
 	return nil
 }

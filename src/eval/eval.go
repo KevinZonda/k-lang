@@ -30,7 +30,9 @@ func (e *Eval) run() any {
 		default:
 			panic("not implemented")
 		}
-		if e.objTable.HasKeyAtTop(reserved.Return) || e.objTable.HasKeyAtTop(reserved.Break) {
+		if e.objTable.HasKeyAtTop(reserved.Return) ||
+			e.objTable.HasKeyAtTop(reserved.Break) ||
+			e.objTable.HasKeyAtTop(reserved.Continue) {
 			break
 		}
 	}
