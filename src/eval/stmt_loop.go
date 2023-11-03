@@ -3,6 +3,7 @@ package eval
 import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
 )
 
 func (e *Eval) EvalWhileForStmt(n *node.WhileStyleFor) any {
@@ -16,13 +17,13 @@ func (e *Eval) EvalWhileForStmt(n *node.WhileStyleFor) any {
 			}
 		}
 		_ = e.EvalLoopCodeBlock(n.Body)
-		if e.objTable.HasKeyAtTop("0") {
+		if e.objTable.HasKeyAtTop(reserved.Return) {
 			e.loopLvl--
 			return nil
 		}
-		if e.objTable.HasKeyAtTop("1") {
+		if e.objTable.HasKeyAtTop(reserved.Break) {
 			e.loopLvl--
-			e.objTable.RemoveKeyAtTop("1")
+			e.objTable.RemoveKeyAtTop(reserved.Break)
 			return nil
 		}
 	}

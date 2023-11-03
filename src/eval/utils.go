@@ -3,6 +3,7 @@ package eval
 import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 )
 
@@ -33,16 +34,17 @@ func (e *Eval) frameEnd() {
 	e.funcTable.Pop()
 }
 
-func (e *Eval) frameEndWithRetAndBreak() {
-	retV, hasVal := e.objTable.GetAtTop("0")
-	isBreak := e.objTable.HasKeyAtTop("1")
+func (e *Eval) frameEndWithRetAndBreak() any {
+	retV, hasVal := e.objTable.GetAtTop(reserved.Return)
+	isBreak := e.objTable.HasKeyAtTop(reserved.Break)
 	e.frameEnd()
 	if hasVal {
-		e.objTable.SetAtTop("0", retV)
+		e.objTable.SetAtTop(reserved.Return, retV)
 	}
 	if isBreak {
-		e.objTable.SetAtTop("1", nil)
+		e.objTable.SetAtTop(reserved.Break, nil)
 	}
+	return retV
 }
 
 func (e *Eval) evalValWithIdx(idxs []node.Expr, root *any) *any {
