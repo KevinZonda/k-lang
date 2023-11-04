@@ -24,6 +24,8 @@ func (e *Eval) EvalExpr(n node.Expr) any {
 		return e.EvalIdentifier(n.(*node.Identifier))
 	case *node.ArrayLiteral:
 		return e.EvalArrayLiteral(n.(*node.ArrayLiteral))
+	case *node.MapLiteral:
+		return e.EvalMapLiteral(n.(*node.MapLiteral))
 	case *node.FuncCall:
 		return e.EvalFuncCall(n.(*node.FuncCall))
 	default:

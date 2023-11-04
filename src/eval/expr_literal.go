@@ -26,6 +26,14 @@ func (e *Eval) EvalArrayLiteral(n *node.ArrayLiteral) []any {
 	return arr
 }
 
+func (e *Eval) EvalMapLiteral(n *node.MapLiteral) map[any]any {
+	var m = make(map[any]any)
+	for _, v := range n.Value {
+		m[e.EvalExpr(v.Key)] = e.EvalExpr(v.Value)
+	}
+	return m
+}
+
 func (e *Eval) EvalIdentifier(n *node.Identifier) any {
 	v, ok := e.objTable.Get(n.Value)
 	if ok {
