@@ -3,7 +3,7 @@
         "prefix": "fn",
         "body": [
             "fn ${1:funcName}(${2:arguments}) ${3:returnType} {",
-            "    ${4:print('Hello, World!');}",
+            "    ${4:print(\"Hello, World!\");}",
             "}"
         ],
         "description": "Create a function"
