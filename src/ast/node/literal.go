@@ -6,6 +6,10 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
 )
 
+type ILiteralValue interface {
+	ConstVal() any
+}
+
 //region Int
 
 type IntLiteral struct {
@@ -21,6 +25,10 @@ func (i *IntLiteral) TokenValue() string {
 
 func (i *IntLiteral) String() string {
 	return fmt.Sprintf("(%d:int)", i.Value)
+}
+
+func (i *IntLiteral) ConstVal() any {
+	return i.Value
 }
 
 //endregion
@@ -42,6 +50,10 @@ func (f *FloatLiteral) String() string {
 	return fmt.Sprintf("(%f:float)", f.Value)
 }
 
+func (f *FloatLiteral) ConstVal() any {
+	return f.Value
+}
+
 //endregion
 
 //region String
@@ -61,6 +73,10 @@ func (s *StringLiteral) String() string {
 	return fmt.Sprintf("(%s:string)", s.Value)
 }
 
+func (s *StringLiteral) ConstVal() any {
+	return s.Value
+}
+
 //endregion
 
 //region Bool
@@ -78,6 +94,10 @@ func (b *BoolLiteral) TokenValue() string {
 
 func (b *BoolLiteral) String() string {
 	return fmt.Sprintf("(%t:bool)", b.Value)
+}
+
+func (b *BoolLiteral) ConstVal() any {
+	return b.Value
 }
 
 //endregion
