@@ -25,6 +25,15 @@ else
 	./scripts/src.sh
 endif
 
+vsix:
+ifeq ($(OS),Windows_NT)
+	@echo '=== VSIX Builder ==='
+	.\scripts\vsix.bat
+else
+	echo '=== VSIX Builder ==='
+	./scripts/vsix.sh
+endif
+
 all:
 	make grammar
 	make go

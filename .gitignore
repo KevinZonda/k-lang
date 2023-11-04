@@ -5,3 +5,4 @@
 .fleet/
 gen/
 .DS_Store
+*.vsix
