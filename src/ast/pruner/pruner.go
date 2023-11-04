@@ -43,22 +43,76 @@ func pruneUnaryExpr(n *node.UnaryOperExpr) any {
 	return n
 }
 
+func binaryTransformer(n *node.BinaryOperExpr) any {
+	switch n.Token.Kind {
+	case token.Add, token.Sub:
+		//    +/-
+		// left right
+		left := pruneExprAndVal(n.Left)
+		right := pruneExprAndVal(n.Right)
+		switch left.(type) {
+		case node.BinaryOperExpr:
+			//    +/-
+			// bin right
+			leftBin := left.(node.BinaryOperExpr)
+			if leftBin.Token.Kind == token.Add || leftBin.Token.Kind == token.Sub {
+				//    +/-
+				// +/-   right
+				//?  ?
+				return binaryOperEval.BinaryOper(token.Add, leftBin, right)
+			}
+		case node.Node:
+			//    +/-
+			// node right
+			return n
+		default:
+			//    +/-
+			// val right
+			switch right.(type) {
+			case node.BinaryOperExpr:
+				if n.Token.Kind == token.Add || n.Token.Kind == token.Sub {
+					//    +/-
+					// val  +/-
+					//      ?  ?
+					return binaryOperEval.BinaryOper(token.Add, left, right)
+				}
+				//    +/-
+				// val bin
+				return n
+			case node.Node:
+				//    +/-
+				// val node
+				return n
+			default:
+				//    +/-
+				// val  val
+				panic("prune: impossible corner")
+			}
+		}
+	}
+	return n
+}
+
 func pruneBinaryExpr(n *node.BinaryOperExpr) any {
 	left := reconstruct(pruneExprAndVal(n.Left)).(node.Expr)
 	right := reconstruct(pruneExprAndVal(n.Right)).(node.Expr)
 
 	switch left.(type) {
 	case node.Node:
+		//     bin
+		//  node   ?
 		n.Left = left.(node.Expr)
 		n.Right = reconstruct(right).(node.Expr)
-		return n
 	default:
 		switch right.(type) {
 		case node.Node:
+			//     bin
+			//  val   node
 			n.Left = left.(node.Expr)
 			n.Right = reconstruct(right).(node.Expr)
-			return n
 		default:
+			//     bin
+			//  val   val
 			return binaryOperEval.BinaryOper(n.Token.Kind, left, right)
 		}
 	}
@@ -92,6 +146,25 @@ func pruneExpr(n node.Expr) any {
 		return reconstruct(r)
 	}
 	return n
+}
+
+func constV(r any) any {
+	if r == nil {
+		return nil
+	}
+	switch r.(type) {
+	case node.ILiteralValue:
+		return r.(node.ILiteralValue).ConstVal()
+	case int:
+		return r.(int)
+	case float64:
+		return r.(float64)
+	case string:
+		return r.(string)
+	case bool:
+		return r.(bool)
+	}
+	return nil
 }
 
 func reconstruct(r any) node.Node {
