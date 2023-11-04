@@ -7,7 +7,8 @@
     "vscode": "^1.84.0"
   },
   "categories": [
-    "Programming Languages"
+    "Programming Languages",
+    "Snippets"
   ],
   "contributes": {
     "languages": [{
@@ -20,6 +21,12 @@
       "language": "klang",
       "scopeName": "main.k",
       "path": "./syntaxes/klang.tmLanguage.json"
-    }]
+    }],
+    "snippets": [
+      {
+        "language": "klang",
+        "path": "./snippets/snippets.json"
+      }
+    ]
   }
 }
