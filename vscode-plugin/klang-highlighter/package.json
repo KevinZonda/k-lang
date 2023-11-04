@@ -1,0 +1,25 @@
+{
+  "name": "klang-highlighter",
+  "displayName": "klang-highlighter",
+  "description": "",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.84.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "klang",
+      "aliases": ["K", "klang"],
+      "extensions": [".k"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "klang",
+      "scopeName": "main.k",
+      "path": "./syntaxes/klang.tmLanguage.json"
+    }]
+  }
+}

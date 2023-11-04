@@ -1,0 +1,53 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "klang",
+	"patterns": [
+		{ "include": "#keywords" },
+		{ "include": "#operator" },
+		{ "include": "#type" },
+		{ "include": "#strings" },
+		{ "include": "#comment" },
+		{ "include": "#number" },
+		{ "include": "#boolean" }
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.control.klang",
+				"match": "\\b(if|else|struct|fn|match|for|break|continue|return|:=)\\b"
+			}]
+		},
+		"operator": {
+			"match": "\\b(and|or|not|\\+|-|\\*|/|\\|\\||\\^)\\b",
+			"name": "keyword.operator.klang"
+		},
+		"type": {
+			"match": "\\b(int|num|bool|str)\\b",
+			"name": "keyword.type.klang"
+		},
+		"strings": {
+			"name": "string.quoted.double.klang",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.klang",
+					"match": "\\\\."
+				}
+			]
+		},
+		"comment": {
+			"match": "(#.*)",
+			"name": "comment.line.number-sign.klang"
+		},
+		"number": {
+			"match": "\\b(\\d(.d*)?)\\b",
+			"name": "constant.numeric.klang"
+		},
+		"boolean": {
+			"match": "\\b(true|false)\\b",
+			"name": "constant.language.klang"
+		}
+	},
+	"scopeName": "main.k"
+}
