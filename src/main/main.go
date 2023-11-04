@@ -70,13 +70,13 @@ func repl(context *eval.Eval) {
 	var it any
 	var history []string
 
-	defer func() {
-		_ = rl.Close()
-		if r := recover(); r != nil {
-			fmt.Println("Recover from panic:", r)
-			repl(context)
-		}
-	}()
+	//defer func() {
+	//	_ = rl.Close()
+	//	if r := recover(); r != nil {
+	//		fmt.Println("Recover from panic:", r)
+	//		repl(context)
+	//	}
+	//}()
 	for {
 		line, err := rl.Readline()
 		if err != nil {

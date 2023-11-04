@@ -17,9 +17,16 @@ func (e *Eval) EvalAssignStmt(n *node.AssignStmt) any {
 					((*tgt).([]any))[e.EvalExpr(baseV.Index[len(baseV.Index)-1]).(int)] = v
 				}
 			}
-			e.objTable.Set(baseV.Name.Value, obj)
-			return v
+			//e.objTable.Set(baseV.Name.Value, obj)
+			//return v
 		}
+	}
+	switch n.Value.(type) {
+	case *node.LambdaExpr:
+		e.funcTable.Set(baseV.Name.Value, n.Value.(*node.LambdaExpr).ToFunc(baseV.Name.Value))
+	default:
+		e.objTable.Set(baseV.Name.Value, v)
+
 	}
 	e.objTable.Set(baseV.Name.Value, v)
 	return v

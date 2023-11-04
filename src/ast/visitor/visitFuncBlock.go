@@ -13,6 +13,22 @@ func (v *AntlrVisitor) VisitFuncBlock(ctx *parser.FuncBlockContext) interface{} 
 	return fx
 }
 
+func (v *AntlrVisitor) VisitLambda(ctx *parser.LambdaContext) interface{} {
+	fb := &node.LambdaExpr{
+		Token: token.FromAntlrToken(ctx.GetStart()),
+		Body:  v.VisitCodeBlock(ctx.CodeBlock().(*parser.CodeBlockContext)).(*node.CodeBlock),
+	}
+	args := v.VisitFuncSignArgs(typeCastToPtr[parser.FuncSignArgsContext](ctx.FuncSignArgs()))
+	ret := v.VisitType(typeCastToPtr[parser.TypeContext](ctx.Type_()))
+	if args != nil {
+		fb.Args = args.([]*node.FuncArg)
+	}
+	if ret != nil {
+		fb.RetType = ret.(*node.Identifier)
+	}
+	return fb
+}
+
 func (v *AntlrVisitor) VisitFuncSig(ctx *parser.FuncSigContext) interface{} {
 	fb := &node.FuncBlock{
 		// Token: token.FromAntlrToken(ctx.GetStart()),

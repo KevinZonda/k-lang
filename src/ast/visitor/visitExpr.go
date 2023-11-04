@@ -11,9 +11,8 @@ import (
 )
 
 func (v *AntlrVisitor) VisitExprWithLambda(ctx *parser.ExprWithLambdaContext) interface{} {
-	fmt.Println("VisitExprWithLambda")
 	if ctx.Lambda() != nil {
-		panic("VisitExprWithLambda : Lambda not implemented")
+		return v.VisitLambda(ctx.Lambda().(*parser.LambdaContext))
 	}
 	return v.VisitExpr(ctx.Expr().(*parser.ExprContext))
 }

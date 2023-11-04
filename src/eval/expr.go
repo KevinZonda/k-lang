@@ -28,6 +28,8 @@ func (e *Eval) EvalExpr(n node.Expr) any {
 		return e.EvalMapLiteral(n.(*node.MapLiteral))
 	case *node.FuncCall:
 		return e.EvalFuncCall(n.(*node.FuncCall))
+	case *node.LambdaExpr:
+		return nil
 	default:
 		fmt.Println(reflect.TypeOf(n))
 		panic("not implemented")
