@@ -17,12 +17,12 @@ func Help() {
       Parse the input file and output the AST json to the output file.
 
    *  compile [--input] <inputPath> [--output <outputPath>]:
-	  Parse the input file and output the compressed ast to the output file.
+      Parse the input file and output the compressed ast to the output file.
       If no output file is specified, the output file will be the same name
       as the input file, but with the extension changed to .ast.
 
    *  run [--input] path:
-	  Parse the input file and run it.
+      Parse the input file and run it.
 
    *  repl [--input <path>]:
       Enter the REPL mode.

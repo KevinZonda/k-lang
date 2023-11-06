@@ -11,7 +11,7 @@ import (
 
 func main() {
 	if len(os.Args) == 1 {
-		(&funcs.Repl{}).Repl()
+		(&funcs.Repl{}).Repl("")
 		return
 	}
 	// [from] [subCmd] [args...]
@@ -20,7 +20,7 @@ func main() {
 	case "ast":
 		funcs.Ast(args.GetStrOr(0, cli.Input), args.GetStrOr(1, cli.Output))
 	case "repl":
-		(&funcs.Repl{}).Repl()
+		(&funcs.Repl{}).Repl(args.GetStrOr(0, cli.Input))
 	case "compile":
 		funcs.Compile(args.GetStrOr(0, cli.Input), args.GetStrOr(1, cli.Output))
 	case "run":

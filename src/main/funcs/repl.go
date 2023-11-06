@@ -6,6 +6,7 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/consoleReader"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/utils/jout"
+	"github.com/KevinZonda/GoX/pkg/iox"
 	"github.com/KevinZonda/GoX/pkg/panicx"
 	"os"
 	"reflect"
@@ -17,7 +18,16 @@ type Repl struct {
 	context *eval.Eval
 }
 
-func (r *Repl) Repl() {
+func (r *Repl) Repl(input string) {
+	if input != "" {
+		str, e := iox.ReadAllText(input)
+		panicx.PanicIfNotNil(e, e)
+
+		ast := parserHelper.Ast(str)
+		r.context = eval.New(ast)
+		r.context.Do()
+	}
+
 	rl, err := consoleReader.New("> ")
 	panicx.PanicIfNotNil(err, err)
 
