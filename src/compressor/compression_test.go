@@ -18,7 +18,7 @@ a := foo(11)
 
 `)
 	r := compressor.Compress(v)
-	fmt.Println(r)
+	fmt.Println("Compressed To: ", r)
 	fmt.Println("Size: ", len(r))
 	ast := compressor.Decompress(r)
 	jout.Println(ast)

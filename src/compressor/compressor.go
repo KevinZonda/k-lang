@@ -2,11 +2,15 @@ package compressor
 
 import (
 	"bytes"
-	"io"
-
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
 	"github.com/andybalholm/brotli"
 	"github.com/brimdata/zed/zson"
+	"io"
+)
+
+const (
+	magicStart = "[<"
+	magicEnd   = ">]"
 )
 
 func serialise(a tree.Ast) string {
@@ -45,10 +49,23 @@ func unbr(bs []byte) []byte {
 	return bs
 }
 func Compress(a tree.Ast) []byte {
-	s := serialise(a)
-	return br([]byte(s))
+	x := br([]byte(serialise(a)))
+	return append([]byte(magicStart),
+		append(x, []byte(magicEnd)...)...)
 }
 
 func Decompress(bs []byte) tree.Ast {
+	begin := bytes.Index(bs, []byte(magicStart))
+	end := bytes.Index(bs, []byte(magicEnd))
+	if begin == -1 || end == -1 {
+		panic("Not a compressed file")
+	}
+	bs = bs[begin+len(magicStart) : end]
 	return deserialise(string(unbr(bs)))
+}
+
+func IsCompressed(bs []byte) bool {
+	begin := bytes.Index(bs, []byte(magicStart))
+	end := bytes.Index(bs, []byte(magicEnd))
+	return begin != -1 && end != -1
 }
