@@ -37,3 +37,10 @@ endif
 all:
 	make grammar
 	make go
+
+out:
+ifeq ($(OS),Windows_NT)
+	explorer .\src\out
+else
+	open .\src\out
+endif

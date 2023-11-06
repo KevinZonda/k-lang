@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/funcs"
 	"os"
 	"strings"
@@ -24,14 +25,18 @@ func main() {
 		funcs.Compile(args.GetStrOr(0, cli.Input), args.GetStrOr(1, cli.Output))
 	case "run":
 		funcs.Run(args.GetStrOr(0, cli.Input))
+	case "2ast":
+		funcs.ShowAst(args.GetStrOr(0, cli.Input))
+	case "help":
+		funcs.Help()
 	default:
 		if len(args) == 0 {
-			panic("Not recognised command: " + os.Args[1])
+			funcs.Run(os.Args[1])
+		} else {
+			fmt.Println("Not recognised command: " + strings.Join(os.Args[1:], " "))
+			fmt.Println("Use `help` to see all commands")
+			os.Exit(1)
 		}
-		if len(args) == 1 {
-			funcs.Run(args[0])
-		}
-		panic("Not recognised command: " + strings.Join(os.Args[1:], " "))
 	}
 }
 
