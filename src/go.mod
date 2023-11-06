@@ -4,11 +4,9 @@ go 1.21.2
 
 require (
 	github.com/KevinZonda/GoX v0.0.15
-	github.com/alecthomas/kong v0.8.1
 	github.com/andybalholm/brotli v1.0.4
 	github.com/antlr4-go/antlr/v4 v4.13.0
 	github.com/brimdata/zed v1.10.0
-	github.com/chzyer/readline v1.5.1
 )
 
 require (
