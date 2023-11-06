@@ -65,9 +65,6 @@ type V2ParserVisitor interface {
 	// Visit a parse tree produced by V2Parser#exprWithLambda.
 	VisitExprWithLambda(ctx *ExprWithLambdaContext) interface{}
 
-	// Visit a parse tree produced by V2Parser#exprOrAssign.
-	VisitExprOrAssign(ctx *ExprOrAssignContext) interface{}
-
 	// Visit a parse tree produced by V2Parser#funcCall.
 	VisitFuncCall(ctx *FuncCallContext) interface{}
 

@@ -65,9 +65,6 @@ type V2ParserListener interface {
 	// EnterExprWithLambda is called when entering the exprWithLambda production.
 	EnterExprWithLambda(c *ExprWithLambdaContext)
 
-	// EnterExprOrAssign is called when entering the exprOrAssign production.
-	EnterExprOrAssign(c *ExprOrAssignContext)
-
 	// EnterFuncCall is called when entering the funcCall production.
 	EnterFuncCall(c *FuncCallContext)
 
@@ -193,9 +190,6 @@ type V2ParserListener interface {
 
 	// ExitExprWithLambda is called when exiting the exprWithLambda production.
 	ExitExprWithLambda(c *ExprWithLambdaContext)
-
-	// ExitExprOrAssign is called when exiting the exprOrAssign production.
-	ExitExprOrAssign(c *ExprOrAssignContext)
 
 	// ExitFuncCall is called when exiting the funcCall production.
 	ExitFuncCall(c *FuncCallContext)

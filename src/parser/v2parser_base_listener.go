@@ -135,12 +135,6 @@ func (s *BaseV2ParserListener) EnterExprWithLambda(ctx *ExprWithLambdaContext) {
 // ExitExprWithLambda is called when production exprWithLambda is exited.
 func (s *BaseV2ParserListener) ExitExprWithLambda(ctx *ExprWithLambdaContext) {}
 
-// EnterExprOrAssign is called when production exprOrAssign is entered.
-func (s *BaseV2ParserListener) EnterExprOrAssign(ctx *ExprOrAssignContext) {}
-
-// ExitExprOrAssign is called when production exprOrAssign is exited.
-func (s *BaseV2ParserListener) ExitExprOrAssign(ctx *ExprOrAssignContext) {}
-
 // EnterFuncCall is called when production funcCall is entered.
 func (s *BaseV2ParserListener) EnterFuncCall(ctx *FuncCallContext) {}
 

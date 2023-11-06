@@ -41,6 +41,9 @@ func (v *AntlrVisitor) VisitFuncCallArgs(ctx *parser.FuncCallArgsContext) interf
 
 func (v *AntlrVisitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 	// fmt.Println("VisitExpr")
+	if ctx.AssignStmt() != nil {
+		return v.VisitAssignStmt(ctx.AssignStmt().(*parser.AssignStmtContext))
+	}
 	if ctx.BinaryOper() != nil {
 		return v.VisitBinaryExpr(ctx)
 	}

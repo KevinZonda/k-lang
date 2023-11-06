@@ -48,8 +48,8 @@ func (v *AntlrVisitor) VisitCStyleFor(ctx *parser.CStyleForContext) any {
 		Token: token.FromAntlrToken(ctx.For().GetSymbol()),
 		Body:  v.VisitCodeBlock(ctx.CodeBlock().(*parser.CodeBlockContext)).(*node.CodeBlock),
 	}
-	if ctx.ExprOrAssign() != nil {
-		n.InitialExpr = v.VisitExprOrAssign(ctx.ExprOrAssign().(*parser.ExprOrAssignContext)).(node.Expr)
+	if ctx.GetOnInit() != nil {
+		n.InitialExpr = v.VisitExpr(ctx.GetOnInit().(*parser.ExprContext)).(node.Node)
 	}
 
 	if ctx.GetOnCondition() != nil {
@@ -60,7 +60,7 @@ func (v *AntlrVisitor) VisitCStyleFor(ctx *parser.CStyleForContext) any {
 		n.AfterIterExpr = v.VisitExpr(ctx.GetOnEnd().(*parser.ExprContext)).(node.Expr)
 	}
 
-	panic("not supported stmt")
+	return &n
 }
 
 func (v *AntlrVisitor) VisitWhileStyleFor(ctx *parser.WhileStyleForContext) any {

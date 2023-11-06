@@ -84,10 +84,6 @@ func (v *BaseV2ParserVisitor) VisitExprWithLambda(ctx *ExprWithLambdaContext) in
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseV2ParserVisitor) VisitExprOrAssign(ctx *ExprOrAssignContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
 func (v *BaseV2ParserVisitor) VisitFuncCall(ctx *FuncCallContext) interface{} {
 	return v.VisitChildren(ctx)
 }

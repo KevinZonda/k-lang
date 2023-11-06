@@ -30,6 +30,8 @@ func (e *Eval) EvalExpr(n node.Expr) any {
 		return e.EvalFuncCall(n.(*node.FuncCall))
 	case *node.LambdaExpr:
 		return nil
+	case *node.AssignStmt:
+		return e.EvalAssignStmt(n.(*node.AssignStmt))
 	default:
 		fmt.Println(reflect.TypeOf(n))
 		panic("not implemented")

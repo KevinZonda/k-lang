@@ -39,10 +39,10 @@ expr
     | LParen expr RParen
     | Identifier
     | expr indexes
+    | assignStmt
     ;
 
 exprWithLambda : lambda | expr;
-exprOrAssign : expr | assignStmt;
 
 funcCall : var LParen funcCallArgs? RParen ;
 funcCallArgs : expr (Comma expr)*;
@@ -88,7 +88,7 @@ loopStmt
     | whileStyleFor
     ;
 
-cStyleFor : For LParen onInit=exprOrAssign? Semi onCondition=expr? Semi onEnd=expr? RParen codeBlock;
+cStyleFor : For LParen onInit=expr? Semi onCondition=expr? Semi onEnd=expr? RParen codeBlock;
 iterFor : For LParen type? Identifier Col expr RParen codeBlock;
 whileStyleFor : For (LParen expr? RParen)? codeBlock;
 

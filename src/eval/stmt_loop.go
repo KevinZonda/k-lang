@@ -36,7 +36,12 @@ func (e *Eval) EvalWhileForStmt(n *node.WhileStyleFor) any {
 func (e *Eval) EvalCStyleFrStmt(n *node.CStyleFor) any {
 	e.loopLvl++
 	if n.InitialExpr != nil {
-		e.EvalExpr(n.InitialExpr)
+		switch n.InitialExpr.(type) {
+		case node.Stmt:
+			e.EvalStmt(n.InitialExpr.(node.Stmt))
+		case node.Expr:
+			e.EvalExpr(n.InitialExpr.(node.Expr))
+		}
 	}
 	for {
 		if n.ConditionExpr != nil {
