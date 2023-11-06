@@ -33,6 +33,37 @@ func (e *Eval) EvalWhileForStmt(n *node.WhileStyleFor) any {
 	}
 }
 
+func (e *Eval) EvalCStyleFrStmt(n *node.CStyleFor) any {
+	e.loopLvl++
+	if n.InitialExpr != nil {
+		e.EvalExpr(n.InitialExpr)
+	}
+	for {
+		if n.ConditionExpr != nil {
+			rst := e.EvalExpr(n.ConditionExpr).(bool)
+			if !rst {
+				e.loopLvl--
+				return nil
+			}
+		}
+		_ = e.EvalLoopCodeBlock(n.Body)
+		if e.objTable.HasKeyAtTop(reserved.Continue) {
+			e.objTable.RemoveKeyAtTop(reserved.Continue)
+			continue
+		}
+		if e.objTable.HasKeyAtTop(reserved.Return) {
+			e.loopLvl--
+			return nil
+		}
+		if e.objTable.HasKeyAtTop(reserved.Break) {
+			e.loopLvl--
+			e.objTable.RemoveKeyAtTop(reserved.Break)
+			return nil
+		}
+		e.EvalExpr(n.AfterIterExpr)
+	}
+}
+
 func (e *Eval) EvalLoopCodeBlock(fc *node.CodeBlock) any {
 	e.frameStart()
 	fe := e.new((tree.Ast)(fc.Nodes))
