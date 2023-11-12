@@ -74,7 +74,7 @@ func (r *Repl) Repl(input string) {
 			r.printIt = true
 			fmt.Println("Print it: ON")
 			continue
-		case ":type", ":t":
+		case ":type", ":tx":
 			fmt.Println("Type: ", reflect.TypeOf(it))
 			continue
 		}

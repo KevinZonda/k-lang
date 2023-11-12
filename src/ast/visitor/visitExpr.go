@@ -68,14 +68,14 @@ func (v *AntlrVisitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 		}
 	}
 
-	//for _, t := range ctx.GetChildren() {
-	//	fmt.Println("->", reflect.TypeOf(t))
-	//	switch t.(type) {
+	//for _, tx := range ctx.GetChildren() {
+	//	fmt.Println("->", reflect.TypeOf(tx))
+	//	switch tx.(type) {
 	//	case *parser.ExprContext:
-	//		_ = v.VisitExpr(t.(*parser.ExprContext))
+	//		_ = v.VisitExpr(tx.(*parser.ExprContext))
 	//		continue
 	//	case *parser.LiteralContext:
-	//		_ = v.VisitLiteral(t.(*parser.LiteralContext))
+	//		_ = v.VisitLiteral(tx.(*parser.LiteralContext))
 	//		continue
 	//	case *parser.LambdaContext:
 	//		continue

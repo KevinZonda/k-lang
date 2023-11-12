@@ -93,7 +93,7 @@ func (b *BoolLiteral) TokenValue() string {
 }
 
 func (b *BoolLiteral) String() string {
-	return fmt.Sprintf("(%t:bool)", b.Value)
+	return fmt.Sprintf("(%tx:bool)", b.Value)
 }
 
 func (b *BoolLiteral) ConstVal() any {
