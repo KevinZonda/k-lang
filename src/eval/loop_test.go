@@ -1,8 +1,6 @@
-package eval
+package eval_test
 
 import (
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/utils/tx"
 	"testing"
 )
 
@@ -19,12 +17,6 @@ for (i := 0; i <= 5; i := i + 1) {
 2, 3 | 2, 4 | 2, 5 | 2, 6 | 
 3, 4 | 3, 5 | 3, 6 | 
 4, 5 | 4, 6 | 
-5, 6 |
-`
-	if err := tx.IsStdoutAsExpected(func() {
-		e := New(parserHelper.Ast(code))
-		e.Do()
-	}, expected); err != nil {
-		ts.Fatal(err)
-	}
+5, 6 | `
+	generalTest(ts, code, expected)
 }

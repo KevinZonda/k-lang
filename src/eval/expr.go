@@ -29,7 +29,7 @@ func (e *Eval) EvalExpr(n node.Expr) any {
 	case *node.FuncCall:
 		return e.EvalFuncCall(n.(*node.FuncCall))
 	case *node.LambdaExpr:
-		return nil
+		return e.EvalLambdaExpr(n.(*node.LambdaExpr))
 	case *node.AssignStmt:
 		return e.EvalAssignStmt(n.(*node.AssignStmt))
 	default:

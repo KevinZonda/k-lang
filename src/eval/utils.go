@@ -40,7 +40,12 @@ func (e *Eval) frameEndWith(keys ...string) {
 	e.funcTable.Pop()
 	for _, key := range keys {
 		if v, ok := m[key]; ok {
-			e.objTable.SetAtTop(key, v)
+			switch v.(type) {
+			case *node.LambdaExpr:
+				e.funcTable.Set(key, v.(*node.LambdaExpr).ToFunc(key))
+			default:
+				e.objTable.Set(key, v)
+			}
 		}
 	}
 }
