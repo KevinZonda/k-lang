@@ -11,7 +11,6 @@ func IsStdoutAsExpected(f func(), expected string) error {
 	f()
 	output := StopCaptureStdout()
 
-	fmt.Println(output)
 	if output != expected {
 		return fmt.Errorf("The code result:\n%s\nSHA256:%s\nExpected:\n%s\nSHA256:%s\n",
 			output, Sha256(output),
