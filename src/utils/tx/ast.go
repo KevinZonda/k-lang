@@ -8,6 +8,16 @@ import (
 
 func IsStdoutAsExpected(f func(), expected string) error {
 	CaptureStdout()
+	defer func() {
+		if rec := recover(); rec != nil {
+			fmt.Println("Recovered in tester", r)
+			if IsCapturing() {
+				StopCaptureStdout()
+			}
+			fmt.Println("Content Captured:\n", lastCall)
+		}
+
+	}()
 	f()
 	output := StopCaptureStdout()
 
