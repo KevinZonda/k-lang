@@ -4,7 +4,6 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/compressor"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"github.com/KevinZonda/GoX/pkg/iox"
-	"github.com/KevinZonda/GoX/pkg/panicx"
 	"path/filepath"
 	"strings"
 )
@@ -15,10 +14,23 @@ func Compile(input string, output string) {
 	}
 
 	str, e := iox.ReadAllText(input)
-	panicx.PanicIfNotNil(e, e)
+	if e != nil {
+		panic("Error: cannot read file:" + input)
+	}
 
-	ast, _ := parserHelper.Ast(str)
+	ast, errs := parserHelper.Ast(str)
+	if len(errs) >= 0 {
+		printAllCodeErros(errs)
+		panic("Parse failed.")
+	}
 
-	e = iox.WriteAllBytes(output, compressor.Compress(ast))
-	panicx.PanicIfNotNil(e, e)
+	c, ce := compressor.Compress(ast)
+	if ce != nil {
+		panic(ce)
+	}
+
+	e = iox.WriteAllBytes(output, c)
+	if e != nil {
+		panic("Error: cannot write to file:" + output)
+	}
 }

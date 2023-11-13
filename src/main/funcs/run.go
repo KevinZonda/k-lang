@@ -11,12 +11,23 @@ import (
 
 func Run(input string) {
 	bs, e := iox.ReadAllByte(input)
+
 	panicx.PanicIfNotNil(e, e)
 	var ast tree.Ast
+
 	if compressor.IsCompressed(bs) {
-		ast, _ = compressor.Decompress(bs)
+		var ce compressor.CompressorError
+		ast, ce = compressor.Decompress(bs)
+		if ce != nil {
+			panic(ce)
+		}
 	} else {
-		ast, _ = parserHelper.Ast(string(bs))
+		var errs []parserHelper.CodeError
+		ast, errs = parserHelper.Ast(string(bs))
+		if len(errs) >= 0 {
+			printAllCodeErros(errs)
+			panic("Parse failed.")
+		}
 	}
 	ev := eval.New(ast)
 	ev.Do()
