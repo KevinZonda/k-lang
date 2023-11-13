@@ -3,7 +3,6 @@ package binaryOperEval
 import "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
 
 func BinaryOper(oper token.Kind, left any, right any) any {
-
 	switch oper {
 	case token.Add:
 		return Add(left, right)

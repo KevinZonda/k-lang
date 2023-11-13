@@ -33,89 +33,6 @@ func (v *AntlrVisitor) VisitStmt(ctx *parser.StmtContext) interface{} {
 
 }
 
-func (v *AntlrVisitor) VisitLoopStmt(ctx *parser.LoopStmtContext) interface{} {
-	if ctx.CStyleFor() != nil {
-		return v.VisitCStyleFor(ctx.CStyleFor().(*parser.CStyleForContext))
-	}
-	if ctx.WhileStyleFor() != nil {
-		return v.VisitWhileStyleFor(ctx.WhileStyleFor().(*parser.WhileStyleForContext))
-	}
-	if ctx.IterFor() != nil {
-		return v.VisitIterStyleFor(ctx.IterFor().(*parser.IterForContext))
-	}
-	panic("implement me")
-}
-
-func (v *AntlrVisitor) VisitMathStmt(ctx *parser.MatchStmtContext) any {
-	match := &node.MatchStmt{
-		Token: token.FromAntlrToken(ctx.Match().GetSymbol()),
-		Match: v.VisitExpr(ctx.Expr().(*parser.ExprContext)).(node.Expr),
-	}
-	for _, c := range ctx.AllMatchCase() {
-		m := c.(*parser.MatchCaseContext)
-		if m.Default() == nil {
-			match.Cases = append(match.Cases, v.VisitMatchCase(m).(*node.MatchCase))
-		} else {
-			match.Default = typeCastToPtr[node.CodeBlock](v.VisitCodeBlock(typeCastToPtr[parser.CodeBlockContext](m.CodeBlock())))
-		}
-	}
-	return match
-}
-
-func (v *AntlrVisitor) VisitMatchCase(ctx *parser.MatchCaseContext) any {
-	return &node.MatchCase{
-		Expr: v.VisitExpr(ctx.Expr().(*parser.ExprContext)).(node.Expr),
-		Body: v.VisitCodeBlock(ctx.CodeBlock().(*parser.CodeBlockContext)).(*node.CodeBlock),
-	}
-}
-
-func (v *AntlrVisitor) VisitCStyleFor(ctx *parser.CStyleForContext) any {
-	n := node.CStyleFor{
-		Token: token.FromAntlrToken(ctx.For().GetSymbol()),
-		Body:  v.VisitCodeBlock(ctx.CodeBlock().(*parser.CodeBlockContext)).(*node.CodeBlock),
-	}
-	if ctx.GetOnInit() != nil {
-		n.InitialExpr = v.VisitExpr(ctx.GetOnInit().(*parser.ExprContext)).(node.Node)
-	}
-
-	if ctx.GetOnCondition() != nil {
-		n.ConditionExpr = v.VisitExpr(ctx.GetOnCondition().(*parser.ExprContext)).(node.Expr)
-	}
-
-	if ctx.GetOnEnd() != nil {
-		n.AfterIterExpr = v.VisitExpr(ctx.GetOnEnd().(*parser.ExprContext)).(node.Expr)
-	}
-
-	return &n
-}
-
-func (v *AntlrVisitor) VisitWhileStyleFor(ctx *parser.WhileStyleForContext) any {
-	n := node.WhileStyleFor{
-		Token: token.FromAntlrToken(ctx.For().GetSymbol()),
-		Body:  v.VisitCodeBlock(ctx.CodeBlock().(*parser.CodeBlockContext)).(*node.CodeBlock),
-	}
-	if ctx.Expr() != nil {
-		n.ConditionExpr = v.VisitExpr(ctx.Expr().(*parser.ExprContext)).(node.Expr)
-	}
-	return &n
-}
-
-func (v *AntlrVisitor) VisitIterStyleFor(ctx *parser.IterForContext) any {
-	n := node.IterStyleFor{
-		Token:    token.FromAntlrToken(ctx.For().GetSymbol()),
-		Variable: v.visitIdentifier(ctx.Identifier()),
-		Iterator: v.VisitExpr(ctx.Expr().(*parser.ExprContext)).(node.Expr),
-		Body:     v.VisitCodeBlock(ctx.CodeBlock().(*parser.CodeBlockContext)).(*node.CodeBlock),
-	}
-	if ctx.Type_() != nil {
-		t := v.VisitType(typeCastToPtr[parser.TypeContext](ctx.Type_()))
-		if t != nil {
-			n.Type = t.(*node.Identifier)
-		}
-	}
-	return &n
-}
-
 func (v *AntlrVisitor) VisitJumpStmt(ctx *parser.JumpStmtContext) interface{} {
 	if ctx.Return() != nil {
 		ret := node.ReturnStmt{
@@ -206,20 +123,6 @@ func (v *AntlrVisitor) VisitBaseVar(ctx *parser.BaseVarContext) any {
 				),
 			)),
 	}
-}
-
-func typeCastToPtr[T any](i any) *T {
-	if i == nil {
-		return nil
-	}
-	return i.(*T)
-}
-
-func typeCastToArr[T any](v any) []T {
-	if v == nil {
-		return nil
-	}
-	return v.([]T)
 }
 
 func (v *AntlrVisitor) VisitIndexes(ctx *parser.IndexesContext) any {

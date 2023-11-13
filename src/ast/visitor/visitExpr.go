@@ -6,8 +6,6 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parser"
 	"github.com/antlr4-go/antlr/v4"
-	"reflect"
-	"strconv"
 )
 
 func (v *AntlrVisitor) VisitExprWithLambda(ctx *parser.ExprWithLambdaContext) interface{} {
@@ -15,28 +13,6 @@ func (v *AntlrVisitor) VisitExprWithLambda(ctx *parser.ExprWithLambdaContext) in
 		return v.VisitLambda(ctx.Lambda().(*parser.LambdaContext))
 	}
 	return v.VisitExpr(ctx.Expr().(*parser.ExprContext))
-}
-
-func (v *AntlrVisitor) VisitFuncCall(ctx *parser.FuncCallContext) interface{} {
-	fc := &node.FuncCall{
-		Token:  token.FromAntlrToken(ctx.GetStart()),
-		Caller: v.VisitVar(ctx.Var_().(*parser.VarContext)).(*node.Variable),
-	}
-	if fca := ctx.FuncCallArgs(); fca != nil {
-		args := v.VisitFuncCallArgs(ctx.FuncCallArgs().(*parser.FuncCallArgsContext))
-		if args != nil {
-			fc.Args = args.([]node.Expr)
-		}
-	}
-	return fc
-}
-
-func (v *AntlrVisitor) VisitFuncCallArgs(ctx *parser.FuncCallArgsContext) interface{} {
-	var args []node.Expr
-	for _, expr := range ctx.AllExpr() {
-		args = append(args, v.VisitExpr(expr.(*parser.ExprContext)).(node.Expr))
-	}
-	return args
 }
 
 func (v *AntlrVisitor) VisitExpr(ctx *parser.ExprContext) interface{} {
@@ -126,113 +102,5 @@ func (v *AntlrVisitor) VisitBinaryExpr(ctx *parser.ExprContext) interface{} {
 		Left:  v.VisitExpr(ctx.GetChild(0).(*parser.ExprContext)).(node.Expr),
 		Oper:  oper.GetText(),
 		Right: v.VisitExpr(ctx.GetChild(2).(*parser.ExprContext)).(node.Expr),
-	}
-}
-
-func (v *AntlrVisitor) VisitLiteral(ctx *parser.LiteralContext) interface{} {
-	switch ctx.GetStart().GetTokenType() {
-	case parser.V2ParserIdentifier:
-		return &node.Identifier{
-			Token: token.FromAntlrToken(ctx.GetStart()),
-			Value: ctx.GetStart().GetText(),
-		}
-	case parser.V2ParserIntegerLiteral:
-		val, err := strconv.Atoi(ctx.GetStart().GetText())
-
-		if err != nil {
-			v.Errs = append(v.Errs, VisitorError{
-				Raw:    err,
-				Msg:    "Expected an integer value, but got " + ctx.GetStart().GetText(),
-				Line:   ctx.GetStart().GetLine(),
-				Column: ctx.GetStart().GetColumn(),
-				Text:   ctx.GetText(),
-			})
-		}
-		return &node.IntLiteral{
-			Token: token.FromAntlrToken(ctx.GetStart()),
-			Value: val,
-		}
-	case parser.V2ParserNumberLiteral:
-		val, err := strconv.ParseFloat(ctx.GetStart().GetText(), 64)
-		if err != nil {
-			v.Errs = append(v.Errs, VisitorError{
-				Raw:    err,
-				Msg:    "Expected an number value, but got " + ctx.GetStart().GetText(),
-				Line:   ctx.GetStart().GetLine(),
-				Column: ctx.GetStart().GetColumn(),
-				Text:   ctx.GetText(),
-			})
-			return nil
-		}
-		return &node.FloatLiteral{
-			Token: token.FromAntlrToken(ctx.GetStart()),
-			Value: val,
-		}
-	case parser.V2ParserStringLiteral:
-		txt := ctx.GetStart().GetText()
-		return &node.StringLiteral{
-			Token: token.FromAntlrToken(ctx.GetStart()),
-			Value: txt[1 : len(txt)-1],
-		}
-	case parser.V2ParserTrue:
-		return &node.BoolLiteral{
-			Token: token.FromAntlrToken(ctx.GetStart()),
-			Value: true,
-		}
-	case parser.V2ParserFalse:
-		return &node.BoolLiteral{
-			Token: token.FromAntlrToken(ctx.GetStart()),
-			Value: false,
-		}
-	case parser.V2ParserRULE_structInitializer:
-		fmt.Println("-> STRUCT : ", ctx.GetStart().GetText())
-	default:
-		if ctx.ArrayInitializer() != nil {
-			return v.VisitArrayInitializer(ctx.ArrayInitializer().(*parser.ArrayInitializerContext))
-		}
-		if ctx.MapInitializer() != nil {
-			return v.VisitMapInitializer(ctx.MapInitializer().(*parser.MapInitializerContext))
-		}
-		fmt.Println("VisitLiteralBlock : Unknown type")
-		fmt.Println("-> text     : ", ctx.GetStart().GetText())
-		fmt.Println("-> tokenType: ", ctx.GetStart().GetTokenType())
-		fmt.Println("-> reflect  :", reflect.TypeOf(ctx))
-		panic("VisitLiteralBlock : Unknown type")
-	}
-	panic("Unimplemented")
-}
-
-func (v *AntlrVisitor) VisitMapInitializer(ctx *parser.MapInitializerContext) interface{} {
-	pairs := ctx.AllMapPair()
-	var arr []*node.MapPairLiteral
-	for _, e := range pairs {
-		arr = append(arr, v.VisitMapPairInitializer(e.(*parser.MapPairContext)).(*node.MapPairLiteral))
-	}
-	return &node.MapLiteral{
-		Token: token.FromAntlrToken(ctx.GetStart()),
-		Value: arr,
-	}
-}
-
-func (v *AntlrVisitor) VisitMapPairInitializer(ctx *parser.MapPairContext) interface{} {
-	if ctx.MapPair() != nil {
-		return v.VisitMapPairInitializer(ctx.MapPair().(*parser.MapPairContext))
-	}
-	return &node.MapPairLiteral{
-		Token: token.FromAntlrToken(ctx.GetStart()),
-		Key:   v.VisitExpr(ctx.Expr().(*parser.ExprContext)).(node.Expr),
-		Value: v.VisitExprWithLambda(ctx.ExprWithLambda().(*parser.ExprWithLambdaContext)).(node.Expr),
-	}
-}
-
-func (v *AntlrVisitor) VisitArrayInitializer(ctx *parser.ArrayInitializerContext) interface{} {
-	exprs := ctx.AllExpr()
-	var arr []node.Expr
-	for _, e := range exprs {
-		arr = append(arr, v.VisitExpr(e.(*parser.ExprContext)).(node.Expr))
-	}
-	return &node.ArrayLiteral{
-		Token: token.FromAntlrToken(ctx.GetStart()),
-		Value: arr,
 	}
 }
