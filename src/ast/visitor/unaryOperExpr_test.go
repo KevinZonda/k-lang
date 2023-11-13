@@ -8,7 +8,7 @@ import (
 )
 
 func TestUnaryOperExpr(t *testing.T) {
-	a := parserHelper.Ast("-1")
+	a, _ := parserHelper.Ast("-1")
 	if len(a) != 1 {
 		t.Error("Expected 1 node, got", len(a))
 	}

@@ -15,9 +15,9 @@ func ShowAst(input string) {
 	panicx.PanicIfNotNil(e, e)
 	var ast tree.Ast
 	if compressor.IsCompressed(bs) {
-		ast = compressor.Decompress(bs)
+		ast, _ = compressor.Decompress(bs)
 	} else {
-		ast = parserHelper.Ast(string(bs))
+		ast, _ = parserHelper.Ast(string(bs))
 	}
 	jout.Println(ast)
 }

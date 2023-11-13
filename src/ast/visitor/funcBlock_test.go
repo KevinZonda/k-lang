@@ -7,19 +7,19 @@ import (
 )
 
 func TestFuncBlock(t *testing.T) {
-	ast := parserHelper.Ast(`
+	ast, _ := parserHelper.Ast(`
 fn add(int x, int y) float {
     y := x + 1
 }
 `)
 	jout.Println(ast)
-	ast = parserHelper.Ast(`
+	ast, _ = parserHelper.Ast(`
 fn add() float {
     y := x + 1
 }
 `)
 	jout.Println(ast)
-	ast = parserHelper.Ast(`
+	ast, _ = parserHelper.Ast(`
 fn add() {
     y := x + 1
 }
@@ -28,10 +28,10 @@ fn add() {
 }
 
 func TestFuncCall(t *testing.T) {
-	ast := parserHelper.Ast(`
+	ast, _ := parserHelper.Ast(`
 add()`)
 	jout.Println(ast)
-	ast = parserHelper.Ast(`
+	ast, _ = parserHelper.Ast(`
 add(1, 2)`)
 	jout.Println(ast)
 }

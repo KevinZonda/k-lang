@@ -11,7 +11,7 @@ func Ast(input string, output string) {
 	txt, err := iox.ReadAllText(input)
 	panicx.PanicIfNotNil(err, err)
 
-	ast := parserHelper.Ast(txt)
+	ast, _ := parserHelper.Ast(txt)
 	bs, err := json.MarshalIndent(ast, "", "    ")
 	panicx.PanicIfNotNil(err, err)
 

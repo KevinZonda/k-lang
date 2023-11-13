@@ -17,7 +17,7 @@ func Compile(input string, output string) {
 	str, e := iox.ReadAllText(input)
 	panicx.PanicIfNotNil(e, e)
 
-	ast := parserHelper.Ast(str)
+	ast, _ := parserHelper.Ast(str)
 
 	e = iox.WriteAllBytes(output, compressor.Compress(ast))
 	panicx.PanicIfNotNil(e, e)

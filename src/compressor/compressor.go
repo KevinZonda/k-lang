@@ -13,24 +13,17 @@ const (
 	magicEnd   = ">]"
 )
 
-func serialise(a tree.Ast) string {
+func serialise(a tree.Ast) (string, error) {
 	m := zson.NewMarshaler()
 	m.Decorate(zson.StyleSimple)
-	val, e := m.Marshal(a)
-	if e != nil {
-		panic(e)
-	}
-	return val
+	return m.Marshal(a)
 }
 
-func deserialise(zson string) tree.Ast {
+func deserialise(zson string) (tree.Ast, error) {
 	um := NewUnmarshal()
 	var a tree.Ast
 	e := um.Unmarshal(zson, &a)
-	if e != nil {
-		panic(e)
-	}
-	return a
+	return a, e
 }
 
 func br(bs []byte) []byte {
@@ -41,27 +34,37 @@ func br(bs []byte) []byte {
 	return b.Bytes()
 }
 
-func unbr(bs []byte) []byte {
-	bs, e := io.ReadAll(brotli.NewReader(bytes.NewReader(bs)))
-	if e != nil {
-		panic(e)
-	}
-	return bs
+func unbr(bs []byte) ([]byte, error) {
+	return io.ReadAll(brotli.NewReader(bytes.NewReader(bs)))
 }
-func Compress(a tree.Ast) []byte {
-	x := br([]byte(serialise(a)))
+func Compress(a tree.Ast) ([]byte, CompressorError) {
+	s, err := serialise(a)
+	if err != nil {
+		return nil, ErrSerialiseFailed
+	}
+	x := br([]byte(s))
 	return append([]byte(magicStart),
-		append(x, []byte(magicEnd)...)...)
+		append(x, []byte(magicEnd)...)...), nil
 }
 
-func Decompress(bs []byte) tree.Ast {
+func Decompress(bs []byte) (tree.Ast, CompressorError) {
 	begin := bytes.Index(bs, []byte(magicStart))
 	end := bytes.Index(bs, []byte(magicEnd))
 	if begin == -1 || end == -1 {
-		panic("Not a compressed file")
+		return nil, ErrNotCompressed
 	}
 	bs = bs[begin+len(magicStart) : end]
-	return deserialise(string(unbr(bs)))
+
+	unbred, err := unbr(bs)
+	if err != nil {
+		return nil, ErrDecompressFailed
+	}
+
+	ast, err := deserialise(string(unbred))
+	if err != nil {
+		return nil, ErrDeserialiseFailed
+	}
+	return ast, nil
 }
 
 func IsCompressed(bs []byte) bool {

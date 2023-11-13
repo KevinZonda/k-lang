@@ -9,7 +9,8 @@ import (
 
 func generalTest(ts *testing.T, code, expected string) {
 	if err := tx.IsStdoutAsExpected(func() {
-		e := eval.New(parserHelper.Ast(code))
+		ast, _ := parserHelper.Ast(code)
+		e := eval.New(ast)
 		e.Do()
 	}, expected); err != nil {
 		ts.Fatal(err)

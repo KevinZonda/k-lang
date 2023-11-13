@@ -9,7 +9,7 @@ import (
 )
 
 func TestCompressAst(t *testing.T) {
-	v := parserHelper.Ast(`
+	v, _ := parserHelper.Ast(`
 fn foo(int x) {
   return x + x
 }
@@ -17,9 +17,9 @@ fn foo(int x) {
 a := foo(11)
 
 `)
-	r := compressor.Compress(v)
+	r, _ := compressor.Compress(v)
 	fmt.Println("Compressed To: ", r)
 	fmt.Println("Size: ", len(r))
-	ast := compressor.Decompress(r)
+	ast, _ := compressor.Decompress(r)
 	jout.Println(ast)
 }

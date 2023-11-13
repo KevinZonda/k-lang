@@ -8,7 +8,7 @@ import (
 )
 
 func TestBinaryOper(t *testing.T) {
-	v := parserHelper.Ast("7+1+2+3+a")
+	v, _ := parserHelper.Ast("7+1+2+3+a")
 	t.Log(v)
 	fmt.Println("------------------")
 	v = pruner.Prune(v)

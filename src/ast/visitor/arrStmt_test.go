@@ -7,6 +7,6 @@ import (
 )
 
 func TestArr(t *testing.T) {
-	ast := parserHelper.Ast("[1, 2, 3, 4]")
+	ast, _ := parserHelper.Ast("[1, 2, 3, 4]")
 	jout.Println(ast)
 }

@@ -8,7 +8,7 @@ import (
 )
 
 func TestSingleExpressionParse(t *testing.T) {
-	ast := parserHelper.Ast("1 + 2.2")
+	ast, _ := parserHelper.Ast("1 + 2.2")
 	if len(ast) != 1 {
 		t.Error("Expected 1 node, got", len(ast))
 	}
