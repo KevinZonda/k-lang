@@ -11,5 +11,8 @@ func (e *Eval) EvalMatchStmt(m *node.MatchStmt) any {
 			return e.EvalCodeBlock(c.Body)
 		}
 	}
+	if m.Default != nil {
+		return e.EvalCodeBlock(m.Default)
+	}
 	return nil
 }
