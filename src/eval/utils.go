@@ -11,7 +11,7 @@ import (
 func New(ast tree.Ast) *Eval {
 	return &Eval{
 		ast:       ast,
-		objTable:  &obj.TableStack{},
+		objTable:  obj.NewObjectTable(),
 		funcTable: &obj.StackImpl[*node.FuncBlock]{},
 	}
 }
