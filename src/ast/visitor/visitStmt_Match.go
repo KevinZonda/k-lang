@@ -16,7 +16,7 @@ func (v *AntlrVisitor) VisitMathStmt(ctx *parser.MatchStmtContext) any {
 		if m.Default() == nil {
 			match.Cases = append(match.Cases, v.VisitMatchCase(m).(*node.MatchCase))
 		} else {
-			match.Default = typeCastToPtr[node.CodeBlock](v.VisitCodeBlock(typeCastToPtr[parser.CodeBlockContext](m.CodeBlock())))
+			match.Default = toPtr[node.CodeBlock](v.VisitCodeBlock(toPtr[parser.CodeBlockContext](m.CodeBlock())))
 		}
 	}
 	return match

@@ -38,9 +38,8 @@ func (v *AntlrVisitor) VisitJumpStmt(ctx *parser.JumpStmtContext) interface{} {
 		ret := node.ReturnStmt{
 			Token: token.FromAntlrToken(ctx.GetStart()),
 		}
-		if ctx.ExprWithLambda() != nil {
-			ret.Value = v.VisitExprWithLambda(ctx.ExprWithLambda().(*parser.ExprWithLambdaContext)).(node.Expr)
-		}
+		ret.Value = toExpr(v.VisitExprWithLambda(toPtr[parser.ExprWithLambdaContext](ctx.ExprWithLambda())))
+		
 		return &ret
 	}
 	if ctx.Break() != nil {
@@ -74,7 +73,7 @@ func (v *AntlrVisitor) VisitIfStmt(ctx *parser.IfStmtContext) interface{} {
 func (v *AntlrVisitor) VisitAssignStmt(ctx *parser.AssignStmtContext) interface{} {
 	n := node.AssignStmt{
 		Token: token.FromAntlrToken(ctx.Assign().GetSymbol()),
-		Type:  typeCastToPtr[node.Identifier](v.VisitType(typeCastToPtr[parser.TypeContext](ctx.Type_()))),
+		Type:  toPtr[node.Identifier](v.VisitType(toPtr[parser.TypeContext](ctx.Type_()))),
 		Var:   v.VisitVar(ctx.Var_().(*parser.VarContext)).(*node.Variable),
 		Value: v.VisitExprWithLambda(ctx.ExprWithLambda().(*parser.ExprWithLambdaContext)).(node.Expr),
 	}
@@ -116,9 +115,9 @@ func (v *AntlrVisitor) VisitBaseVar(ctx *parser.BaseVarContext) any {
 			Token: token.FromAntlrToken(id.GetSymbol()),
 			Value: id.GetText(),
 		},
-		Index: typeCastToArr[node.Expr](
+		Index: toArr[node.Expr](
 			v.VisitIndexes(
-				typeCastToPtr[parser.IndexesContext](
+				toPtr[parser.IndexesContext](
 					ctx.Indexes(),
 				),
 			)),

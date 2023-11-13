@@ -21,21 +21,12 @@ func (v *AntlrVisitor) VisitLoopStmt(ctx *parser.LoopStmtContext) interface{} {
 
 func (v *AntlrVisitor) VisitCStyleFor(ctx *parser.CStyleForContext) any {
 	n := node.CStyleFor{
-		Token: token.FromAntlrToken(ctx.For().GetSymbol()),
-		Body:  v.VisitCodeBlock(ctx.CodeBlock().(*parser.CodeBlockContext)).(*node.CodeBlock),
+		Token:         token.FromAntlrToken(ctx.For().GetSymbol()),
+		Body:          v.VisitCodeBlock(ctx.CodeBlock().(*parser.CodeBlockContext)).(*node.CodeBlock),
+		InitialExpr:   toNode(v.VisitExpr(toPtr[parser.ExprContext](ctx.GetOnInit()))),
+		ConditionExpr: toExpr(v.VisitExpr(toPtr[parser.ExprContext](ctx.GetOnCondition()))),
+		AfterIterExpr: toExpr(v.VisitExpr(toPtr[parser.ExprContext](ctx.GetOnEnd()))),
 	}
-	if ctx.GetOnInit() != nil {
-		n.InitialExpr = v.VisitExpr(ctx.GetOnInit().(*parser.ExprContext)).(node.Node)
-	}
-
-	if ctx.GetOnCondition() != nil {
-		n.ConditionExpr = v.VisitExpr(ctx.GetOnCondition().(*parser.ExprContext)).(node.Expr)
-	}
-
-	if ctx.GetOnEnd() != nil {
-		n.AfterIterExpr = v.VisitExpr(ctx.GetOnEnd().(*parser.ExprContext)).(node.Expr)
-	}
-
 	return &n
 }
 
@@ -58,7 +49,7 @@ func (v *AntlrVisitor) VisitIterStyleFor(ctx *parser.IterForContext) any {
 		Body:     v.VisitCodeBlock(ctx.CodeBlock().(*parser.CodeBlockContext)).(*node.CodeBlock),
 	}
 	if ctx.Type_() != nil {
-		t := v.VisitType(typeCastToPtr[parser.TypeContext](ctx.Type_()))
+		t := v.VisitType(toPtr[parser.TypeContext](ctx.Type_()))
 		if t != nil {
 			n.Type = t.(*node.Identifier)
 		}

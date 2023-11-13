@@ -5,7 +5,6 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parser"
-	"github.com/antlr4-go/antlr/v4"
 )
 
 func (v *AntlrVisitor) VisitExprWithLambda(ctx *parser.ExprWithLambdaContext) interface{} {
@@ -16,6 +15,9 @@ func (v *AntlrVisitor) VisitExprWithLambda(ctx *parser.ExprWithLambdaContext) in
 }
 
 func (v *AntlrVisitor) VisitExpr(ctx *parser.ExprContext) interface{} {
+	if ctx == nil {
+		return nil
+	}
 	// fmt.Println("VisitExpr")
 	if ctx.AssignStmt() != nil {
 		return v.VisitAssignStmt(ctx.AssignStmt().(*parser.AssignStmtContext))
@@ -35,13 +37,9 @@ func (v *AntlrVisitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 	if ctx.FuncCall() != nil {
 		return v.VisitFuncCall(ctx.FuncCall().(*parser.FuncCallContext))
 	}
-	if ctx.GetChildCount() == 1 {
-		// TODO: ID
-		n := ctx.GetChild(0).(*antlr.TerminalNodeImpl)
-		return &node.Identifier{
-			Token: token.FromAntlrToken(n.GetSymbol()),
-			Value: n.GetText(),
-		}
+
+	if ctx.Identifier() != nil {
+		return v.visitIdentifier(ctx.Identifier())
 	}
 
 	//for _, tx := range ctx.GetChildren() {

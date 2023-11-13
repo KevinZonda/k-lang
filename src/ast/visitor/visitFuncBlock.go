@@ -18,8 +18,8 @@ func (v *AntlrVisitor) VisitLambda(ctx *parser.LambdaContext) interface{} {
 		Token: token.FromAntlrToken(ctx.GetStart()),
 		Body:  v.VisitCodeBlock(ctx.CodeBlock().(*parser.CodeBlockContext)).(*node.CodeBlock),
 	}
-	args := v.VisitFuncSignArgs(typeCastToPtr[parser.FuncSignArgsContext](ctx.FuncSignArgs()))
-	ret := v.VisitType(typeCastToPtr[parser.TypeContext](ctx.Type_()))
+	args := v.VisitFuncSignArgs(toPtr[parser.FuncSignArgsContext](ctx.FuncSignArgs()))
+	ret := v.VisitType(toPtr[parser.TypeContext](ctx.Type_()))
 	if args != nil {
 		fb.Args = args.([]*node.FuncArg)
 	}
@@ -35,8 +35,8 @@ func (v *AntlrVisitor) VisitFuncSig(ctx *parser.FuncSigContext) interface{} {
 		Name: v.visitIdentifier(ctx.Identifier()),
 	}
 
-	args := v.VisitFuncSignArgs(typeCastToPtr[parser.FuncSignArgsContext](ctx.FuncSignArgs()))
-	ret := v.VisitType(typeCastToPtr[parser.TypeContext](ctx.Type_()))
+	args := v.VisitFuncSignArgs(toPtr[parser.FuncSignArgsContext](ctx.FuncSignArgs()))
+	ret := v.VisitType(toPtr[parser.TypeContext](ctx.Type_()))
 	if args != nil {
 		fb.Args = args.([]*node.FuncArg)
 	}
