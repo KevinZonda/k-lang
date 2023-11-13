@@ -72,3 +72,11 @@ func (e *Eval) evalValWithIdx(idxs []node.Expr, root *any) *any {
 	}
 	return val
 }
+
+func (e *Eval) ObjTable() *obj.TableStack {
+	return e.objTable
+}
+
+func (e *Eval) FuncTable() *obj.StackImpl[*node.FuncBlock] {
+	return e.funcTable
+}

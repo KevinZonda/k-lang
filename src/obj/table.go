@@ -8,6 +8,10 @@ type TableStack struct {
 	q []Table
 }
 
+func (t *TableStack) Raw() []Table {
+	return t.q
+}
+
 func (t *TableStack) Push(n Table) {
 	t.q = append(t.q, n)
 }

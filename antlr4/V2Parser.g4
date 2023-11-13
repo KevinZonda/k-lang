@@ -27,7 +27,7 @@ baseVar : Identifier indexes?;
 index : LSquare expr RSquare;
 indexes : index+;
 
-lambda : LParen funcSignArgs RParen type? codeBlock;
+lambda : Function LParen funcSignArgs RParen type? codeBlock;
 
 binaryOper : Equals | NotEq | Greater | Less | GreaterEq | LessEq | (Or | And) | Pow | (Mul | Div) | Mod | (Add | Sub);
 unaryOper : Add | Sub | Not;
@@ -39,6 +39,7 @@ expr
     | LParen expr RParen
     | Identifier
     | expr indexes
+    | expr Dot expr
     | assignStmt
     ;
 
@@ -105,7 +106,7 @@ matchCase
 jumpStmt
     : Continue
     | Break
-    | Return expr?
+    | Return exprWithLambda?
     ;
 
 sep : NewLine | Semi;

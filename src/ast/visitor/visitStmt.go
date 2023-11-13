@@ -121,8 +121,8 @@ func (v *AntlrVisitor) VisitJumpStmt(ctx *parser.JumpStmtContext) interface{} {
 		ret := node.ReturnStmt{
 			Token: token.FromAntlrToken(ctx.GetStart()),
 		}
-		if ctx.Expr() != nil {
-			ret.Value = v.VisitExpr(ctx.Expr().(*parser.ExprContext)).(node.Expr)
+		if ctx.ExprWithLambda() != nil {
+			ret.Value = v.VisitExprWithLambda(ctx.ExprWithLambda().(*parser.ExprWithLambdaContext)).(node.Expr)
 		}
 		return &ret
 	}

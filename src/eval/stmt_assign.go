@@ -1,6 +1,8 @@
 package eval
 
-import "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
+import (
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
+)
 
 func (e *Eval) EvalAssignStmt(n *node.AssignStmt) any {
 	v := e.EvalExpr(n.Value)
@@ -21,9 +23,9 @@ func (e *Eval) EvalAssignStmt(n *node.AssignStmt) any {
 			//return v
 		}
 	}
-	switch n.Value.(type) {
+	switch v.(type) {
 	case *node.LambdaExpr:
-		e.funcTable.Set(baseV.Name.Value, n.Value.(*node.LambdaExpr).ToFunc(baseV.Name.Value))
+		e.funcTable.Set(baseV.Name.Value, v.(*node.LambdaExpr).ToFunc(baseV.Name.Value))
 	default:
 		e.objTable.Set(baseV.Name.Value, v)
 

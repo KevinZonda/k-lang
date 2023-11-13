@@ -4,6 +4,10 @@ type StackImpl[T any] struct {
 	q []map[string]T
 }
 
+func (t *StackImpl[T]) Raw() []map[string]T {
+	return t.q
+}
+
 func (t *StackImpl[T]) Push(n map[string]T) {
 	t.q = append(t.q, n)
 }

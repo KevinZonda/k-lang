@@ -1,6 +1,8 @@
 package eval_test
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestLambdaCall(t *testing.T) {
 	code := `
@@ -15,13 +17,15 @@ foo(14)
 
 func TestReturnLambda(t *testing.T) {
 	code := `
-foo := () {
-	return (x) {
+foo := fn () {
+	return fn (x) {
         println(x+11)
+        return x + 11
     }
 }
-foo()(14)
+m := foo()
+k := m(17)
 `
-	expected := "25\n"
+	expected := "28\n"
 	generalTest(t, code, expected)
 }

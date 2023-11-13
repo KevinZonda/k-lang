@@ -10,7 +10,7 @@ func IsStdoutAsExpected(f func(), expected string) error {
 	CaptureStdout()
 	defer func() {
 		if rec := recover(); rec != nil {
-			fmt.Println("Recovered in tester", r)
+			fmt.Println("Recovered in tester", rec)
 			if IsCapturing() {
 				StopCaptureStdout()
 			}
@@ -20,6 +20,7 @@ func IsStdoutAsExpected(f func(), expected string) error {
 	}()
 	f()
 	output := StopCaptureStdout()
+	fmt.Println("Content Captured:\n", output)
 
 	if output != expected {
 		return fmt.Errorf("The code result:\n%s\nSHA256:%s\nExpected:\n%s\nSHA256:%s\n",
