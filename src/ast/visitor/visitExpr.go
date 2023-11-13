@@ -87,8 +87,16 @@ func (v *AntlrVisitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 }
 
 func (v *AntlrVisitor) VisitUnaryExpr(ctx *parser.ExprContext) interface{} {
+
 	if ctx.GetChildCount() != 2 {
-		panic("VisitUnaryExpr : Invalid child count : " + fmt.Sprint(ctx.GetChildCount()))
+		v.Errs = append(v.Errs, VisitorError{
+			Raw:    nil,
+			Msg:    "Expected unary expression (e.g., -a), but got " + ctx.GetStart().GetText() + "\nWe expect 2 children, but got " + fmt.Sprint(ctx.GetChildCount()) + " children",
+			Line:   ctx.GetStart().GetLine(),
+			Column: ctx.GetStart().GetColumn(),
+			Text:   ctx.GetText(),
+		})
+		return nil
 	}
 	oper := ctx.GetChild(0).(*parser.UnaryOperContext)
 
@@ -102,7 +110,14 @@ func (v *AntlrVisitor) VisitUnaryExpr(ctx *parser.ExprContext) interface{} {
 func (v *AntlrVisitor) VisitBinaryExpr(ctx *parser.ExprContext) interface{} {
 	// fmt.Println("VisitBinaryExpr")
 	if ctx.GetChildCount() != 3 {
-		panic("VisitBinaryExpr : Invalid child count : " + fmt.Sprint(ctx.GetChildCount()))
+		v.Errs = append(v.Errs, VisitorError{
+			Raw:    nil,
+			Msg:    "Expected binary expression (e.g., a + b), but got " + ctx.GetStart().GetText() + "\nWe expect 3 children, but got " + fmt.Sprint(ctx.GetChildCount()) + " children",
+			Line:   ctx.GetStart().GetLine(),
+			Column: ctx.GetStart().GetColumn(),
+			Text:   ctx.GetText(),
+		})
+		return nil
 	}
 	oper := ctx.GetChild(1).(*parser.BinaryOperContext)
 
@@ -123,8 +138,15 @@ func (v *AntlrVisitor) VisitLiteral(ctx *parser.LiteralContext) interface{} {
 		}
 	case parser.V2ParserIntegerLiteral:
 		val, err := strconv.Atoi(ctx.GetStart().GetText())
+
 		if err != nil {
-			panic(err)
+			v.Errs = append(v.Errs, VisitorError{
+				Raw:    err,
+				Msg:    "Expected an integer value, but got " + ctx.GetStart().GetText(),
+				Line:   ctx.GetStart().GetLine(),
+				Column: ctx.GetStart().GetColumn(),
+				Text:   ctx.GetText(),
+			})
 		}
 		return &node.IntLiteral{
 			Token: token.FromAntlrToken(ctx.GetStart()),
@@ -133,7 +155,14 @@ func (v *AntlrVisitor) VisitLiteral(ctx *parser.LiteralContext) interface{} {
 	case parser.V2ParserNumberLiteral:
 		val, err := strconv.ParseFloat(ctx.GetStart().GetText(), 64)
 		if err != nil {
-			panic(err)
+			v.Errs = append(v.Errs, VisitorError{
+				Raw:    err,
+				Msg:    "Expected an number value, but got " + ctx.GetStart().GetText(),
+				Line:   ctx.GetStart().GetLine(),
+				Column: ctx.GetStart().GetColumn(),
+				Text:   ctx.GetText(),
+			})
+			return nil
 		}
 		return &node.FloatLiteral{
 			Token: token.FromAntlrToken(ctx.GetStart()),

@@ -9,6 +9,7 @@ import (
 
 type AntlrVisitor struct {
 	*parser.BaseV2ParserVisitor
+	Errs []VisitorError
 }
 
 func New() *AntlrVisitor {
@@ -42,4 +43,3 @@ func (v *AntlrVisitor) VisitProgram(ctx *parser.ProgramContext) any {
 	}
 	return tree.Ast(block)
 }
-

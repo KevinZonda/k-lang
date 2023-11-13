@@ -8,7 +8,7 @@ import (
 
 func TestErrOutput(t *testing.T) {
 	code := `
-if x == 17 {
+if (x == 17) {
 }`
 	p := parserHelper.FromString(code)
 	_ = p.Ast()

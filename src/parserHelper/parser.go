@@ -16,10 +16,22 @@ type WrappedParser struct {
 }
 
 func (p *WrappedParser) Ast() tree.Ast {
-	return p.
+	v := visitor.New()
+	a := p.
 		parser.
 		Program().
-		Accept(visitor.New()).(tree.Ast)
+		Accept(v).(tree.Ast)
+
+	for _, e := range v.Errs {
+		p.parE.Errors = append(p.parE.Errors,
+			SyntaxError{
+				line:   e.Line,
+				column: e.Column,
+				msg:    e.Msg + "\nRelated Code: " + e.Text,
+			})
+	}
+
+	return a
 }
 
 // region Getter & Setter
