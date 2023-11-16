@@ -37,7 +37,7 @@ func (e *Eval) EvalMapLiteral(n *node.MapLiteral) map[any]any {
 func (e *Eval) EvalIdentifier(n *node.Identifier) any {
 	v, ok := e.objTable.Get(n.Value)
 	if ok {
-		return v
+		return v.Val
 	}
 	panic("No Var Found")
 }

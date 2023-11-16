@@ -10,10 +10,10 @@ func (e *Eval) EvalAssignStmt(n *node.AssignStmt) any {
 	baseV := n.Var.Value[len(n.Var.Value)-1]
 	obj, ok := e.objTable.Get(baseV.Name.Value)
 	if ok && len(baseV.Index) != 0 {
-		switch obj.(type) {
+		switch obj.Val.(type) {
 		case []any:
 			bIdx := baseV.Index[:len(baseV.Index)-1]
-			if tgt := e.evalValWithIdx(bIdx, &obj); tgt != nil {
+			if tgt := e.evalValWithIdx(bIdx, &obj.Val); tgt != nil {
 				switch (*tgt).(type) {
 				case []any:
 					((*tgt).([]any))[e.EvalExpr(baseV.Index[len(baseV.Index)-1]).(int)] = v

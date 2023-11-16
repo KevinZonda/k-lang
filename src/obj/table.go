@@ -80,7 +80,7 @@ func printId(id int) {
 	fmt.Print("->")
 }
 
-func (t *TableStack) Get(key string) (any, bool) {
+func (t *TableStack) Get(key string) (*Object, bool) {
 	// Get only valid on 2 tables
 	// Top
 	//  |
@@ -92,10 +92,7 @@ func (t *TableStack) Get(key string) (any, bool) {
 	}
 	if t.Len() == 1 {
 		v, ok := t.q[0][key]
-		if ok {
-			return v.Val, true
-		}
-		return nil, false
+		return v, ok
 	}
 	//ts := []Table{t.q[len(t.q)-1], t.q[0]}
 	//for _, _t := range ts {
@@ -105,7 +102,7 @@ func (t *TableStack) Get(key string) (any, bool) {
 	//}
 	for i := len(t.q) - 1; i >= 0; i-- {
 		if v, ok := t.q[i][key]; ok {
-			return v.Val, true
+			return v, true
 		}
 	}
 	return nil, false

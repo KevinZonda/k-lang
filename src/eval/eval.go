@@ -7,6 +7,7 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	"path/filepath"
+	"reflect"
 )
 
 type Eval struct {
@@ -59,7 +60,7 @@ func (e *Eval) LoadContext(o *Eval) {
 	e.funcTable = o.funcTable
 }
 
-func (e *Eval) runWithBreak(breaks ...string) any {
+func (e *Eval) runWithBreak(breaks ...string) (retV *obj.Object, hasRet bool) {
 	for _, n := range e.ast {
 		switch n.(type) {
 		case *node.CodeBlock:
@@ -85,17 +86,22 @@ func (e *Eval) runWithBreak(breaks ...string) any {
 			}
 		}
 	}
-	val, _ := e.objTable.Get(reserved.Return)
-	return val
+	retV, hasRet = e.objTable.Get(reserved.Return)
+	return
 }
 
 func (e *Eval) run() any {
-	return e.runWithBreak(reserved.Return, reserved.Break, reserved.Continue)
+	retV, hasRet := e.runWithBreak(reserved.Return, reserved.Break, reserved.Continue)
+	if hasRet {
+		return retV.Val
+	}
+	return nil
 }
 
 func (e *Eval) Do() {
-	if retV := e.runWithBreak(reserved.Return); retV != nil {
-		fmt.Println("[Interpreter] Program returned: ", retV)
+	if retV, hasRetV := e.runWithBreak(reserved.Return); hasRetV {
+		fmt.Println(retV == nil, reflect.TypeOf(retV))
+		fmt.Println("[Interpreter] Program returned: ", retV.Val)
 		return
 	}
 
