@@ -2,39 +2,10 @@ package eval
 
 import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
-	"path/filepath"
 	"reflect"
 )
-
-var openedFiles map[string]*Eval
-
-func New(ast tree.Ast, inputFile string) *Eval {
-	if openedFiles == nil {
-		openedFiles = map[string]*Eval{}
-	}
-	path := filepath.Dir(inputFile)
-	return &Eval{
-		ast:       ast,
-		objTable:  obj.NewObjectTable(),
-		funcTable: &obj.StackImpl[*node.FuncBlock]{},
-		basePath:  path,
-		opened:    make(map[string]*Eval),
-	}
-}
-
-func (e *Eval) new(ast tree.Ast) *Eval {
-	return &Eval{
-		ast:       ast,
-		objTable:  e.objTable,
-		funcTable: e.funcTable,
-		loopLvl:   e.loopLvl,
-		basePath:  e.basePath,
-		opened:    e.opened,
-	}
-}
 
 func (e *Eval) frameStart() {
 	e.objTable.PushEmpty()

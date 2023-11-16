@@ -6,6 +6,7 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
+	"path/filepath"
 )
 
 type Eval struct {
@@ -15,6 +16,33 @@ type Eval struct {
 	basePath  string
 	loopLvl   int
 	opened    map[string]*Eval
+}
+
+var openedFiles map[string]*Eval
+
+func New(ast tree.Ast, inputFile string) *Eval {
+	if openedFiles == nil {
+		openedFiles = map[string]*Eval{}
+	}
+	path := filepath.Dir(inputFile)
+	return &Eval{
+		ast:       ast,
+		objTable:  obj.NewObjectTable(),
+		funcTable: &obj.StackImpl[*node.FuncBlock]{},
+		basePath:  path,
+		opened:    make(map[string]*Eval),
+	}
+}
+
+func (e *Eval) new(ast tree.Ast) *Eval {
+	return &Eval{
+		ast:       ast,
+		objTable:  e.objTable,
+		funcTable: e.funcTable,
+		loopLvl:   e.loopLvl,
+		basePath:  e.basePath,
+		opened:    e.opened,
+	}
 }
 
 func (e *Eval) LoadContext(o *Eval) {
@@ -27,7 +55,7 @@ func (e *Eval) LoadContext(o *Eval) {
 	e.funcTable = o.funcTable
 }
 
-func (e *Eval) run() any {
+func (e *Eval) runWithBreak(breaks ...string) any {
 	for _, n := range e.ast {
 		switch n.(type) {
 		case *node.CodeBlock:
@@ -47,25 +75,37 @@ func (e *Eval) run() any {
 		default:
 			panic("not implemented")
 		}
-		if e.objTable.HasKeyAtTop(reserved.Return) ||
-			e.objTable.HasKeyAtTop(reserved.Break) ||
-			e.objTable.HasKeyAtTop(reserved.Continue) {
-			break
+		for _, key := range breaks {
+			if e.objTable.HasKeyAtTop(key) {
+				break
+			}
 		}
 	}
 	val, _ := e.objTable.Get(reserved.Return)
 	return val
 }
 
-func (e *Eval) It() any {
-	v, _ := e.objTable.Get("it")
-	return v
+func (e *Eval) run() any {
+	return e.runWithBreak(reserved.Return, reserved.Break, reserved.Continue)
 }
 
 func (e *Eval) Do() {
-	if retV := e.run(); retV != nil {
-		fmt.Println("Program returned: ", retV)
+	if retV := e.runWithBreak(reserved.Return); retV != nil {
+		fmt.Println("[Interpreter] Program returned: ", retV)
+		return
 	}
 
 	e.EvalMain()
+}
+
+func (e *Eval) EvalMain() any {
+	fn, ok := e.funcTable.Get("main")
+	if !ok {
+		return nil
+	}
+	e.frameStart()
+	fe := e.new((tree.Ast)(fn.Body.Nodes))
+	ret := fe.run()
+	e.frameEnd()
+	return ret
 }
