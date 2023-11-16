@@ -1,6 +1,7 @@
 package eval
 
 import (
+	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"github.com/KevinZonda/GoX/pkg/iox"
@@ -9,10 +10,10 @@ import (
 	"strings"
 )
 
-func (e *Eval) openFile(s string) (abs, content string, ok bool) {
+func (e *Eval) fineFile(s string) (abs string, ok bool) {
 	s = strings.TrimSpace(s)
 	if s == "" {
-		return "", "", false
+		return "", false
 	}
 	paths := []string{path.Join(e.basePath, s), s}
 	for _, p := range paths {
@@ -21,35 +22,41 @@ func (e *Eval) openFile(s string) (abs, content string, ok bool) {
 		//	fmt.Println("TRY OPEN ->", a, e)
 		//}
 		if iox.ExistFile(p) {
-			txt, err := iox.ReadAllText(p)
-			abs, _ = filepath.Abs(p)
-			return abs, txt, err == nil
+			var err error
+			abs, err = filepath.Abs(p)
+			return abs, err == nil
 		}
 	}
-	return "", "", false
+	return "", false
 }
 
 func (e *Eval) EvalOpenStmt(n *node.OpenStmt) {
-	abs, txt, ok := e.openFile(n.Path)
+	abs, ok := e.fineFile(n.Path)
 	if !ok {
 		panic("File not found: " + n.Path)
 		return
 	}
 
-	if _, ok = openedFiles[abs]; ok {
-		return
+	var openedEval *Eval
+
+	if openedEval, ok = openedFiles[abs]; !ok {
+		txt, err := iox.ReadAllText(abs)
+		if err != nil {
+			panic(fmt.Sprintln("Error reading file: ", abs, err))
+		}
+
+		ast, errs := parserHelper.Ast(txt)
+		if len(errs) > 0 {
+			parserHelper.PrintAllCodeErrors(errs)
+			panic("Parse failed: " + n.Path)
+		}
+		openedEval = New(ast, n.Path)
+		openedFiles[abs] = openedEval
+		openedEval.run()
 	}
 
-	ast, errs := parserHelper.Ast(txt)
-	if len(errs) > 0 {
-		parserHelper.PrintAllCodeErrors(errs)
-		panic("Parse failed: " + n.Path)
-		return
-	}
-	_e := New(ast, n.Path)
-	openedFiles[abs] = _e
 	if n.As != "" {
-		e.opened[n.As] = _e
+		e.opened[n.As] = openedEval
 	} else {
 		base := filepath.Base(abs)
 		sb := strings.Builder{}
@@ -60,9 +67,7 @@ func (e *Eval) EvalOpenStmt(n *node.OpenStmt) {
 				sb.WriteRune(c)
 			}
 		}
-		e.opened[sb.String()] = _e
+		e.opened[sb.String()] = openedEval
 		sb.Reset()
 	}
-	_e.run()
-	// e.new(ast).run()
 }
