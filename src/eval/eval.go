@@ -15,7 +15,6 @@ type Eval struct {
 	objTable *obj.TableStack
 	basePath string
 	loopLvl  int
-	opened   map[string]*Eval
 }
 
 var openedFiles map[string]*Eval
@@ -33,7 +32,6 @@ func New(ast tree.Ast, inputFile string) *Eval {
 		ast:      ast,
 		objTable: obj.NewObjectTable(),
 		basePath: path,
-		opened:   make(map[string]*Eval),
 	}
 }
 
@@ -43,7 +41,6 @@ func (e *Eval) new(ast tree.Ast) *Eval {
 		objTable: e.objTable,
 		loopLvl:  e.loopLvl,
 		basePath: e.basePath,
-		opened:   e.opened,
 	}
 }
 
