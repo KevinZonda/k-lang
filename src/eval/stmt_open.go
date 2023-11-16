@@ -35,6 +35,11 @@ func (e *Eval) EvalOpenStmt(n *node.OpenStmt) {
 		panic("File not found: " + n.Path)
 		return
 	}
+
+	if _, ok = openedFiles[abs]; ok {
+		return
+	}
+
 	ast, errs := parserHelper.Ast(txt)
 	if len(errs) > 0 {
 		parserHelper.PrintAllCodeErrors(errs)
