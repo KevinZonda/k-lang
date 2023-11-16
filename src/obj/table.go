@@ -94,17 +94,17 @@ func (t *TableStack) Get(key string) (any, bool) {
 		v, ok := t.q[0][key]
 		return v, ok
 	}
-	ts := []Table{t.q[len(t.q)-1], t.q[0]}
-	for _, _t := range ts {
-		if v, ok := _t[key]; ok {
-			return v, true
-		}
-	}
-	//for i := len(t.q) - 1; i >= 0; i-- {
-	//	if v, ok := t.q[i][key]; ok {
+	//ts := []Table{t.q[len(t.q)-1], t.q[0]}
+	//for _, _t := range ts {
+	//	if v, ok := _t[key]; ok {
 	//		return v, true
 	//	}
 	//}
+	for i := len(t.q) - 1; i >= 0; i-- {
+		if v, ok := t.q[i][key]; ok {
+			return v, true
+		}
+	}
 	return nil, false
 }
 
@@ -116,20 +116,21 @@ func (t *TableStack) Set(key string, val any) {
 		return
 	}
 
-	ts := []Table{t.q[len(t.q)-1], t.q[0]}
-	for _, _t := range ts {
-		if _, ok := _t[key]; ok {
-			_t[key] = val
-			return
-		}
-	}
-
-	//for i := len(t.q) - 1; i >= 0; i-- {
-	//	if _, ok := t.q[i][key]; ok {
-	//		t.q[i][key] = val
+	// FIXME: Could cause var not found
+	//ts := []Table{t.q[len(t.q)-1], t.q[0]}
+	//for _, _t := range ts {
+	//	if _, ok := _t[key]; ok {
+	//		_t[key] = val
 	//		return
 	//	}
 	//}
+
+	for i := len(t.q) - 1; i >= 0; i-- {
+		if _, ok := t.q[i][key]; ok {
+			t.q[i][key] = val
+			return
+		}
+	}
 	t.q[len(t.q)-1][key] = val
 }
 
