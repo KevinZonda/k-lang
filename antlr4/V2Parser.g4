@@ -29,14 +29,26 @@ indexes : index+;
 
 lambda : Function LParen funcSignArgs RParen type? codeBlock;
 
-binaryOper : Equals | NotEq | Greater | Less | GreaterEq | LessEq | (Or | And) | Pow | (Mul | Div) | Mod | (Add | Sub);
+//boolExpr
+//    : expr (Equals | NotEq | Greater | Less | GreaterEq | LessEq) expr
+//    | expr (Or | And) expr
+//    ;
+//arithExpr
+//    : expr Pow expr
+//    | expr (Mul | Div | Mod) expr
+//    | expr (Add | Sub) expr
+//    ;
 unaryOper : Add | Sub | Not;
 expr
     : funcCall
     | unaryOper expr
-    | expr binaryOper expr
     | literal
     | LParen expr RParen
+    | LHS=expr OP=(Equals | NotEq | Greater | Less | GreaterEq | LessEq) RHS=expr
+    | LHS=expr OP=(Or | And)        RHS=expr
+    | LHS=expr OP=Pow               RHS=expr
+    | LHS=expr OP=(Mul | Div | Mod) RHS=expr
+    | LHS=expr OP=(Add | Sub)       RHS=expr
     | Identifier
     | expr indexes
     | expr Dot expr

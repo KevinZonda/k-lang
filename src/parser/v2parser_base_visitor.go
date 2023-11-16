@@ -1,4 +1,4 @@
-// Code generated from ./antlr4/V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
+// Code generated from .//antlr4//V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
 
 package parser // V2Parser
 
@@ -65,10 +65,6 @@ func (v *BaseV2ParserVisitor) VisitIndexes(ctx *IndexesContext) interface{} {
 }
 
 func (v *BaseV2ParserVisitor) VisitLambda(ctx *LambdaContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseV2ParserVisitor) VisitBinaryOper(ctx *BinaryOperContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

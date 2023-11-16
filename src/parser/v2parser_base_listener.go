@@ -1,4 +1,4 @@
-// Code generated from ./antlr4/V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
+// Code generated from .//antlr4//V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
 
 package parser // V2Parser
 
@@ -110,12 +110,6 @@ func (s *BaseV2ParserListener) EnterLambda(ctx *LambdaContext) {}
 
 // ExitLambda is called when production lambda is exited.
 func (s *BaseV2ParserListener) ExitLambda(ctx *LambdaContext) {}
-
-// EnterBinaryOper is called when production binaryOper is entered.
-func (s *BaseV2ParserListener) EnterBinaryOper(ctx *BinaryOperContext) {}
-
-// ExitBinaryOper is called when production binaryOper is exited.
-func (s *BaseV2ParserListener) ExitBinaryOper(ctx *BinaryOperContext) {}
 
 // EnterUnaryOper is called when production unaryOper is entered.
 func (s *BaseV2ParserListener) EnterUnaryOper(ctx *UnaryOperContext) {}
