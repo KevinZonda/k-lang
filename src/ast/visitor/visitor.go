@@ -21,8 +21,10 @@ func (v *AntlrVisitor) VisitProgram(ctx *parser.ProgramContext) any {
 	for _, t := range ctx.GetChildren() {
 		switch t.(type) {
 		case *parser.OpenBlockContext:
-			ox := v.VisitOpenBlock(t.(*parser.OpenBlockContext)).(node.Block)
-			block = append(block, ox)
+			ox := v.VisitOpenBlock(t.(*parser.OpenBlockContext)).(*node.OpenBlock)
+			if len(ox.Openers) > 0 {
+				block = append(block, ox)
+			}
 		case *parser.StructBlockContext:
 			continue
 		case *parser.FuncBlockContext:

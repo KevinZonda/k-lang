@@ -1,6 +1,7 @@
 package visitor_test
 
 import (
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/utils/jout"
 	"testing"
 
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
@@ -8,7 +9,8 @@ import (
 )
 
 func TestParenthesesExpr(t *testing.T) {
-	ast := parserHelper.Ast("(1+2.2) * (3 -8)")
+	ast, _ := parserHelper.Ast("(1+2.2) * (3 -8)")
+	jout.Println(ast)
 	if len(ast) != 1 {
 		t.Error("Expected 1 node, got", len(ast))
 	}
