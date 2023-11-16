@@ -19,5 +19,5 @@ for (i := 0; i <= 5; i := i + 1) {
 4, 5 | 4, 6 | 
 5, 6 | 
 `
-	generalTest(false, ts, code, expected)
+	generalTest(true, ts, code, expected)
 }

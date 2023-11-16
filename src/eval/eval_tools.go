@@ -22,9 +22,9 @@ func (e *Eval) frameEndWith(keys ...string) {
 	e.funcTable.Pop()
 	for _, key := range keys {
 		if v, ok := m[key]; ok {
-			switch v.(type) {
-			case *node.LambdaExpr:
-				e.funcTable.Set(key, v.(*node.LambdaExpr).ToFunc(key))
+			switch v.Kind {
+			case obj.Lambda:
+				e.funcTable.Set(key, v.ToLambda().ToFunc(key))
 			default:
 				e.objTable.Set(key, v)
 			}

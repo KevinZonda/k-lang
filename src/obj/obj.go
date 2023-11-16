@@ -59,3 +59,16 @@ func (o *Object) ToFunc() *node.FuncBlock {
 func (o *Object) ToValue() any {
 	return o.Val
 }
+
+func cons(a any) *Object {
+	switch a.(type) {
+	case *Object:
+		return a.(*Object)
+	case *node.LambdaExpr:
+		return NewLambdaObject(a.(*node.LambdaExpr))
+	case *node.FuncBlock:
+		return NewFuncObject(a.(*node.FuncBlock))
+	default:
+		return NewValueObject(a)
+	}
+}

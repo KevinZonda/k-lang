@@ -2,7 +2,7 @@ package obj
 
 import "fmt"
 
-type Table map[string]any
+type Table map[string]*Object
 
 type TableMap map[string]Table
 
@@ -92,7 +92,10 @@ func (t *TableStack) Get(key string) (any, bool) {
 	}
 	if t.Len() == 1 {
 		v, ok := t.q[0][key]
-		return v, ok
+		if ok {
+			return v.Val, true
+		}
+		return nil, false
 	}
 	//ts := []Table{t.q[len(t.q)-1], t.q[0]}
 	//for _, _t := range ts {
@@ -102,16 +105,17 @@ func (t *TableStack) Get(key string) (any, bool) {
 	//}
 	for i := len(t.q) - 1; i >= 0; i-- {
 		if v, ok := t.q[i][key]; ok {
-			return v, true
+			return v.Val, true
 		}
 	}
 	return nil, false
 }
 
 func (t *TableStack) Set(key string, val any) {
+	o := cons(val)
 	if len(t.q) == 0 {
 		v := make(Table)
-		v[key] = val
+		v[key] = o
 		t.q = append(t.q, v)
 		return
 	}
@@ -127,18 +131,19 @@ func (t *TableStack) Set(key string, val any) {
 
 	for i := len(t.q) - 1; i >= 0; i-- {
 		if _, ok := t.q[i][key]; ok {
-			t.q[i][key] = val
+			t.q[i][key] = o
 			return
 		}
 	}
-	t.q[len(t.q)-1][key] = val
+	t.q[len(t.q)-1][key] = o
 }
 
 func (t *TableStack) SetAtTop(key string, val any) {
+	o := cons(val)
 	if t.Empty() {
 		t.PushEmpty()
 	}
-	t.q[len(t.q)-1][key] = val
+	t.q[len(t.q)-1][key] = o
 }
 
 func (t *TableStack) GetAtTop(key string) (any, bool) {
@@ -146,5 +151,8 @@ func (t *TableStack) GetAtTop(key string) (any, bool) {
 		return nil, false
 	}
 	v, ok := t.q[len(t.q)-1][key]
-	return v, ok
+	if !ok {
+		return nil, false
+	}
+	return v.Val, true
 }
