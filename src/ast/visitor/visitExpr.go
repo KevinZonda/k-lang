@@ -22,7 +22,7 @@ func (v *AntlrVisitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 	if ctx.AssignStmt() != nil {
 		return v.VisitAssignStmt(ctx.AssignStmt().(*parser.AssignStmtContext))
 	}
-	if ctx.BinaryOper() != nil {
+	if ctx.GetOP() != nil {
 		return v.VisitBinaryExpr(ctx)
 	}
 	if ctx.UnaryOper() != nil {
@@ -93,12 +93,10 @@ func (v *AntlrVisitor) VisitBinaryExpr(ctx *parser.ExprContext) interface{} {
 		})
 		return nil
 	}
-	oper := ctx.GetChild(1).(*parser.BinaryOperContext)
-
 	return &node.BinaryOperExpr{
-		Token: token.FromAntlrToken(oper.GetStart()),
-		Left:  v.VisitExpr(ctx.GetChild(0).(*parser.ExprContext)).(node.Expr),
-		Oper:  oper.GetText(),
-		Right: v.VisitExpr(ctx.GetChild(2).(*parser.ExprContext)).(node.Expr),
+		Token: token.FromAntlrToken(ctx.GetOP()),
+		Left:  v.VisitExpr(ctx.GetLHS().(*parser.ExprContext)).(node.Expr),
+		Oper:  ctx.GetOP().GetText(),
+		Right: v.VisitExpr(ctx.GetRHS().(*parser.ExprContext)).(node.Expr),
 	}
 }
