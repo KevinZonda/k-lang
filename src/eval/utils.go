@@ -5,14 +5,22 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
+	"path/filepath"
 	"reflect"
 )
 
-func New(ast tree.Ast) *Eval {
+var openedFiles map[string]*Eval
+
+func New(ast tree.Ast, inputFile string) *Eval {
+	if openedFiles == nil {
+		openedFiles = map[string]*Eval{}
+	}
+	path := filepath.Dir(inputFile)
 	return &Eval{
 		ast:       ast,
 		objTable:  obj.NewObjectTable(),
 		funcTable: &obj.StackImpl[*node.FuncBlock]{},
+		basePath:  path,
 	}
 }
 
@@ -22,6 +30,7 @@ func (e *Eval) new(ast tree.Ast) *Eval {
 		objTable:  e.objTable,
 		funcTable: e.funcTable,
 		loopLvl:   e.loopLvl,
+		basePath:  e.basePath,
 	}
 }
 

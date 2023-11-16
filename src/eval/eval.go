@@ -12,7 +12,9 @@ type Eval struct {
 	ast       tree.Ast
 	objTable  *obj.TableStack
 	funcTable *obj.StackImpl[*node.FuncBlock]
+	basePath  string
 	loopLvl   int
+	opened    map[string]*Eval
 }
 
 func (e *Eval) LoadContext(o *Eval) {
@@ -37,6 +39,11 @@ func (e *Eval) run() any {
 		case *node.FuncBlock:
 			fb := n.(*node.FuncBlock)
 			e.funcTable.Set(fb.Name.Value, fb)
+		case *node.OpenBlock:
+			ob := n.(*node.OpenBlock)
+			for _, stmt := range ob.Openers {
+				e.EvalStmt(stmt)
+			}
 		default:
 			panic("not implemented")
 		}
@@ -46,7 +53,7 @@ func (e *Eval) run() any {
 			break
 		}
 	}
-	val, _ := e.objTable.Get("0") // 0 is reserved place for return value
+	val, _ := e.objTable.Get(reserved.Return)
 	return val
 }
 
@@ -56,21 +63,8 @@ func (e *Eval) It() any {
 }
 
 func (e *Eval) Do() {
-	for _, n := range e.ast {
-		switch n.(type) {
-		case node.Expr:
-			e.objTable.Set("it", e.EvalExpr(n.(node.Expr)))
-		case node.Stmt:
-			e.EvalStmt(n.(node.Stmt))
-		case *node.FuncBlock:
-			fb := n.(*node.FuncBlock)
-			e.funcTable.Set(fb.Name.Value, fb)
-		default:
-			panic("not implemented")
-		}
-		if retVal, ok := e.objTable.GetAtTop(reserved.Return); ok {
-			fmt.Println("Program returned: ", retVal)
-		}
+	if retV := e.run(); retV != nil {
+		fmt.Println("Program returned: ", retV)
 	}
 
 	e.EvalMain()

@@ -24,7 +24,7 @@ func ShowAst(input string) {
 		var errs []parserHelper.CodeError
 		ast, errs = parserHelper.Ast(string(bs))
 		if len(errs) >= 0 {
-			printAllCodeErros(errs)
+			parserHelper.PrintAllCodeErrors(errs)
 			panic("Parse failed.")
 		}
 	}

@@ -24,7 +24,7 @@ func (r *Repl) Repl(input string) {
 		panicx.PanicIfNotNil(e, e)
 
 		ast, _ := parserHelper.Ast(str)
-		r.context = eval.New(ast)
+		r.context = eval.New(ast, input)
 		r.context.Do()
 	}
 
@@ -98,7 +98,7 @@ func (r *Repl) Repl(input string) {
 				jout.Println(node)
 			}
 		}
-		e := eval.New(ast)
+		e := eval.New(ast, "")
 		e.LoadContext(r.context)
 		e.Do()
 		if r.printIt {

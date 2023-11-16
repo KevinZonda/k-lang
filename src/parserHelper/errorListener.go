@@ -41,3 +41,10 @@ func (c *errorListener) SyntaxError(recognizer antlr.Recognizer, offendingSymbol
 	}
 	c.Errors = append(c.Errors, synE)
 }
+
+func PrintAllCodeErrors(errs []CodeError) {
+	fmt.Println("Parsing Error(s):")
+	for i, e := range errs {
+		fmt.Println("[", i, "] :", e)
+	}
+}

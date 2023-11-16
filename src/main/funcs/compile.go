@@ -20,7 +20,7 @@ func Compile(input string, output string) {
 
 	ast, errs := parserHelper.Ast(str)
 	if len(errs) >= 0 {
-		printAllCodeErros(errs)
+		parserHelper.PrintAllCodeErrors(errs)
 		panic("Parse failed.")
 	}
 

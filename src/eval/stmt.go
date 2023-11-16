@@ -25,6 +25,9 @@ func (e *Eval) EvalStmt(n node.Stmt) any {
 		return e.EvalContinueStmt(n.(*node.ContinueStmt))
 	case *node.MatchStmt:
 		return e.EvalMatchStmt(n.(*node.MatchStmt))
+	case *node.OpenStmt:
+		e.EvalOpenStmt(n.(*node.OpenStmt))
+		return nil
 	}
 	panic("not implemented")
 }

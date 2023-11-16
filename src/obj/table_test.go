@@ -25,7 +25,7 @@ foo()
 `
 	if err := tx.IsStdoutAsExpected(func() {
 		ast, _ := parserHelper.Ast(code)
-		e := eval.New(ast)
+		e := eval.New(ast, "")
 		e.Do()
 	}, expected); err != nil {
 		t.Fatal(err)
