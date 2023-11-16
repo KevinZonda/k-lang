@@ -23,13 +23,6 @@ func (e *Eval) EvalAssignStmt(n *node.AssignStmt) any {
 			//return v
 		}
 	}
-	switch v.(type) {
-	case *node.LambdaExpr:
-		e.funcTable.Set(baseV.Name.Value, v.(*node.LambdaExpr).ToFunc(baseV.Name.Value))
-	default:
-		e.objTable.Set(baseV.Name.Value, v)
-
-	}
 	e.objTable.Set(baseV.Name.Value, v)
 	return v
 }

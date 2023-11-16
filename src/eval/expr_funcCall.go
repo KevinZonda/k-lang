@@ -14,9 +14,15 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) any {
 	}
 
 	funcName := fc.Caller.Value[0].Name.Value
-	fn, ok := e.funcTable.Get(funcName)
-	if !ok {
+	fx, ok := e.objTable.Get(funcName)
+	if !ok || !(fx.IsLambda() || fx.IsFunc()) {
 		return e.EvalBuiltInCall(fc, args)
+	}
+	var fn *node.FuncBlock
+	if fx.IsLambda() {
+		fn = fx.ToLambda().ToFunc(funcName)
+	} else {
+		fn = fx.ToFunc()
 	}
 
 	e.frameStart()

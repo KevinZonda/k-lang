@@ -9,25 +9,17 @@ import (
 
 func (e *Eval) frameStart() {
 	e.objTable.PushEmpty()
-	e.funcTable.PushEmpty()
 }
 
 func (e *Eval) frameEnd() {
 	e.objTable.Pop()
-	e.funcTable.Pop()
 }
 
 func (e *Eval) frameEndWith(keys ...string) {
 	m := e.objTable.Pop()
-	e.funcTable.Pop()
 	for _, key := range keys {
 		if v, ok := m[key]; ok {
-			switch v.Kind {
-			case obj.Lambda:
-				e.funcTable.Set(key, v.ToLambda().ToFunc(key))
-			default:
-				e.objTable.Set(key, v)
-			}
+			e.objTable.Set(key, v)
 		}
 	}
 }
@@ -57,8 +49,4 @@ func (e *Eval) evalValWithIdx(idxs []node.Expr, root *any) *any {
 
 func (e *Eval) ObjTable() *obj.TableStack {
 	return e.objTable
-}
-
-func (e *Eval) FuncTable() *obj.StackImpl[*node.FuncBlock] {
-	return e.funcTable
 }

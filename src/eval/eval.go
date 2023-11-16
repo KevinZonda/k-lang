@@ -11,12 +11,11 @@ import (
 )
 
 type Eval struct {
-	ast       tree.Ast
-	objTable  *obj.TableStack
-	funcTable *obj.StackImpl[*node.FuncBlock]
-	basePath  string
-	loopLvl   int
-	opened    map[string]*Eval
+	ast      tree.Ast
+	objTable *obj.TableStack
+	basePath string
+	loopLvl  int
+	opened   map[string]*Eval
 }
 
 var openedFiles map[string]*Eval
@@ -31,33 +30,29 @@ func New(ast tree.Ast, inputFile string) *Eval {
 	}
 	path := filepath.Dir(inputFile)
 	return &Eval{
-		ast:       ast,
-		objTable:  obj.NewObjectTable(),
-		funcTable: &obj.StackImpl[*node.FuncBlock]{},
-		basePath:  path,
-		opened:    make(map[string]*Eval),
+		ast:      ast,
+		objTable: obj.NewObjectTable(),
+		basePath: path,
+		opened:   make(map[string]*Eval),
 	}
 }
 
 func (e *Eval) new(ast tree.Ast) *Eval {
 	return &Eval{
-		ast:       ast,
-		objTable:  e.objTable,
-		funcTable: e.funcTable,
-		loopLvl:   e.loopLvl,
-		basePath:  e.basePath,
-		opened:    e.opened,
+		ast:      ast,
+		objTable: e.objTable,
+		loopLvl:  e.loopLvl,
+		basePath: e.basePath,
+		opened:   e.opened,
 	}
 }
 
 func (e *Eval) LoadContext(o *Eval) {
 	if o == nil {
 		e.objTable = &obj.TableStack{}
-		e.funcTable = &obj.StackImpl[*node.FuncBlock]{}
 		return
 	}
 	e.objTable = o.objTable
-	e.funcTable = o.funcTable
 }
 
 func (e *Eval) runWithBreak(breaks ...string) (retV *obj.Object, hasRet bool) {
@@ -71,7 +66,7 @@ func (e *Eval) runWithBreak(breaks ...string) (retV *obj.Object, hasRet bool) {
 			e.EvalStmt(n.(node.Stmt))
 		case *node.FuncBlock:
 			fb := n.(*node.FuncBlock)
-			e.funcTable.Set(fb.Name.Value, fb)
+			e.objTable.Set(fb.Name.Value, fb)
 		case *node.OpenBlock:
 			ob := n.(*node.OpenBlock)
 			for _, stmt := range ob.Openers {
@@ -109,12 +104,13 @@ func (e *Eval) Do() {
 }
 
 func (e *Eval) EvalMain() any {
-	fn, ok := e.funcTable.Get("main")
-	if !ok {
+	fn, ok := e.objTable.Get("main")
+	if !ok || !fn.IsFunc() {
 		return nil
 	}
+	fx := fn.ToFunc()
 	e.frameStart()
-	fe := e.new((tree.Ast)(fn.Body.Nodes))
+	fe := e.new((tree.Ast)(fx.Body.Nodes))
 	ret := fe.run()
 	e.frameEnd()
 	return ret
