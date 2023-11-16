@@ -1,4 +1,4 @@
-package obj
+package eval
 
 import "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 
@@ -10,10 +10,10 @@ type Object struct {
 type Kind string
 
 const (
-	Lambda Kind = "Lambda"
-	Func   Kind = "Func"
-	Value  Kind = "Val"
-	File   Kind = "File"
+	Lambda  Kind = "Lambda"
+	Func    Kind = "Func"
+	Value   Kind = "Val"
+	EvalObj Kind = "EvalObj"
 )
 
 func NewLambdaObject(val *node.LambdaExpr) *Object {
@@ -28,8 +28,8 @@ func NewValueObject(val any) *Object {
 	return &Object{Kind: Value, Val: val}
 }
 
-func NewFileObject(val any) *Object {
-	return &Object{Kind: File, Val: val}
+func NewEvalObject(val any) *Object {
+	return &Object{Kind: EvalObj, Val: val}
 }
 
 func (o *Object) IsLambda() bool {
@@ -44,8 +44,8 @@ func (o *Object) IsValue() bool {
 	return o.Kind == Value
 }
 
-func (o *Object) IsFile() bool {
-	return o.Kind == File
+func (o *Object) IsEval() bool {
+	return o.Kind == EvalObj
 }
 
 func (o *Object) ToLambda() *node.LambdaExpr {
@@ -62,6 +62,11 @@ func (o *Object) ToValue() any {
 
 func cons(a any) *Object {
 	switch a.(type) {
+	case Eval:
+		e := a.(Eval)
+		return NewEvalObject(&e)
+	case *Eval:
+		return NewEvalObject(a.(*Eval))
 	case *Object:
 		return a.(*Object)
 	case *node.LambdaExpr:

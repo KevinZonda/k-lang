@@ -3,7 +3,6 @@ package eval
 import (
 	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"github.com/KevinZonda/GoX/pkg/iox"
 	"path"
@@ -57,7 +56,7 @@ func (e *Eval) EvalOpenStmt(n *node.OpenStmt) {
 	}
 
 	if n.As != "" {
-		e.objTable.Set(n.As, obj.NewFileObject(openedEval))
+		e.objTable.Set(n.As, openedEval)
 	} else {
 		base := filepath.Base(abs)
 		sb := strings.Builder{}
@@ -68,7 +67,7 @@ func (e *Eval) EvalOpenStmt(n *node.OpenStmt) {
 				sb.WriteRune(c)
 			}
 		}
-		e.objTable.Set(sb.String(), obj.NewFileObject(openedEval))
+		e.objTable.Set(sb.String(), openedEval)
 		sb.Reset()
 	}
 }

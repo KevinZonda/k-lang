@@ -3,7 +3,6 @@ package eval
 import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	"reflect"
 )
 
@@ -47,6 +46,6 @@ func (e *Eval) evalValWithIdx(idxs []node.Expr, root *any) *any {
 	return val
 }
 
-func (e *Eval) ObjTable() *obj.TableStack {
+func (e *Eval) ObjTable() *TableStack {
 	return e.objTable
 }

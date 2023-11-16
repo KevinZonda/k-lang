@@ -1,10 +1,8 @@
-package obj
+package eval
 
 import "fmt"
 
 type Table map[string]*Object
-
-type TableMap map[string]Table
 
 func NewObjectTable() *TableStack {
 	return &TableStack{q: []Table{make(Table)}}

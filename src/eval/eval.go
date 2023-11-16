@@ -5,14 +5,13 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	"path/filepath"
 	"reflect"
 )
 
 type Eval struct {
 	ast      tree.Ast
-	objTable *obj.TableStack
+	objTable *TableStack
 	basePath string
 	loopLvl  int
 }
@@ -30,7 +29,7 @@ func New(ast tree.Ast, inputFile string) *Eval {
 	path := filepath.Dir(inputFile)
 	return &Eval{
 		ast:      ast,
-		objTable: obj.NewObjectTable(),
+		objTable: NewObjectTable(),
 		basePath: path,
 	}
 }
@@ -46,13 +45,13 @@ func (e *Eval) new(ast tree.Ast) *Eval {
 
 func (e *Eval) LoadContext(o *Eval) {
 	if o == nil {
-		e.objTable = &obj.TableStack{}
+		e.objTable = &TableStack{}
 		return
 	}
 	e.objTable = o.objTable
 }
 
-func (e *Eval) runWithBreak(breaks ...string) (retV *obj.Object, hasRet bool) {
+func (e *Eval) runWithBreak(breaks ...string) (retV *Object, hasRet bool) {
 	for _, n := range e.ast {
 		switch n.(type) {
 		case *node.CodeBlock:
