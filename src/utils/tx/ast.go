@@ -6,16 +6,18 @@ import (
 	"fmt"
 )
 
-func IsStdoutAsExpected(f func(), expected string) (e error) {
+func IsStdoutAsExpected(allowPanic bool, f func(), expected string) (e error) {
 	CaptureStdout()
 	defer func() {
-		if rec := recover(); rec != nil {
-			fmt.Println("Recovered in tester", rec)
-			if IsCapturing() {
-				StopCaptureStdout()
+		if !allowPanic {
+			if rec := recover(); rec != nil {
+				fmt.Println("Recovered in tester", rec)
+				if IsCapturing() {
+					StopCaptureStdout()
+				}
+				fmt.Println("Content Captured:\n", lastCall)
+				e = fmt.Errorf("code panic! %v", rec)
 			}
-			fmt.Println("Content Captured:\n", lastCall)
-			e = fmt.Errorf("code panic! %v", rec)
 		}
 		if IsCapturing() {
 			StopCaptureStdout()

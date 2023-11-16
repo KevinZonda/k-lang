@@ -20,5 +20,5 @@ match (x) {
 }
 `
 	expected := "eleven\n"
-	generalTest(t, code, expected)
+	generalTest(false, t, code, expected)
 }

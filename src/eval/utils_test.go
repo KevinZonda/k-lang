@@ -7,8 +7,8 @@ import (
 	"testing"
 )
 
-func generalTest(ts *testing.T, code, expected string) {
-	if err := tx.IsStdoutAsExpected(func() {
+func generalTest(allowPanic bool, ts *testing.T, code, expected string) {
+	if err := tx.IsStdoutAsExpected(allowPanic, func() {
 		ast, _ := parserHelper.Ast(code)
 		e := eval.New(ast, "")
 		e.Do()

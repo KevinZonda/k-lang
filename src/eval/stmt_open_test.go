@@ -14,7 +14,7 @@ func TestOpenStmt(t *testing.T) {
 open "testFile/hello.k" as hello
 `
 	expected := "Hello from hello.k\n"
-	generalTest(t, code, expected)
+	generalTest(false, t, code, expected)
 }
 
 func TestMultiOpenStmt(t *testing.T) {
@@ -26,5 +26,5 @@ open "testFile/hello.k" as z
 open "testFile/hello.k" as m
 `
 	expected := "Hello from hello.k\n"
-	generalTest(t, code, expected)
+	generalTest(false, t, code, expected)
 }
