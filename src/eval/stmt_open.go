@@ -16,10 +16,14 @@ func (e *Eval) openFile(s string) (abs, content string, ok bool) {
 	}
 	paths := []string{path.Join(e.basePath, s), s}
 	for _, p := range paths {
+		//{
+		//	a, e := filepath.Abs(p)
+		//	fmt.Println("TRY OPEN ->", a, e)
+		//}
 		if iox.ExistFile(p) {
 			txt, err := iox.ReadAllText(p)
 			abs, _ = filepath.Abs(p)
-			return abs, txt, err != nil
+			return abs, txt, err == nil
 		}
 	}
 	return "", "", false
@@ -28,6 +32,7 @@ func (e *Eval) openFile(s string) (abs, content string, ok bool) {
 func (e *Eval) EvalOpenStmt(n *node.OpenStmt) {
 	abs, txt, ok := e.openFile(n.Path)
 	if !ok {
+		panic("File not found: " + n.Path)
 		return
 	}
 	ast, errs := parserHelper.Ast(txt)

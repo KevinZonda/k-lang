@@ -21,21 +21,19 @@ func (v *AntlrVisitor) VisitProgram(ctx *parser.ProgramContext) any {
 	for _, t := range ctx.GetChildren() {
 		switch t.(type) {
 		case *parser.OpenBlockContext:
-			continue
+			ox := v.VisitOpenBlock(t.(*parser.OpenBlockContext)).(node.Block)
+			block = append(block, ox)
 		case *parser.StructBlockContext:
 			continue
 		case *parser.FuncBlockContext:
 			fx := v.VisitFuncBlock(t.(*parser.FuncBlockContext)).(node.Block)
 			block = append(block, fx)
-			continue
 		case *parser.StmtContext:
 			stmt := v.VisitStmt(t.(*parser.StmtContext)).(node.Stmt)
 			block = append(block, stmt)
-			continue
 		case *parser.ExprContext:
 			expr := v.VisitExpr(t.(*parser.ExprContext)).(node.Expr)
 			block = append(block, expr)
-			continue
 		case *antlr.TerminalNodeImpl:
 			continue
 		}

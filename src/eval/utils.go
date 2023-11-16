@@ -21,6 +21,7 @@ func New(ast tree.Ast, inputFile string) *Eval {
 		objTable:  obj.NewObjectTable(),
 		funcTable: &obj.StackImpl[*node.FuncBlock]{},
 		basePath:  path,
+		opened:    make(map[string]*Eval),
 	}
 }
 
@@ -31,6 +32,7 @@ func (e *Eval) new(ast tree.Ast) *Eval {
 		funcTable: e.funcTable,
 		loopLvl:   e.loopLvl,
 		basePath:  e.basePath,
+		opened:    e.opened,
 	}
 }
 
