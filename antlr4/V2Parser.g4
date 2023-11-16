@@ -74,8 +74,8 @@ structInitializer : type LBrack (structElementInitializer Comma?)* RBrack;
 structElementInitializer : Identifier Comma expr;
 
 stmt
-    : declareStmt
-    | assignStmt
+    : assignStmt
+    | declareStmt
     | jumpStmt
     | ifStmt
     | loopStmt
@@ -83,13 +83,12 @@ stmt
     | codeBlock
     | funcCall
     ;
+assignStmt
+    : type? var Assign exprWithLambda ;
 
 declareStmt
     : type Identifier (Comma Identifier)*;
 
-assignStmt
-    : type? var Assign exprWithLambda
-    ;
 
 ifStmt
     : If LParen expr RParen codeBlock (Else codeBlock)?

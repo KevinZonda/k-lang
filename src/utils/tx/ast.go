@@ -17,6 +17,9 @@ func IsStdoutAsExpected(f func(), expected string) (e error) {
 			fmt.Println("Content Captured:\n", lastCall)
 			e = fmt.Errorf("code panic! %v", rec)
 		}
+		if IsCapturing() {
+			StopCaptureStdout()
+		}
 
 	}()
 	f()

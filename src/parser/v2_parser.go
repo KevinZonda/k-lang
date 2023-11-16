@@ -54,7 +54,7 @@ func v2parserParserInit() {
 		"index", "indexes", "lambda", "unaryOper", "expr", "exprWithLambda",
 		"funcCall", "funcCallArgs", "stmtWithSep", "openStmt", "literal", "literalWithLambda",
 		"arrayInitializer", "mapInitializer", "mapPair", "structInitializer",
-		"structElementInitializer", "stmt", "declareStmt", "assignStmt", "ifStmt",
+		"structElementInitializer", "stmt", "assignStmt", "declareStmt", "ifStmt",
 		"loopStmt", "cStyleFor", "iterFor", "whileStyleFor", "matchStmt", "matchCase",
 		"jumpStmt", "sep",
 	}
@@ -97,8 +97,8 @@ func v2parserParserInit() {
 		27, 1, 27, 1, 27, 1, 27, 3, 27, 334, 8, 27, 5, 27, 336, 8, 27, 10, 27,
 		12, 27, 339, 9, 27, 1, 27, 1, 27, 1, 28, 1, 28, 1, 28, 1, 28, 1, 29, 1,
 		29, 1, 29, 1, 29, 1, 29, 1, 29, 1, 29, 1, 29, 3, 29, 355, 8, 29, 1, 30,
-		1, 30, 1, 30, 1, 30, 5, 30, 361, 8, 30, 10, 30, 12, 30, 364, 9, 30, 1,
-		31, 3, 31, 367, 8, 31, 1, 31, 1, 31, 1, 31, 1, 31, 1, 32, 1, 32, 1, 32,
+		3, 30, 358, 8, 30, 1, 30, 1, 30, 1, 30, 1, 30, 1, 31, 1, 31, 1, 31, 1,
+		31, 5, 31, 368, 8, 31, 10, 31, 12, 31, 371, 9, 31, 1, 32, 1, 32, 1, 32,
 		1, 32, 1, 32, 1, 32, 1, 32, 3, 32, 380, 8, 32, 1, 33, 1, 33, 1, 33, 3,
 		33, 385, 8, 33, 1, 34, 1, 34, 1, 34, 3, 34, 390, 8, 34, 1, 34, 1, 34, 3,
 		34, 394, 8, 34, 1, 34, 1, 34, 3, 34, 398, 8, 34, 1, 34, 1, 34, 1, 34, 1,
@@ -120,8 +120,8 @@ func v2parserParserInit() {
 		0, 34, 244, 1, 0, 0, 0, 36, 246, 1, 0, 0, 0, 38, 253, 1, 0, 0, 0, 40, 261,
 		1, 0, 0, 0, 42, 268, 1, 0, 0, 0, 44, 282, 1, 0, 0, 0, 46, 286, 1, 0, 0,
 		0, 48, 289, 1, 0, 0, 0, 50, 303, 1, 0, 0, 0, 52, 327, 1, 0, 0, 0, 54, 329,
-		1, 0, 0, 0, 56, 342, 1, 0, 0, 0, 58, 354, 1, 0, 0, 0, 60, 356, 1, 0, 0,
-		0, 62, 366, 1, 0, 0, 0, 64, 372, 1, 0, 0, 0, 66, 384, 1, 0, 0, 0, 68, 386,
+		1, 0, 0, 0, 56, 342, 1, 0, 0, 0, 58, 354, 1, 0, 0, 0, 60, 357, 1, 0, 0,
+		0, 62, 363, 1, 0, 0, 0, 64, 372, 1, 0, 0, 0, 66, 384, 1, 0, 0, 0, 68, 386,
 		1, 0, 0, 0, 70, 402, 1, 0, 0, 0, 72, 413, 1, 0, 0, 0, 74, 423, 1, 0, 0,
 		0, 76, 444, 1, 0, 0, 0, 78, 452, 1, 0, 0, 0, 80, 454, 1, 0, 0, 0, 82, 97,
 		3, 2, 1, 0, 83, 88, 3, 4, 2, 0, 84, 88, 3, 6, 3, 0, 85, 88, 3, 58, 29,
@@ -141,7 +141,7 @@ func v2parserParserInit() {
 		0, 123, 121, 1, 0, 0, 0, 124, 117, 1, 0, 0, 0, 125, 128, 1, 0, 0, 0, 126,
 		124, 1, 0, 0, 0, 126, 127, 1, 0, 0, 0, 127, 129, 1, 0, 0, 0, 128, 126,
 		1, 0, 0, 0, 129, 130, 5, 2, 0, 0, 130, 9, 1, 0, 0, 0, 131, 135, 5, 1, 0,
-		0, 132, 134, 3, 60, 30, 0, 133, 132, 1, 0, 0, 0, 134, 137, 1, 0, 0, 0,
+		0, 132, 134, 3, 62, 31, 0, 133, 132, 1, 0, 0, 0, 134, 137, 1, 0, 0, 0,
 		135, 133, 1, 0, 0, 0, 135, 136, 1, 0, 0, 0, 136, 138, 1, 0, 0, 0, 137,
 		135, 1, 0, 0, 0, 138, 139, 5, 2, 0, 0, 139, 11, 1, 0, 0, 0, 140, 141, 5,
 		47, 0, 0, 141, 142, 5, 3, 0, 0, 142, 143, 3, 14, 7, 0, 143, 145, 5, 4,
@@ -170,7 +170,7 @@ func v2parserParserInit() {
 		216, 3, 36, 18, 0, 205, 206, 3, 30, 15, 0, 206, 207, 3, 32, 16, 12, 207,
 		216, 1, 0, 0, 0, 208, 216, 3, 44, 22, 0, 209, 210, 5, 3, 0, 0, 210, 211,
 		3, 32, 16, 0, 211, 212, 5, 4, 0, 0, 212, 216, 1, 0, 0, 0, 213, 216, 5,
-		47, 0, 0, 214, 216, 3, 62, 31, 0, 215, 203, 1, 0, 0, 0, 215, 205, 1, 0,
+		47, 0, 0, 214, 216, 3, 60, 30, 0, 215, 203, 1, 0, 0, 0, 215, 205, 1, 0,
 		0, 0, 215, 208, 1, 0, 0, 0, 215, 209, 1, 0, 0, 0, 215, 213, 1, 0, 0, 0,
 		215, 214, 1, 0, 0, 0, 216, 239, 1, 0, 0, 0, 217, 218, 10, 9, 0, 0, 218,
 		219, 7, 1, 0, 0, 219, 238, 3, 32, 16, 10, 220, 221, 10, 8, 0, 0, 221, 222,
@@ -226,18 +226,18 @@ func v2parserParserInit() {
 		0, 351, 355, 3, 74, 37, 0, 352, 355, 3, 8, 4, 0, 353, 355, 3, 36, 18, 0,
 		354, 346, 1, 0, 0, 0, 354, 347, 1, 0, 0, 0, 354, 348, 1, 0, 0, 0, 354,
 		349, 1, 0, 0, 0, 354, 350, 1, 0, 0, 0, 354, 351, 1, 0, 0, 0, 354, 352,
-		1, 0, 0, 0, 354, 353, 1, 0, 0, 0, 355, 59, 1, 0, 0, 0, 356, 357, 3, 18,
-		9, 0, 357, 362, 5, 47, 0, 0, 358, 359, 5, 7, 0, 0, 359, 361, 5, 47, 0,
-		0, 360, 358, 1, 0, 0, 0, 361, 364, 1, 0, 0, 0, 362, 360, 1, 0, 0, 0, 362,
-		363, 1, 0, 0, 0, 363, 61, 1, 0, 0, 0, 364, 362, 1, 0, 0, 0, 365, 367, 3,
-		18, 9, 0, 366, 365, 1, 0, 0, 0, 366, 367, 1, 0, 0, 0, 367, 368, 1, 0, 0,
-		0, 368, 369, 3, 20, 10, 0, 369, 370, 5, 46, 0, 0, 370, 371, 3, 34, 17,
-		0, 371, 63, 1, 0, 0, 0, 372, 373, 5, 34, 0, 0, 373, 374, 5, 3, 0, 0, 374,
-		375, 3, 32, 16, 0, 375, 376, 5, 4, 0, 0, 376, 379, 3, 8, 4, 0, 377, 378,
-		5, 35, 0, 0, 378, 380, 3, 8, 4, 0, 379, 377, 1, 0, 0, 0, 379, 380, 1, 0,
-		0, 0, 380, 65, 1, 0, 0, 0, 381, 385, 3, 70, 35, 0, 382, 385, 3, 68, 34,
-		0, 383, 385, 3, 72, 36, 0, 384, 381, 1, 0, 0, 0, 384, 382, 1, 0, 0, 0,
-		384, 383, 1, 0, 0, 0, 385, 67, 1, 0, 0, 0, 386, 387, 5, 36, 0, 0, 387,
+		1, 0, 0, 0, 354, 353, 1, 0, 0, 0, 355, 59, 1, 0, 0, 0, 356, 358, 3, 18,
+		9, 0, 357, 356, 1, 0, 0, 0, 357, 358, 1, 0, 0, 0, 358, 359, 1, 0, 0, 0,
+		359, 360, 3, 20, 10, 0, 360, 361, 5, 46, 0, 0, 361, 362, 3, 34, 17, 0,
+		362, 61, 1, 0, 0, 0, 363, 364, 3, 18, 9, 0, 364, 369, 5, 47, 0, 0, 365,
+		366, 5, 7, 0, 0, 366, 368, 5, 47, 0, 0, 367, 365, 1, 0, 0, 0, 368, 371,
+		1, 0, 0, 0, 369, 367, 1, 0, 0, 0, 369, 370, 1, 0, 0, 0, 370, 63, 1, 0,
+		0, 0, 371, 369, 1, 0, 0, 0, 372, 373, 5, 34, 0, 0, 373, 374, 5, 3, 0, 0,
+		374, 375, 3, 32, 16, 0, 375, 376, 5, 4, 0, 0, 376, 379, 3, 8, 4, 0, 377,
+		378, 5, 35, 0, 0, 378, 380, 3, 8, 4, 0, 379, 377, 1, 0, 0, 0, 379, 380,
+		1, 0, 0, 0, 380, 65, 1, 0, 0, 0, 381, 385, 3, 70, 35, 0, 382, 385, 3, 68,
+		34, 0, 383, 385, 3, 72, 36, 0, 384, 381, 1, 0, 0, 0, 384, 382, 1, 0, 0,
+		0, 384, 383, 1, 0, 0, 0, 385, 67, 1, 0, 0, 0, 386, 387, 5, 36, 0, 0, 387,
 		389, 5, 3, 0, 0, 388, 390, 3, 32, 16, 0, 389, 388, 1, 0, 0, 0, 389, 390,
 		1, 0, 0, 0, 390, 391, 1, 0, 0, 0, 391, 393, 5, 9, 0, 0, 392, 394, 3, 32,
 		16, 0, 393, 392, 1, 0, 0, 0, 393, 394, 1, 0, 0, 0, 394, 395, 1, 0, 0, 0,
@@ -264,8 +264,8 @@ func v2parserParserInit() {
 		0, 452, 447, 1, 0, 0, 0, 452, 448, 1, 0, 0, 0, 453, 79, 1, 0, 0, 0, 454,
 		455, 7, 6, 0, 0, 455, 81, 1, 0, 0, 0, 50, 87, 92, 97, 105, 121, 126, 135,
 		145, 148, 154, 158, 167, 169, 176, 181, 190, 197, 215, 237, 239, 244, 249,
-		258, 265, 272, 282, 286, 289, 294, 298, 309, 314, 327, 333, 337, 354, 362,
-		366, 379, 384, 389, 393, 397, 405, 416, 419, 431, 444, 450, 452,
+		258, 265, 272, 282, 286, 289, 294, 298, 309, 314, 327, 333, 337, 354, 357,
+		369, 379, 384, 389, 393, 397, 405, 416, 419, 431, 444, 450, 452,
 	}
 	deserializer := antlr.NewATNDeserializer(nil)
 	staticData.atn = deserializer.Deserialize(staticData.serializedATN)
@@ -388,8 +388,8 @@ const (
 	V2ParserRULE_structInitializer        = 27
 	V2ParserRULE_structElementInitializer = 28
 	V2ParserRULE_stmt                     = 29
-	V2ParserRULE_declareStmt              = 30
-	V2ParserRULE_assignStmt               = 31
+	V2ParserRULE_assignStmt               = 30
+	V2ParserRULE_declareStmt              = 31
 	V2ParserRULE_ifStmt                   = 32
 	V2ParserRULE_loopStmt                 = 33
 	V2ParserRULE_cStyleFor                = 34
@@ -6334,8 +6334,8 @@ type IStmtContext interface {
 	GetParser() antlr.Parser
 
 	// Getter signatures
-	DeclareStmt() IDeclareStmtContext
 	AssignStmt() IAssignStmtContext
+	DeclareStmt() IDeclareStmtContext
 	JumpStmt() IJumpStmtContext
 	IfStmt() IIfStmtContext
 	LoopStmt() ILoopStmtContext
@@ -6379,22 +6379,6 @@ func NewStmtContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokin
 
 func (s *StmtContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *StmtContext) DeclareStmt() IDeclareStmtContext {
-	var t antlr.RuleContext
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IDeclareStmtContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IDeclareStmtContext)
-}
-
 func (s *StmtContext) AssignStmt() IAssignStmtContext {
 	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
@@ -6409,6 +6393,22 @@ func (s *StmtContext) AssignStmt() IAssignStmtContext {
 	}
 
 	return t.(IAssignStmtContext)
+}
+
+func (s *StmtContext) DeclareStmt() IDeclareStmtContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IDeclareStmtContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IDeclareStmtContext)
 }
 
 func (s *StmtContext) JumpStmt() IJumpStmtContext {
@@ -6551,14 +6551,14 @@ func (p *V2Parser) Stmt() (localctx IStmtContext) {
 		p.EnterOuterAlt(localctx, 1)
 		{
 			p.SetState(346)
-			p.DeclareStmt()
+			p.AssignStmt()
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
 		{
 			p.SetState(347)
-			p.AssignStmt()
+			p.DeclareStmt()
 		}
 
 	case 3:
@@ -6605,182 +6605,6 @@ func (p *V2Parser) Stmt() (localctx IStmtContext) {
 
 	case antlr.ATNInvalidAltNumber:
 		goto errorExit
-	}
-
-errorExit:
-	if p.HasError() {
-		v := p.GetError()
-		localctx.SetException(v)
-		p.GetErrorHandler().ReportError(p, v)
-		p.GetErrorHandler().Recover(p, v)
-		p.SetError(nil)
-	}
-	p.ExitRule()
-	return localctx
-	goto errorExit // Trick to prevent compiler error if the label is not used
-}
-
-// IDeclareStmtContext is an interface to support dynamic dispatch.
-type IDeclareStmtContext interface {
-	antlr.ParserRuleContext
-
-	// GetParser returns the parser.
-	GetParser() antlr.Parser
-
-	// Getter signatures
-	Type_() ITypeContext
-	AllIdentifier() []antlr.TerminalNode
-	Identifier(i int) antlr.TerminalNode
-	AllComma() []antlr.TerminalNode
-	Comma(i int) antlr.TerminalNode
-
-	// IsDeclareStmtContext differentiates from other interfaces.
-	IsDeclareStmtContext()
-}
-
-type DeclareStmtContext struct {
-	antlr.BaseParserRuleContext
-	parser antlr.Parser
-}
-
-func NewEmptyDeclareStmtContext() *DeclareStmtContext {
-	var p = new(DeclareStmtContext)
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = V2ParserRULE_declareStmt
-	return p
-}
-
-func InitEmptyDeclareStmtContext(p *DeclareStmtContext) {
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
-	p.RuleIndex = V2ParserRULE_declareStmt
-}
-
-func (*DeclareStmtContext) IsDeclareStmtContext() {}
-
-func NewDeclareStmtContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *DeclareStmtContext {
-	var p = new(DeclareStmtContext)
-
-	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
-
-	p.parser = parser
-	p.RuleIndex = V2ParserRULE_declareStmt
-
-	return p
-}
-
-func (s *DeclareStmtContext) GetParser() antlr.Parser { return s.parser }
-
-func (s *DeclareStmtContext) Type_() ITypeContext {
-	var t antlr.RuleContext
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(ITypeContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(ITypeContext)
-}
-
-func (s *DeclareStmtContext) AllIdentifier() []antlr.TerminalNode {
-	return s.GetTokens(V2ParserIdentifier)
-}
-
-func (s *DeclareStmtContext) Identifier(i int) antlr.TerminalNode {
-	return s.GetToken(V2ParserIdentifier, i)
-}
-
-func (s *DeclareStmtContext) AllComma() []antlr.TerminalNode {
-	return s.GetTokens(V2ParserComma)
-}
-
-func (s *DeclareStmtContext) Comma(i int) antlr.TerminalNode {
-	return s.GetToken(V2ParserComma, i)
-}
-
-func (s *DeclareStmtContext) GetRuleContext() antlr.RuleContext {
-	return s
-}
-
-func (s *DeclareStmtContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
-	return antlr.TreesStringTree(s, ruleNames, recog)
-}
-
-func (s *DeclareStmtContext) EnterRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(V2ParserListener); ok {
-		listenerT.EnterDeclareStmt(s)
-	}
-}
-
-func (s *DeclareStmtContext) ExitRule(listener antlr.ParseTreeListener) {
-	if listenerT, ok := listener.(V2ParserListener); ok {
-		listenerT.ExitDeclareStmt(s)
-	}
-}
-
-func (s *DeclareStmtContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case V2ParserVisitor:
-		return t.VisitDeclareStmt(s)
-
-	default:
-		return t.VisitChildren(s)
-	}
-}
-
-func (p *V2Parser) DeclareStmt() (localctx IDeclareStmtContext) {
-	localctx = NewDeclareStmtContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 60, V2ParserRULE_declareStmt)
-	var _la int
-
-	p.EnterOuterAlt(localctx, 1)
-	{
-		p.SetState(356)
-		p.Type_()
-	}
-	{
-		p.SetState(357)
-		p.Match(V2ParserIdentifier)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
-		}
-	}
-	p.SetState(362)
-	p.GetErrorHandler().Sync(p)
-	if p.HasError() {
-		goto errorExit
-	}
-	_la = p.GetTokenStream().LA(1)
-
-	for _la == V2ParserComma {
-		{
-			p.SetState(358)
-			p.Match(V2ParserComma)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
-		}
-		{
-			p.SetState(359)
-			p.Match(V2ParserIdentifier)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
-		}
-
-		p.SetState(364)
-		p.GetErrorHandler().Sync(p)
-		if p.HasError() {
-			goto errorExit
-		}
-		_la = p.GetTokenStream().LA(1)
 	}
 
 errorExit:
@@ -6929,14 +6753,14 @@ func (s *AssignStmtContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 func (p *V2Parser) AssignStmt() (localctx IAssignStmtContext) {
 	localctx = NewAssignStmtContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 62, V2ParserRULE_assignStmt)
+	p.EnterRule(localctx, 60, V2ParserRULE_assignStmt)
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(366)
+	p.SetState(357)
 	p.GetErrorHandler().Sync(p)
 
-	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 37, p.GetParserRuleContext()) == 1 {
+	if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 36, p.GetParserRuleContext()) == 1 {
 		{
-			p.SetState(365)
+			p.SetState(356)
 			p.Type_()
 		}
 
@@ -6944,11 +6768,11 @@ func (p *V2Parser) AssignStmt() (localctx IAssignStmtContext) {
 		goto errorExit
 	}
 	{
-		p.SetState(368)
+		p.SetState(359)
 		p.Var_()
 	}
 	{
-		p.SetState(369)
+		p.SetState(360)
 		p.Match(V2ParserAssign)
 		if p.HasError() {
 			// Recognition error - abort rule
@@ -6956,8 +6780,184 @@ func (p *V2Parser) AssignStmt() (localctx IAssignStmtContext) {
 		}
 	}
 	{
-		p.SetState(370)
+		p.SetState(361)
 		p.ExprWithLambda()
+	}
+
+errorExit:
+	if p.HasError() {
+		v := p.GetError()
+		localctx.SetException(v)
+		p.GetErrorHandler().ReportError(p, v)
+		p.GetErrorHandler().Recover(p, v)
+		p.SetError(nil)
+	}
+	p.ExitRule()
+	return localctx
+	goto errorExit // Trick to prevent compiler error if the label is not used
+}
+
+// IDeclareStmtContext is an interface to support dynamic dispatch.
+type IDeclareStmtContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// Getter signatures
+	Type_() ITypeContext
+	AllIdentifier() []antlr.TerminalNode
+	Identifier(i int) antlr.TerminalNode
+	AllComma() []antlr.TerminalNode
+	Comma(i int) antlr.TerminalNode
+
+	// IsDeclareStmtContext differentiates from other interfaces.
+	IsDeclareStmtContext()
+}
+
+type DeclareStmtContext struct {
+	antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyDeclareStmtContext() *DeclareStmtContext {
+	var p = new(DeclareStmtContext)
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = V2ParserRULE_declareStmt
+	return p
+}
+
+func InitEmptyDeclareStmtContext(p *DeclareStmtContext) {
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, nil, -1)
+	p.RuleIndex = V2ParserRULE_declareStmt
+}
+
+func (*DeclareStmtContext) IsDeclareStmtContext() {}
+
+func NewDeclareStmtContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *DeclareStmtContext {
+	var p = new(DeclareStmtContext)
+
+	antlr.InitBaseParserRuleContext(&p.BaseParserRuleContext, parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = V2ParserRULE_declareStmt
+
+	return p
+}
+
+func (s *DeclareStmtContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *DeclareStmtContext) Type_() ITypeContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(ITypeContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITypeContext)
+}
+
+func (s *DeclareStmtContext) AllIdentifier() []antlr.TerminalNode {
+	return s.GetTokens(V2ParserIdentifier)
+}
+
+func (s *DeclareStmtContext) Identifier(i int) antlr.TerminalNode {
+	return s.GetToken(V2ParserIdentifier, i)
+}
+
+func (s *DeclareStmtContext) AllComma() []antlr.TerminalNode {
+	return s.GetTokens(V2ParserComma)
+}
+
+func (s *DeclareStmtContext) Comma(i int) antlr.TerminalNode {
+	return s.GetToken(V2ParserComma, i)
+}
+
+func (s *DeclareStmtContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *DeclareStmtContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *DeclareStmtContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(V2ParserListener); ok {
+		listenerT.EnterDeclareStmt(s)
+	}
+}
+
+func (s *DeclareStmtContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(V2ParserListener); ok {
+		listenerT.ExitDeclareStmt(s)
+	}
+}
+
+func (s *DeclareStmtContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case V2ParserVisitor:
+		return t.VisitDeclareStmt(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+func (p *V2Parser) DeclareStmt() (localctx IDeclareStmtContext) {
+	localctx = NewDeclareStmtContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 62, V2ParserRULE_declareStmt)
+	var _la int
+
+	p.EnterOuterAlt(localctx, 1)
+	{
+		p.SetState(363)
+		p.Type_()
+	}
+	{
+		p.SetState(364)
+		p.Match(V2ParserIdentifier)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
+	}
+	p.SetState(369)
+	p.GetErrorHandler().Sync(p)
+	if p.HasError() {
+		goto errorExit
+	}
+	_la = p.GetTokenStream().LA(1)
+
+	for _la == V2ParserComma {
+		{
+			p.SetState(365)
+			p.Match(V2ParserComma)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+		{
+			p.SetState(366)
+			p.Match(V2ParserIdentifier)
+			if p.HasError() {
+				// Recognition error - abort rule
+				goto errorExit
+			}
+		}
+
+		p.SetState(371)
+		p.GetErrorHandler().Sync(p)
+		if p.HasError() {
+			goto errorExit
+		}
+		_la = p.GetTokenStream().LA(1)
 	}
 
 errorExit:

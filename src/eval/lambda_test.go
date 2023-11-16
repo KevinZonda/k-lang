@@ -6,7 +6,7 @@ import (
 
 func TestLambdaCall(t *testing.T) {
 	code := `
-foo := (x) {
+foo := fn (x) {
 	println(x+11)
 }
 foo(14)

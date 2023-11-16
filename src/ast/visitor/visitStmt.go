@@ -1,6 +1,7 @@
 package visitor
 
 import (
+	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parser"
@@ -29,6 +30,7 @@ func (v *AntlrVisitor) VisitStmt(ctx *parser.StmtContext) interface{} {
 	if ctx.MatchStmt() != nil {
 		return v.VisitMathStmt(ctx.MatchStmt().(*parser.MatchStmtContext))
 	}
+	fmt.Println(ctx.GetText())
 	panic("implement me")
 
 }
@@ -39,7 +41,7 @@ func (v *AntlrVisitor) VisitJumpStmt(ctx *parser.JumpStmtContext) interface{} {
 			Token: token.FromAntlrToken(ctx.GetStart()),
 		}
 		ret.Value = toExpr(v.VisitExprWithLambda(toPtr[parser.ExprWithLambdaContext](ctx.ExprWithLambda())))
-		
+
 		return &ret
 	}
 	if ctx.Break() != nil {

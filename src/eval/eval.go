@@ -20,6 +20,10 @@ type Eval struct {
 
 var openedFiles map[string]*Eval
 
+func ResetGlobal() {
+	openedFiles = make(map[string]*Eval)
+}
+
 func New(ast tree.Ast, inputFile string) *Eval {
 	if openedFiles == nil {
 		openedFiles = map[string]*Eval{}

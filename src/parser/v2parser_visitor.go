@@ -98,11 +98,11 @@ type V2ParserVisitor interface {
 	// Visit a parse tree produced by V2Parser#stmt.
 	VisitStmt(ctx *StmtContext) interface{}
 
-	// Visit a parse tree produced by V2Parser#declareStmt.
-	VisitDeclareStmt(ctx *DeclareStmtContext) interface{}
-
 	// Visit a parse tree produced by V2Parser#assignStmt.
 	VisitAssignStmt(ctx *AssignStmtContext) interface{}
+
+	// Visit a parse tree produced by V2Parser#declareStmt.
+	VisitDeclareStmt(ctx *DeclareStmtContext) interface{}
 
 	// Visit a parse tree produced by V2Parser#ifStmt.
 	VisitIfStmt(ctx *IfStmtContext) interface{}

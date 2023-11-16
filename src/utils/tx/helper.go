@@ -31,6 +31,7 @@ func StopCaptureStdout() string {
 		return ""
 	}
 	w.Close()
+	w = nil
 	os.Stdout = out
 	var buf bytes.Buffer
 	io.Copy(&buf, r)
