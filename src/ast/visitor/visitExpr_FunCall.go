@@ -9,7 +9,7 @@ import (
 func (v *AntlrVisitor) VisitFuncCall(ctx *parser.FuncCallContext) interface{} {
 	fc := &node.FuncCall{
 		Token:  token.FromAntlrToken(ctx.GetStart()),
-		Caller: v.VisitVar(ctx.Var_().(*parser.VarContext)).(*node.Variable),
+		Caller: v.visitIdentifier(ctx.Identifier()),
 	}
 	if fca := ctx.FuncCallArgs(); fca != nil {
 		args := v.VisitFuncCallArgs(ctx.FuncCallArgs().(*parser.FuncCallArgsContext))

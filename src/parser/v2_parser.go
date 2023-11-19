@@ -184,7 +184,7 @@ func v2parserParserInit() {
 		1, 0, 0, 0, 238, 241, 1, 0, 0, 0, 239, 237, 1, 0, 0, 0, 239, 240, 1, 0,
 		0, 0, 240, 33, 1, 0, 0, 0, 241, 239, 1, 0, 0, 0, 242, 245, 3, 28, 14, 0,
 		243, 245, 3, 32, 16, 0, 244, 242, 1, 0, 0, 0, 244, 243, 1, 0, 0, 0, 245,
-		35, 1, 0, 0, 0, 246, 247, 3, 20, 10, 0, 247, 249, 5, 3, 0, 0, 248, 250,
+		35, 1, 0, 0, 0, 246, 247, 5, 47, 0, 0, 247, 249, 5, 3, 0, 0, 248, 250,
 		3, 38, 19, 0, 249, 248, 1, 0, 0, 0, 249, 250, 1, 0, 0, 0, 250, 251, 1,
 		0, 0, 0, 251, 252, 5, 4, 0, 0, 252, 37, 1, 0, 0, 0, 253, 258, 3, 32, 16,
 		0, 254, 255, 5, 7, 0, 0, 255, 257, 3, 32, 16, 0, 256, 254, 1, 0, 0, 0,
@@ -4173,7 +4173,7 @@ type IFuncCallContext interface {
 	GetParser() antlr.Parser
 
 	// Getter signatures
-	Var_() IVarContext
+	Identifier() antlr.TerminalNode
 	LParen() antlr.TerminalNode
 	RParen() antlr.TerminalNode
 	FuncCallArgs() IFuncCallArgsContext
@@ -4214,20 +4214,8 @@ func NewFuncCallContext(parser antlr.Parser, parent antlr.ParserRuleContext, inv
 
 func (s *FuncCallContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *FuncCallContext) Var_() IVarContext {
-	var t antlr.RuleContext
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IVarContext); ok {
-			t = ctx.(antlr.RuleContext)
-			break
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IVarContext)
+func (s *FuncCallContext) Identifier() antlr.TerminalNode {
+	return s.GetToken(V2ParserIdentifier, 0)
 }
 
 func (s *FuncCallContext) LParen() antlr.TerminalNode {
@@ -4292,7 +4280,11 @@ func (p *V2Parser) FuncCall() (localctx IFuncCallContext) {
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(246)
-		p.Var_()
+		p.Match(V2ParserIdentifier)
+		if p.HasError() {
+			// Recognition error - abort rule
+			goto errorExit
+		}
 	}
 	{
 		p.SetState(247)

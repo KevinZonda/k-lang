@@ -2,7 +2,6 @@ package builtin
 
 import (
 	"fmt"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"reflect"
 )
 
@@ -14,8 +13,8 @@ func Println(v ...any) {
 	fmt.Println(v...)
 }
 
-func Match(n *node.Variable) any {
-	switch n.Value[0].Name.Value {
+func Match(ns ...string) any {
+	switch ns[0] {
 	case "print":
 		return Print
 	case "println":

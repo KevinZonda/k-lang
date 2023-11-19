@@ -13,7 +13,7 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) any {
 		args = append(args, e.EvalExpr(expr))
 	}
 
-	funcName := fc.Caller.Value[0].Name.Value
+	funcName := fc.Caller.Value
 	fx, ok := e.objTable.Get(funcName)
 	if !ok || !(fx.IsLambda() || fx.IsFunc()) {
 		return e.EvalBuiltInCall(fc, args)
@@ -40,7 +40,7 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) any {
 }
 
 func (e *Eval) EvalBuiltInCall(fc *node.FuncCall, args []any) any {
-	fn := builtin.Match(fc.Caller)
+	fn := builtin.Match(fc.Caller.Value)
 	if fn == nil {
 		panic("func not found")
 	}

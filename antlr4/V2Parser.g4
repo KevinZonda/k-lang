@@ -57,7 +57,7 @@ expr
 
 exprWithLambda : lambda | expr;
 
-funcCall : var LParen funcCallArgs? RParen ;
+funcCall : Identifier LParen funcCallArgs? RParen ;
 funcCallArgs : expr (Comma expr)*;
 
 stmtWithSep : stmt sep*;
