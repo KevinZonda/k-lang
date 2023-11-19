@@ -64,7 +64,7 @@ func (v *AntlrVisitor) VisitLiteral(ctx *parser.LiteralContext) interface{} {
 			Token: token.FromAntlrToken(ctx.GetStart()),
 			Value: false,
 		}
-	case parser.V2ParserRULE_structInitializer:
+	case parser.V2ParserStruct:
 		fmt.Println("-> STRUCT : ", ctx.GetStart().GetText())
 	default:
 		if ctx.ArrayInitializer() != nil {
