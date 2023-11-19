@@ -9,11 +9,16 @@ type Object struct {
 
 type Kind string
 
+type ILibrary interface {
+	FuncCall(name string, args []any) any
+}
+
 const (
 	Lambda  Kind = "Lambda"
 	Func    Kind = "Func"
 	Value   Kind = "Val"
 	EvalObj Kind = "EvalObj"
+	Library Kind = "Library"
 )
 
 func NewLambdaObject(val *node.LambdaExpr) *Object {
@@ -48,12 +53,20 @@ func (o *Object) IsEval() bool {
 	return o.Kind == EvalObj
 }
 
+func (o *Object) IsLib() bool {
+	return o.Kind == Library
+}
+
 func (o *Object) ToLambda() *node.LambdaExpr {
 	return o.Val.(*node.LambdaExpr)
 }
 
 func (o *Object) ToFunc() *node.FuncBlock {
 	return o.Val.(*node.FuncBlock)
+}
+
+func (o *Object) ToLib() ILibrary {
+	return o.Val.(ILibrary)
 }
 
 func (o *Object) ToValue() any {
@@ -67,6 +80,8 @@ func cons(a any) *Object {
 		return NewEvalObject(&e)
 	case *Eval:
 		return NewEvalObject(a.(*Eval))
+	case ILibrary:
+		return &Object{Kind: Library, Val: a}
 	case *Object:
 		return a.(*Object)
 	case *node.LambdaExpr:

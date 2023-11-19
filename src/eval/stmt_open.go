@@ -31,6 +31,15 @@ func (e *Eval) fineFile(s string) (abs string, ok bool) {
 }
 
 func (e *Eval) EvalOpenStmt(n *node.OpenStmt) {
+	switch n.Path {
+	case "string":
+		if n.As != "" {
+			e.objTable.Set(n.As, NewStdStringLib())
+		} else {
+			e.objTable.Set("string", NewStdStringLib())
+		}
+		return
+	}
 	abs, ok := e.fineFile(n.Path)
 	if !ok {
 		panic("File not found: " + n.Path)
@@ -59,15 +68,18 @@ func (e *Eval) EvalOpenStmt(n *node.OpenStmt) {
 		e.objTable.Set(n.As, openedEval)
 	} else {
 		base := filepath.Base(abs)
-		sb := strings.Builder{}
-		for _, c := range base {
-			if c != '_' && (c < 'a' || c > 'z') && (c < 'A' || c > 'Z') {
-				sb.WriteRune('_')
-			} else {
-				sb.WriteRune(c)
-			}
-		}
-		e.objTable.Set(sb.String(), openedEval)
-		sb.Reset()
+		e.objTable.Set(normaliseName(base), openedEval)
 	}
+}
+
+func normaliseName(n string) string {
+	sb := strings.Builder{}
+	for _, c := range n {
+		if c != '_' && (c < 'a' || c > 'z') && (c < 'A' || c > 'Z') {
+			sb.WriteRune('_')
+		} else {
+			sb.WriteRune(c)
+		}
+	}
+	return sb.String()
 }
