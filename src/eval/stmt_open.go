@@ -3,6 +3,7 @@ package eval
 import (
 	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/builtin"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"github.com/KevinZonda/GoX/pkg/iox"
 	"path"
@@ -30,13 +31,34 @@ func (e *Eval) fineFile(s string) (abs string, ok bool) {
 	return "", false
 }
 
+func (e *Eval) loadBuiltInLibrary(name, as string) (ok bool) {
+	var lib builtin.ILibrary
+	var libName string
+	switch name {
+	case "string":
+		lib = builtin.NewStdStringLib()
+		libName = "string"
+	default:
+		return false
+	}
+	if as != "" {
+		e.objTable.Set(as, lib)
+	} else {
+		e.objTable.Set(libName, lib)
+	}
+	return true
+}
+
 func (e *Eval) EvalOpenStmt(n *node.OpenStmt) {
+	if e.loadBuiltInLibrary(n.Path, n.As) {
+		return
+	}
 	switch n.Path {
 	case "string":
 		if n.As != "" {
-			e.objTable.Set(n.As, NewStdStringLib())
+			e.objTable.Set(n.As, builtin.NewStdStringLib())
 		} else {
-			e.objTable.Set("string", NewStdStringLib())
+			e.objTable.Set("string", builtin.NewStdStringLib())
 		}
 		return
 	}

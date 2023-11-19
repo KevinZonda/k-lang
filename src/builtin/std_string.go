@@ -1,6 +1,8 @@
-package eval
+package builtin
 
-import "strings"
+import (
+	"strings"
+)
 
 type StdStringLib struct {
 }

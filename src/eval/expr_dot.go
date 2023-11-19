@@ -3,6 +3,7 @@ package eval
 import (
 	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/builtin"
 )
 
 func (e *Eval) EvalDotExpr(n *node.DotExpr) any {
@@ -44,8 +45,8 @@ func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) any {
 	case *Eval:
 		_e := scope.(*Eval)
 		return _e.EvalFuncCall(funcCall)
-	case ILibrary:
-		_lib := scope.(ILibrary)
+	case builtin.ILibrary:
+		_lib := scope.(builtin.ILibrary)
 		var args []any
 		for _, expr := range _fc.Args {
 			args = append(args, e.EvalExpr(expr))

@@ -1,6 +1,9 @@
 package eval
 
-import "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
+import (
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/builtin"
+)
 
 type Object struct {
 	Kind Kind
@@ -8,10 +11,6 @@ type Object struct {
 }
 
 type Kind string
-
-type ILibrary interface {
-	FuncCall(name string, args []any) any
-}
 
 const (
 	Lambda  Kind = "Lambda"
@@ -65,8 +64,8 @@ func (o *Object) ToFunc() *node.FuncBlock {
 	return o.Val.(*node.FuncBlock)
 }
 
-func (o *Object) ToLib() ILibrary {
-	return o.Val.(ILibrary)
+func (o *Object) ToLib() builtin.ILibrary {
+	return o.Val.(builtin.ILibrary)
 }
 
 func (o *Object) ToValue() any {
@@ -80,7 +79,7 @@ func cons(a any) *Object {
 		return NewEvalObject(&e)
 	case *Eval:
 		return NewEvalObject(a.(*Eval))
-	case ILibrary:
+	case builtin.ILibrary:
 		return &Object{Kind: Library, Val: a}
 	case *Object:
 		return a.(*Object)
