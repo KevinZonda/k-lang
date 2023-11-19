@@ -20,7 +20,8 @@ func IsStdoutAsExpected(allowPanic bool, f func(), expected string) (e error) {
 			}
 		}
 		if IsCapturing() {
-			StopCaptureStdout()
+			output := StopCaptureStdout()
+			fmt.Println("Content Captured:\n", output)
 		}
 
 	}()

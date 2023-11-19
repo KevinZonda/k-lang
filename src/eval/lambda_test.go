@@ -12,7 +12,7 @@ foo := fn (x) {
 foo(14)
 `
 	expected := "25\n"
-	generalTest(false, t, code, expected)
+	GeneralTest(false, t, code, expected)
 }
 
 func TestReturnLambda(t *testing.T) {
@@ -27,5 +27,5 @@ m := foo()
 k := m(17)
 `
 	expected := "28\n"
-	generalTest(false, t, code, expected)
+	GeneralTest(false, t, code, expected)
 }

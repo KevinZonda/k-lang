@@ -38,7 +38,7 @@ func (e *Eval) loadBuiltInLibrary(name, as string) (ok bool) {
 	}
 
 	if as != "" {
-		e.objTable.Set(as, lib)
+		e.objTable.Set(normaliseName(as), lib)
 	} else {
 		e.objTable.Set(name, lib)
 	}
@@ -49,15 +49,7 @@ func (e *Eval) EvalOpenStmt(n *node.OpenStmt) {
 	if e.loadBuiltInLibrary(n.Path, n.As) {
 		return
 	}
-	switch n.Path {
-	case "string":
-		if n.As != "" {
-			e.objTable.Set(n.As, builtin.NewStdStringLib())
-		} else {
-			e.objTable.Set("string", builtin.NewStdStringLib())
-		}
-		return
-	}
+
 	abs, ok := e.fineFile(n.Path)
 	if !ok {
 		panic("File not found: " + n.Path)

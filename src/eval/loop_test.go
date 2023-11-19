@@ -19,5 +19,22 @@ for (i := 0; i <= 5; i := i + 1) {
 4, 5 | 4, 6 | 
 5, 6 | 
 `
-	generalTest(true, ts, code, expected)
+	GeneralTest(true, ts, code, expected)
+}
+
+func TestWhileLoop(ts *testing.T) {
+	code := `
+i := 0
+for (i <= 5) {
+    i := i - (-1)
+    println(i)
+}`
+	expected := `1
+2
+3
+4
+5
+6
+`
+	GeneralTest(true, ts, code, expected)
 }

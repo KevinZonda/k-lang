@@ -26,5 +26,5 @@ x.printHi()
 Calling open_func_call.printHi()
 Hi
 `
-	generalTest(false, t, code, expected)
+	GeneralTest(false, t, code, expected)
 }
