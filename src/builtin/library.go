@@ -6,6 +6,10 @@ type ILibrary interface {
 
 var libMap = map[string]ILibrary{}
 
+type ITypeOf interface {
+	TypeOf() string
+}
+
 func GetLibrary(name string) ILibrary {
 	if lib, ok := libMap[name]; ok {
 		return lib
@@ -18,4 +22,10 @@ func GetLibrary(name string) ILibrary {
 		return lib
 	}
 	return nil
+}
+
+func ensureArgsLen(args []any, n int) {
+	if len(args) != n {
+		panic("Wrong number of arguments")
+	}
 }

@@ -16,9 +16,13 @@ const (
 	Lambda  Kind = "Lambda"
 	Func    Kind = "Func"
 	Value   Kind = "Val"
-	EvalObj Kind = "EvalObj"
+	EvalObj Kind = "Eval"
 	Library Kind = "Library"
 )
+
+func (o *Object) TypeOf() string {
+	return string(o.Kind)
+}
 
 func NewLambdaObject(val *node.LambdaExpr) *Object {
 	return &Object{Kind: Lambda, Val: val}
