@@ -1,6 +1,7 @@
 package eval_test
 
 import (
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/tester"
 	"testing"
 )
 
@@ -19,7 +20,7 @@ for (i := 0; i <= 5; i := i + 1) {
 4, 5 | 4, 6 | 
 5, 6 | 
 `
-	GeneralTest(true, ts, code, expected)
+	tester.GeneralTest(true, ts, code, expected)
 }
 
 func TestWhileLoop(ts *testing.T) {
@@ -36,5 +37,5 @@ for (i <= 5) {
 5
 6
 `
-	GeneralTest(true, ts, code, expected)
+	tester.GeneralTest(true, ts, code, expected)
 }

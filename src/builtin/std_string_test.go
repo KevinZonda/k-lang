@@ -1,6 +1,7 @@
 package builtin_test
 
 import (
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/tester"
 	"testing"
 )
 
@@ -27,5 +28,5 @@ float64
   128.0
 `
 
-	GeneralTest(false, t, code, expected)
+	tester.GeneralTest(false, t, code, expected)
 }

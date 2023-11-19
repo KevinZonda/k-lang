@@ -1,6 +1,7 @@
 package eval_test
 
 import (
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/tester"
 	"testing"
 )
 
@@ -13,7 +14,7 @@ if (1 == 1) {
 }
 `
 	expected := `1`
-	GeneralTest(true, ts, code, expected)
+	tester.GeneralTest(true, ts, code, expected)
 }
 
 func TestIfFalse(ts *testing.T) {
@@ -25,5 +26,5 @@ if (1 == -2) {
 }
 `
 	expected := `2`
-	GeneralTest(true, ts, code, expected)
+	tester.GeneralTest(true, ts, code, expected)
 }

@@ -3,6 +3,7 @@ package eval_test
 import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/tester"
 	"testing"
 )
 
@@ -26,5 +27,5 @@ x.printHi()
 Calling open_func_call.printHi()
 Hi
 `
-	GeneralTest(false, t, code, expected)
+	tester.GeneralTest(false, t, code, expected)
 }

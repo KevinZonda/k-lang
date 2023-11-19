@@ -1,6 +1,7 @@
 package eval_test
 
 import (
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/tester"
 	"testing"
 )
 
@@ -12,7 +13,7 @@ foo := fn (x) {
 foo(14)
 `
 	expected := "25\n"
-	GeneralTest(false, t, code, expected)
+	tester.GeneralTest(false, t, code, expected)
 }
 
 func TestReturnLambda(t *testing.T) {
@@ -27,5 +28,5 @@ m := foo()
 k := m(17)
 `
 	expected := "28\n"
-	GeneralTest(false, t, code, expected)
+	tester.GeneralTest(false, t, code, expected)
 }

@@ -1,4 +1,4 @@
-package tx
+package tester
 
 import (
 	"crypto/sha256"

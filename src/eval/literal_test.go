@@ -1,12 +1,15 @@
 package eval_test
 
-import "testing"
+import (
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/tester"
+	"testing"
+)
 
 func TestArrayInitializer(t *testing.T) {
 	code := `x := [1, 2, 3, 4, 5]
 print(x)`
 	expected := `[1 2 3 4 5]`
-	GeneralTest(false, t, code, expected)
+	tester.GeneralTest(false, t, code, expected)
 }
 
 func TestMapInitializer(t *testing.T) {
@@ -16,5 +19,5 @@ func TestMapInitializer(t *testing.T) {
 }
 print(x)`
 	expected := `map[1:one 13:Thirteen]`
-	GeneralTest(true, t, code, expected)
+	tester.GeneralTest(true, t, code, expected)
 }
