@@ -3952,6 +3952,7 @@ func (p *V2Parser) expr(_p int) (localctx IExprContext) {
 
 			case 6:
 				localctx = NewExprContext(p, _parentctx, _parentState)
+				localctx.(*ExprContext).LHS = _prevctx
 				p.PushNewRecursionContext(localctx, _startState, V2ParserRULE_expr)
 				p.SetState(232)
 
@@ -3969,7 +3970,10 @@ func (p *V2Parser) expr(_p int) (localctx IExprContext) {
 				}
 				{
 					p.SetState(234)
-					p.expr(3)
+
+					var _x = p.expr(3)
+
+					localctx.(*ExprContext).RHS = _x
 				}
 
 			case 7:

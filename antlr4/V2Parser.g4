@@ -51,7 +51,7 @@ expr
     | LHS=expr OP=(Add | Sub)       RHS=expr
     | Identifier
     | expr indexes
-    | expr Dot expr
+    | LHS=expr Dot RHS=expr
     | assignStmt
     ;
 

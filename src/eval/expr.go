@@ -6,8 +6,36 @@ import (
 	"reflect"
 )
 
+func (e *Eval) EvalDotExpr(n *node.DotExpr) any {
+	var left, right any
+
+	if lfc, ok := n.Left.(*node.FuncCall); ok {
+		left = e.EvalFuncCall(lfc)
+	} else {
+		left = e.EvalExpr(n.Left)
+	}
+
+	if _, ok := n.Right.(*node.FuncCall); !ok {
+		right = e.EvalExpr(n.Right)
+		return e.EvalPropertyAfterScope(left, right)
+	} else {
+		return e.EvalFuncCallAfterScope(left, n.Right.(*node.FuncCall))
+	}
+}
+
+func (e *Eval) EvalPropertyAfterScope(scope any, property any) any {
+	return nil
+
+}
+
+func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) any {
+	return nil
+}
+
 func (e *Eval) EvalExpr(n node.Expr) any {
 	switch n.(type) {
+	case *node.DotExpr:
+		return e.EvalDotExpr(n.(*node.DotExpr))
 	case *node.BinaryOperExpr:
 		return e.EvalBinOperExpr(n.(*node.BinaryOperExpr))
 	case *node.UnaryOperExpr:
