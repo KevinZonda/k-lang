@@ -32,19 +32,15 @@ func (e *Eval) fineFile(s string) (abs string, ok bool) {
 }
 
 func (e *Eval) loadBuiltInLibrary(name, as string) (ok bool) {
-	var lib builtin.ILibrary
-	var libName string
-	switch name {
-	case "string":
-		lib = builtin.NewStdStringLib()
-		libName = "string"
-	default:
+	lib := builtin.GetLibrary(name)
+	if lib == nil {
 		return false
 	}
+
 	if as != "" {
 		e.objTable.Set(as, lib)
 	} else {
-		e.objTable.Set(libName, lib)
+		e.objTable.Set(name, lib)
 	}
 	return true
 }
