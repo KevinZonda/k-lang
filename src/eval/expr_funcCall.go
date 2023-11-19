@@ -44,6 +44,14 @@ func (e *Eval) EvalBuiltInCall(fc *node.FuncCall, args []any) any {
 	if fn == nil {
 		panic("func not found")
 	}
-	_ = builtin.Call(fn, args)
+	var ret []any
+	xs := builtin.Call(fn, args)
+	for _, x := range xs {
+		ret = append(ret, x)
+	}
+	// TODO: return multiple values
+	if len(ret) > 0 {
+		return ret[0]
+	}
 	return nil
 }
