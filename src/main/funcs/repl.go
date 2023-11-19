@@ -9,7 +9,6 @@ import (
 	"github.com/KevinZonda/GoX/pkg/iox"
 	"github.com/KevinZonda/GoX/pkg/panicx"
 	"os"
-	"reflect"
 )
 
 type Repl struct {
@@ -31,7 +30,6 @@ func (r *Repl) Repl(input string) {
 	rl, err := consoleReader.New("> ")
 	panicx.PanicIfNotNil(err, err)
 
-	var it any
 	var history []string
 
 	//defer func() {
@@ -74,9 +72,6 @@ func (r *Repl) Repl(input string) {
 			r.printIt = true
 			fmt.Println("Print it: ON")
 			continue
-		case ":type", ":tx":
-			fmt.Println("Type: ", reflect.TypeOf(it))
-			continue
 		}
 
 		buffer, err := consoleReader.MultipleLine(rl, line, "> ", "| ")
@@ -101,10 +96,6 @@ func (r *Repl) Repl(input string) {
 		e := eval.New(ast, "")
 		e.LoadContext(r.context)
 		e.Do()
-		if r.printIt {
-			fmt.Println("Evaluated ->", e.It())
-		}
-		it = e.It()
 		r.context = e
 	}
 

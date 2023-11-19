@@ -44,3 +44,12 @@ ifeq ($(OS),Windows_NT)
 else
 	open .\src\out
 endif
+
+test:
+ifeq ($(OS),Windows_NT)
+	@echo '=== Test ==='
+	.\scripts\test.bat
+else
+	echo '=== Test ==='
+	./scripts/test.sh
+endif
