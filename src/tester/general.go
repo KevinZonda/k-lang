@@ -19,3 +19,14 @@ func GeneralTest(allowPanic bool, ts *testing.T, code, expected string) {
 		ts.Fatal(err)
 	}
 }
+
+func GeneralTestX(allowPanic bool, ts *testing.T, code, expected string) {
+	ast, errs := parserHelper.Ast(code)
+	if len(errs) > 0 {
+		ts.Fatal(errs)
+		return
+	}
+	e := eval.New(ast, "")
+	e.Do()
+
+}

@@ -54,6 +54,7 @@ func (e *Eval) EvalCStyleFrStmt(n *node.CStyleFor) any {
 		_ = e.EvalLoopCodeBlock(n.Body)
 		if e.objTable.HasKeyAtTop(reserved.Continue) {
 			e.objTable.RemoveKeyAtTop(reserved.Continue)
+			e.EvalExpr(n.AfterIterExpr)
 			continue
 		}
 		if e.objTable.HasKeyAtTop(reserved.Return) {

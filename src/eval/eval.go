@@ -53,6 +53,11 @@ func (e *Eval) LoadContext(o *Eval) {
 
 func (e *Eval) runWithBreak(breaks ...string) (retV *Object, hasRet bool) {
 	for _, n := range e.ast {
+		for _, key := range breaks {
+			if e.objTable.HasKeyAtTop(key) {
+				goto end
+			}
+		}
 		switch n.(type) {
 		case *node.CodeBlock:
 			e.EvalCodeBlock(n.(*node.CodeBlock))
@@ -71,12 +76,8 @@ func (e *Eval) runWithBreak(breaks ...string) (retV *Object, hasRet bool) {
 		default:
 			panic("not implemented")
 		}
-		for _, key := range breaks {
-			if e.objTable.HasKeyAtTop(key) {
-				break
-			}
-		}
 	}
+end:
 	retV, hasRet = e.objTable.Get(reserved.Return)
 	return
 }
