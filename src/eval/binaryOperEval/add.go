@@ -1,6 +1,8 @@
 package binaryOperEval
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func Add(left any, right any) any {
 	// string + any

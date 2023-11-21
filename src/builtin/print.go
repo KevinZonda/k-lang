@@ -32,7 +32,7 @@ func Match(ns ...string) any {
 	return nil
 }
 
-func Call(fn any, args []any) []reflect.Value {
+func Call(fn any, args []any) []any {
 	if fn == nil {
 		return nil // FIXME: Nil FUNC
 	}
@@ -40,5 +40,11 @@ func Call(fn any, args []any) []reflect.Value {
 	for _, arg := range args {
 		argsV = append(argsV, reflect.ValueOf(arg))
 	}
-	return reflect.ValueOf(fn).Call(argsV)
+	vC := reflect.ValueOf(fn).Call(argsV)
+	var vs []any
+	for _, v := range vC {
+		vs = append(vs, v.Interface())
+	}
+
+	return vs
 }
