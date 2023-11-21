@@ -23,6 +23,8 @@ func Eq(left any, right any) bool {
 		case bool:
 			return left.(bool) == right.(bool)
 		}
+	case string:
+		return left.(string) == fmt.Sprint(right)
 	}
 	panic(fmt.Sprintf("cannot eq %T and %T", left, right))
 }
