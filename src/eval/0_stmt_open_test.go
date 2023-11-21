@@ -29,3 +29,16 @@ open "testFile/hello.k" as m
 	expected := "Hello from hello.k\n"
 	tester.GeneralTest(false, t, code, expected)
 }
+
+func TestOpenLibStmt(t *testing.T) {
+	eval.ResetGlobal()
+	fmt.Println(filepath.Abs("."))
+	code := `
+open "string"
+
+x := "This is a string"
+typeOf(x)
+`
+	expected := ""
+	tester.GeneralTest(true, t, code, expected)
+}

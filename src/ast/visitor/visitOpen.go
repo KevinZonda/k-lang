@@ -9,11 +9,18 @@ import (
 func (v *AntlrVisitor) VisitOpenStmt(ctx *parser.OpenStmtContext) interface{} {
 	txt := ctx.StringLiteral().GetText()
 
-	return &node.OpenStmt{
+	o := &node.OpenStmt{
 		Token: token.FromAntlrToken(ctx.GetStart()),
 		Path:  txt[1 : len(txt)-1],
-		As:    v.visitIdentifier(ctx.Identifier()).Value,
 	}
+	if ctx.As() == nil {
+
+		return o
+	}
+	if as := v.visitIdentifier(ctx.Identifier()); as != nil {
+		o.As = as.Value
+	}
+	return o
 }
 
 func (v *AntlrVisitor) VisitOpenBlock(ctx *parser.OpenBlockContext) interface{} {
