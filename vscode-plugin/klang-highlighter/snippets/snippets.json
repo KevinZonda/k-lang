@@ -52,5 +52,12 @@
             "${1:variable} := ${2:value};"
         ],
         "description": "Create a for loop"
+    },
+    "open": {
+        "prefix": "open",
+        "body": [
+            "open ${1:file}"
+        ]
     }
+
 }
