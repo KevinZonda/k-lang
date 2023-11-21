@@ -21,4 +21,7 @@ func TestEq(t *testing.T) {
 	tester.Assert(t, binaryOperEval.BinaryOper(token.Equals, "1", "2"), false)
 	tester.Assert(t, binaryOperEval.BinaryOper(token.Equals, "1.1", "1.1"), true)
 	tester.Assert(t, binaryOperEval.BinaryOper(token.Equals, "1.1", "1.2"), false)
+	var a float64 = .1
+	var b float64 = .2
+	tester.Assert(t, binaryOperEval.BinaryOper(token.Equals, a+b, .3), true)
 }
