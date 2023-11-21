@@ -78,9 +78,9 @@ func (o *Object) ToValue() any {
 
 func cons(a any) *Object {
 	switch a.(type) {
-	case Eval:
-		e := a.(Eval)
-		return NewEvalObject(&e)
+	//case Eval:
+	//	e := a.(Eval)
+	//	return NewEvalObject(&e)
 	case *Eval:
 		return NewEvalObject(a.(*Eval))
 	case builtin.ILibrary:

@@ -19,8 +19,10 @@ func (e *Eval) EvalAssignStmt(n *node.AssignStmt) any {
 					((*tgt).([]any))[e.EvalExpr(baseV.Index[len(baseV.Index)-1]).(int)] = v
 				}
 			}
-			//e.objTable.Set(baseV.Name.Value, obj)
-			//return v
+			// Consider we use pointer to modify the value, we are not okay to
+			// set back with new value by using objTable.Set(..., v) method.
+			e.objTable.Set(baseV.Name.Value, obj)
+			return v
 		}
 	}
 	e.objTable.Set(baseV.Name.Value, v)

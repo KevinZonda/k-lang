@@ -8,3 +8,7 @@ import (
 func TestAssignStmt(t *testing.T) {
 	parserHelper.Ast("int a[11][12][17].x.y := 1")
 }
+
+func TestAssignDoubleStmt(t *testing.T) {
+	parserHelper.Ast("int a[11][12][17].x.y := 1.1")
+}

@@ -73,11 +73,11 @@ func (v *AntlrVisitor) VisitLiteral(ctx *parser.LiteralContext) interface{} {
 		if ctx.MapInitializer() != nil {
 			return v.VisitMapInitializer(ctx.MapInitializer().(*parser.MapInitializerContext))
 		}
-		fmt.Println("VisitLiteralBlock : Unknown type")
-		fmt.Println("-> text     : ", ctx.GetStart().GetText())
-		fmt.Println("-> tokenType: ", ctx.GetStart().GetTokenType())
-		fmt.Println("-> reflect  :", reflect.TypeOf(ctx))
-		panic("VisitLiteralBlock : Unknown type")
 	}
+	fmt.Println("VisitLiteralBlock : Unknown type")
+	fmt.Println("-> text     : ", ctx.GetStart().GetText())
+	fmt.Println("-> tokenType: ", ctx.GetStart().GetTokenType())
+	fmt.Println("-> reflect  :", reflect.TypeOf(ctx))
+	panic("VisitLiteralBlock : Unknown type")
 	panic("Unimplemented")
 }

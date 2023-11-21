@@ -1,0 +1,17 @@
+package eval_test
+
+import (
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/tester"
+	"testing"
+)
+
+func TestAssignStmt(t *testing.T) {
+	code := `
+x := [12, 18, 19]
+x[0] := 19
+println(x)
+`
+	expected := `[19 18 19]
+`
+	tester.GeneralTest(false, t, code, expected)
+}
