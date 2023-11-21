@@ -1,6 +1,8 @@
 package binaryOperEval
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func Sub(left any, right any) any {
 	switch left.(type) {
