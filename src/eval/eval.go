@@ -68,6 +68,9 @@ func (e *Eval) runWithBreak(breaks ...string) (retV *Object, hasRet bool) {
 		case *node.FuncBlock:
 			fb := n.(*node.FuncBlock)
 			e.objTable.Set(fb.Name.Value, fb)
+		case *node.StructBlock:
+			structBlock := n.(*node.StructBlock)
+			e.objTable.Set(structBlock.Name, structBlock)
 		case *node.OpenBlock:
 			ob := n.(*node.OpenBlock)
 			for _, stmt := range ob.Openers {

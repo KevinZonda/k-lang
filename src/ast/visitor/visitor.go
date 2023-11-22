@@ -26,7 +26,8 @@ func (v *AntlrVisitor) VisitProgram(ctx *parser.ProgramContext) any {
 				block = append(block, ox)
 			}
 		case *parser.StructBlockContext:
-			continue
+			sx := v.VisitStructBlock(t.(*parser.StructBlockContext)).(*node.StructBlock)
+			block = append(block, sx)
 		case *parser.FuncBlockContext:
 			fx := v.VisitFuncBlock(t.(*parser.FuncBlockContext)).(node.Block)
 			block = append(block, fx)
