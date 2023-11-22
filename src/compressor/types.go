@@ -8,6 +8,7 @@ import (
 func NewUnmarshal() *zson.UnmarshalContext {
 	um := zson.NewUnmarshaler()
 	um.Bind(
+		node.DotExpr{},
 		node.AssignStmt{},
 
 		node.BinaryOperExpr{},
@@ -28,6 +29,8 @@ func NewUnmarshal() *zson.UnmarshalContext {
 
 		node.IfStmt{},
 
+		node.LambdaExpr{},
+
 		node.ArrayLiteral{},
 		node.BoolLiteral{},
 		node.FloatLiteral{},
@@ -36,10 +39,19 @@ func NewUnmarshal() *zson.UnmarshalContext {
 		node.MapPairLiteral{},
 		node.StringLiteral{},
 
+		node.MatchStmt{},
+		node.MatchCase{},
+
+		node.OpenStmt{},
+		node.OpenBlock{},
+
 		node.ReturnStmt{},
-		
-		node.Struct{},
+
+		node.StructBlock{},
 		node.UnaryOperExpr{},
+
+		node.BaseVariable{},
+		node.Variable{},
 	)
 	return um
 }
