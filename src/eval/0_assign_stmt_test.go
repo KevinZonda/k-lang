@@ -15,3 +15,14 @@ println(x)
 `
 	tester.GeneralTest(false, t, code, expected)
 }
+
+func TestMapAssignStmt(t *testing.T) {
+	code := `
+x := map{1: 12, 2: 18, 3: 19}
+x[1] := 18
+println(x)
+`
+	expected := `map[1:18 2:18 3:19]
+`
+	tester.GeneralTest(false, t, code, expected)
+}

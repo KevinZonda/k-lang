@@ -23,6 +23,11 @@ func (e *Eval) EvalAssignStmt(n *node.AssignStmt) any {
 			// set back with new value by using objTable.Set(..., v) method.
 			e.objTable.Set(baseV.Name.Value, obj)
 			return v
+		case map[any]any:
+			m := obj.Val.(map[any]any)
+			m[e.EvalExpr(baseV.Index[len(baseV.Index)-1])] = v
+			e.objTable.Set(baseV.Name.Value, obj)
+			return v
 		}
 	}
 	e.objTable.Set(baseV.Name.Value, v)
