@@ -20,7 +20,7 @@ funcSig : Identifier LParen funcSignArgs RParen type?;
 funcSignArgs : funcSignArgItem? (Comma funcSignArgItem)*;
 funcSignArgItem : type? Identifier;
 
-type: Map | Function | Identifier (LSquare RSquare)?;
+type: Map | Function | (PackageName=Identifier Dot)? TypeName=Identifier (LSquare RSquare)?;
 var : baseVar (Dot baseVar)*; // x.y[X].z
 baseVar : Identifier indexes?;
 

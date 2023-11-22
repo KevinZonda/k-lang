@@ -30,7 +30,7 @@ func (a *WhileStyleFor) stmt() {}
 
 type IterStyleFor struct {
 	Token    token.Token
-	Type     *Identifier
+	Type     *Type
 	Variable *Identifier
 	Iterator Expr
 	Body     *CodeBlock

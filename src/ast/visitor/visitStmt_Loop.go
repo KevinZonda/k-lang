@@ -51,7 +51,7 @@ func (v *AntlrVisitor) VisitIterStyleFor(ctx *parser.IterForContext) any {
 	if ctx.Type_() != nil {
 		t := v.VisitType(toPtr[parser.TypeContext](ctx.Type_()))
 		if t != nil {
-			n.Type = t.(*node.Identifier)
+			n.Type = t.(*node.Type)
 		}
 	}
 	return &n

@@ -75,7 +75,7 @@ func (v *AntlrVisitor) VisitIfStmt(ctx *parser.IfStmtContext) interface{} {
 func (v *AntlrVisitor) VisitAssignStmt(ctx *parser.AssignStmtContext) interface{} {
 	n := node.AssignStmt{
 		Token: token.FromAntlrToken(ctx.Assign().GetSymbol()),
-		Type:  toPtr[node.Identifier](v.VisitType(toPtr[parser.TypeContext](ctx.Type_()))),
+		Type:  toPtr[node.Type](v.VisitType(toPtr[parser.TypeContext](ctx.Type_()))),
 		Var:   v.VisitVar(ctx.Var_().(*parser.VarContext)).(*node.Variable),
 		Value: v.VisitExprWithLambda(ctx.ExprWithLambda().(*parser.ExprWithLambdaContext)).(node.Expr),
 	}
@@ -91,10 +91,18 @@ func (v *AntlrVisitor) visitIdentifier(n antlr.TerminalNode) *node.Identifier {
 
 func (v *AntlrVisitor) VisitType(ctx *parser.TypeContext) any {
 	// fmt.Println("VisitType")
-	if ctx == nil || ctx.Identifier() == nil {
+	if ctx == nil || ctx.TypeName == nil {
 		return nil
 	}
-	return v.visitIdentifier(ctx.Identifier())
+
+	t := node.Type{}
+	if ctx.PackageName != nil {
+		t.Package = ctx.PackageName.GetText()
+	}
+	t.Name = ctx.TypeName.GetText()
+	t.Token = token.FromAntlrToken(ctx.GetStart())
+
+	return &t
 }
 
 func (v *AntlrVisitor) VisitVar(ctx *parser.VarContext) any {

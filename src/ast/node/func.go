@@ -6,7 +6,7 @@ type FuncBlock struct {
 	Token   token.Token
 	Name    *Identifier
 	Args    []*FuncArg
-	RetType *Identifier
+	RetType *Type
 	Body    *CodeBlock
 }
 
@@ -16,7 +16,7 @@ func (f *FuncBlock) TokenValue() string {
 }
 
 type FuncArg struct {
-	Type *Identifier
+	Type *Type
 	Name *Identifier
 }
 

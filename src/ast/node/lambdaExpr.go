@@ -5,7 +5,7 @@ import "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
 type LambdaExpr struct {
 	Token   token.Token
 	Args    []*FuncArg
-	RetType *Identifier
+	RetType *Type
 	Body    *CodeBlock
 }
 

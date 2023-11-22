@@ -24,7 +24,7 @@ func (v *AntlrVisitor) VisitLambda(ctx *parser.LambdaContext) interface{} {
 		fb.Args = args.([]*node.FuncArg)
 	}
 	if ret != nil {
-		fb.RetType = ret.(*node.Identifier)
+		fb.RetType = ret.(*node.Type)
 	}
 	return fb
 }
@@ -41,7 +41,7 @@ func (v *AntlrVisitor) VisitFuncSig(ctx *parser.FuncSigContext) interface{} {
 		fb.Args = args.([]*node.FuncArg)
 	}
 	if ret != nil {
-		fb.RetType = ret.(*node.Identifier)
+		fb.RetType = ret.(*node.Type)
 	}
 	return fb
 }
@@ -64,7 +64,7 @@ func (v *AntlrVisitor) VisitFuncSignArgItem(ctx *parser.FuncSignArgItemContext) 
 		Name: v.visitIdentifier(ctx.Identifier()),
 	}
 	if ctx.Type_() != nil {
-		a.Type = v.VisitType(ctx.Type_().(*parser.TypeContext)).(*node.Identifier)
+		a.Type = v.VisitType(ctx.Type_().(*parser.TypeContext)).(*node.Type)
 	}
 	return &a
 }

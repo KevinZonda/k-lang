@@ -14,19 +14,19 @@ func (v *AntlrVisitor) VisitStructBlock(ctx *parser.StructBlockContext) any {
 	}
 }
 
-func (v *AntlrVisitor) visitDeclareBlock(ctx *parser.DeclareBlockContext) map[string]string {
+func (v *AntlrVisitor) visitDeclareBlock(ctx *parser.DeclareBlockContext) map[string]*node.Type {
 	if ctx == nil {
 		return nil
 	}
-	var body = make(map[string]string)
+	var body = make(map[string]*node.Type)
 	declares := ctx.AllDeclareStmt()
 	for _, declare := range declares {
 		declareStmt := declare.(*parser.DeclareStmtContext)
 		tN := v.VisitType(toPtr[parser.TypeContext](declareStmt.Type_()))
 		if tN != nil {
-			t := tN.(*node.Identifier)
+			t := tN.(*node.Type)
 			for _, id := range declareStmt.AllIdentifier() {
-				body[id.GetText()] = t.Value
+				body[id.GetText()] = t
 			}
 		}
 	}
