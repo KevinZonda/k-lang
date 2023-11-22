@@ -18,10 +18,13 @@ func GetLibrary(name string) ILibrary {
 	switch name {
 	case "string":
 		lib = NewStdStringLib()
-		libMap[name] = lib
-		return lib
+	case "console":
+		lib = NewStdConsoleLib()
 	}
-	return nil
+	if lib != nil {
+		libMap[name] = lib
+	}
+	return lib
 }
 
 func ensureArgsLen(args []any, n int) {
