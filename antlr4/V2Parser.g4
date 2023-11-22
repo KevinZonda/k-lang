@@ -14,7 +14,7 @@ funcBlock
     : Function funcSig codeBlock
     ;
 
-codeBlock : LBrack (stmt sep*)* RBrack;
+codeBlock : LBrack ((stmt | expr) sep*)* RBrack;
 declareBlock : LBrack declareStmt* RBrack;
 funcSig : Identifier LParen funcSignArgs RParen type?;
 funcSignArgs : funcSignArgItem? (Comma funcSignArgItem)*;
