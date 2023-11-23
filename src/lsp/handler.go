@@ -49,6 +49,33 @@ func completion(context *glsp.Context, params *protocol.CompletionParams) (any, 
 var handler protocol.Handler
 var initLock sync.Mutex
 
+func pushDiagnoses(notify glsp.NotifyFunc, uri protocol.DocumentUri, errs []parserHelper.CodeError) {
+	dia := make([]protocol.Diagnostic, 0)
+	diagnoseE := protocol.DiagnosticSeverityError
+	for _, err := range errs {
+		dia = append(dia, protocol.Diagnostic{
+			Range: protocol.Range{
+				Start: protocol.Position{
+					Line:      protocol.UInteger(err.Line() - 1),
+					Character: protocol.UInteger(err.Col()),
+				},
+				End: protocol.Position{
+					Line:      protocol.UInteger(err.EndLine() - 1),
+					Character: protocol.UInteger(err.EndCol()),
+				},
+			},
+			Message:  err.Error(),
+			Severity: &diagnoseE,
+		})
+	}
+	notify(
+		protocol.ServerTextDocumentPublishDiagnostics,
+		protocol.PublishDiagnosticsParams{
+			URI:         uri,
+			Diagnostics: dia,
+		})
+
+}
 func initHandler() {
 	initLock.Lock()
 	defer initLock.Unlock()
@@ -71,30 +98,18 @@ func initHandler() {
 			}
 			txt, _ := iox.ReadAllText(path)
 			_, errs := parserHelper.Ast(txt)
-			dia := make([]protocol.Diagnostic, 0)
-			diagnoseE := protocol.DiagnosticSeverityError
-			for _, err := range errs {
-				dia = append(dia, protocol.Diagnostic{
-					Range: protocol.Range{
-						Start: protocol.Position{
-							Line:      protocol.UInteger(err.Line() - 1),
-							Character: protocol.UInteger(err.Col()),
-						},
-						End: protocol.Position{
-							Line:      protocol.UInteger(err.EndLine() - 1),
-							Character: protocol.UInteger(err.EndCol()),
-						},
-					},
-					Message:  err.Error(),
-					Severity: &diagnoseE,
-				})
+			pushDiagnoses(context.Notify, params.TextDocument.URI, errs)
+
+			return nil
+		},
+		TextDocumentDidOpen: func(context *glsp.Context, params *protocol.DidOpenTextDocumentParams) error {
+			path := string(params.TextDocument.URI)
+			if strings.HasPrefix(path, "file://") {
+				path = path[7:]
 			}
-			context.Notify(
-				protocol.ServerTextDocumentPublishDiagnostics,
-				protocol.PublishDiagnosticsParams{
-					URI:         params.TextDocument.URI,
-					Diagnostics: dia,
-				})
+			txt, _ := iox.ReadAllText(path)
+			_, errs := parserHelper.Ast(txt)
+			pushDiagnoses(context.Notify, params.TextDocument.URI, errs)
 
 			return nil
 		},
