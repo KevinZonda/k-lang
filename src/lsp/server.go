@@ -12,6 +12,7 @@ type Server struct {
 
 func NewLsp() *Server {
 	commonlog.Configure(2, nil)
+	initHandler()
 	srv := &Server{
 		Server: server.NewServer(&handler, "K", true),
 	}
