@@ -18,7 +18,7 @@ export function activate(context: ExtensionContext) {
     };
     
     const clientOptions: LanguageClientOptions = {
-        documentSelector: [{ scheme: 'file', language: 'klang' }],
+        documentSelector: ['klang'],
         synchronize: {
             fileEvents: workspace.createFileSystemWatcher('**/*.k')
         }

@@ -2,6 +2,7 @@ package visitor
 
 import (
 	"fmt"
+
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parser"
@@ -31,8 +32,16 @@ func (v *AntlrVisitor) VisitStmt(ctx *parser.StmtContext) interface{} {
 		return v.VisitMathStmt(ctx.MatchStmt().(*parser.MatchStmtContext))
 	}
 	fmt.Println(ctx.GetText())
-	panic("implement me")
-
+	v.Errs = append(v.Errs, VisitorError{
+		Line:      ctx.GetStart().GetLine(),
+		Column:    ctx.GetStart().GetColumn(),
+		EndLine:   ctx.GetStop().GetLine(),
+		EndColumn: ctx.GetStop().GetColumn(),
+		Msg:       "unknown stmt: " + ctx.GetText(),
+		Text:      ctx.GetText(),
+		Raw:       fmt.Errorf("unknown stmt: %s", ctx.GetText()),
+	})
+	return nil
 }
 
 func (v *AntlrVisitor) VisitJumpStmt(ctx *parser.JumpStmtContext) interface{} {

@@ -75,11 +75,13 @@ func (v *AntlrVisitor) VisitUnaryExpr(ctx *parser.ExprContext) interface{} {
 
 	if ctx.GetChildCount() != 2 {
 		v.Errs = append(v.Errs, VisitorError{
-			Raw:    nil,
-			Msg:    "Expected unary expression (e.g., -a), but got " + ctx.GetStart().GetText() + "\nWe expect 2 children, but got " + fmt.Sprint(ctx.GetChildCount()) + " children",
-			Line:   ctx.GetStart().GetLine(),
-			Column: ctx.GetStart().GetColumn(),
-			Text:   ctx.GetText(),
+			Raw:       nil,
+			Msg:       "Expected unary expression (e.g., -a), but got " + ctx.GetStart().GetText() + "\nWe expect 2 children, but got " + fmt.Sprint(ctx.GetChildCount()) + " children",
+			Line:      ctx.GetStart().GetLine(),
+			Column:    ctx.GetStart().GetColumn(),
+			EndLine:   ctx.GetStop().GetLine(),
+			EndColumn: ctx.GetStop().GetColumn(),
+			Text:      ctx.GetText(),
 		})
 		return nil
 	}
@@ -96,11 +98,13 @@ func (v *AntlrVisitor) VisitBinaryExpr(ctx *parser.ExprContext) interface{} {
 	// fmt.Println("VisitBinaryExpr")
 	if ctx.GetChildCount() != 3 {
 		v.Errs = append(v.Errs, VisitorError{
-			Raw:    nil,
-			Msg:    "Expected binary expression (e.g., a + b), but got " + ctx.GetStart().GetText() + "\nWe expect 3 children, but got " + fmt.Sprint(ctx.GetChildCount()) + " children",
-			Line:   ctx.GetStart().GetLine(),
-			Column: ctx.GetStart().GetColumn(),
-			Text:   ctx.GetText(),
+			Raw:       nil,
+			Msg:       "Expected binary expression (e.g., a + b), but got " + ctx.GetStart().GetText() + "\nWe expect 3 children, but got " + fmt.Sprint(ctx.GetChildCount()) + " children",
+			Line:      ctx.GetStart().GetLine(),
+			Column:    ctx.GetStart().GetColumn(),
+			EndLine:   ctx.GetStop().GetLine(),
+			EndColumn: ctx.GetStop().GetColumn(),
+			Text:      ctx.GetText(),
 		})
 		return nil
 	}

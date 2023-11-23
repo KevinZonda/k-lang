@@ -29,11 +29,13 @@ func (v *AntlrVisitor) VisitProgram(ctx *parser.ProgramContext) any {
 			sx := v.VisitStructBlock(t.(*parser.StructBlockContext)).(*node.StructBlock)
 			block = append(block, sx)
 		case *parser.FuncBlockContext:
-			fx := v.VisitFuncBlock(t.(*parser.FuncBlockContext)).(node.Block)
-			block = append(block, fx)
+			if fx := v.VisitFuncBlock(t.(*parser.FuncBlockContext)); fx != nil {
+				block = append(block, fx.(node.Block))
+			}
 		case *parser.StmtContext:
-			stmt := v.VisitStmt(t.(*parser.StmtContext)).(node.Stmt)
-			block = append(block, stmt)
+			if stmt := v.VisitStmt(t.(*parser.StmtContext)); stmt != nil {
+				block = append(block, stmt.(node.Stmt))
+			}
 		case *parser.ExprContext:
 			expr := v.VisitExpr(t.(*parser.ExprContext)).(node.Expr)
 			block = append(block, expr)

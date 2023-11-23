@@ -23,11 +23,18 @@ func (p *WrappedParser) Ast() tree.Ast {
 		Accept(v).(tree.Ast)
 
 	for _, e := range v.Errs {
+		msg := "Related Code: " + e.Text
+		if e.Msg != "" {
+			msg = e.Msg + "\n" + msg
+		}
+
 		p.parE.Errors = append(p.parE.Errors,
 			SyntaxError{
-				line:   e.Line,
-				column: e.Column,
-				msg:    e.Msg + "\nRelated Code: " + e.Text,
+				line:    e.Line,
+				column:  e.Column,
+				endLine: e.EndLine,
+				endCol:  e.EndColumn,
+				msg:     msg,
 			})
 	}
 

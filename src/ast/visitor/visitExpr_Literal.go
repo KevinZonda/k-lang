@@ -21,11 +21,13 @@ func (v *AntlrVisitor) VisitLiteral(ctx *parser.LiteralContext) interface{} {
 
 		if err != nil {
 			v.Errs = append(v.Errs, VisitorError{
-				Raw:    err,
-				Msg:    "Expected an integer value, but got " + ctx.GetStart().GetText(),
-				Line:   ctx.GetStart().GetLine(),
-				Column: ctx.GetStart().GetColumn(),
-				Text:   ctx.GetText(),
+				Raw:       err,
+				Msg:       "Expected an integer value, but got " + ctx.GetStart().GetText(),
+				Line:      ctx.GetStart().GetLine(),
+				Column:    ctx.GetStart().GetColumn(),
+				EndLine:   ctx.GetStop().GetLine(),
+				EndColumn: ctx.GetStop().GetColumn(),
+				Text:      ctx.GetText(),
 			})
 		}
 		return &node.IntLiteral{
@@ -36,11 +38,13 @@ func (v *AntlrVisitor) VisitLiteral(ctx *parser.LiteralContext) interface{} {
 		val, err := strconv.ParseFloat(ctx.GetStart().GetText(), 64)
 		if err != nil {
 			v.Errs = append(v.Errs, VisitorError{
-				Raw:    err,
-				Msg:    "Expected an number value, but got " + ctx.GetStart().GetText(),
-				Line:   ctx.GetStart().GetLine(),
-				Column: ctx.GetStart().GetColumn(),
-				Text:   ctx.GetText(),
+				Raw:       err,
+				Msg:       "Expected an number value, but got " + ctx.GetStart().GetText(),
+				Line:      ctx.GetStart().GetLine(),
+				Column:    ctx.GetStart().GetColumn(),
+				EndLine:   ctx.GetStop().GetLine(),
+				EndColumn: ctx.GetStop().GetColumn(),
+				Text:      ctx.GetText(),
 			})
 			return nil
 		}
