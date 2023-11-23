@@ -28,5 +28,14 @@
         "path": "./snippets/snippets.json"
       }
     ]
+  },
+  "main": "out/extension",
+  "devDependencies": {
+    "@types/node": "^18.12.1",
+    "@types/vscode": "^1.84.0",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1"
   }
 }
