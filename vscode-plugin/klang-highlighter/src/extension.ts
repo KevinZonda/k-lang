@@ -2,14 +2,23 @@
 
 import * as net from 'net';
 import { Trace } from 'vscode-jsonrpc';
-import { workspace, ExtensionContext } from 'vscode';
+import { workspace, ExtensionContext, OutputChannel, window } from 'vscode';
 
 import { LanguageClient, LanguageClientOptions } from 'vscode-languageclient/node';
 
 let client: LanguageClient;
 
+let enableLsp : boolean = true;
+
+let outputChannel: OutputChannel;
+
 export function activate(context: ExtensionContext) {
-    startLsp()
+    outputChannel = window.createOutputChannel("Klang LSP");
+    // outputChannel.show(true);
+    // outputChannel.appendLine('activate');
+    if (enableLsp) {
+        startLsp()
+    }
 }
 
 function startLsp() {
@@ -36,8 +45,9 @@ function startLsp() {
     );
 
     client.setTrace(Trace.Verbose);
-    client.start();
+    client.start()
 }
+
 export function deactivate() : Thenable<void> | undefined {
     if (!client) {
 		return undefined;
