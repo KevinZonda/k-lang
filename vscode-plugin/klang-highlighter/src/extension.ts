@@ -9,6 +9,10 @@ import { LanguageClient, LanguageClientOptions } from 'vscode-languageclient/nod
 let client: LanguageClient;
 
 export function activate(context: ExtensionContext) {
+    startLsp()
+}
+
+function startLsp() {
     const socket = net.connect(11451, '127.0.0.1');
     const serverOptions = () => {
         return Promise.resolve({

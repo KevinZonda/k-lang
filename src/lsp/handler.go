@@ -78,11 +78,11 @@ func initHandler() {
 					Range: protocol.Range{
 						Start: protocol.Position{
 							Line:      protocol.UInteger(err.Line() - 1),
-							Character: protocol.UInteger(err.Col()) - 1,
+							Character: protocol.UInteger(err.Col()),
 						},
 						End: protocol.Position{
 							Line:      protocol.UInteger(err.EndLine() - 1),
-							Character: protocol.UInteger(err.EndCol() - 1),
+							Character: protocol.UInteger(err.EndCol()),
 						},
 					},
 					Message:  err.Error(),

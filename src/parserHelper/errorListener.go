@@ -32,11 +32,11 @@ func (s SyntaxError) Col() int {
 }
 
 func (s SyntaxError) EndLine() int {
-	return s.line
+	return s.endLine
 }
 
 func (s SyntaxError) EndCol() int {
-	return s.column
+	return s.endCol
 }
 
 type errorListener struct {
