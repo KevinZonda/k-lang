@@ -7,6 +7,7 @@ require (
 	github.com/andybalholm/brotli v1.0.4
 	github.com/antlr4-go/antlr/v4 v4.13.0
 	github.com/brimdata/zed v1.10.0
+	github.com/tliron/commonlog v0.2.8
 	github.com/tliron/glsp v0.2.0
 )
 
@@ -23,10 +24,7 @@ require (
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/sasha-s/go-deadlock v0.3.1 // indirect
 	github.com/sourcegraph/jsonrpc2 v0.2.0 // indirect
-	github.com/tliron/commonlog v0.2.8 // indirect
 	github.com/tliron/kutil v0.3.11 // indirect
-	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
-	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	golang.org/x/crypto v0.15.0 // indirect
