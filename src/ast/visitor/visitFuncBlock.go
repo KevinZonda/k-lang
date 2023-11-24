@@ -6,35 +6,34 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parser"
 )
 
-func (v *AntlrVisitor) visitFuncBlock(ctx *parser.FuncBlockContext) *node.FuncBlock {
+func (v *AntlrVisitor) visitFuncBlock(ctx parser.IFuncBlockContext) *node.FuncBlock {
 	fx := v.visitFuncSig(ctx.FuncSig().(*parser.FuncSigContext))
 	fx.Token = token.FromAntlrToken(ctx.GetStart())
 	fx.Body = v.visitCodeBlock(ctx.CodeBlock().(*parser.CodeBlockContext))
 	return fx
 }
 
-func (v *AntlrVisitor) visitLambda(ctx *parser.LambdaContext) *node.LambdaExpr {
+func (v *AntlrVisitor) visitLambda(ctx parser.ILambdaContext) *node.LambdaExpr {
 	fb := &node.LambdaExpr{
-		Token: token.FromAntlrToken(ctx.GetStart()),
-		Body:  v.visitCodeBlock(ctx.CodeBlock().(*parser.CodeBlockContext)),
+		Token:   token.FromAntlrToken(ctx.GetStart()),
+		Body:    v.visitCodeBlock(ctx.CodeBlock()),
+		Args:    v.visitFuncSignArgs(ctx.FuncSignArgs()),
+		RetType: v.visitType(ctx.Type_()),
 	}
-	fb.Args = v.visitFuncSignArgs(toPtr[parser.FuncSignArgsContext](ctx.FuncSignArgs()))
-	fb.RetType = v.visitType(toPtr[parser.TypeContext](ctx.Type_()))
 	return fb
 }
 
-func (v *AntlrVisitor) visitFuncSig(ctx *parser.FuncSigContext) *node.FuncBlock {
+func (v *AntlrVisitor) visitFuncSig(ctx parser.IFuncSigContext) *node.FuncBlock {
 	fb := &node.FuncBlock{
 		// Token: token.FromAntlrToken(ctx.GetStart()),
-		Name: v.visitIdentifier(ctx.Identifier()),
+		Name:    v.visitIdentifier(ctx.Identifier()),
+		Args:    v.visitFuncSignArgs(ctx.FuncSignArgs()),
+		RetType: v.visitType(ctx.Type_()),
 	}
-
-	fb.Args = v.visitFuncSignArgs(toPtr[parser.FuncSignArgsContext](ctx.FuncSignArgs()))
-	fb.RetType = v.visitType(toPtr[parser.TypeContext](ctx.Type_()))
 	return fb
 }
 
-func (v *AntlrVisitor) visitFuncSignArgs(ctx *parser.FuncSignArgsContext) []*node.FuncArg {
+func (v *AntlrVisitor) visitFuncSignArgs(ctx parser.IFuncSignArgsContext) []*node.FuncArg {
 	// []*node.FuncArg
 	if ctx == nil {
 		return nil
@@ -42,22 +41,20 @@ func (v *AntlrVisitor) visitFuncSignArgs(ctx *parser.FuncSignArgsContext) []*nod
 	ts := ctx.AllFuncSignArgItem()
 	var rst []*node.FuncArg
 	for _, t := range ts {
-		rst = append(rst, v.visitFuncSignArgItem(t.(*parser.FuncSignArgItemContext)))
+		rst = append(rst, v.visitFuncSignArgItem(t))
 	}
 	return rst
 }
 
-func (v *AntlrVisitor) visitFuncSignArgItem(ctx *parser.FuncSignArgItemContext) *node.FuncArg {
+func (v *AntlrVisitor) visitFuncSignArgItem(ctx parser.IFuncSignArgItemContext) *node.FuncArg {
 	a := node.FuncArg{
 		Name: v.visitIdentifier(ctx.Identifier()),
-	}
-	if ctx.Type_() != nil {
-		a.Type = v.visitType(ctx.Type_().(*parser.TypeContext))
+		Type: v.visitType(ctx.Type_()),
 	}
 	return &a
 }
 
-func (v *AntlrVisitor) visitCodeBlock(ctx *parser.CodeBlockContext) *node.CodeBlock {
+func (v *AntlrVisitor) visitCodeBlock(ctx parser.ICodeBlockContext) *node.CodeBlock {
 	var body []node.Node
 	for _, m := range ctx.GetChildren() {
 		switch m.(type) {

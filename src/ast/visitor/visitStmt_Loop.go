@@ -6,53 +6,46 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parser"
 )
 
-func (v *AntlrVisitor) visitLoopStmt(ctx *parser.LoopStmtContext) node.Stmt {
+func (v *AntlrVisitor) visitLoopStmt(ctx parser.ILoopStmtContext) node.Stmt {
 	if ctx.CStyleFor() != nil {
-		return v.visitCStyleFor(ctx.CStyleFor().(*parser.CStyleForContext))
+		return v.visitCStyleFor(ctx.CStyleFor())
 	}
 	if ctx.WhileStyleFor() != nil {
-		return v.visitWhileStyleFor(ctx.WhileStyleFor().(*parser.WhileStyleForContext))
+		return v.visitWhileStyleFor(ctx.WhileStyleFor())
 	}
 	if ctx.IterFor() != nil {
-		return v.visitIterStyleFor(ctx.IterFor().(*parser.IterForContext))
+		return v.visitIterStyleFor(ctx.IterFor())
 	}
 	panic("implement me")
 }
 
-func (v *AntlrVisitor) visitCStyleFor(ctx *parser.CStyleForContext) *node.CStyleFor {
+func (v *AntlrVisitor) visitCStyleFor(ctx parser.ICStyleForContext) *node.CStyleFor {
 	n := node.CStyleFor{
 		Token:         token.FromAntlrToken(ctx.For().GetSymbol()),
-		Body:          v.visitCodeBlock(ctx.CodeBlock().(*parser.CodeBlockContext)),
-		InitialExpr:   v.visitExpr(toPtr[parser.ExprContext](ctx.GetOnInit())),
-		ConditionExpr: v.visitExpr(toPtr[parser.ExprContext](ctx.GetOnCondition())),
-		AfterIterExpr: v.visitExpr(toPtr[parser.ExprContext](ctx.GetOnEnd())),
+		Body:          v.visitCodeBlock(ctx.CodeBlock()),
+		InitialExpr:   v.visitExpr(ctx.GetOnInit()),
+		ConditionExpr: v.visitExpr(ctx.GetOnCondition()),
+		AfterIterExpr: v.visitExpr(ctx.GetOnEnd()),
 	}
 	return &n
 }
 
-func (v *AntlrVisitor) visitWhileStyleFor(ctx *parser.WhileStyleForContext) *node.WhileStyleFor {
+func (v *AntlrVisitor) visitWhileStyleFor(ctx parser.IWhileStyleForContext) *node.WhileStyleFor {
 	n := node.WhileStyleFor{
-		Token: token.FromAntlrToken(ctx.For().GetSymbol()),
-		Body:  v.visitCodeBlock(ctx.CodeBlock().(*parser.CodeBlockContext)),
-	}
-	if ctx.Expr() != nil {
-		n.ConditionExpr = v.visitExpr(ctx.Expr().(*parser.ExprContext))
+		Token:         token.FromAntlrToken(ctx.For().GetSymbol()),
+		Body:          v.visitCodeBlock(ctx.CodeBlock()),
+		ConditionExpr: v.visitExpr(ctx.Expr()),
 	}
 	return &n
 }
 
-func (v *AntlrVisitor) visitIterStyleFor(ctx *parser.IterForContext) *node.IterStyleFor {
+func (v *AntlrVisitor) visitIterStyleFor(ctx parser.IIterForContext) *node.IterStyleFor {
 	n := node.IterStyleFor{
 		Token:    token.FromAntlrToken(ctx.For().GetSymbol()),
 		Variable: v.visitIdentifier(ctx.Identifier()),
-		Iterator: v.visitExpr(ctx.Expr().(*parser.ExprContext)),
-		Body:     v.visitCodeBlock(ctx.CodeBlock().(*parser.CodeBlockContext)),
-	}
-	if ctx.Type_() != nil {
-		t := v.VisitType(toPtr[parser.TypeContext](ctx.Type_()))
-		if t != nil {
-			n.Type = t.(*node.Type)
-		}
+		Iterator: v.visitExpr(ctx.Expr()),
+		Body:     v.visitCodeBlock(ctx.CodeBlock()),
+		Type:     v.visitType(ctx.Type_()),
 	}
 	return &n
 }

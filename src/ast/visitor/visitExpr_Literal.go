@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-func (v *AntlrVisitor) visitLiteral(ctx *parser.LiteralContext) node.Expr {
+func (v *AntlrVisitor) visitLiteral(ctx parser.ILiteralContext) node.Expr {
 	switch ctx.GetStart().GetTokenType() {
 	case parser.V2ParserIdentifier:
 		return &node.Identifier{
@@ -72,10 +72,10 @@ func (v *AntlrVisitor) visitLiteral(ctx *parser.LiteralContext) node.Expr {
 		fmt.Println("-> STRUCT : ", ctx.GetStart().GetText())
 	default:
 		if ctx.ArrayInitializer() != nil {
-			return v.visitArrayInitializer(ctx.ArrayInitializer().(*parser.ArrayInitializerContext))
+			return v.visitArrayInitializer(ctx.ArrayInitializer())
 		}
 		if ctx.MapInitializer() != nil {
-			return v.visitMapInitializer(ctx.MapInitializer().(*parser.MapInitializerContext))
+			return v.visitMapInitializer(ctx.MapInitializer())
 		}
 	}
 	fmt.Println("VisitLiteralBlock : Unknown type")

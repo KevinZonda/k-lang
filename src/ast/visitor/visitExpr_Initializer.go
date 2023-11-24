@@ -6,11 +6,11 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parser"
 )
 
-func (v *AntlrVisitor) visitMapInitializer(ctx *parser.MapInitializerContext) *node.MapLiteral {
+func (v *AntlrVisitor) visitMapInitializer(ctx parser.IMapInitializerContext) *node.MapLiteral {
 	pairs := ctx.AllMapPair()
 	var arr []*node.MapPairLiteral
 	for _, e := range pairs {
-		arr = append(arr, v.visitMapPairInitializer(e.(*parser.MapPairContext)))
+		arr = append(arr, v.visitMapPairInitializer(e))
 	}
 	return &node.MapLiteral{
 		Token: token.FromAntlrToken(ctx.GetStart()),
@@ -18,22 +18,22 @@ func (v *AntlrVisitor) visitMapInitializer(ctx *parser.MapInitializerContext) *n
 	}
 }
 
-func (v *AntlrVisitor) visitMapPairInitializer(ctx *parser.MapPairContext) *node.MapPairLiteral {
+func (v *AntlrVisitor) visitMapPairInitializer(ctx parser.IMapPairContext) *node.MapPairLiteral {
 	if ctx.MapPair() != nil {
-		return v.visitMapPairInitializer(ctx.MapPair().(*parser.MapPairContext))
+		return v.visitMapPairInitializer(ctx.MapPair())
 	}
 	return &node.MapPairLiteral{
 		Token: token.FromAntlrToken(ctx.GetStart()),
-		Key:   v.visitExpr(ctx.Expr().(*parser.ExprContext)),
-		Value: v.visitExprWithLambda(ctx.ExprWithLambda().(*parser.ExprWithLambdaContext)),
+		Key:   v.visitExpr(ctx.Expr()),
+		Value: v.visitExprWithLambda(ctx.ExprWithLambda()),
 	}
 }
 
-func (v *AntlrVisitor) visitArrayInitializer(ctx *parser.ArrayInitializerContext) *node.ArrayLiteral {
+func (v *AntlrVisitor) visitArrayInitializer(ctx parser.IArrayInitializerContext) *node.ArrayLiteral {
 	exprs := ctx.AllExpr()
 	var arr []node.Expr
 	for _, e := range exprs {
-		arr = append(arr, v.visitExpr(e.(*parser.ExprContext)))
+		arr = append(arr, v.visitExpr(e))
 	}
 	return &node.ArrayLiteral{
 		Token: token.FromAntlrToken(ctx.GetStart()),

@@ -7,28 +7,28 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parser"
 )
 
-func (v *AntlrVisitor) visitExprWithLambda(ctx *parser.ExprWithLambdaContext) node.Expr {
+func (v *AntlrVisitor) visitExprWithLambda(ctx parser.IExprWithLambdaContext) node.Expr {
 	if ctx.Lambda() != nil {
-		return v.visitLambda(ctx.Lambda().(*parser.LambdaContext))
+		return v.visitLambda(ctx.Lambda())
 	}
-	return v.visitExpr(ctx.Expr().(*parser.ExprContext))
+	return v.visitExpr(ctx.Expr())
 }
 
-func (v *AntlrVisitor) visitDotExpr(ctx *parser.ExprContext) *node.DotExpr {
+func (v *AntlrVisitor) visitDotExpr(ctx parser.IExprContext) *node.DotExpr {
 	return &node.DotExpr{
 		Token: token.FromAntlrToken(ctx.GetStart()),
-		Left:  v.visitExpr(ctx.GetLHS().(*parser.ExprContext)),
-		Right: v.visitExpr(ctx.GetRHS().(*parser.ExprContext)),
+		Left:  v.visitExpr(ctx.GetLHS()),
+		Right: v.visitExpr(ctx.GetRHS()),
 	}
 }
 
-func (v *AntlrVisitor) visitExpr(ctx *parser.ExprContext) node.Expr {
+func (v *AntlrVisitor) visitExpr(ctx parser.IExprContext) node.Expr {
 	if ctx == nil {
 		return nil
 	}
 	// fmt.Println("VisitExpr")
 	if ctx.AssignStmt() != nil {
-		return v.visitAssignStmt(ctx.AssignStmt().(*parser.AssignStmtContext))
+		return v.visitAssignStmt(ctx.AssignStmt())
 	}
 	if ctx.GetOP() != nil {
 		return v.visitBinaryExpr(ctx)
@@ -43,7 +43,7 @@ func (v *AntlrVisitor) visitExpr(ctx *parser.ExprContext) node.Expr {
 		return v.visitExpr(ctx.GetChild(1).(*parser.ExprContext))
 	}
 	if ctx.FuncCall() != nil {
-		return v.visitFuncCall(ctx.FuncCall().(*parser.FuncCallContext))
+		return v.visitFuncCall(ctx.FuncCall())
 	}
 	if ctx.Dot() != nil {
 		return v.visitDotExpr(ctx)
@@ -71,7 +71,7 @@ func (v *AntlrVisitor) visitExpr(ctx *parser.ExprContext) node.Expr {
 	return nil
 }
 
-func (v *AntlrVisitor) visitUnaryExpr(ctx *parser.ExprContext) *node.UnaryOperExpr {
+func (v *AntlrVisitor) visitUnaryExpr(ctx parser.IExprContext) *node.UnaryOperExpr {
 
 	if ctx.GetChildCount() != 2 {
 		v.Errs = append(v.Errs, VisitorError{
@@ -94,7 +94,7 @@ func (v *AntlrVisitor) visitUnaryExpr(ctx *parser.ExprContext) *node.UnaryOperEx
 	}
 }
 
-func (v *AntlrVisitor) visitBinaryExpr(ctx *parser.ExprContext) *node.BinaryOperExpr {
+func (v *AntlrVisitor) visitBinaryExpr(ctx parser.IExprContext) *node.BinaryOperExpr {
 	// fmt.Println("VisitBinaryExpr")
 	if ctx.GetChildCount() != 3 {
 		v.Errs = append(v.Errs, VisitorError{
@@ -110,8 +110,8 @@ func (v *AntlrVisitor) visitBinaryExpr(ctx *parser.ExprContext) *node.BinaryOper
 	}
 	return &node.BinaryOperExpr{
 		Token: token.FromAntlrToken(ctx.GetOP()),
-		Left:  v.visitExpr(ctx.GetLHS().(*parser.ExprContext)),
+		Left:  v.visitExpr(ctx.GetLHS()),
 		Oper:  ctx.GetOP().GetText(),
-		Right: v.visitExpr(ctx.GetRHS().(*parser.ExprContext)),
+		Right: v.visitExpr(ctx.GetRHS()),
 	}
 }

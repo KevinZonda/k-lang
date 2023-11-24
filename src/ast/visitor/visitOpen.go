@@ -6,7 +6,7 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parser"
 )
 
-func (v *AntlrVisitor) visitOpenStmt(ctx *parser.OpenStmtContext) *node.OpenStmt {
+func (v *AntlrVisitor) visitOpenStmt(ctx parser.IOpenStmtContext) *node.OpenStmt {
 	txt := ctx.StringLiteral().GetText()
 
 	o := &node.OpenStmt{
@@ -14,7 +14,6 @@ func (v *AntlrVisitor) visitOpenStmt(ctx *parser.OpenStmtContext) *node.OpenStmt
 		Path:  txt[1 : len(txt)-1],
 	}
 	if ctx.As() == nil {
-
 		return o
 	}
 	if as := v.visitIdentifier(ctx.Identifier()); as != nil {
@@ -23,12 +22,12 @@ func (v *AntlrVisitor) visitOpenStmt(ctx *parser.OpenStmtContext) *node.OpenStmt
 	return o
 }
 
-func (v *AntlrVisitor) visitOpenBlock(ctx *parser.OpenBlockContext) *node.OpenBlock {
+func (v *AntlrVisitor) visitOpenBlock(ctx parser.IOpenBlockContext) *node.OpenBlock {
 	os := ctx.AllOpenStmt()
 
 	var openers []*node.OpenStmt
 	for _, o := range os {
-		openers = append(openers, v.visitOpenStmt(o.(*parser.OpenStmtContext)))
+		openers = append(openers, v.visitOpenStmt(o))
 	}
 	return &node.OpenBlock{
 		Token:   token.FromAntlrToken(ctx.GetStart()),

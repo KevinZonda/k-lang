@@ -8,27 +8,27 @@ import (
 	"github.com/antlr4-go/antlr/v4"
 )
 
-func (v *AntlrVisitor) visitStmt(ctx *parser.StmtContext) node.Stmt {
+func (v *AntlrVisitor) visitStmt(ctx parser.IStmtContext) node.Stmt {
 	if ctx.FuncCall() != nil {
-		return v.visitFuncCall(ctx.FuncCall().(*parser.FuncCallContext))
+		return v.visitFuncCall(ctx.FuncCall())
 	}
 	if ctx.AssignStmt() != nil {
-		return v.visitAssignStmt(ctx.AssignStmt().(*parser.AssignStmtContext))
+		return v.visitAssignStmt(ctx.AssignStmt())
 	}
 	if ctx.CodeBlock() != nil {
-		return v.visitCodeBlock(ctx.CodeBlock().(*parser.CodeBlockContext))
+		return v.visitCodeBlock(ctx.CodeBlock())
 	}
 	if ctx.IfStmt() != nil {
-		return v.visitIfStmt(ctx.IfStmt().(*parser.IfStmtContext))
+		return v.visitIfStmt(ctx.IfStmt())
 	}
 	if ctx.JumpStmt() != nil {
-		return v.visitJumpStmt(ctx.JumpStmt().(*parser.JumpStmtContext))
+		return v.visitJumpStmt(ctx.JumpStmt())
 	}
 	if ctx.LoopStmt() != nil {
-		return v.visitLoopStmt(ctx.LoopStmt().(*parser.LoopStmtContext))
+		return v.visitLoopStmt(ctx.LoopStmt())
 	}
 	if ctx.MatchStmt() != nil {
-		return v.visitMathStmt(ctx.MatchStmt().(*parser.MatchStmtContext))
+		return v.visitMathStmt(ctx.MatchStmt())
 	}
 	fmt.Println(ctx.GetText())
 	v.Errs = append(v.Errs, VisitorError{
@@ -43,13 +43,12 @@ func (v *AntlrVisitor) visitStmt(ctx *parser.StmtContext) node.Stmt {
 	return nil
 }
 
-func (v *AntlrVisitor) visitJumpStmt(ctx *parser.JumpStmtContext) node.Stmt {
+func (v *AntlrVisitor) visitJumpStmt(ctx parser.IJumpStmtContext) node.Stmt {
 	if ctx.Return() != nil {
 		ret := node.ReturnStmt{
 			Token: token.FromAntlrToken(ctx.GetStart()),
+			Value: v.visitExprWithLambda(ctx.ExprWithLambda()),
 		}
-		ret.Value = toExpr(v.visitExprWithLambda(toPtr[parser.ExprWithLambdaContext](ctx.ExprWithLambda())))
-
 		return &ret
 	}
 	if ctx.Break() != nil {
@@ -66,12 +65,12 @@ func (v *AntlrVisitor) visitJumpStmt(ctx *parser.JumpStmtContext) node.Stmt {
 	panic("Unknown jumpStmt")
 }
 
-func (v *AntlrVisitor) visitIfStmt(ctx *parser.IfStmtContext) *node.IfStmt {
+func (v *AntlrVisitor) visitIfStmt(ctx parser.IIfStmtContext) *node.IfStmt {
 	cdx := ctx.AllCodeBlock()
 	i := node.IfStmt{
 		Token:     token.FromAntlrToken(ctx.GetStart()),
-		IfTrue:    v.visitCodeBlock(cdx[0].(*parser.CodeBlockContext)),
-		Condition: v.visitExpr(ctx.Expr().(*parser.ExprContext)),
+		IfTrue:    v.visitCodeBlock(cdx[0]),
+		Condition: v.visitExpr(ctx.Expr()),
 	}
 	if len(cdx) == 2 {
 		i.IfFalse = v.visitCodeBlock(cdx[1].(*parser.CodeBlockContext))
@@ -80,12 +79,12 @@ func (v *AntlrVisitor) visitIfStmt(ctx *parser.IfStmtContext) *node.IfStmt {
 	return &i
 }
 
-func (v *AntlrVisitor) visitAssignStmt(ctx *parser.AssignStmtContext) *node.AssignStmt {
+func (v *AntlrVisitor) visitAssignStmt(ctx parser.IAssignStmtContext) *node.AssignStmt {
 	n := node.AssignStmt{
 		Token: token.FromAntlrToken(ctx.Assign().GetSymbol()),
-		Type:  v.visitType(toPtr[parser.TypeContext](ctx.Type_())),
-		Var:   v.visitVar(ctx.Var_().(*parser.VarContext)),
-		Value: v.visitExprWithLambda(ctx.ExprWithLambda().(*parser.ExprWithLambdaContext)),
+		Type:  v.visitType(ctx.Type_()),
+		Var:   v.visitVar(ctx.Var_()),
+		Value: v.visitExprWithLambda(ctx.ExprWithLambda()),
 	}
 	return &n
 }
@@ -97,27 +96,28 @@ func (v *AntlrVisitor) visitIdentifier(n antlr.TerminalNode) *node.Identifier {
 	}
 }
 
-func (v *AntlrVisitor) visitType(ctx *parser.TypeContext) *node.Type {
+func (v *AntlrVisitor) visitType(ctx parser.ITypeContext) *node.Type {
 	// fmt.Println("VisitType")
-	if ctx == nil || ctx.TypeName == nil {
+	if ctx == nil || ctx.GetTypeName() == nil {
 		return nil
 	}
 
-	t := node.Type{}
-	if ctx.PackageName != nil {
-		t.Package = ctx.PackageName.GetText()
+	t := node.Type{
+		Token: token.FromAntlrToken(ctx.GetStart()),
+		Name:  ctx.GetTypeName().GetText(),
 	}
-	t.Name = ctx.TypeName.GetText()
-	t.Token = token.FromAntlrToken(ctx.GetStart())
+	if ctx.GetPackageName() != nil {
+		t.Package = ctx.GetPackageName().GetText()
+	}
 
 	return &t
 }
 
-func (v *AntlrVisitor) visitVar(ctx *parser.VarContext) *node.Variable {
+func (v *AntlrVisitor) visitVar(ctx parser.IVarContext) *node.Variable {
 	var bs []*node.BaseVariable
 	bvs := ctx.AllBaseVar()
 	for _, bv := range bvs {
-		bs = append(bs, v.visitBaseVar(bv.(*parser.BaseVarContext)))
+		bs = append(bs, v.visitBaseVar(bv))
 	}
 	return &node.Variable{
 		Token: token.FromAntlrToken(ctx.GetStart()),
@@ -125,7 +125,7 @@ func (v *AntlrVisitor) visitVar(ctx *parser.VarContext) *node.Variable {
 	}
 }
 
-func (v *AntlrVisitor) visitBaseVar(ctx *parser.BaseVarContext) *node.BaseVariable {
+func (v *AntlrVisitor) visitBaseVar(ctx parser.IBaseVarContext) *node.BaseVariable {
 	id := ctx.Identifier()
 	return &node.BaseVariable{
 		Token: token.FromAntlrToken(ctx.GetStart()),
@@ -133,26 +133,22 @@ func (v *AntlrVisitor) visitBaseVar(ctx *parser.BaseVarContext) *node.BaseVariab
 			Token: token.FromAntlrToken(id.GetSymbol()),
 			Value: id.GetText(),
 		},
-		Index: v.visitIndexes(
-			toPtr[parser.IndexesContext](
-				ctx.Indexes(),
-			),
-		),
+		Index: v.visitIndexes(ctx.Indexes()),
 	}
 }
 
-func (v *AntlrVisitor) visitIndexes(ctx *parser.IndexesContext) []node.Expr {
+func (v *AntlrVisitor) visitIndexes(ctx parser.IIndexesContext) []node.Expr {
 	if ctx == nil || ctx.GetChildCount() == 0 {
 		return nil
 	}
 	var idx []node.Expr
-	for _, kid := range ctx.GetChildren() {
-		idx = append(idx, v.visitIndex(kid.(*parser.IndexContext)))
+	for _, kid := range ctx.AllIndex() {
+		idx = append(idx, v.visitIndex(kid))
 	}
 	return idx
 }
 
-func (v *AntlrVisitor) visitIndex(ctx *parser.IndexContext) node.Expr {
+func (v *AntlrVisitor) visitIndex(ctx parser.IIndexContext) node.Expr {
 	// [ expr ] <- RSquare
 	// ^
 	// LSquare
