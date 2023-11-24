@@ -91,12 +91,30 @@ func initHandler() {
 		//CompletionItemResolve:  completionItemResolve,
 
 		TextDocumentCompletion: completion,
+		TextDocumentDidChange: func(context *glsp.Context, params *protocol.DidChangeTextDocumentParams) error {
+			d := getDoc(params.TextDocument.URI)
+			if d == nil {
+				return nil
+			}
+			d.applyChanges(params.ContentChanges)
+			_, errs := parserHelper.Ast(d.Text)
+			pushDiagnoses(context.Notify, params.TextDocument.URI, errs)
+			return nil
+		},
+		TextDocumentDidClose: func(context *glsp.Context, params *protocol.DidCloseTextDocumentParams) error {
+			rmDoc(params.TextDocument.URI)
+			return nil
+		},
 		TextDocumentDidSave: func(context *glsp.Context, params *protocol.DidSaveTextDocumentParams) error {
 			path := string(params.TextDocument.URI)
 			if strings.HasPrefix(path, "file://") {
 				path = path[7:]
 			}
 			txt, _ := iox.ReadAllText(path)
+			setDoc(&doc{
+				Uri:  params.TextDocument.URI,
+				Text: txt,
+			})
 			_, errs := parserHelper.Ast(txt)
 			pushDiagnoses(context.Notify, params.TextDocument.URI, errs)
 
@@ -108,6 +126,10 @@ func initHandler() {
 				path = path[7:]
 			}
 			txt, _ := iox.ReadAllText(path)
+			setDoc(&doc{
+				Uri:  params.TextDocument.URI,
+				Text: txt,
+			})
 			_, errs := parserHelper.Ast(txt)
 			pushDiagnoses(context.Notify, params.TextDocument.URI, errs)
 
