@@ -74,15 +74,10 @@ func (v *AntlrVisitor) visitExpr(ctx parser.IExprContext) node.Expr {
 func (v *AntlrVisitor) visitUnaryExpr(ctx parser.IExprContext) *node.UnaryOperExpr {
 
 	if ctx.GetChildCount() != 2 {
-		v.Errs = append(v.Errs, VisitorError{
-			Raw:       nil,
-			Msg:       "Expected unary expression (e.g., -a), but got " + ctx.GetStart().GetText() + "\nWe expect 2 children, but got " + fmt.Sprint(ctx.GetChildCount()) + " children",
-			Line:      ctx.GetStart().GetLine(),
-			Column:    ctx.GetStart().GetColumn(),
-			EndLine:   ctx.GetStop().GetLine(),
-			EndColumn: ctx.GetStop().GetColumn(),
-			Text:      ctx.GetText(),
-		})
+		v.appendErr(ctx,
+			"Expected unary expression (e.g., -a), but got "+ctx.GetStart().GetText()+"\nWe expect 2 children, but got "+fmt.Sprint(ctx.GetChildCount())+" children",
+			nil)
+
 		return nil
 	}
 	oper := ctx.GetChild(0).(*parser.UnaryOperContext)
@@ -97,15 +92,9 @@ func (v *AntlrVisitor) visitUnaryExpr(ctx parser.IExprContext) *node.UnaryOperEx
 func (v *AntlrVisitor) visitBinaryExpr(ctx parser.IExprContext) *node.BinaryOperExpr {
 	// fmt.Println("VisitBinaryExpr")
 	if ctx.GetChildCount() != 3 {
-		v.Errs = append(v.Errs, VisitorError{
-			Raw:       nil,
-			Msg:       "Expected binary expression (e.g., a + b), but got " + ctx.GetStart().GetText() + "\nWe expect 3 children, but got " + fmt.Sprint(ctx.GetChildCount()) + " children",
-			Line:      ctx.GetStart().GetLine(),
-			Column:    ctx.GetStart().GetColumn(),
-			EndLine:   ctx.GetStop().GetLine(),
-			EndColumn: ctx.GetStop().GetColumn(),
-			Text:      ctx.GetText(),
-		})
+		v.appendErr(ctx,
+			"Expected binary expression (e.g., a + b), but got "+ctx.GetStart().GetText()+"\nWe expect 3 children, but got "+fmt.Sprint(ctx.GetChildCount())+" children",
+			nil)
 		return nil
 	}
 	return &node.BinaryOperExpr{

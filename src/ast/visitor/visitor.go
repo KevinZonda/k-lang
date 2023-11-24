@@ -1,6 +1,8 @@
 package visitor
 
 import (
+	"errors"
+	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parser"
@@ -14,6 +16,22 @@ type AntlrVisitor struct {
 
 func New() *AntlrVisitor {
 	return &AntlrVisitor{}
+}
+
+func (v *AntlrVisitor) appendErr(ctx antlr.ParserRuleContext, msg string, raw error) {
+	if raw != nil {
+		raw = errors.New(msg)
+	}
+	e := VisitorError{
+		Line:      ctx.GetStart().GetLine(),
+		Column:    ctx.GetStart().GetColumn(),
+		EndLine:   ctx.GetStop().GetLine(),
+		EndColumn: ctx.GetStop().GetColumn() + len([]rune(ctx.GetStop().GetText())),
+		Msg:       msg,
+		Text:      ctx.GetText(),
+		Raw:       fmt.Errorf(msg),
+	}
+	v.Errs = append(v.Errs, e)
 }
 
 func (v *AntlrVisitor) VisitProgram(ctx *parser.ProgramContext) any {
