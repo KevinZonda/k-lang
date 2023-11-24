@@ -1,7 +1,9 @@
 package lsp
 
 import (
+	"github.com/KevinZonda/GoX/pkg/iox"
 	protocol "github.com/tliron/glsp/protocol_3_16"
+	"strings"
 	"sync"
 )
 
@@ -11,21 +13,44 @@ type doc struct {
 	Text string
 }
 
-var docMap = sync.Map{}
+type docStoreType struct {
+	docMap sync.Map
+}
 
-func getDoc(uri protocol.DocumentUri) *doc {
-	if d, ok := docMap.Load(uri); ok {
+var docStore = &docStoreType{
+	docMap: sync.Map{},
+}
+
+func (s *docStoreType) getDoc(uri protocol.DocumentUri) *doc {
+	if d, ok := s.docMap.Load(uri); ok {
 		return d.(*doc)
 	}
 	return nil
 }
 
-func rmDoc(uri protocol.DocumentUri) {
-	docMap.Delete(uri)
+func (s *docStoreType) rmDoc(uri protocol.DocumentUri) {
+	s.docMap.Delete(uri)
 }
 
-func setDoc(d *doc) {
-	docMap.Store(d.Uri, d)
+func (s *docStoreType) setDoc(d *doc) {
+	s.docMap.Store(d.Uri, d)
+}
+
+func (s *docStoreType) loadDoc(uri protocol.DocumentUri) *doc {
+	path := string(uri)
+	if strings.HasPrefix(path, "file://") {
+		path = path[7:]
+	}
+	txt, err := iox.ReadAllText(path)
+	if err != nil {
+		return nil
+	}
+	d := &doc{
+		Uri:  uri,
+		Text: txt,
+	}
+	docStore.setDoc(d)
+	return d
 }
 
 func (d *doc) applyChanges(changes []interface{}) {

@@ -3,10 +3,8 @@ package lsp
 import (
 	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
-	"github.com/KevinZonda/GoX/pkg/iox"
 	"github.com/tliron/glsp"
 	protocol "github.com/tliron/glsp/protocol_3_16"
-	"strings"
 	"sync"
 )
 
@@ -49,7 +47,11 @@ func completion(context *glsp.Context, params *protocol.CompletionParams) (any, 
 var handler protocol.Handler
 var initLock sync.Mutex
 
-func pushDiagnoses(notify glsp.NotifyFunc, uri protocol.DocumentUri, errs []parserHelper.CodeError) {
+func (d *doc) pushDiagnoses(notify glsp.NotifyFunc) {
+	if d == nil {
+		return
+	}
+	_, errs := parserHelper.Ast(d.Text)
 	dia := make([]protocol.Diagnostic, 0)
 	diagnoseE := protocol.DiagnosticSeverityError
 	for _, err := range errs {
@@ -71,7 +73,7 @@ func pushDiagnoses(notify glsp.NotifyFunc, uri protocol.DocumentUri, errs []pars
 	notify(
 		protocol.ServerTextDocumentPublishDiagnostics,
 		protocol.PublishDiagnosticsParams{
-			URI:         uri,
+			URI:         d.Uri,
 			Diagnostics: dia,
 		})
 
@@ -92,47 +94,28 @@ func initHandler() {
 
 		TextDocumentCompletion: completion,
 		TextDocumentDidChange: func(context *glsp.Context, params *protocol.DidChangeTextDocumentParams) error {
-			d := getDoc(params.TextDocument.URI)
+			d := docStore.getDoc(params.TextDocument.URI)
 			if d == nil {
 				return nil
 			}
 			d.applyChanges(params.ContentChanges)
-			_, errs := parserHelper.Ast(d.Text)
-			pushDiagnoses(context.Notify, params.TextDocument.URI, errs)
+			d.pushDiagnoses(context.Notify)
 			return nil
 		},
 		TextDocumentDidClose: func(context *glsp.Context, params *protocol.DidCloseTextDocumentParams) error {
-			rmDoc(params.TextDocument.URI)
+			docStore.rmDoc(params.TextDocument.URI)
 			return nil
 		},
 		TextDocumentDidSave: func(context *glsp.Context, params *protocol.DidSaveTextDocumentParams) error {
-			path := string(params.TextDocument.URI)
-			if strings.HasPrefix(path, "file://") {
-				path = path[7:]
-			}
-			txt, _ := iox.ReadAllText(path)
-			setDoc(&doc{
-				Uri:  params.TextDocument.URI,
-				Text: txt,
-			})
-			_, errs := parserHelper.Ast(txt)
-			pushDiagnoses(context.Notify, params.TextDocument.URI, errs)
-
+			docStore.
+				loadDoc(params.TextDocument.URI).
+				pushDiagnoses(context.Notify)
 			return nil
 		},
 		TextDocumentDidOpen: func(context *glsp.Context, params *protocol.DidOpenTextDocumentParams) error {
-			path := string(params.TextDocument.URI)
-			if strings.HasPrefix(path, "file://") {
-				path = path[7:]
-			}
-			txt, _ := iox.ReadAllText(path)
-			setDoc(&doc{
-				Uri:  params.TextDocument.URI,
-				Text: txt,
-			})
-			_, errs := parserHelper.Ast(txt)
-			pushDiagnoses(context.Notify, params.TextDocument.URI, errs)
-
+			docStore.
+				loadDoc(params.TextDocument.URI).
+				pushDiagnoses(context.Notify)
 			return nil
 		},
 	}
