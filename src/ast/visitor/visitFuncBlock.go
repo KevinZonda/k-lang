@@ -6,47 +6,35 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parser"
 )
 
-func (v *AntlrVisitor) VisitFuncBlock(ctx *parser.FuncBlockContext) interface{} {
-	fx := v.VisitFuncSig(ctx.FuncSig().(*parser.FuncSigContext)).(*node.FuncBlock)
+func (v *AntlrVisitor) visitFuncBlock(ctx *parser.FuncBlockContext) *node.FuncBlock {
+	fx := v.visitFuncSig(ctx.FuncSig().(*parser.FuncSigContext))
 	fx.Token = token.FromAntlrToken(ctx.GetStart())
-	fx.Body = v.VisitCodeBlock(ctx.CodeBlock().(*parser.CodeBlockContext)).(*node.CodeBlock)
+	fx.Body = v.visitCodeBlock(ctx.CodeBlock().(*parser.CodeBlockContext))
 	return fx
 }
 
-func (v *AntlrVisitor) VisitLambda(ctx *parser.LambdaContext) interface{} {
+func (v *AntlrVisitor) visitLambda(ctx *parser.LambdaContext) *node.LambdaExpr {
 	fb := &node.LambdaExpr{
 		Token: token.FromAntlrToken(ctx.GetStart()),
-		Body:  v.VisitCodeBlock(ctx.CodeBlock().(*parser.CodeBlockContext)).(*node.CodeBlock),
+		Body:  v.visitCodeBlock(ctx.CodeBlock().(*parser.CodeBlockContext)),
 	}
-	args := v.VisitFuncSignArgs(toPtr[parser.FuncSignArgsContext](ctx.FuncSignArgs()))
-	ret := v.VisitType(toPtr[parser.TypeContext](ctx.Type_()))
-	if args != nil {
-		fb.Args = args.([]*node.FuncArg)
-	}
-	if ret != nil {
-		fb.RetType = ret.(*node.Type)
-	}
+	fb.Args = v.visitFuncSignArgs(toPtr[parser.FuncSignArgsContext](ctx.FuncSignArgs()))
+	fb.RetType = v.visitType(toPtr[parser.TypeContext](ctx.Type_()))
 	return fb
 }
 
-func (v *AntlrVisitor) VisitFuncSig(ctx *parser.FuncSigContext) interface{} {
+func (v *AntlrVisitor) visitFuncSig(ctx *parser.FuncSigContext) *node.FuncBlock {
 	fb := &node.FuncBlock{
 		// Token: token.FromAntlrToken(ctx.GetStart()),
 		Name: v.visitIdentifier(ctx.Identifier()),
 	}
 
-	args := v.VisitFuncSignArgs(toPtr[parser.FuncSignArgsContext](ctx.FuncSignArgs()))
-	ret := v.VisitType(toPtr[parser.TypeContext](ctx.Type_()))
-	if args != nil {
-		fb.Args = args.([]*node.FuncArg)
-	}
-	if ret != nil {
-		fb.RetType = ret.(*node.Type)
-	}
+	fb.Args = v.visitFuncSignArgs(toPtr[parser.FuncSignArgsContext](ctx.FuncSignArgs()))
+	fb.RetType = v.visitType(toPtr[parser.TypeContext](ctx.Type_()))
 	return fb
 }
 
-func (v *AntlrVisitor) VisitFuncSignArgs(ctx *parser.FuncSignArgsContext) interface{} {
+func (v *AntlrVisitor) visitFuncSignArgs(ctx *parser.FuncSignArgsContext) []*node.FuncArg {
 	// []*node.FuncArg
 	if ctx == nil {
 		return nil
@@ -54,29 +42,29 @@ func (v *AntlrVisitor) VisitFuncSignArgs(ctx *parser.FuncSignArgsContext) interf
 	ts := ctx.AllFuncSignArgItem()
 	var rst []*node.FuncArg
 	for _, t := range ts {
-		rst = append(rst, v.VisitFuncSignArgItem(t.(*parser.FuncSignArgItemContext)).(*node.FuncArg))
+		rst = append(rst, v.visitFuncSignArgItem(t.(*parser.FuncSignArgItemContext)))
 	}
 	return rst
 }
 
-func (v *AntlrVisitor) VisitFuncSignArgItem(ctx *parser.FuncSignArgItemContext) any {
+func (v *AntlrVisitor) visitFuncSignArgItem(ctx *parser.FuncSignArgItemContext) *node.FuncArg {
 	a := node.FuncArg{
 		Name: v.visitIdentifier(ctx.Identifier()),
 	}
 	if ctx.Type_() != nil {
-		a.Type = v.VisitType(ctx.Type_().(*parser.TypeContext)).(*node.Type)
+		a.Type = v.visitType(ctx.Type_().(*parser.TypeContext))
 	}
 	return &a
 }
 
-func (v *AntlrVisitor) VisitCodeBlock(ctx *parser.CodeBlockContext) interface{} {
+func (v *AntlrVisitor) visitCodeBlock(ctx *parser.CodeBlockContext) *node.CodeBlock {
 	var body []node.Node
 	for _, m := range ctx.GetChildren() {
 		switch m.(type) {
 		case *parser.StmtContext:
-			body = append(body, v.VisitStmt(m.(*parser.StmtContext)).(node.Node))
+			body = append(body, v.visitStmt(m.(*parser.StmtContext)))
 		case *parser.ExprContext:
-			body = append(body, v.VisitExpr(m.(*parser.ExprContext)).(node.Node))
+			body = append(body, v.visitExpr(m.(*parser.ExprContext)))
 		}
 	}
 	return &node.CodeBlock{

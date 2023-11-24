@@ -6,24 +6,24 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parser"
 )
 
-func (v *AntlrVisitor) VisitFuncCall(ctx *parser.FuncCallContext) interface{} {
+func (v *AntlrVisitor) visitFuncCall(ctx *parser.FuncCallContext) *node.FuncCall {
 	fc := &node.FuncCall{
 		Token:  token.FromAntlrToken(ctx.GetStart()),
 		Caller: v.visitIdentifier(ctx.Identifier()),
 	}
 	if fca := ctx.FuncCallArgs(); fca != nil {
-		args := v.VisitFuncCallArgs(ctx.FuncCallArgs().(*parser.FuncCallArgsContext))
+		args := v.visitFuncCallArgs(ctx.FuncCallArgs().(*parser.FuncCallArgsContext))
 		if args != nil {
-			fc.Args = args.([]node.Expr)
+			fc.Args = args
 		}
 	}
 	return fc
 }
 
-func (v *AntlrVisitor) VisitFuncCallArgs(ctx *parser.FuncCallArgsContext) interface{} {
+func (v *AntlrVisitor) visitFuncCallArgs(ctx *parser.FuncCallArgsContext) []node.Expr {
 	var args []node.Expr
 	for _, expr := range ctx.AllExpr() {
-		args = append(args, v.VisitExpr(expr.(*parser.ExprContext)).(node.Expr))
+		args = append(args, v.visitExpr(expr.(*parser.ExprContext)))
 	}
 	return args
 }

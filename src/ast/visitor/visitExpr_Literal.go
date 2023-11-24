@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-func (v *AntlrVisitor) VisitLiteral(ctx *parser.LiteralContext) interface{} {
+func (v *AntlrVisitor) visitLiteral(ctx *parser.LiteralContext) node.Expr {
 	switch ctx.GetStart().GetTokenType() {
 	case parser.V2ParserIdentifier:
 		return &node.Identifier{
@@ -72,10 +72,10 @@ func (v *AntlrVisitor) VisitLiteral(ctx *parser.LiteralContext) interface{} {
 		fmt.Println("-> STRUCT : ", ctx.GetStart().GetText())
 	default:
 		if ctx.ArrayInitializer() != nil {
-			return v.VisitArrayInitializer(ctx.ArrayInitializer().(*parser.ArrayInitializerContext))
+			return v.visitArrayInitializer(ctx.ArrayInitializer().(*parser.ArrayInitializerContext))
 		}
 		if ctx.MapInitializer() != nil {
-			return v.VisitMapInitializer(ctx.MapInitializer().(*parser.MapInitializerContext))
+			return v.visitMapInitializer(ctx.MapInitializer().(*parser.MapInitializerContext))
 		}
 	}
 	fmt.Println("VisitLiteralBlock : Unknown type")
@@ -83,5 +83,4 @@ func (v *AntlrVisitor) VisitLiteral(ctx *parser.LiteralContext) interface{} {
 	fmt.Println("-> tokenType: ", ctx.GetStart().GetTokenType())
 	fmt.Println("-> reflect  :", reflect.TypeOf(ctx))
 	panic("VisitLiteralBlock : Unknown type")
-	panic("Unimplemented")
 }

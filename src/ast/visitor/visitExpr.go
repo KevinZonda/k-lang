@@ -7,46 +7,46 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parser"
 )
 
-func (v *AntlrVisitor) VisitExprWithLambda(ctx *parser.ExprWithLambdaContext) interface{} {
+func (v *AntlrVisitor) visitExprWithLambda(ctx *parser.ExprWithLambdaContext) node.Expr {
 	if ctx.Lambda() != nil {
-		return v.VisitLambda(ctx.Lambda().(*parser.LambdaContext))
+		return v.visitLambda(ctx.Lambda().(*parser.LambdaContext))
 	}
-	return v.VisitExpr(ctx.Expr().(*parser.ExprContext))
+	return v.visitExpr(ctx.Expr().(*parser.ExprContext))
 }
 
-func (v *AntlrVisitor) VisitDotExpr(ctx *parser.ExprContext) interface{} {
+func (v *AntlrVisitor) visitDotExpr(ctx *parser.ExprContext) *node.DotExpr {
 	return &node.DotExpr{
 		Token: token.FromAntlrToken(ctx.GetStart()),
-		Left:  v.VisitExpr(ctx.GetLHS().(*parser.ExprContext)).(node.Expr),
-		Right: v.VisitExpr(ctx.GetRHS().(*parser.ExprContext)).(node.Expr),
+		Left:  v.visitExpr(ctx.GetLHS().(*parser.ExprContext)),
+		Right: v.visitExpr(ctx.GetRHS().(*parser.ExprContext)),
 	}
 }
 
-func (v *AntlrVisitor) VisitExpr(ctx *parser.ExprContext) interface{} {
+func (v *AntlrVisitor) visitExpr(ctx *parser.ExprContext) node.Expr {
 	if ctx == nil {
 		return nil
 	}
 	// fmt.Println("VisitExpr")
 	if ctx.AssignStmt() != nil {
-		return v.VisitAssignStmt(ctx.AssignStmt().(*parser.AssignStmtContext))
+		return v.visitAssignStmt(ctx.AssignStmt().(*parser.AssignStmtContext))
 	}
 	if ctx.GetOP() != nil {
-		return v.VisitBinaryExpr(ctx)
+		return v.visitBinaryExpr(ctx)
 	}
 	if ctx.UnaryOper() != nil {
-		return v.VisitUnaryExpr(ctx)
+		return v.visitUnaryExpr(ctx)
 	}
 	if ctx.Literal() != nil {
-		return v.VisitLiteral(ctx.GetChild(0).(*parser.LiteralContext))
+		return v.visitLiteral(ctx.GetChild(0).(*parser.LiteralContext))
 	}
 	if ctx.LParen() != nil {
-		return v.VisitExpr(ctx.GetChild(1).(*parser.ExprContext))
+		return v.visitExpr(ctx.GetChild(1).(*parser.ExprContext))
 	}
 	if ctx.FuncCall() != nil {
-		return v.VisitFuncCall(ctx.FuncCall().(*parser.FuncCallContext))
+		return v.visitFuncCall(ctx.FuncCall().(*parser.FuncCallContext))
 	}
 	if ctx.Dot() != nil {
-		return v.VisitDotExpr(ctx)
+		return v.visitDotExpr(ctx)
 	}
 
 	if ctx.Identifier() != nil {
@@ -57,10 +57,10 @@ func (v *AntlrVisitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 	//	fmt.Println("->", reflect.TypeOf(tx))
 	//	switch tx.(type) {
 	//	case *parser.ExprContext:
-	//		_ = v.VisitExpr(tx.(*parser.ExprContext))
+	//		_ = v.visitExpr(tx.(*parser.ExprContext))
 	//		continue
 	//	case *parser.LiteralContext:
-	//		_ = v.VisitLiteral(tx.(*parser.LiteralContext))
+	//		_ = v.visitLiteral(tx.(*parser.LiteralContext))
 	//		continue
 	//	case *parser.LambdaContext:
 	//		continue
@@ -71,7 +71,7 @@ func (v *AntlrVisitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 	return nil
 }
 
-func (v *AntlrVisitor) VisitUnaryExpr(ctx *parser.ExprContext) interface{} {
+func (v *AntlrVisitor) visitUnaryExpr(ctx *parser.ExprContext) *node.UnaryOperExpr {
 
 	if ctx.GetChildCount() != 2 {
 		v.Errs = append(v.Errs, VisitorError{
@@ -90,11 +90,11 @@ func (v *AntlrVisitor) VisitUnaryExpr(ctx *parser.ExprContext) interface{} {
 	return &node.UnaryOperExpr{
 		Token: token.FromAntlrToken(oper.GetStart()),
 		Oper:  oper.GetText(),
-		Expr:  v.VisitExpr(ctx.GetChild(1).(*parser.ExprContext)).(node.Expr),
+		Expr:  v.visitExpr(ctx.GetChild(1).(*parser.ExprContext)),
 	}
 }
 
-func (v *AntlrVisitor) VisitBinaryExpr(ctx *parser.ExprContext) interface{} {
+func (v *AntlrVisitor) visitBinaryExpr(ctx *parser.ExprContext) *node.BinaryOperExpr {
 	// fmt.Println("VisitBinaryExpr")
 	if ctx.GetChildCount() != 3 {
 		v.Errs = append(v.Errs, VisitorError{
@@ -110,8 +110,8 @@ func (v *AntlrVisitor) VisitBinaryExpr(ctx *parser.ExprContext) interface{} {
 	}
 	return &node.BinaryOperExpr{
 		Token: token.FromAntlrToken(ctx.GetOP()),
-		Left:  v.VisitExpr(ctx.GetLHS().(*parser.ExprContext)).(node.Expr),
+		Left:  v.visitExpr(ctx.GetLHS().(*parser.ExprContext)),
 		Oper:  ctx.GetOP().GetText(),
-		Right: v.VisitExpr(ctx.GetRHS().(*parser.ExprContext)).(node.Expr),
+		Right: v.visitExpr(ctx.GetRHS().(*parser.ExprContext)),
 	}
 }

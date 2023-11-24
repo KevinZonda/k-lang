@@ -6,7 +6,7 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parser"
 )
 
-func (v *AntlrVisitor) VisitStructBlock(ctx *parser.StructBlockContext) any {
+func (v *AntlrVisitor) visitStructBlock(ctx *parser.StructBlockContext) *node.StructBlock {
 	return &node.StructBlock{
 		Token: token.FromAntlrToken(ctx.Struct().GetSymbol()),
 		Body:  v.visitDeclareBlock(ctx.DeclareBlock().(*parser.DeclareBlockContext)),
@@ -22,11 +22,10 @@ func (v *AntlrVisitor) visitDeclareBlock(ctx *parser.DeclareBlockContext) map[st
 	declares := ctx.AllDeclareStmt()
 	for _, declare := range declares {
 		declareStmt := declare.(*parser.DeclareStmtContext)
-		tN := v.VisitType(toPtr[parser.TypeContext](declareStmt.Type_()))
+		tN := v.visitType(toPtr[parser.TypeContext](declareStmt.Type_()))
 		if tN != nil {
-			t := tN.(*node.Type)
 			for _, id := range declareStmt.AllIdentifier() {
-				body[id.GetText()] = t
+				body[id.GetText()] = tN
 			}
 		}
 	}
