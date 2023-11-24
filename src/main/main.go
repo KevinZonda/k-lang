@@ -29,6 +29,8 @@ func main() {
 		funcs.ShowAst(args.GetStrOr(0, cli.Input))
 	case "help":
 		funcs.Help()
+	case "lsp":
+		funcs.Lsp(args.GetStrOr(0, nil))
 	default:
 		if len(args) == 0 {
 			funcs.Run(os.Args[1])
@@ -54,6 +56,9 @@ func (a cmdArgs) GetStrOr(i int, ss *string) string {
 		if a[i] != "" {
 			return a[i]
 		}
+	}
+	if ss == nil {
+		return ""
 	}
 	if *ss == "" {
 		return ""

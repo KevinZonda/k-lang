@@ -27,6 +27,10 @@ func Help() {
    *  repl [--input <path>]:
       Enter the REPL mode.
 
+   *  lsp [addr]:
+      Start the language server at the given address. If no address is given,
+      the server will listen on 127.0.0.1:11451.
+
    *  help:
       Show this help message.
 `)
