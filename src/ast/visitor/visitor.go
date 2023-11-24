@@ -40,23 +40,25 @@ func (v *AntlrVisitor) VisitProgram(ctx *parser.ProgramContext) any {
 		switch t.(type) {
 		case *parser.OpenBlockContext:
 			ox := v.visitOpenBlock(t.(*parser.OpenBlockContext))
-			if len(ox.Openers) > 0 {
+			if ox != nil && len(ox.Openers) > 0 {
 				block = append(block, ox)
 			}
 		case *parser.StructBlockContext:
-			sx := v.visitStructBlock(t.(*parser.StructBlockContext))
-			block = append(block, sx)
+			if sx := v.visitStructBlock(t.(*parser.StructBlockContext)); sx != nil {
+				block = append(block, sx)
+			}
 		case *parser.FuncBlockContext:
 			if fx := v.visitFuncBlock(t.(*parser.FuncBlockContext)); fx != nil {
 				block = append(block, fx)
 			}
 		case *parser.StmtContext:
 			if stmt := v.visitStmt(t.(*parser.StmtContext)); stmt != nil {
-				block = append(block, stmt.(node.Stmt))
+				block = append(block, stmt)
 			}
 		case *parser.ExprContext:
-			expr := v.visitExpr(t.(*parser.ExprContext))
-			block = append(block, expr)
+			if expr := v.visitExpr(t.(*parser.ExprContext)); expr != nil {
+				block = append(block, expr)
+			}
 		case *antlr.TerminalNodeImpl:
 			continue
 		}
