@@ -27,7 +27,34 @@
         "language": "klang",
         "path": "./snippets/snippets.json"
       }
-    ]
+    ],
+    "commands": [
+      {
+        "command": "klang.run",
+        "title": "Run KLang",
+        "icon": "$(play)"
+      }
+    ],
+    "menus": {
+      "editor/title/run": [
+        {
+          "command": "klang.run",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "K Language",
+      "properties": {
+        "klang.runner": {
+          "type": "string",
+          "default": "klang",
+          "description": "Klang Runner",
+          "scope": "resource"
+        }
+      }
+    }
   },
   "main": "out/extension",
   "devDependencies": {
