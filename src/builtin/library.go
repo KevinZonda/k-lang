@@ -1,18 +1,18 @@
 package builtin
 
-import "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/objType"
+import "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 
-var libMap = map[string]objType.ILibrary{}
+var libMap = map[string]obj.ILibrary{}
 
 type ITypeOf interface {
 	TypeOf() string
 }
 
-func GetLibrary(name string) objType.ILibrary {
+func GetLibrary(name string) obj.ILibrary {
 	if lib, ok := libMap[name]; ok {
 		return lib
 	}
-	var lib objType.ILibrary
+	var lib obj.ILibrary
 	switch name {
 	case "std/string", "string":
 		lib = NewStdStringLib()

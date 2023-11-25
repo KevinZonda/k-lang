@@ -2,34 +2,34 @@ package eval
 
 import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/objType"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 )
 
-func cons(a any) *objType.Object {
+func cons(a any) *obj.Object {
 	switch a.(type) {
 	//case Eval:
 	//	e := a.(Eval)
 	//	return NewEvalObject(&e)
 	case *Eval:
-		return objType.NewObj(objType.EvalObj, a)
-	case objType.ILibrary:
-		return objType.NewObj(objType.Library, a)
-	case *objType.Object:
-		return a.(*objType.Object)
+		return obj.NewObj(obj.EvalObj, a)
+	case obj.ILibrary:
+		return obj.NewObj(obj.Library, a)
+	case *obj.Object:
+		return a.(*obj.Object)
 	case *node.LambdaExpr:
-		return objType.NewObj(objType.Lambda, a.(*node.LambdaExpr))
+		return obj.NewObj(obj.Lambda, a.(*node.LambdaExpr))
 	case *node.FuncBlock:
-		return objType.NewObj(objType.Func, a.(*node.FuncBlock))
+		return obj.NewObj(obj.Func, a.(*node.FuncBlock))
 	//case []any:
 	//	return NewArrayObject(a.([]any))
 	//case map[any]any:
 	//	return NewMapObject(a.(map[any]any))
-	case *objType.StructField:
-		return objType.NewObj(objType.Struct, a.(*objType.StructField))
-	case objType.StructField:
-		sf := a.(objType.StructField)
-		return objType.NewObj(objType.Struct, &sf)
+	case *obj.StructField:
+		return obj.NewObj(obj.Struct, a.(*obj.StructField))
+	case obj.StructField:
+		sf := a.(obj.StructField)
+		return obj.NewObj(obj.Struct, &sf)
 	default:
-		return objType.NewObj(objType.Value, a)
+		return obj.NewObj(obj.Value, a)
 	}
 }

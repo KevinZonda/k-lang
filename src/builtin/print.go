@@ -2,15 +2,15 @@ package builtin
 
 import (
 	"fmt"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/objType"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	"reflect"
 )
 
 func Print(v ...any) {
 	for _, arg := range v {
 		switch arg.(type) {
-		case *objType.StructField:
-			fmt.Println(arg.(*objType.StructField).Fields)
+		case *obj.StructField:
+			fmt.Println(arg.(*obj.StructField).Fields)
 		default:
 			fmt.Print(arg)
 		}

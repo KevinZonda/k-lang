@@ -1,7 +1,7 @@
 package builtin
 
 import (
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/objType"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	"strconv"
 	"strings"
 )
@@ -44,4 +44,4 @@ func (s *StdStringLib) FuncCall(caller string, args []any) any {
 	panic("Unknown function: " + caller)
 }
 
-var _ objType.ILibrary = (*StdStringLib)(nil)
+var _ obj.ILibrary = (*StdStringLib)(nil)

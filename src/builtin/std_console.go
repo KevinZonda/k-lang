@@ -2,7 +2,7 @@ package builtin
 
 import (
 	"fmt"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/objType"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 )
 
 type StdConsoleLib struct{}
@@ -31,4 +31,4 @@ func (s *StdConsoleLib) FuncCall(caller string, args []any) any {
 	panic("Unknown function: " + caller)
 }
 
-var _ objType.ILibrary = (*StdConsoleLib)(nil)
+var _ obj.ILibrary = (*StdConsoleLib)(nil)
