@@ -4,6 +4,7 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/builtin"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/objType"
 )
 
 func (e *Eval) EvalFuncCall(fc *node.FuncCall) any {
@@ -15,11 +16,11 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) any {
 
 	funcName := fc.Caller.Value
 	fx, ok := e.objTable.Get(funcName)
-	if !ok || !(fx.IsLambda() || fx.IsFunc()) {
+	if !ok || !(fx.Is(objType.Func, objType.Lambda)) {
 		return e.EvalBuiltInCall(fc, args)
 	}
 	var fn *node.FuncBlock
-	if fx.IsLambda() {
+	if fx.Is(objType.Lambda) {
 		fn = fx.ToLambda().ToFunc(funcName)
 	} else {
 		fn = fx.ToFunc()

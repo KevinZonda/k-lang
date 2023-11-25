@@ -5,6 +5,7 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/objType"
 	"path/filepath"
 	"reflect"
 )
@@ -51,7 +52,7 @@ func (e *Eval) LoadContext(o *Eval) {
 	e.objTable = o.objTable
 }
 
-func (e *Eval) runWithBreak(breaks ...string) (retV *Object, hasRet bool) {
+func (e *Eval) runWithBreak(breaks ...string) (retV *objType.Object, hasRet bool) {
 	for _, n := range e.ast {
 		for _, key := range breaks {
 			if e.objTable.HasKeyAtTop(key) {
@@ -105,7 +106,7 @@ func (e *Eval) Do() {
 
 func (e *Eval) EvalMain() any {
 	fn, ok := e.objTable.Get("main")
-	if !ok || !fn.IsFunc() {
+	if !ok || !fn.Is(objType.Func) {
 		return nil
 	}
 	fx := fn.ToFunc()

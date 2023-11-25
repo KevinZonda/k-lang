@@ -1,8 +1,11 @@
 package eval
 
-import "fmt"
+import (
+	"fmt"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/objType"
+)
 
-type Table map[string]*Object
+type Table map[string]*objType.Object
 
 func NewObjectTable() *TableStack {
 	return &TableStack{q: []Table{make(Table)}}
@@ -78,7 +81,7 @@ func printId(id int) {
 	fmt.Print("->")
 }
 
-func (t *TableStack) Get(key string) (*Object, bool) {
+func (t *TableStack) Get(key string) (*objType.Object, bool) {
 	// Get only valid on 2 tables
 	// Top
 	//  |

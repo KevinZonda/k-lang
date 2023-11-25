@@ -1,20 +1,18 @@
 package builtin
 
-type ILibrary interface {
-	FuncCall(name string, args []any) any
-}
+import "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/objType"
 
-var libMap = map[string]ILibrary{}
+var libMap = map[string]objType.ILibrary{}
 
 type ITypeOf interface {
 	TypeOf() string
 }
 
-func GetLibrary(name string) ILibrary {
+func GetLibrary(name string) objType.ILibrary {
 	if lib, ok := libMap[name]; ok {
 		return lib
 	}
-	var lib ILibrary
+	var lib objType.ILibrary
 	switch name {
 	case "std/string", "string":
 		lib = NewStdStringLib()
