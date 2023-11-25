@@ -1,7 +1,6 @@
 package eval
 
 import (
-	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 )
@@ -30,8 +29,13 @@ func (e *Eval) EvalPropertyAfterScope(scope any, property node.Expr) any {
 	case *node.DotExpr:
 		actualPpt = e.EvalDotExpr(property.(*node.DotExpr))
 	}
-	fmt.Println("Scope: ", actualPpt)
-	fmt.Println("Property: ", property)
+	//fmt.Println("Scope: ", actualPpt)
+	//fmt.Println("Property: ", property)
+	switch scope.(type) {
+	case *obj.StructField:
+		_sf := scope.(*obj.StructField)
+		return _sf.Fields[actualPpt.(string)]
+	}
 	return nil
 
 }

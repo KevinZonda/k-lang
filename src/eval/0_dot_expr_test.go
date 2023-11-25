@@ -29,3 +29,20 @@ Hi
 `
 	tester.GeneralTest(false, t, code, expected)
 }
+
+func TestDotExpr3(t *testing.T) {
+	code := `
+c := colour {
+  R: 255,
+  G: 114,
+  B: 819
+}
+
+println(c.R)
+println(c.G)
+`
+	expected := `255
+114
+`
+	tester.GeneralTest(false, t, code, expected)
+}
