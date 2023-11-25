@@ -22,6 +22,14 @@ func (v *AntlrVisitor) visitMapPairInitializer(ctx parser.IMapPairContext) *node
 	if ctx.MapPair() != nil {
 		return v.visitMapPairInitializer(ctx.MapPair())
 	}
+	if ctx.IdentifierPair() != nil {
+		k, v, _ := v.visitIdentifierPair(ctx.IdentifierPair())
+		return &node.MapPairLiteral{
+			Token: token.FromAntlrToken(ctx.GetStart()),
+			Key:   &node.Identifier{Token: token.FromAntlrToken(ctx.GetStart()), Value: k},
+			Value: v,
+		}
+	}
 	return &node.MapPairLiteral{
 		Token: token.FromAntlrToken(ctx.GetStart()),
 		Key:   v.visitExpr(ctx.Expr()),
@@ -39,4 +47,26 @@ func (v *AntlrVisitor) visitArrayInitializer(ctx parser.IArrayInitializerContext
 		Token: token.FromAntlrToken(ctx.GetStart()),
 		Value: arr,
 	}
+}
+
+func (v *AntlrVisitor) visitStructInitializer(ctx parser.IStructInitializerContext) *node.StructLiteral {
+	pairs := ctx.AllIdentifierPair()
+	body := make(map[string]node.Expr)
+	for _, e := range pairs {
+		if k, v, ok := v.visitIdentifierPair(e); ok {
+			body[k] = v
+		}
+	}
+	return &node.StructLiteral{
+		Token: token.FromAntlrToken(ctx.GetStart()),
+		Body:  body,
+	}
+}
+
+func (v *AntlrVisitor) visitIdentifierPair(ctx parser.IIdentifierPairContext) (key string, val node.Expr, ok bool) {
+	if ctx == nil {
+		return "", nil, false
+	}
+	return v.visitIdentifier(ctx.Identifier()).Value, v.visitExprWithLambda(ctx.ExprWithLambda()), true
+
 }

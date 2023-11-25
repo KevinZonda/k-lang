@@ -10,13 +10,7 @@ import (
 )
 
 func (v *AntlrVisitor) visitLiteral(ctx parser.ILiteralContext) node.Expr {
-	switch ctx.GetStart().GetTokenType() {
-	case parser.V2ParserIdentifier:
-		return &node.Identifier{
-			Token: token.FromAntlrToken(ctx.GetStart()),
-			Value: ctx.GetStart().GetText(),
-		}
-	case parser.V2ParserIntegerLiteral:
+	if ctx.IntegerLiteral() != nil {
 		val, err := strconv.Atoi(ctx.GetStart().GetText())
 
 		if err != nil {
@@ -27,7 +21,8 @@ func (v *AntlrVisitor) visitLiteral(ctx parser.ILiteralContext) node.Expr {
 			Token: token.FromAntlrToken(ctx.GetStart()),
 			Value: val,
 		}
-	case parser.V2ParserNumberLiteral:
+	}
+	if ctx.NumberLiteral() != nil {
 		val, err := strconv.ParseFloat(ctx.GetStart().GetText(), 64)
 		if err != nil {
 			v.appendErr(ctx, "Expected an number value, but got "+ctx.GetStart().GetText(), err)
@@ -37,32 +32,42 @@ func (v *AntlrVisitor) visitLiteral(ctx parser.ILiteralContext) node.Expr {
 			Token: token.FromAntlrToken(ctx.GetStart()),
 			Value: val,
 		}
-	case parser.V2ParserStringLiteral:
+	}
+	if ctx.StringLiteral() != nil {
 		txt := ctx.GetStart().GetText()
 		return &node.StringLiteral{
 			Token: token.FromAntlrToken(ctx.GetStart()),
 			Value: txt[1 : len(txt)-1],
 		}
-	case parser.V2ParserTrue:
+	}
+	if ctx.True() != nil {
 		return &node.BoolLiteral{
 			Token: token.FromAntlrToken(ctx.GetStart()),
 			Value: true,
 		}
-	case parser.V2ParserFalse:
+	}
+	if ctx.False() != nil {
 		return &node.BoolLiteral{
 			Token: token.FromAntlrToken(ctx.GetStart()),
 			Value: false,
 		}
-	case parser.V2ParserStruct:
-		fmt.Println("-> STRUCT : ", ctx.GetStart().GetText())
-	default:
-		if ctx.ArrayInitializer() != nil {
-			return v.visitArrayInitializer(ctx.ArrayInitializer())
-		}
-		if ctx.MapInitializer() != nil {
-			return v.visitMapInitializer(ctx.MapInitializer())
-		}
 	}
+	if ctx.StructInitializer() != nil {
+		return v.visitStructInitializer(ctx.StructInitializer())
+	}
+	if ctx.ArrayInitializer() != nil {
+		return v.visitArrayInitializer(ctx.ArrayInitializer())
+	}
+	if ctx.MapInitializer() != nil {
+		return v.visitMapInitializer(ctx.MapInitializer())
+	}
+	//switch ctx.GetStart().GetTokenType() {
+	//case parser.V2ParserIdentifier:
+	//	return &node.Identifier{
+	//		Token: token.FromAntlrToken(ctx.GetStart()),
+	//		Value: ctx.GetStart().GetText(),
+	//	}
+	//}
 	fmt.Println("VisitLiteralBlock : Unknown type")
 	fmt.Println("-> text     : ", ctx.GetStart().GetText())
 	fmt.Println("-> tokenType: ", ctx.GetStart().GetTokenType())

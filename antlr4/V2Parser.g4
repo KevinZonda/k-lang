@@ -64,14 +64,14 @@ stmtWithSep : stmt sep*;
 
 openStmt : Open StringLiteral (As Identifier)?;
 
-literal : True | False | IntegerLiteral | NumberLiteral | StringLiteral | arrayInitializer | mapInitializer | structInitializer;
-literalWithLambda : literal | lambda;
+literal : True | False | IntegerLiteral | NumberLiteral | StringLiteral | arrayInitializer | structInitializer | mapInitializer;
 
 arrayInitializer : type? LSquare (expr Comma?)* RSquare;
+identifierPair : LHS=Identifier  (Col | To) RHS=exprWithLambda;
+mapPair : LHS=expr (Col | To) RHS=exprWithLambda | LParen mapPair RParen | identifierPair;
+structInitializer : type LBrack (identifierPair Comma?)* RBrack;
+// structElementInitializer : Identifier Comma expr;
 mapInitializer : Map? LBrack (mapPair (Comma*))* RBrack;
-mapPair : expr (Col | To) exprWithLambda | LParen mapPair RParen;
-structInitializer : type LBrack (structElementInitializer Comma?)* RBrack;
-structElementInitializer : Identifier Comma expr;
 
 stmt
     : assignStmt

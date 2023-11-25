@@ -100,15 +100,11 @@ func (v *BaseV2ParserVisitor) VisitLiteral(ctx *LiteralContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseV2ParserVisitor) VisitLiteralWithLambda(ctx *LiteralWithLambdaContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
 func (v *BaseV2ParserVisitor) VisitArrayInitializer(ctx *ArrayInitializerContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseV2ParserVisitor) VisitMapInitializer(ctx *MapInitializerContext) interface{} {
+func (v *BaseV2ParserVisitor) VisitIdentifierPair(ctx *IdentifierPairContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -120,7 +116,7 @@ func (v *BaseV2ParserVisitor) VisitStructInitializer(ctx *StructInitializerConte
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseV2ParserVisitor) VisitStructElementInitializer(ctx *StructElementInitializerContext) interface{} {
+func (v *BaseV2ParserVisitor) VisitMapInitializer(ctx *MapInitializerContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

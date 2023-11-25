@@ -34,6 +34,8 @@ func (e *Eval) EvalExpr(n node.Expr) any {
 		return e.EvalLambdaExpr(n.(*node.LambdaExpr))
 	case *node.AssignStmt:
 		return e.EvalAssignStmt(n.(*node.AssignStmt))
+	case *node.StructLiteral:
+		return e.EvalStructLiteral(n.(*node.StructLiteral))
 	default:
 		fmt.Println(reflect.TypeOf(n))
 		panic("not implemented")

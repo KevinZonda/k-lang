@@ -159,23 +159,17 @@ func (s *BaseV2ParserListener) EnterLiteral(ctx *LiteralContext) {}
 // ExitLiteral is called when production literal is exited.
 func (s *BaseV2ParserListener) ExitLiteral(ctx *LiteralContext) {}
 
-// EnterLiteralWithLambda is called when production literalWithLambda is entered.
-func (s *BaseV2ParserListener) EnterLiteralWithLambda(ctx *LiteralWithLambdaContext) {}
-
-// ExitLiteralWithLambda is called when production literalWithLambda is exited.
-func (s *BaseV2ParserListener) ExitLiteralWithLambda(ctx *LiteralWithLambdaContext) {}
-
 // EnterArrayInitializer is called when production arrayInitializer is entered.
 func (s *BaseV2ParserListener) EnterArrayInitializer(ctx *ArrayInitializerContext) {}
 
 // ExitArrayInitializer is called when production arrayInitializer is exited.
 func (s *BaseV2ParserListener) ExitArrayInitializer(ctx *ArrayInitializerContext) {}
 
-// EnterMapInitializer is called when production mapInitializer is entered.
-func (s *BaseV2ParserListener) EnterMapInitializer(ctx *MapInitializerContext) {}
+// EnterIdentifierPair is called when production identifierPair is entered.
+func (s *BaseV2ParserListener) EnterIdentifierPair(ctx *IdentifierPairContext) {}
 
-// ExitMapInitializer is called when production mapInitializer is exited.
-func (s *BaseV2ParserListener) ExitMapInitializer(ctx *MapInitializerContext) {}
+// ExitIdentifierPair is called when production identifierPair is exited.
+func (s *BaseV2ParserListener) ExitIdentifierPair(ctx *IdentifierPairContext) {}
 
 // EnterMapPair is called when production mapPair is entered.
 func (s *BaseV2ParserListener) EnterMapPair(ctx *MapPairContext) {}
@@ -189,11 +183,11 @@ func (s *BaseV2ParserListener) EnterStructInitializer(ctx *StructInitializerCont
 // ExitStructInitializer is called when production structInitializer is exited.
 func (s *BaseV2ParserListener) ExitStructInitializer(ctx *StructInitializerContext) {}
 
-// EnterStructElementInitializer is called when production structElementInitializer is entered.
-func (s *BaseV2ParserListener) EnterStructElementInitializer(ctx *StructElementInitializerContext) {}
+// EnterMapInitializer is called when production mapInitializer is entered.
+func (s *BaseV2ParserListener) EnterMapInitializer(ctx *MapInitializerContext) {}
 
-// ExitStructElementInitializer is called when production structElementInitializer is exited.
-func (s *BaseV2ParserListener) ExitStructElementInitializer(ctx *StructElementInitializerContext) {}
+// ExitMapInitializer is called when production mapInitializer is exited.
+func (s *BaseV2ParserListener) ExitMapInitializer(ctx *MapInitializerContext) {}
 
 // EnterStmt is called when production stmt is entered.
 func (s *BaseV2ParserListener) EnterStmt(ctx *StmtContext) {}

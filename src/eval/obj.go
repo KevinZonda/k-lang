@@ -18,6 +18,9 @@ const (
 	Value   Kind = "Val"
 	EvalObj Kind = "Eval"
 	Library Kind = "Library"
+	Array   Kind = "Array"
+	Map     Kind = "Map"
+	Struct  Kind = "Struct"
 )
 
 func (o *Object) TypeOf() string {
@@ -38,6 +41,18 @@ func NewValueObject(val any) *Object {
 
 func NewEvalObject(val any) *Object {
 	return &Object{Kind: EvalObj, Val: val}
+}
+
+func NewArrayObject(val []any) *Object {
+	return &Object{Kind: Array, Val: val}
+}
+
+func NewMapObject(val map[any]any) *Object {
+	return &Object{Kind: Map, Val: val}
+}
+
+func NewStructObject(val map[string]any) *Object {
+	return &Object{Kind: Struct, Val: val}
 }
 
 func (o *Object) IsLambda() bool {
@@ -91,6 +106,12 @@ func cons(a any) *Object {
 		return NewLambdaObject(a.(*node.LambdaExpr))
 	case *node.FuncBlock:
 		return NewFuncObject(a.(*node.FuncBlock))
+	//case []any:
+	//	return NewArrayObject(a.([]any))
+	//case map[any]any:
+	//	return NewMapObject(a.(map[any]any))
+	case map[string]any:
+		return NewStructObject(a.(map[string]any))
 	default:
 		return NewValueObject(a)
 	}

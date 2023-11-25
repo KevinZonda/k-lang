@@ -77,14 +77,11 @@ type V2ParserListener interface {
 	// EnterLiteral is called when entering the literal production.
 	EnterLiteral(c *LiteralContext)
 
-	// EnterLiteralWithLambda is called when entering the literalWithLambda production.
-	EnterLiteralWithLambda(c *LiteralWithLambdaContext)
-
 	// EnterArrayInitializer is called when entering the arrayInitializer production.
 	EnterArrayInitializer(c *ArrayInitializerContext)
 
-	// EnterMapInitializer is called when entering the mapInitializer production.
-	EnterMapInitializer(c *MapInitializerContext)
+	// EnterIdentifierPair is called when entering the identifierPair production.
+	EnterIdentifierPair(c *IdentifierPairContext)
 
 	// EnterMapPair is called when entering the mapPair production.
 	EnterMapPair(c *MapPairContext)
@@ -92,8 +89,8 @@ type V2ParserListener interface {
 	// EnterStructInitializer is called when entering the structInitializer production.
 	EnterStructInitializer(c *StructInitializerContext)
 
-	// EnterStructElementInitializer is called when entering the structElementInitializer production.
-	EnterStructElementInitializer(c *StructElementInitializerContext)
+	// EnterMapInitializer is called when entering the mapInitializer production.
+	EnterMapInitializer(c *MapInitializerContext)
 
 	// EnterStmt is called when entering the stmt production.
 	EnterStmt(c *StmtContext)
@@ -200,14 +197,11 @@ type V2ParserListener interface {
 	// ExitLiteral is called when exiting the literal production.
 	ExitLiteral(c *LiteralContext)
 
-	// ExitLiteralWithLambda is called when exiting the literalWithLambda production.
-	ExitLiteralWithLambda(c *LiteralWithLambdaContext)
-
 	// ExitArrayInitializer is called when exiting the arrayInitializer production.
 	ExitArrayInitializer(c *ArrayInitializerContext)
 
-	// ExitMapInitializer is called when exiting the mapInitializer production.
-	ExitMapInitializer(c *MapInitializerContext)
+	// ExitIdentifierPair is called when exiting the identifierPair production.
+	ExitIdentifierPair(c *IdentifierPairContext)
 
 	// ExitMapPair is called when exiting the mapPair production.
 	ExitMapPair(c *MapPairContext)
@@ -215,8 +209,8 @@ type V2ParserListener interface {
 	// ExitStructInitializer is called when exiting the structInitializer production.
 	ExitStructInitializer(c *StructInitializerContext)
 
-	// ExitStructElementInitializer is called when exiting the structElementInitializer production.
-	ExitStructElementInitializer(c *StructElementInitializerContext)
+	// ExitMapInitializer is called when exiting the mapInitializer production.
+	ExitMapInitializer(c *MapInitializerContext)
 
 	// ExitStmt is called when exiting the stmt production.
 	ExitStmt(c *StmtContext)

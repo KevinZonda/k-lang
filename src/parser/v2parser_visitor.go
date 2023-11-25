@@ -77,14 +77,11 @@ type V2ParserVisitor interface {
 	// Visit a parse tree produced by V2Parser#literal.
 	VisitLiteral(ctx *LiteralContext) interface{}
 
-	// Visit a parse tree produced by V2Parser#literalWithLambda.
-	VisitLiteralWithLambda(ctx *LiteralWithLambdaContext) interface{}
-
 	// Visit a parse tree produced by V2Parser#arrayInitializer.
 	VisitArrayInitializer(ctx *ArrayInitializerContext) interface{}
 
-	// Visit a parse tree produced by V2Parser#mapInitializer.
-	VisitMapInitializer(ctx *MapInitializerContext) interface{}
+	// Visit a parse tree produced by V2Parser#identifierPair.
+	VisitIdentifierPair(ctx *IdentifierPairContext) interface{}
 
 	// Visit a parse tree produced by V2Parser#mapPair.
 	VisitMapPair(ctx *MapPairContext) interface{}
@@ -92,8 +89,8 @@ type V2ParserVisitor interface {
 	// Visit a parse tree produced by V2Parser#structInitializer.
 	VisitStructInitializer(ctx *StructInitializerContext) interface{}
 
-	// Visit a parse tree produced by V2Parser#structElementInitializer.
-	VisitStructElementInitializer(ctx *StructElementInitializerContext) interface{}
+	// Visit a parse tree produced by V2Parser#mapInitializer.
+	VisitMapInitializer(ctx *MapInitializerContext) interface{}
 
 	// Visit a parse tree produced by V2Parser#stmt.
 	VisitStmt(ctx *StmtContext) interface{}

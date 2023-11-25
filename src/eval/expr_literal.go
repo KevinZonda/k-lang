@@ -41,3 +41,11 @@ func (e *Eval) EvalIdentifier(n *node.Identifier) any {
 	}
 	panic("No Var Found")
 }
+
+func (e *Eval) EvalStructLiteral(n *node.StructLiteral) map[string]any {
+	var m = make(map[string]any)
+	for key, v := range n.Body {
+		m[key] = e.EvalExpr(v)
+	}
+	return m
+}

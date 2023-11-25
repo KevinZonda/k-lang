@@ -13,3 +13,14 @@ func (n *StructBlock) stmt() {}
 func (n *StructBlock) TokenValue() string {
 	return n.Token.Value
 }
+
+type StructLiteral struct {
+	Token token.Token
+	Body  map[string]Expr
+}
+
+func (n *StructLiteral) expr() {}
+
+func (n *StructLiteral) TokenValue() string {
+	return n.Token.Value
+}
