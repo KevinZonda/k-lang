@@ -8,7 +8,7 @@ import (
 func TestStdStringLib(t *testing.T) {
 
 	code := `
-open "string" as s
+open "std/string" as s
 x := s.int("128")
 println(typeOf(x))
 println(x)

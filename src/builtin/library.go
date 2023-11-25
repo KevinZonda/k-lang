@@ -16,9 +16,9 @@ func GetLibrary(name string) ILibrary {
 	}
 	var lib ILibrary
 	switch name {
-	case "string":
+	case "std/string", "string":
 		lib = NewStdStringLib()
-	case "console":
+	case "std/console", "console":
 		lib = NewStdConsoleLib()
 	}
 	if lib != nil {

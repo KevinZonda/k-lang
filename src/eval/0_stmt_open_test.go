@@ -34,7 +34,7 @@ func TestOpenLibStmt(t *testing.T) {
 	eval.ResetGlobal()
 	fmt.Println(filepath.Abs("."))
 	code := `
-open "string"
+open "std/string"
 
 x := "This is a string"
 typeOf(x)

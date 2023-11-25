@@ -83,6 +83,8 @@ func (e *Eval) EvalOpenStmt(n *node.OpenStmt) {
 }
 
 func normaliseName(n string) string {
+	ns := strings.Split(n, "/")
+	n = ns[len(ns)-1]
 	sb := strings.Builder{}
 	for _, c := range n {
 		if c != '_' && (c < 'a' || c > 'z') && (c < 'A' || c > 'Z') {
