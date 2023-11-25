@@ -3,6 +3,7 @@ package eval
 import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/builtin"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/objType"
 )
 
 type Object struct {
@@ -18,9 +19,9 @@ const (
 	Value   Kind = "Val"
 	EvalObj Kind = "Eval"
 	Library Kind = "Library"
-	Array   Kind = "Array"
-	Map     Kind = "Map"
-	Struct  Kind = "Struct"
+	//Array   Kind = "Array"
+	//Map     Kind = "Map"
+	Struct Kind = "Struct"
 )
 
 func (o *Object) TypeOf() string {
@@ -43,15 +44,15 @@ func NewEvalObject(val any) *Object {
 	return &Object{Kind: EvalObj, Val: val}
 }
 
-func NewArrayObject(val []any) *Object {
-	return &Object{Kind: Array, Val: val}
-}
+//func NewArrayObject(val []any) *Object {
+//	return &Object{Kind: Array, Val: val}
+//}
+//
+//func NewMapObject(val map[any]any) *Object {
+//	return &Object{Kind: Map, Val: val}
+//}
 
-func NewMapObject(val map[any]any) *Object {
-	return &Object{Kind: Map, Val: val}
-}
-
-func NewStructObject(val map[string]any) *Object {
+func NewStructObject(val *objType.StructField) *Object {
 	return &Object{Kind: Struct, Val: val}
 }
 
@@ -67,12 +68,24 @@ func (o *Object) IsValue() bool {
 	return o.Kind == Value
 }
 
+func (o *Object) IsStruct() bool {
+	return o.Kind == Struct
+}
+
+func (o *Object) IsKindOfValue() bool {
+	return o.Kind == Value || o.Kind == Struct
+}
+
 func (o *Object) IsEval() bool {
 	return o.Kind == EvalObj
 }
 
 func (o *Object) IsLib() bool {
 	return o.Kind == Library
+}
+
+func (o *Object) ToStruct() *objType.StructField {
+	return o.Val.(*objType.StructField)
 }
 
 func (o *Object) ToLambda() *node.LambdaExpr {
@@ -110,8 +123,11 @@ func cons(a any) *Object {
 	//	return NewArrayObject(a.([]any))
 	//case map[any]any:
 	//	return NewMapObject(a.(map[any]any))
-	case map[string]any:
-		return NewStructObject(a.(map[string]any))
+	case *objType.StructField:
+		return NewStructObject(a.(*objType.StructField))
+	case objType.StructField:
+		sf := a.(objType.StructField)
+		return NewStructObject(&sf)
 	default:
 		return NewValueObject(a)
 	}

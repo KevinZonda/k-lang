@@ -17,6 +17,7 @@ func (n *StructBlock) TokenValue() string {
 type StructLiteral struct {
 	Token token.Token
 	Body  map[string]Expr
+	Type  *Type
 }
 
 func (n *StructLiteral) expr() {}

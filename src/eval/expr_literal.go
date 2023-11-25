@@ -1,6 +1,9 @@
 package eval
 
-import "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
+import (
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/objType"
+)
 
 func (e *Eval) EvalStringLiteral(n *node.StringLiteral) string {
 	return n.Value
@@ -42,10 +45,13 @@ func (e *Eval) EvalIdentifier(n *node.Identifier) any {
 	panic("No Var Found")
 }
 
-func (e *Eval) EvalStructLiteral(n *node.StructLiteral) map[string]any {
+func (e *Eval) EvalStructLiteral(n *node.StructLiteral) *objType.StructField {
 	var m = make(map[string]any)
 	for key, v := range n.Body {
 		m[key] = e.EvalExpr(v)
 	}
-	return m
+	return &objType.StructField{
+		TypeAs: n.Type,
+		Fields: m,
+	}
 }

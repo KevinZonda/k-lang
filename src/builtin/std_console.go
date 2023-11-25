@@ -21,15 +21,10 @@ func (s *StdConsoleLib) FuncCall(caller string, args []any) any {
 		}
 		return s
 	case "write":
-		for _, arg := range args {
-			fmt.Print(arg)
-		}
+		Print(args...)
 		return nil
 	case "writeln":
-		for _, arg := range args {
-			fmt.Print(arg)
-		}
-		fmt.Println()
+		Println(args...)
 		return nil
 	}
 	panic("Unknown function: " + caller)

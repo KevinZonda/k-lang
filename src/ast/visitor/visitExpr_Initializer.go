@@ -60,6 +60,7 @@ func (v *AntlrVisitor) visitStructInitializer(ctx parser.IStructInitializerConte
 	return &node.StructLiteral{
 		Token: token.FromAntlrToken(ctx.GetStart()),
 		Body:  body,
+		Type:  v.visitType(ctx.Type_()),
 	}
 }
 

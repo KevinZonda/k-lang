@@ -2,15 +2,26 @@ package builtin
 
 import (
 	"fmt"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/objType"
 	"reflect"
 )
 
 func Print(v ...any) {
-	fmt.Print(v...)
+	for _, arg := range v {
+		switch arg.(type) {
+		case *objType.StructField:
+			fmt.Println(arg.(*objType.StructField).Fields)
+		default:
+			fmt.Print(arg)
+		}
+	}
 }
 
 func Println(v ...any) {
-	fmt.Println(v...)
+	for _, arg := range v {
+		Print(arg)
+	}
+	fmt.Println()
 }
 
 func TypeOf(v any) string {
