@@ -81,6 +81,16 @@ func printId(id int) {
 	fmt.Print("->")
 }
 
+func getFromObjTable[T any](t *TableStack, key string) (T, bool) {
+	v, ok := t.Get(key)
+	if !ok {
+		var t T
+		return t, false
+	}
+	tV, ok := v.Val.(T)
+	return tV, ok
+}
+
 func (t *TableStack) Get(key string) (*obj.Object, bool) {
 	// Get only valid on 2 tables
 	// Top

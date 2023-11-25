@@ -45,13 +45,53 @@ func (e *Eval) EvalIdentifier(n *node.Identifier) any {
 	panic("No Var Found")
 }
 
+func (e *Eval) getZeroValue(t *node.Type) any {
+	if t == nil {
+		return nil
+	}
+	baseEval := e
+	if t.Package != "" {
+		newEval, ok := e.objTable.Get(t.Package)
+		if ok {
+			baseEval = newEval.Val.(*Eval)
+		} else {
+			panic("No Package Found")
+		}
+	}
+	switch t.Name {
+	case "int":
+		return 0
+	case "number", "float":
+		return 0.0
+	case "string":
+		return ""
+	case "bool":
+		return false
+	default:
+		def, ok := getFromObjTable[*node.StructBlock](baseEval.objTable, t.Name)
+		if ok {
+			var m = make(map[string]any)
+			for variable, typeOfVar := range def.Body {
+				m[variable] = baseEval.getZeroValue(typeOfVar)
+			}
+			return &obj.StructField{
+				TypeAs: t,
+				Fields: m,
+			}
+		}
+		return &obj.StructField{
+			TypeAs: t,
+			Fields: make(map[string]any),
+		}
+	}
+
+	return nil
+}
+
 func (e *Eval) EvalStructLiteral(n *node.StructLiteral) *obj.StructField {
-	var m = make(map[string]any)
+	sf := e.getZeroValue(n.Type).(*obj.StructField)
 	for key, v := range n.Body {
-		m[key] = e.EvalExpr(v)
+		sf.Fields[key] = e.EvalExpr(v)
 	}
-	return &obj.StructField{
-		TypeAs: n.Type,
-		Fields: m,
-	}
+	return sf
 }

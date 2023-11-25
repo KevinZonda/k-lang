@@ -44,5 +44,5 @@ println(c.G)
 	expected := `255
 114
 `
-	tester.GeneralTest(false, t, code, expected)
+	tester.GeneralTest(true, t, code, expected)
 }

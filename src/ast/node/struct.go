@@ -8,7 +8,7 @@ type StructBlock struct {
 	Name  string
 }
 
-func (n *StructBlock) stmt() {}
+func (n *StructBlock) block() {}
 
 func (n *StructBlock) TokenValue() string {
 	return n.Token.Value
