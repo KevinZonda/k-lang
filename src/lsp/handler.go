@@ -51,7 +51,8 @@ func (d *doc) pushDiagnoses(notify glsp.NotifyFunc) {
 	if d == nil {
 		return
 	}
-	_, errs := parserHelper.Ast(d.Text)
+	ast, errs := parserHelper.Ast(d.Text)
+	d.Asl = astToASL(ast)
 	dia := make([]protocol.Diagnostic, 0)
 	diagnoseE := protocol.DiagnosticSeverityError
 	for _, err := range errs {

@@ -11,6 +11,7 @@ type doc struct {
 	lock sync.Mutex
 	Uri  protocol.DocumentUri
 	Text string
+	Asl  *ASL
 }
 
 type docStoreType struct {
