@@ -17,7 +17,6 @@ let runChannel: OutputChannel;
 let klangCfg : vscode.WorkspaceConfiguration
 
 function runCode(file : string) {
-    klangCfg = vscode.workspace.getConfiguration("klang")
     const spawn = require("child_process").spawn;
     let cmd = klangCfg.get<string>("runner");
     if (cmd === undefined || cmd === "" || cmd === null) {
@@ -49,6 +48,7 @@ function runCode(file : string) {
 }
 
 export function activate(context: ExtensionContext) {
+    klangCfg = vscode.workspace.getConfiguration("klang")
     lspChannel = window.createOutputChannel("Klang LSP");
     runChannel = window.createOutputChannel("Klang Run");
 
@@ -66,7 +66,12 @@ export function activate(context: ExtensionContext) {
 }
 
 function startLsp() {
-    const socket = net.connect(11451, '127.0.0.1');
+    let lspListenAddr = klangCfg.get<string>("lspListenAddress");
+    if (lspListenAddr === undefined || lspListenAddr === "" || lspListenAddr === null) {
+        lspListenAddr = "127.0.0.1:11451"
+    }
+    lspChannel.appendLine("LSP Listen Address: " + lspListenAddr);
+    const socket = net.connect(lspListenAddr);
     const serverOptions = () => {
         return Promise.resolve({
             writer: socket,
