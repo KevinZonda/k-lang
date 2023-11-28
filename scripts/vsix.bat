@@ -1,6 +1,6 @@
 @echo off
 cd .\vscode-plugin\klang-highlighter
-npm install
+call npm install
 vsce package
 cd ..
 cd ..
