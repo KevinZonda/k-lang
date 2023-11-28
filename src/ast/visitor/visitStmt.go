@@ -56,16 +56,12 @@ func (v *AntlrVisitor) visitJumpStmt(ctx parser.IJumpStmtContext) node.Stmt {
 }
 
 func (v *AntlrVisitor) visitIfStmt(ctx parser.IIfStmtContext) *node.IfStmt {
-	cdx := ctx.AllCodeBlock()
 	i := node.IfStmt{
 		Token:     token.FromAntlrToken(ctx.GetStart()),
-		IfTrue:    v.visitCodeBlock(cdx[0]),
+		IfTrue:    v.visitCodeBlock(ctx.CodeBlock(0)),
+		IfFalse:   v.visitCodeBlock(ctx.CodeBlock(1)),
 		Condition: v.visitExpr(ctx.Expr()),
 	}
-	if len(cdx) == 2 {
-		i.IfFalse = v.visitCodeBlock(cdx[1].(*parser.CodeBlockContext))
-	}
-
 	return &i
 }
 

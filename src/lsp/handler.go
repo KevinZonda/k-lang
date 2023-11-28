@@ -5,6 +5,7 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"github.com/tliron/glsp"
 	protocol "github.com/tliron/glsp/protocol_3_16"
+	"log"
 	"sync"
 )
 
@@ -48,6 +49,7 @@ var handler protocol.Handler
 var initLock sync.Mutex
 
 func (d *doc) pushDiagnoses(notify glsp.NotifyFunc) {
+	log.Println("pushDiagnoses", d == nil)
 	if d == nil {
 		return
 	}

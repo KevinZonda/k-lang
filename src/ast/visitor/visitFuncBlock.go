@@ -55,6 +55,9 @@ func (v *AntlrVisitor) visitFuncSignArgItem(ctx parser.IFuncSignArgItemContext) 
 }
 
 func (v *AntlrVisitor) visitCodeBlock(ctx parser.ICodeBlockContext) *node.CodeBlock {
+	if ctx == nil {
+		return nil
+	}
 	var body []node.Node
 	for _, m := range ctx.GetChildren() {
 		switch m.(type) {

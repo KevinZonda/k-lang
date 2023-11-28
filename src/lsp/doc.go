@@ -3,6 +3,9 @@ package lsp
 import (
 	"github.com/KevinZonda/GoX/pkg/iox"
 	protocol "github.com/tliron/glsp/protocol_3_16"
+	"log"
+	"net/url"
+	"runtime"
 	"strings"
 	"sync"
 )
@@ -41,6 +44,14 @@ func (s *docStoreType) loadDoc(uri protocol.DocumentUri) *doc {
 	path := string(uri)
 	if strings.HasPrefix(path, "file://") {
 		path = path[7:]
+	}
+	path, err := url.QueryUnescape(path)
+	if err != nil {
+		log.Println(path, err)
+		return nil
+	}
+	if runtime.GOOS == "windows" && strings.HasPrefix(path, "/") {
+		path = path[1:]
 	}
 	txt, err := iox.ReadAllText(path)
 	if err != nil {
