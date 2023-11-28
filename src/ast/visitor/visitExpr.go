@@ -80,12 +80,12 @@ func (v *AntlrVisitor) visitUnaryExpr(ctx parser.IExprContext) *node.UnaryOperEx
 
 		return nil
 	}
-	oper := ctx.GetChild(0).(*parser.UnaryOperContext)
+	oper := ctx.UnaryOper()
 
 	return &node.UnaryOperExpr{
 		Token: token.FromAntlrToken(oper.GetStart()),
 		Oper:  oper.GetText(),
-		Expr:  v.visitExpr(ctx.GetChild(1).(*parser.ExprContext)),
+		Expr:  v.visitExpr(ctx.GetChild(1).(parser.IExprContext)),
 	}
 }
 
