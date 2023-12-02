@@ -14,17 +14,26 @@ func (v *AntlrVisitor) visitStructBlock(ctx parser.IStructBlockContext) *node.St
 	}
 }
 
-func (v *AntlrVisitor) visitDeclareBlock(ctx parser.IDeclareBlockContext) map[string]*node.Type {
+func (v *AntlrVisitor) visitDeclareBlock(ctx parser.IDeclareBlockContext) map[string]*node.Declare {
 	if ctx == nil {
 		return nil
 	}
-	var body = make(map[string]*node.Type)
+	var body = make(map[string]*node.Declare)
 	declares := ctx.AllDeclareStmt()
 	for _, declare := range declares {
+		if declare.ExprWithLambda() != nil {
+			body[declare.Identifier(0).GetText()] = &node.Declare{
+				Type:  v.visitType(declare.Type_()),
+				Value: v.visitExprWithLambda(declare.ExprWithLambda()),
+			}
+			continue
+		}
 		tN := v.visitType(declare.Type_())
 		if tN != nil {
 			for _, id := range declare.AllIdentifier() {
-				body[id.GetText()] = tN
+				body[id.GetText()] = &node.Declare{
+					Type: tN,
+				}
 			}
 		}
 	}

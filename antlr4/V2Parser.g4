@@ -87,7 +87,10 @@ assignStmt
     : type? var Assign exprWithLambda ;
 
 declareStmt
-    : type Identifier (Comma Identifier)*;
+    : type Identifier (Comma Identifier)*
+    | type Identifier Assign exprWithLambda
+    | type? Identifier Assign exprWithLambda
+    ;
 
 
 ifStmt

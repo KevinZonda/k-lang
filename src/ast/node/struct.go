@@ -4,8 +4,13 @@ import "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
 
 type StructBlock struct {
 	Token token.Token
-	Body  map[string]*Type // map[identifier]type
+	Body  map[string]*Declare // map[identifier]type
 	Name  string
+}
+
+type Declare struct {
+	Type  *Type
+	Value Expr
 }
 
 func (n *StructBlock) block() {}

@@ -16,3 +16,15 @@ println(x)
 	`
 	tester.GeneralTestX(true, t, src, "colour{red:10, green:20, blue:30}")
 }
+
+func TestEvalStructLiteral2(t *testing.T) {
+	src := `
+struct foo {
+  int x = 12
+  bool y = true
+}
+x := foo{}
+println(x)
+	`
+	tester.GeneralTestX(true, t, src, "colour{red:10, green:20, blue:30}")
+}

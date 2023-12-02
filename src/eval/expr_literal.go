@@ -71,8 +71,12 @@ func (e *Eval) getZeroValue(t *node.Type) any {
 		def, ok := getFromObjTable[*node.StructBlock](baseEval.objTable, t.Name)
 		if ok {
 			var m = make(map[string]any)
-			for variable, typeOfVar := range def.Body {
-				m[variable] = baseEval.getZeroValue(typeOfVar)
+			for variable, varDeclare := range def.Body {
+				if varDeclare.Value != nil {
+					m[variable] = baseEval.EvalExpr(varDeclare.Value)
+					continue
+				}
+				m[variable] = baseEval.getZeroValue(varDeclare.Type)
 			}
 			return &obj.StructField{
 				TypeAs: t,
