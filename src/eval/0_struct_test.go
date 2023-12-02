@@ -28,3 +28,19 @@ println(x)
 	`
 	tester.GeneralTestX(true, t, src, "colour{red:10, green:20, blue:30}")
 }
+
+func TestEvalStructLiteral3(t *testing.T) {
+	src := `
+struct foo {
+  int x = 12
+  bool y = true
+  help = fn () {
+    println("hello")
+    println(self.x)
+  }
+}
+x := foo{}
+x.help()
+	`
+	tester.GeneralTestX(true, t, src, "colour{red:10, green:20, blue:30}")
+}

@@ -3,6 +3,7 @@ package eval
 import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
+	"reflect"
 )
 
 func (e *Eval) EvalDotExpr(n *node.DotExpr) any {
@@ -45,6 +46,7 @@ func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) any {
 	_fc.Caller = funcCall.Caller
 	_fc.Args = funcCall.Args
 	_fc.Token = funcCall.Token
+
 	switch scope.(type) {
 	case *Eval:
 		_e := scope.(*Eval)
@@ -56,7 +58,20 @@ func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) any {
 			args = append(args, e.EvalExpr(expr))
 		}
 		return _lib.FuncCall(_fc.Caller.Value, args)
+	case *obj.StructField:
+		_sf := scope.(*obj.StructField)
+		lambda := _sf.Fields[funcCall.Caller.Value].(*node.LambdaExpr)
+		var args []any
+		for _, expr := range _fc.Args {
+			args = append(args, e.EvalExpr(expr))
+		}
+		_lmd := lambda.ToFunc("")
+		return e.EvalFuncBlock(_lmd, args, func() {
+			e.objTable.SetAtTop("self", _sf)
+		})
 		// TODO: More situation!
+	default:
+		panic("Not Implemented" + reflect.TypeOf(scope).String())
 	}
 	return nil
 }
