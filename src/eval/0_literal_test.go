@@ -21,3 +21,48 @@ print(x)`
 	expected := `map[1:one 13:Thirteen]`
 	tester.GeneralTest(true, t, code, expected)
 }
+
+func TestZeroValueInt(t *testing.T) {
+	code := `
+struct M{ int x }
+print(M{}.x)
+`
+	expected := `0`
+	tester.GeneralTest(true, t, code, expected)
+}
+
+func TestZeroValueFloat(t *testing.T) {
+	code := `
+struct M{ float x }
+print(M{}.x)
+`
+	expected := `0`
+	tester.GeneralTest(true, t, code, expected)
+}
+
+func TestZeroValueString(t *testing.T) {
+	code := `
+struct M{ string x }
+print(M{}.x)
+`
+	expected := ``
+	tester.GeneralTest(true, t, code, expected)
+}
+
+func TestZeroValueBool(t *testing.T) {
+	code := `
+struct M{ bool x }
+print(M{}.x)
+`
+	expected := `false`
+	tester.GeneralTest(true, t, code, expected)
+}
+
+func TestFloat(t *testing.T) {
+	code := `
+x := 1.2
+print(x)
+`
+	expected := `1.2`
+	tester.GeneralTest(true, t, code, expected)
+}

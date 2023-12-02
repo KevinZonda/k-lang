@@ -44,3 +44,31 @@ println(c.G)
 `
 	tester.GeneralTest(true, t, code, expected)
 }
+
+func TestDotExprStdLib(t *testing.T) {
+	code := `
+open "std/console"
+
+console.writeln("HI!")
+`
+	expected := `HI!
+`
+	tester.GeneralTest(false, t, code, expected)
+}
+
+func TestDotExprStructLambda(t *testing.T) {
+	code := `
+struct M {
+  x = 10
+  M = fn(x) {
+     println(self.x)
+     println(x)
+  }
+}
+M{}.M(20)
+`
+	expected := `10
+20
+`
+	tester.GeneralTest(false, t, code, expected)
+}

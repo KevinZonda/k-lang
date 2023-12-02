@@ -7,6 +7,17 @@ import (
 )
 
 func IsStdoutAsExpected(allowPanic bool, f func(), expected string) (e error) {
+	output := Stdout(allowPanic, f)
+
+	if output != expected {
+		return fmt.Errorf("The code result:\n%s\nSHA256:%s\nExpected:\n%s\nSHA256:%s\n",
+			output, Sha256(output),
+			expected, Sha256(expected))
+	}
+	return nil
+}
+
+func Stdout(allowPanic bool, f func()) (output string) {
 	CaptureStdout()
 	defer func() {
 		if !allowPanic {
@@ -16,25 +27,20 @@ func IsStdoutAsExpected(allowPanic bool, f func(), expected string) (e error) {
 					StopCaptureStdout()
 				}
 				fmt.Println("Content Captured:\n", lastCall)
-				e = fmt.Errorf("code panic! %v", rec)
+				output = lastCall
 			}
 		}
 		if IsCapturing() {
-			output := StopCaptureStdout()
+			output = StopCaptureStdout()
 			fmt.Println("Content Captured:\n", output)
 		}
 
 	}()
 	f()
-	output := StopCaptureStdout()
+	output = StopCaptureStdout()
 	fmt.Println("Content Captured:\n", output)
 
-	if output != expected {
-		return fmt.Errorf("The code result:\n%s\nSHA256:%s\nExpected:\n%s\nSHA256:%s\n",
-			output, Sha256(output),
-			expected, Sha256(expected))
-	}
-	return nil
+	return output
 }
 
 func Sha256(o string) string {
