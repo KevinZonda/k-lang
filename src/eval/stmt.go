@@ -19,6 +19,8 @@ func (e *Eval) EvalStmt(n node.Stmt) any {
 		return e.EvalWhileForStmt(n.(*node.WhileStyleFor))
 	case *node.CStyleFor:
 		return e.EvalCStyleFrStmt(n.(*node.CStyleFor))
+	case *node.IterStyleFor:
+		return e.EvalIterStyleForStmt(n.(*node.IterStyleFor))
 	case *node.BreakStmt:
 		return e.EvalBreakStmt(n.(*node.BreakStmt))
 	case *node.ContinueStmt:

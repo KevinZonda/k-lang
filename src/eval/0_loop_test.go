@@ -78,3 +78,27 @@ for (i <= 5) {
 `
 	tester.GeneralTest(true, ts, code, expected)
 }
+
+func TestIterLoop(ts *testing.T) {
+	code := `
+for (x : [1, 7, 8]) {
+    println(x)
+}`
+	expected := `1
+7
+8
+`
+	tester.GeneralTest(true, ts, code, expected)
+}
+
+func TestIterLoop2(ts *testing.T) {
+	code := `
+for (x : map{"x": 1, "y": 7, "z": 8}) {
+    println(x)
+}`
+	expected := `map[key:x val:1]
+map[key:y val:7]
+map[key:z val:8]
+`
+	tester.GeneralTest(true, ts, code, expected)
+}

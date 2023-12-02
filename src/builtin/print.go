@@ -10,7 +10,7 @@ func Print(v ...any) {
 	for _, arg := range v {
 		switch arg.(type) {
 		case *obj.StructField:
-			fmt.Println(arg.(*obj.StructField).Fields)
+			fmt.Print(arg.(*obj.StructField).Fields)
 		default:
 			fmt.Print(arg)
 		}
