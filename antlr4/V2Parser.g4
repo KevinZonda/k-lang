@@ -69,7 +69,7 @@ literal : True | False | IntegerLiteral | NumberLiteral | StringLiteral | arrayI
 arrayInitializer : type? LSquare (expr Comma?)* RSquare;
 identifierPair : LHS=Identifier  (Col | To) RHS=exprWithLambda;
 mapPair : LHS=expr (Col | To) RHS=exprWithLambda | LParen mapPair RParen | identifierPair;
-structInitializer : type LBrack (identifierPair Comma?)* RBrack;
+structInitializer : (type | Struct) LBrack (identifierPair Comma?)* RBrack;
 // structElementInitializer : Identifier Comma expr;
 mapInitializer : Map? LBrack (mapPair (Comma*))* RBrack;
 

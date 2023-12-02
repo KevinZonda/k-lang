@@ -10,11 +10,39 @@ func Print(v ...any) {
 	for _, arg := range v {
 		switch arg.(type) {
 		case *obj.StructField:
-			fmt.Print(arg.(*obj.StructField).Fields)
+			printStruct(arg.(*obj.StructField))
 		default:
 			fmt.Print(arg)
 		}
 	}
+}
+
+func printStruct(v *obj.StructField) {
+	if v == nil {
+		return
+	}
+	if v.TypeAs != nil {
+		fmt.Print(v.TypeAs.Name, " ")
+	} else {
+		fmt.Print("struct ")
+	}
+	fmt.Print("{")
+	count := 0
+	max := len(v.Fields)
+	for k, v := range v.Fields {
+		fmt.Print(k, ": ")
+		switch v.(type) {
+		case *obj.StructField:
+			printStruct(v.(*obj.StructField))
+		default:
+			fmt.Print(v)
+		}
+		if count < max-1 {
+			fmt.Print(", ")
+		}
+		count++
+	}
+	fmt.Print("}")
 }
 
 func Println(v ...any) {

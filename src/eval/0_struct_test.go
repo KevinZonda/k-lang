@@ -7,7 +7,7 @@ import (
 
 func TestEvalStructLiteral(t *testing.T) {
 	src := `
-x := colour {
+x := struct {
    red: 10,
    green: 20,
    blue: 30,

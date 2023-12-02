@@ -69,31 +69,34 @@ func (e *Eval) getZeroValue(t *node.Type) any {
 		return false
 	default:
 		def, ok := getFromObjTable[*node.StructBlock](baseEval.objTable, t.Name)
-		if ok {
-			var m = make(map[string]any)
-			for variable, varDeclare := range def.Body {
-				if varDeclare.Value != nil {
-					m[variable] = baseEval.EvalExpr(varDeclare.Value)
-					continue
-				}
-				m[variable] = baseEval.getZeroValue(varDeclare.Type)
+		if !ok {
+			panic("No Struct Definition Found")
+		}
+		var m = make(map[string]any)
+		for variable, varDeclare := range def.Body {
+			if varDeclare.Value != nil {
+				m[variable] = baseEval.EvalExpr(varDeclare.Value)
+				continue
 			}
-			return &obj.StructField{
-				TypeAs: t,
-				Fields: m,
-			}
+			m[variable] = baseEval.getZeroValue(varDeclare.Type)
 		}
 		return &obj.StructField{
 			TypeAs: t,
+			Fields: m,
+		}
+	}
+}
+
+func (e *Eval) EvalStructLiteral(n *node.StructLiteral) *obj.StructField {
+	var sf *obj.StructField
+	if n.Type != nil {
+		sf = e.getZeroValue(n.Type).(*obj.StructField)
+	} else {
+		sf = &obj.StructField{
 			Fields: make(map[string]any),
 		}
 	}
 
-	return nil
-}
-
-func (e *Eval) EvalStructLiteral(n *node.StructLiteral) *obj.StructField {
-	sf := e.getZeroValue(n.Type).(*obj.StructField)
 	for key, v := range n.Body {
 		sf.Fields[key] = e.EvalExpr(v)
 	}
