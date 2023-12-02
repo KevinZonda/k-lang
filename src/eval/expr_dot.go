@@ -35,7 +35,11 @@ func (e *Eval) EvalPropertyAfterScope(scope any, property node.Expr) any {
 	switch scope.(type) {
 	case *obj.StructField:
 		_sf := scope.(*obj.StructField)
-		return _sf.Fields[actualPpt.(string)]
+		res, ok := _sf.Fields.Get(actualPpt.(string))
+		if !ok {
+			res = nil
+		}
+		return res
 	}
 	return nil
 
@@ -60,7 +64,14 @@ func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) any {
 		return _lib.FuncCall(_fc.Caller.Value, args)
 	case *obj.StructField:
 		_sf := scope.(*obj.StructField)
-		lambda := _sf.Fields[funcCall.Caller.Value].(*node.LambdaExpr)
+		var lambda *node.LambdaExpr
+		{
+			v, ok := _sf.Fields.Get(funcCall.Caller.Value)
+			if !ok {
+				panic("No Func Found From Struct")
+			}
+			lambda = v.(*node.LambdaExpr)
+		}
 		var args []any
 		for _, expr := range _fc.Args {
 			args = append(args, e.EvalExpr(expr))

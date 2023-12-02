@@ -28,16 +28,16 @@ func printStruct(v *obj.StructField) {
 	}
 	fmt.Print("{")
 	count := 0
-	max := len(v.Fields)
-	for k, v := range v.Fields {
-		fmt.Print(k, ": ")
-		switch v.(type) {
+	totalLen := v.Fields.Len()
+	for pair := v.Fields.Oldest(); pair != nil; pair = pair.Next() {
+		fmt.Print(pair.Key, ": ")
+		switch pair.Value.(type) {
 		case *obj.StructField:
-			printStruct(v.(*obj.StructField))
+			printStruct(pair.Value.(*obj.StructField))
 		default:
-			fmt.Print(v)
+			fmt.Print(pair.Value)
 		}
-		if count < max-1 {
+		if count < totalLen-1 {
 			fmt.Print(", ")
 		}
 		count++

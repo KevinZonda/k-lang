@@ -3,6 +3,7 @@ package eval
 import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
+	orderedmap "github.com/wk8/go-ordered-map/v2"
 )
 
 func (e *Eval) EvalStringLiteral(n *node.StringLiteral) string {
@@ -72,13 +73,13 @@ func (e *Eval) getZeroValue(t *node.Type) any {
 		if !ok {
 			panic("No Struct Definition Found")
 		}
-		var m = make(map[string]any)
+		m := orderedmap.New[string, any]()
 		for variable, varDeclare := range def.Body {
 			if varDeclare.Value != nil {
-				m[variable] = baseEval.EvalExpr(varDeclare.Value)
+				m.Set(variable, baseEval.EvalExpr(varDeclare.Value))
 				continue
 			}
-			m[variable] = baseEval.getZeroValue(varDeclare.Type)
+			m.Set(variable, baseEval.getZeroValue(varDeclare.Type))
 		}
 		return &obj.StructField{
 			TypeAs: t,
@@ -93,12 +94,12 @@ func (e *Eval) EvalStructLiteral(n *node.StructLiteral) *obj.StructField {
 		sf = e.getZeroValue(n.Type).(*obj.StructField)
 	} else {
 		sf = &obj.StructField{
-			Fields: make(map[string]any),
+			Fields: orderedmap.New[string, any](),
 		}
 	}
 
 	for key, v := range n.Body {
-		sf.Fields[key] = e.EvalExpr(v)
+		sf.Fields.Set(key, e.EvalExpr(v))
 	}
 	return sf
 }

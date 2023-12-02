@@ -5,6 +5,7 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
+	orderedmap "github.com/wk8/go-ordered-map/v2"
 )
 
 func (e *Eval) _evalIterArray(n *node.IterStyleFor, iters []any) any {
@@ -32,11 +33,11 @@ func (e *Eval) _evalIterArray(n *node.IterStyleFor, iters []any) any {
 func (e *Eval) _evalIterMap(n *node.IterStyleFor, iters map[any]any) any {
 	for key, val := range iters {
 		_ = e.EvalLoopCodeBlockWithHook(n.Body, func() {
+			field := orderedmap.New[string, any]()
+			field.Set("key", key)
+			field.Set("val", val)
 			e.objTable.SetAtTop(n.Variable.Value, &obj.StructField{
-				Fields: map[string]any{
-					"key": key,
-					"val": val,
-				},
+				Fields: field,
 			})
 		})
 		if e.objTable.HasKeyAtTop(reserved.Continue) {
