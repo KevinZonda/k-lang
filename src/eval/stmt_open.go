@@ -38,10 +38,9 @@ func (e *Eval) loadBuiltInLibrary(name, as string) (ok bool) {
 	}
 
 	if as != "" {
-		e.objTable.Set(normaliseName(as), lib)
-	} else {
-		e.objTable.Set(name, lib)
+		name = as
 	}
+	e.objTable.Set(normaliseName(name), lib)
 	return true
 }
 
@@ -65,10 +64,8 @@ func (e *Eval) EvalOpenStmt(n *node.OpenStmt) {
 		}
 
 		ast, errs := parserHelper.Ast(txt)
-		if len(errs) > 0 {
-			parserHelper.PrintAllCodeErrors(errs)
-			panic("Parse failed: " + n.Path)
-		}
+		parserHelper.IfErrorsPrintAndPanic(errs)
+
 		openedEval = New(ast, n.Path)
 		openedFiles[abs] = openedEval
 		openedEval.run()
