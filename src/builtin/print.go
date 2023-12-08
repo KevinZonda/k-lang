@@ -77,7 +77,11 @@ func Call(fn any, args []any) []any {
 	}
 	var argsV []reflect.Value
 	for _, arg := range args {
-		argsV = append(argsV, reflect.ValueOf(arg))
+		val := reflect.ValueOf(arg)
+		if val.IsValid() {
+			// FIXME: Null Type Will Cause FunCall Panic!
+			argsV = append(argsV, val)
+		}
 	}
 	vC := reflect.ValueOf(fn).Call(argsV)
 	var vs []any

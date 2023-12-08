@@ -100,6 +100,10 @@ func (v *BaseV2ParserVisitor) VisitLiteral(ctx *LiteralContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseV2ParserVisitor) VisitInitializer(ctx *InitializerContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseV2ParserVisitor) VisitArrayInitializer(ctx *ArrayInitializerContext) interface{} {
 	return v.VisitChildren(ctx)
 }

@@ -77,6 +77,9 @@ type V2ParserVisitor interface {
 	// Visit a parse tree produced by V2Parser#literal.
 	VisitLiteral(ctx *LiteralContext) interface{}
 
+	// Visit a parse tree produced by V2Parser#initializer.
+	VisitInitializer(ctx *InitializerContext) interface{}
+
 	// Visit a parse tree produced by V2Parser#arrayInitializer.
 	VisitArrayInitializer(ctx *ArrayInitializerContext) interface{}
 

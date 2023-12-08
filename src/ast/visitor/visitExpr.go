@@ -22,6 +22,14 @@ func (v *AntlrVisitor) visitDotExpr(ctx parser.IExprContext) *node.DotExpr {
 	}
 }
 
+func (v *AntlrVisitor) visitIndexExpr(ctx parser.IExprContext) *node.IndexExpr {
+	return &node.IndexExpr{
+		Token: token.FromAntlrToken(ctx.GetStart()),
+		Left:  v.visitExpr(ctx.GetLHS()),
+		Index: v.visitExpr(ctx.GetIndex()),
+	}
+}
+
 func (v *AntlrVisitor) visitExpr(ctx parser.IExprContext) node.Expr {
 	if ctx == nil {
 		return nil
@@ -47,6 +55,12 @@ func (v *AntlrVisitor) visitExpr(ctx parser.IExprContext) node.Expr {
 	}
 	if ctx.Dot() != nil {
 		return v.visitDotExpr(ctx)
+	}
+	if ctx.GetIndex() != nil {
+		return v.visitIndexExpr(ctx)
+	}
+	if ctx.Initializer() != nil {
+		return v.visitInitializer(ctx.Initializer())
 	}
 
 	if ctx.Identifier() != nil {

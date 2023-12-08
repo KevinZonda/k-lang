@@ -159,6 +159,12 @@ func (s *BaseV2ParserListener) EnterLiteral(ctx *LiteralContext) {}
 // ExitLiteral is called when production literal is exited.
 func (s *BaseV2ParserListener) ExitLiteral(ctx *LiteralContext) {}
 
+// EnterInitializer is called when production initializer is entered.
+func (s *BaseV2ParserListener) EnterInitializer(ctx *InitializerContext) {}
+
+// ExitInitializer is called when production initializer is exited.
+func (s *BaseV2ParserListener) ExitInitializer(ctx *InitializerContext) {}
+
 // EnterArrayInitializer is called when production arrayInitializer is entered.
 func (s *BaseV2ParserListener) EnterArrayInitializer(ctx *ArrayInitializerContext) {}
 
