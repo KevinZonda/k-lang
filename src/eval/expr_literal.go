@@ -74,7 +74,10 @@ func (e *Eval) getZeroValue(t *node.Type) any {
 			panic("No Struct Definition Found")
 		}
 		m := orderedmap.New[string, any]()
-		for variable, varDeclare := range def.Body {
+		// TODO: Is duplicate code??
+		for pair := def.Body.Oldest(); pair != nil; pair = pair.Next() {
+			variable := pair.Key
+			varDeclare := pair.Value
 			if varDeclare.Value != nil {
 				m.Set(variable, baseEval.EvalExpr(varDeclare.Value))
 				continue
@@ -98,8 +101,8 @@ func (e *Eval) EvalStructLiteral(n *node.StructLiteral) *obj.StructField {
 		}
 	}
 
-	for key, v := range n.Body {
-		sf.Fields.Set(key, e.EvalExpr(v))
+	for pair := n.Body.Oldest(); pair != nil; pair = pair.Next() {
+		sf.Fields.Set(pair.Key, e.EvalExpr(pair.Value))
 	}
 	return sf
 }
