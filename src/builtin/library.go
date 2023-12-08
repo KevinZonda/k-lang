@@ -1,6 +1,9 @@
 package builtin
 
-import "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
+import (
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
+	"strings"
+)
 
 var libMap = map[string]obj.ILibrary{}
 
@@ -12,12 +15,17 @@ func GetLibrary(name string) obj.ILibrary {
 	if lib, ok := libMap[name]; ok {
 		return lib
 	}
+	if strings.HasPrefix(name, "std/") {
+		name = name[4:]
+	}
 	var lib obj.ILibrary
 	switch name {
-	case "std/string", "string":
+	case "string":
 		lib = NewStdStringLib()
-	case "std/console", "console":
+	case "console":
 		lib = NewStdConsoleLib()
+	case "exec":
+		lib = NewStdExecLib()
 	}
 	if lib != nil {
 		libMap[name] = lib

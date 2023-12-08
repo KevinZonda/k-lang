@@ -24,6 +24,7 @@ println(x["c"])
 `
 	expected := `19
 20
+
 `
 	tester.GeneralTest(true, t, code, expected)
 }
