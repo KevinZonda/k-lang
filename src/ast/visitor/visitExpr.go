@@ -8,6 +8,9 @@ import (
 )
 
 func (v *AntlrVisitor) visitExprWithLambda(ctx parser.IExprWithLambdaContext) node.Expr {
+	if ctx == nil {
+		return nil
+	}
 	if ctx.Lambda() != nil {
 		return v.visitLambda(ctx.Lambda())
 	}
@@ -15,6 +18,9 @@ func (v *AntlrVisitor) visitExprWithLambda(ctx parser.IExprWithLambdaContext) no
 }
 
 func (v *AntlrVisitor) visitDotExpr(ctx parser.IExprContext) *node.DotExpr {
+	if ctx == nil {
+		return nil
+	}
 	return &node.DotExpr{
 		Token: token.FromAntlrToken(ctx.GetStart()),
 		Left:  v.visitExpr(ctx.GetLHS()),
@@ -72,7 +78,9 @@ func (v *AntlrVisitor) visitExpr(ctx parser.IExprContext) node.Expr {
 }
 
 func (v *AntlrVisitor) visitUnaryExpr(ctx parser.IExprContext) *node.UnaryOperExpr {
-
+	if ctx == nil {
+		return nil
+	}
 	if ctx.GetChildCount() != 2 {
 		v.appendErr(ctx,
 			"Expected unary expression (e.g., -a), but got "+ctx.GetStart().GetText()+"\nWe expect 2 children, but got "+fmt.Sprint(ctx.GetChildCount())+" children",
