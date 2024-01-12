@@ -4,7 +4,71 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
+	orderedmap "github.com/wk8/go-ordered-map/v2"
 )
+
+func (e *Eval) _evalIterArray(n *node.IterStyleFor, iters []any) any {
+	for _, iter := range iters {
+		_ = e.EvalLoopCodeBlockWithHook(n.Body, func() {
+			e.objTable.SetAtTop(n.Variable.Value, iter)
+		})
+		if e.objTable.HasKeyAtTop(reserved.Continue) {
+			e.objTable.RemoveKeyAtTop(reserved.Continue)
+			continue
+		}
+		if e.objTable.HasKeyAtTop(reserved.Return) {
+			e.loopLvl--
+			return nil
+		}
+		if e.objTable.HasKeyAtTop(reserved.Break) {
+			e.loopLvl--
+			e.objTable.RemoveKeyAtTop(reserved.Break)
+			return nil
+		}
+	}
+	return nil
+}
+
+func (e *Eval) _evalIterMap(n *node.IterStyleFor, iters map[any]any) any {
+	for key, val := range iters {
+		_ = e.EvalLoopCodeBlockWithHook(n.Body, func() {
+			field := orderedmap.New[string, any]()
+			field.Set("key", key)
+			field.Set("val", val)
+			e.objTable.SetAtTop(n.Variable.Value, &obj.StructField{
+				Fields: field,
+			})
+		})
+		if e.objTable.HasKeyAtTop(reserved.Continue) {
+			e.objTable.RemoveKeyAtTop(reserved.Continue)
+			continue
+		}
+		if e.objTable.HasKeyAtTop(reserved.Return) {
+			e.loopLvl--
+			return nil
+		}
+		if e.objTable.HasKeyAtTop(reserved.Break) {
+			e.loopLvl--
+			e.objTable.RemoveKeyAtTop(reserved.Break)
+			return nil
+		}
+	}
+	return nil
+}
+
+func (e *Eval) EvalIterStyleForStmt(styleFor *node.IterStyleFor) any {
+	e.loopLvl++
+	iters := e.EvalExpr(styleFor.Iterator)
+	switch iters.(type) {
+	case []any:
+		return e._evalIterArray(styleFor, iters.([]any))
+	case map[any]any:
+		return e._evalIterMap(styleFor, iters.(map[any]any))
+
+	}
+	panic("Not Supported Iteration Type")
+}
 
 func (e *Eval) EvalWhileForStmt(n *node.WhileStyleFor) any {
 	e.loopLvl++
@@ -72,6 +136,17 @@ func (e *Eval) EvalCStyleFrStmt(n *node.CStyleFor) any {
 
 func (e *Eval) EvalLoopCodeBlock(fc *node.CodeBlock) any {
 	e.frameStart()
+	fe := e.new((tree.Ast)(fc.Nodes))
+	_ = fe.run()
+	e.frameEndWithAll()
+	return nil
+}
+
+func (e *Eval) EvalLoopCodeBlockWithHook(fc *node.CodeBlock, onNewFrame func()) any {
+	e.frameStart()
+	if onNewFrame != nil {
+		onNewFrame()
+	}
 	fe := e.new((tree.Ast)(fc.Nodes))
 	_ = fe.run()
 	e.frameEndWithAll()

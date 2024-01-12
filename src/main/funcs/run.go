@@ -24,10 +24,8 @@ func Run(input string) {
 	} else {
 		var errs []parserHelper.CodeError
 		ast, errs = parserHelper.Ast(string(bs))
-		if len(errs) > 0 {
-			parserHelper.PrintAllCodeErrors(errs)
-			panic("Parse failed.")
-		}
+		parserHelper.IfErrorsPrintAndPanic(errs)
+
 	}
 	ev := eval.New(ast, input)
 	ev.Do()

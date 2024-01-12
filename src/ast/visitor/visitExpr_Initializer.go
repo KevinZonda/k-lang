@@ -4,6 +4,7 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parser"
+	orderedmap "github.com/wk8/go-ordered-map/v2"
 )
 
 func (v *AntlrVisitor) visitMapInitializer(ctx parser.IMapInitializerContext) *node.MapLiteral {
@@ -51,10 +52,10 @@ func (v *AntlrVisitor) visitArrayInitializer(ctx parser.IArrayInitializerContext
 
 func (v *AntlrVisitor) visitStructInitializer(ctx parser.IStructInitializerContext) *node.StructLiteral {
 	pairs := ctx.AllIdentifierPair()
-	body := make(map[string]node.Expr)
+	body := orderedmap.New[string, node.Expr]()
 	for _, e := range pairs {
 		if k, v, ok := v.visitIdentifierPair(e); ok {
-			body[k] = v
+			body.Set(k, v)
 		}
 	}
 	return &node.StructLiteral{

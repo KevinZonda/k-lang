@@ -10,11 +10,39 @@ func Print(v ...any) {
 	for _, arg := range v {
 		switch arg.(type) {
 		case *obj.StructField:
-			fmt.Println(arg.(*obj.StructField).Fields)
+			printStruct(arg.(*obj.StructField))
 		default:
 			fmt.Print(arg)
 		}
 	}
+}
+
+func printStruct(v *obj.StructField) {
+	if v == nil {
+		return
+	}
+	if v.TypeAs != nil {
+		fmt.Print(v.TypeAs.Name, " ")
+	} else {
+		fmt.Print("struct ")
+	}
+	fmt.Print("{")
+	count := 0
+	totalLen := v.Fields.Len()
+	for pair := v.Fields.Oldest(); pair != nil; pair = pair.Next() {
+		fmt.Print(pair.Key, ": ")
+		switch pair.Value.(type) {
+		case *obj.StructField:
+			printStruct(pair.Value.(*obj.StructField))
+		default:
+			fmt.Print(pair.Value)
+		}
+		if count < totalLen-1 {
+			fmt.Print(", ")
+		}
+		count++
+	}
+	fmt.Print("}")
 }
 
 func Println(v ...any) {
@@ -49,7 +77,11 @@ func Call(fn any, args []any) []any {
 	}
 	var argsV []reflect.Value
 	for _, arg := range args {
-		argsV = append(argsV, reflect.ValueOf(arg))
+		val := reflect.ValueOf(arg)
+		if val.IsValid() {
+			// FIXME: Null Type Will Cause FunCall Panic!
+			argsV = append(argsV, val)
+		}
 	}
 	vC := reflect.ValueOf(fn).Call(argsV)
 	var vs []any

@@ -3,6 +3,7 @@ package eval
 import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
+	orderedmap "github.com/wk8/go-ordered-map/v2"
 )
 
 func (e *Eval) EvalStringLiteral(n *node.StringLiteral) string {
@@ -69,29 +70,39 @@ func (e *Eval) getZeroValue(t *node.Type) any {
 		return false
 	default:
 		def, ok := getFromObjTable[*node.StructBlock](baseEval.objTable, t.Name)
-		if ok {
-			var m = make(map[string]any)
-			for variable, typeOfVar := range def.Body {
-				m[variable] = baseEval.getZeroValue(typeOfVar)
+		if !ok {
+			panic("No Struct Definition Found")
+		}
+		m := orderedmap.New[string, any]()
+		// TODO: Is duplicate code??
+		for pair := def.Body.Oldest(); pair != nil; pair = pair.Next() {
+			variable := pair.Key
+			varDeclare := pair.Value
+			if varDeclare.Value != nil {
+				m.Set(variable, baseEval.EvalExpr(varDeclare.Value))
+				continue
 			}
-			return &obj.StructField{
-				TypeAs: t,
-				Fields: m,
-			}
+			m.Set(variable, baseEval.getZeroValue(varDeclare.Type))
 		}
 		return &obj.StructField{
 			TypeAs: t,
-			Fields: make(map[string]any),
+			Fields: m,
 		}
 	}
-
-	return nil
 }
 
 func (e *Eval) EvalStructLiteral(n *node.StructLiteral) *obj.StructField {
-	sf := e.getZeroValue(n.Type).(*obj.StructField)
-	for key, v := range n.Body {
-		sf.Fields[key] = e.EvalExpr(v)
+	var sf *obj.StructField
+	if n.Type != nil {
+		sf = e.getZeroValue(n.Type).(*obj.StructField)
+	} else {
+		sf = &obj.StructField{
+			Fields: orderedmap.New[string, any](),
+		}
+	}
+
+	for pair := n.Body.Oldest(); pair != nil; pair = pair.Next() {
+		sf.Fields.Set(pair.Key, e.EvalExpr(pair.Value))
 	}
 	return sf
 }

@@ -40,9 +40,10 @@ lambda : Function LParen funcSignArgs RParen type? codeBlock;
 //    ;
 unaryOper : Add | Sub | Not;
 expr
-    : funcCall
+    : LHS=expr Dot RHS=expr
+    | LHS=expr LSquare Index=expr RSquare
+    | funcCall
     | unaryOper expr
-    | literal
     | LParen expr RParen
     | LHS=expr OP=(Equals | NotEq | Greater | Less | GreaterEq | LessEq) RHS=expr
     | LHS=expr OP=(Or | And)        RHS=expr
@@ -50,8 +51,9 @@ expr
     | LHS=expr OP=(Mul | Div | Mod) RHS=expr
     | LHS=expr OP=(Add | Sub)       RHS=expr
     | Identifier
+    | literal
+    | initializer
     | expr indexes
-    | LHS=expr Dot RHS=expr
     | assignStmt
     ;
 
@@ -64,12 +66,13 @@ stmtWithSep : stmt sep*;
 
 openStmt : Open StringLiteral (As Identifier)?;
 
-literal : True | False | IntegerLiteral | NumberLiteral | StringLiteral | arrayInitializer | structInitializer | mapInitializer;
+literal : True | False | IntegerLiteral | NumberLiteral | StringLiteral;
+initializer : arrayInitializer | structInitializer | mapInitializer;
 
 arrayInitializer : type? LSquare (expr Comma?)* RSquare;
 identifierPair : LHS=Identifier  (Col | To) RHS=exprWithLambda;
 mapPair : LHS=expr (Col | To) RHS=exprWithLambda | LParen mapPair RParen | identifierPair;
-structInitializer : type LBrack (identifierPair Comma?)* RBrack;
+structInitializer : (type | Struct) LBrack (identifierPair Comma?)* RBrack;
 // structElementInitializer : Identifier Comma expr;
 mapInitializer : Map? LBrack (mapPair (Comma*))* RBrack;
 
@@ -87,7 +90,10 @@ assignStmt
     : type? var Assign exprWithLambda ;
 
 declareStmt
-    : type Identifier (Comma Identifier)*;
+    : type Identifier (Comma Identifier)*
+    | type Identifier Assign exprWithLambda
+    | type? Identifier Assign exprWithLambda
+    ;
 
 
 ifStmt

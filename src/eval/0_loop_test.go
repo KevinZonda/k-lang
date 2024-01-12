@@ -78,3 +78,29 @@ for (i <= 5) {
 `
 	tester.GeneralTest(true, ts, code, expected)
 }
+
+func TestIterLoop(ts *testing.T) {
+	code := `
+for (x : [1, 7, 8]) {
+    println(x)
+}`
+	expected := `1
+7
+8
+`
+	tester.GeneralTest(true, ts, code, expected)
+}
+
+func TestIterLoop2(ts *testing.T) {
+	code := `
+for (x : map{"x": 1, "y": 7, "z": 8}) {
+    println(x)
+}`
+
+	tester.GeneralTestLambda(true, ts, code, func(output string) bool {
+		return tester.ContainsAll(output,
+			"struct {key: x, val: 1}\n",
+			"struct {key: y, val: 7}\n",
+			"struct {key: z, val: 8}\n")
+	})
+}

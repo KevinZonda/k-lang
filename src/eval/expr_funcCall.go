@@ -26,7 +26,26 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) any {
 		fn = fx.ToFunc()
 	}
 
+	return e.EvalFuncBlock(fn, args, nil)
+	//e.frameStart()
+	//for i, funcArg := range fn.Args {
+	//	e.objTable.Set(funcArg.Name.Value, args[i])
+	//}
+	//fe := e.new((tree.Ast)(fn.Body.Nodes))
+	//_ = fe.run()
+	//retV, retOk := fe.objTable.GetAtTop("0")
+	//e.frameEnd()
+	//if retOk {
+	//	return retV
+	//}
+	//return nil
+}
+
+func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []any, onAfterFrameStart func()) any {
 	e.frameStart()
+	if onAfterFrameStart != nil {
+		onAfterFrameStart()
+	}
 	for i, funcArg := range fn.Args {
 		e.objTable.Set(funcArg.Name.Value, args[i])
 	}

@@ -1,4 +1,4 @@
-// Code generated from .//antlr4//V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
+// Code generated from ./antlr4/V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
 
 package parser // V2Parser
 
@@ -76,6 +76,9 @@ type V2ParserVisitor interface {
 
 	// Visit a parse tree produced by V2Parser#literal.
 	VisitLiteral(ctx *LiteralContext) interface{}
+
+	// Visit a parse tree produced by V2Parser#initializer.
+	VisitInitializer(ctx *InitializerContext) interface{}
 
 	// Visit a parse tree produced by V2Parser#arrayInitializer.
 	VisitArrayInitializer(ctx *ArrayInitializerContext) interface{}

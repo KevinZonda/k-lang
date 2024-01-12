@@ -13,10 +13,8 @@ func Ast(input string, output string) {
 	}
 
 	ast, errs := parserHelper.Ast(txt)
-	if len(errs) > 0 {
-		parserHelper.PrintAllCodeErrors(errs)
-		panic("Parse failed.")
-	}
+	parserHelper.IfErrorsPrintAndPanic(errs)
+
 	bs, _ := json.MarshalIndent(ast, "", "    ")
 
 	err = iox.WriteAllText(output, string(bs))

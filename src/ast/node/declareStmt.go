@@ -6,6 +6,7 @@ type DeclareStmt struct {
 	Token token.Token
 	Name  *Identifier
 	Type  *Type
+	Value Expr
 }
 
 func (a *DeclareStmt) TokenValue() string {

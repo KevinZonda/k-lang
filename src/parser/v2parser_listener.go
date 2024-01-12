@@ -1,4 +1,4 @@
-// Code generated from .//antlr4//V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
+// Code generated from ./antlr4/V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
 
 package parser // V2Parser
 
@@ -76,6 +76,9 @@ type V2ParserListener interface {
 
 	// EnterLiteral is called when entering the literal production.
 	EnterLiteral(c *LiteralContext)
+
+	// EnterInitializer is called when entering the initializer production.
+	EnterInitializer(c *InitializerContext)
 
 	// EnterArrayInitializer is called when entering the arrayInitializer production.
 	EnterArrayInitializer(c *ArrayInitializerContext)
@@ -196,6 +199,9 @@ type V2ParserListener interface {
 
 	// ExitLiteral is called when exiting the literal production.
 	ExitLiteral(c *LiteralContext)
+
+	// ExitInitializer is called when exiting the initializer production.
+	ExitInitializer(c *InitializerContext)
 
 	// ExitArrayInitializer is called when exiting the arrayInitializer production.
 	ExitArrayInitializer(c *ArrayInitializerContext)
