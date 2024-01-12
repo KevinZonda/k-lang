@@ -1,4 +1,4 @@
-// Code generated from ./antlr4/V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
+// Code generated from .//antlr4//V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
 
 package parser // V2Parser
 
@@ -218,6 +218,18 @@ func (s *BaseV2ParserListener) EnterIfStmt(ctx *IfStmtContext) {}
 
 // ExitIfStmt is called when production ifStmt is exited.
 func (s *BaseV2ParserListener) ExitIfStmt(ctx *IfStmtContext) {}
+
+// EnterTryCatchSmt is called when production tryCatchSmt is entered.
+func (s *BaseV2ParserListener) EnterTryCatchSmt(ctx *TryCatchSmtContext) {}
+
+// ExitTryCatchSmt is called when production tryCatchSmt is exited.
+func (s *BaseV2ParserListener) ExitTryCatchSmt(ctx *TryCatchSmtContext) {}
+
+// EnterCatchStmt is called when production catchStmt is entered.
+func (s *BaseV2ParserListener) EnterCatchStmt(ctx *CatchStmtContext) {}
+
+// ExitCatchStmt is called when production catchStmt is exited.
+func (s *BaseV2ParserListener) ExitCatchStmt(ctx *CatchStmtContext) {}
 
 // EnterLoopStmt is called when production loopStmt is entered.
 func (s *BaseV2ParserListener) EnterLoopStmt(ctx *LoopStmtContext) {}

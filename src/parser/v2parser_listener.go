@@ -1,4 +1,4 @@
-// Code generated from ./antlr4/V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
+// Code generated from .//antlr4//V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
 
 package parser // V2Parser
 
@@ -106,6 +106,12 @@ type V2ParserListener interface {
 
 	// EnterIfStmt is called when entering the ifStmt production.
 	EnterIfStmt(c *IfStmtContext)
+
+	// EnterTryCatchSmt is called when entering the tryCatchSmt production.
+	EnterTryCatchSmt(c *TryCatchSmtContext)
+
+	// EnterCatchStmt is called when entering the catchStmt production.
+	EnterCatchStmt(c *CatchStmtContext)
 
 	// EnterLoopStmt is called when entering the loopStmt production.
 	EnterLoopStmt(c *LoopStmtContext)
@@ -229,6 +235,12 @@ type V2ParserListener interface {
 
 	// ExitIfStmt is called when exiting the ifStmt production.
 	ExitIfStmt(c *IfStmtContext)
+
+	// ExitTryCatchSmt is called when exiting the tryCatchSmt production.
+	ExitTryCatchSmt(c *TryCatchSmtContext)
+
+	// ExitCatchStmt is called when exiting the catchStmt production.
+	ExitCatchStmt(c *CatchStmtContext)
 
 	// ExitLoopStmt is called when exiting the loopStmt production.
 	ExitLoopStmt(c *LoopStmtContext)

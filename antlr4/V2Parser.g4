@@ -84,6 +84,7 @@ stmt
     | loopStmt
     | matchStmt
     | codeBlock
+    | tryCatchSmt
     | funcCall
     ;
 assignStmt
@@ -98,6 +99,13 @@ declareStmt
 
 ifStmt
     : If LParen expr RParen codeBlock (Else codeBlock)?
+    ;
+
+tryCatchSmt
+    : Try codeBlock catchStmt*
+    ;
+catchStmt
+    : Catch (LParen type Identifier RParen)? codeBlock
     ;
 
 loopStmt

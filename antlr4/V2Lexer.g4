@@ -38,6 +38,8 @@ Default : 'default';
 Open    : 'open';
 As      : 'as';
 
+Try   : 'try';
+Catch : 'catch';
 If   : 'if';
 Else : 'else';
 For  : 'for';

@@ -1,4 +1,4 @@
-// Code generated from ./antlr4/V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
+// Code generated from .//antlr4//V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
 
 package parser // V2Parser
 
@@ -106,6 +106,12 @@ type V2ParserVisitor interface {
 
 	// Visit a parse tree produced by V2Parser#ifStmt.
 	VisitIfStmt(ctx *IfStmtContext) interface{}
+
+	// Visit a parse tree produced by V2Parser#tryCatchSmt.
+	VisitTryCatchSmt(ctx *TryCatchSmtContext) interface{}
+
+	// Visit a parse tree produced by V2Parser#catchStmt.
+	VisitCatchStmt(ctx *CatchStmtContext) interface{}
 
 	// Visit a parse tree produced by V2Parser#loopStmt.
 	VisitLoopStmt(ctx *LoopStmtContext) interface{}

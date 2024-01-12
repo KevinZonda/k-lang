@@ -52,6 +52,8 @@ const (
 	Open
 	As
 	If
+	Try
+	Catch
 	Else
 	For
 	Match

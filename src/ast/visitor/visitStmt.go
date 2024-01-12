@@ -26,6 +26,9 @@ func (v *AntlrVisitor) visitStmt(ctx parser.IStmtContext) node.Stmt {
 	if ctx.LoopStmt() != nil {
 		return v.visitLoopStmt(ctx.LoopStmt())
 	}
+	if ctx.TryCatchSmt() != nil {
+		return v.visitTryCatch(ctx.TryCatchSmt())
+	}
 	if ctx.MatchStmt() != nil {
 		return v.visitMathStmt(ctx.MatchStmt())
 	}
