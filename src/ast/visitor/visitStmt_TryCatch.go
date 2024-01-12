@@ -13,14 +13,15 @@ func (v *AntlrVisitor) visitTryCatch(ctx parser.ITryCatchSmtContext) *node.TryCa
 	tcs := node.TryCatchStmt{
 		Token: token.FromAntlrToken(ctx.Try().GetSymbol()),
 		Try:   v.visitCodeBlock(ctx.CodeBlock()),
+		Catch: v.visitCatch(ctx.CatchStmt()),
 	}
-	cs := ctx.AllCatchStmt()
-	for _, c := range cs {
-		if cb := v.visitCatch(c); cb != nil {
-			tcs.Catch = append(tcs.Catch, cb)
-		}
-
-	}
+	//cs := ctx.AllCatchStmt()
+	//for _, c := range cs {
+	//	if cb := v.visitCatch(c); cb != nil {
+	//		tcs.Catch = append(tcs.Catch, cb)
+	//	}
+	//
+	//}
 	return &tcs
 }
 
@@ -32,7 +33,7 @@ func (v *AntlrVisitor) visitCatch(ctx parser.ICatchStmtContext) *node.CatchBranc
 		Content: v.visitCodeBlock(ctx.CodeBlock()),
 	}
 	if ctx.LParen() == nil {
-		cr.CatchAll = true
+		//cr.CatchAll = true
 		return &cr
 	}
 	cr.VarName = v.visitIdentifier(ctx.Identifier()).Value

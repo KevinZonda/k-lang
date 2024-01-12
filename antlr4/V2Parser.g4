@@ -102,10 +102,10 @@ ifStmt
     ;
 
 tryCatchSmt
-    : Try codeBlock catchStmt*
+    : Try codeBlock catchStmt
     ;
 catchStmt
-    : Catch (LParen type Identifier RParen)? codeBlock
+    : Catch (LParen type? Identifier RParen)? codeBlock
     ;
 
 loopStmt

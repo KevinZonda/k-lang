@@ -25,6 +25,8 @@ func (e *Eval) EvalStmt(n node.Stmt) any {
 		return e.EvalBreakStmt(n.(*node.BreakStmt))
 	case *node.ContinueStmt:
 		return e.EvalContinueStmt(n.(*node.ContinueStmt))
+	case *node.TryCatchStmt:
+		return e.EvalTryCatchStmt(n.(*node.TryCatchStmt))
 	case *node.MatchStmt:
 		return e.EvalMatchStmt(n.(*node.MatchStmt))
 	case *node.OpenStmt:

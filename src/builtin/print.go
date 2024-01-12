@@ -67,8 +67,14 @@ func Match(ns ...string) any {
 		return Println
 	case "typeOf":
 		return TypeOf
+	case "panic":
+		return Panic
 	}
 	return nil
+}
+
+func Panic(vs ...any) {
+	panic(fmt.Sprint(vs...))
 }
 
 func Call(fn any, args []any) []any {
