@@ -25,6 +25,10 @@ func (e *Eval) frameEndWith(keys ...string) {
 
 func (e *Eval) frameEndWithAll() any {
 	e.frameEndWith(reserved.Return, reserved.Break, reserved.Continue)
+	peek := e.objTable.Peek()
+	if len(peek) == 0 {
+		return nil
+	}
 	retV, _ := e.objTable.Peek()[reserved.Return]
 	return retV
 }

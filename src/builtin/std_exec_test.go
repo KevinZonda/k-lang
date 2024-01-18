@@ -18,3 +18,20 @@ println(x)
 
 	tester.GeneralTest(false, t, code, expected)
 }
+
+func TestRange(t *testing.T) {
+
+	code := `
+for (i : range(5)) {
+    println(i)
+}
+`
+	expected := `0
+1
+2
+3
+4
+`
+
+	tester.GeneralTest(false, t, code, expected)
+}

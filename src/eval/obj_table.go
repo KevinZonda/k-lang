@@ -34,6 +34,9 @@ func (t *TableStack) Pop() Table {
 }
 
 func (t *TableStack) Peek() Table {
+	if t.Empty() {
+		return nil
+	}
 	return t.q[len(t.q)-1]
 }
 

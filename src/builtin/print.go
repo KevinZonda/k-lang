@@ -69,6 +69,31 @@ func Match(ns ...string) any {
 		return TypeOf
 	case "panic":
 		return Panic
+	case "range":
+		return Range
+	}
+	return nil
+}
+
+func Range(v any) []any {
+	if v == nil {
+		return nil
+	}
+	switch v.(type) {
+	case int:
+		vi := v.(int)
+		if vi < 0 {
+			return nil
+		}
+		vs := make([]any, vi)
+		for i := 0; i < vi; i++ {
+			vs[i] = i
+		}
+		return vs
+	case int32:
+		return Range(int(v.(int32)))
+	case int64:
+		return Range(int(v.(int64)))
 	}
 	return nil
 }
