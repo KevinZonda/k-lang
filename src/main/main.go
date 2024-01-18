@@ -31,6 +31,8 @@ func main() {
 		funcs.Help()
 	case "lsp":
 		funcs.Lsp(args.GetStrOr(0, nil))
+	case "jupyter":
+		funcs.JupyterKernel(args.GetStrOr(0, nil))
 	default:
 		if len(args) == 0 {
 			funcs.Run(os.Args[1])
