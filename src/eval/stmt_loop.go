@@ -61,6 +61,14 @@ func (e *Eval) EvalIterStyleForStmt(styleFor *node.IterStyleFor) any {
 	e.loopLvl++
 	iters := e.EvalExpr(styleFor.Iterator)
 	switch iters.(type) {
+	case string:
+		// str to []rune to []string
+		rs := []rune(iters.(string))
+		as := make([]any, len(rs))
+		for i, r := range rs {
+			as[i] = string(rune(r))
+		}
+		return e._evalIterArray(styleFor, as)
 	case []any:
 		return e._evalIterArray(styleFor, iters.([]any))
 	case map[any]any:
