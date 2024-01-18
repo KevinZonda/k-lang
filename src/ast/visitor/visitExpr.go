@@ -68,6 +68,9 @@ func (v *AntlrVisitor) visitExpr(ctx parser.IExprContext) node.Expr {
 	if ctx.Initializer() != nil {
 		return v.visitInitializer(ctx.Initializer())
 	}
+	if ctx.StructInitializer() != nil {
+		return v.visitStructInitializer(ctx.StructInitializer())
+	}
 
 	if ctx.Identifier() != nil {
 		return v.visitIdentifier(ctx.Identifier())

@@ -50,6 +50,7 @@ expr
     | LHS=expr OP=Pow               RHS=expr
     | LHS=expr OP=(Mul | Div | Mod) RHS=expr
     | LHS=expr OP=(Add | Sub)       RHS=expr
+    | structInitializer
     | Identifier
     | literal
     | initializer
@@ -67,7 +68,7 @@ stmtWithSep : stmt sep*;
 openStmt : Open StringLiteral (As Identifier)?;
 
 literal : True | False | IntegerLiteral | NumberLiteral | StringLiteral;
-initializer : arrayInitializer | structInitializer | mapInitializer;
+initializer : arrayInitializer | mapInitializer;
 
 arrayInitializer : type? LSquare (expr Comma?)* RSquare;
 identifierPair : LHS=Identifier  (Col | To) RHS=exprWithLambda;

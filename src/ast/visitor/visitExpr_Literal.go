@@ -68,9 +68,6 @@ func (v *AntlrVisitor) visitLiteral(ctx parser.ILiteralContext) node.Expr {
 }
 
 func (v *AntlrVisitor) visitInitializer(ctx parser.IInitializerContext) node.Expr {
-	if ctx.StructInitializer() != nil {
-		return v.visitStructInitializer(ctx.StructInitializer())
-	}
 	if ctx.ArrayInitializer() != nil {
 		return v.visitArrayInitializer(ctx.ArrayInitializer())
 	}
