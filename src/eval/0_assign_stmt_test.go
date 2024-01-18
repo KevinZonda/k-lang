@@ -26,3 +26,14 @@ println(x)
 `
 	tester.GeneralTest(false, t, code, expected)
 }
+
+func TestMapAssignStmt2(t *testing.T) {
+	code := `
+x := {}
+x[1] := 18
+println(x)
+`
+	expected := `map[1:18]
+`
+	tester.GeneralTest(false, t, code, expected)
+}
