@@ -30,9 +30,10 @@ func JupyterKernel(file string) {
 		ImplementationVersion: "0.0.1",
 		Banner:                fmt.Sprintf("Mini Language kernel - v%s", "0.0.1"),
 		LanguageInfo: jupyter.KernelLanguageInfo{
-			Name:          "K",
-			Version:       runtime.Version(),
-			FileExtension: ".k",
+			Name:           "K",
+			Version:        runtime.Version(),
+			FileExtension:  ".k",
+			CodeMirrorMode: "application/x-cypher-query",
 		},
 		HelpLinks: []jupyter.KernelInfoHelpLink{},
 	})
