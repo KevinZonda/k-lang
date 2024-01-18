@@ -2,7 +2,7 @@ package eval
 
 import "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 
-func (e *Eval) EvalTryCatchStmt(t *node.TryCatchStmt) any {
+func (e *Eval) EvalTryCatchStmt(t *node.TryCatchStmt) {
 	defer func() {
 		r := recover()
 		if r == nil || t.Catch == nil {
@@ -10,7 +10,7 @@ func (e *Eval) EvalTryCatchStmt(t *node.TryCatchStmt) any {
 		}
 		e.evalCatch(t.Catch, r)
 	}()
-	return e.EvalCodeBlock(t.Try)
+	e.EvalCodeBlock(t.Try)
 }
 
 //func (e *Eval) EvalCatchs(t *node.TryCatchStmt, exc any) {

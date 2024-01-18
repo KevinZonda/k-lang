@@ -5,57 +5,57 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
 )
 
-func (e *Eval) EvalStmt(n node.Stmt) any {
+func (e *Eval) EvalStmt(n node.Stmt) {
 	switch n.(type) {
 	case *node.AssignStmt:
-		return e.EvalAssignStmt(n.(*node.AssignStmt))
+		e.EvalAssignStmt(n.(*node.AssignStmt))
 	case *node.IfStmt:
-		return e.EvalIfStmt(n.(*node.IfStmt))
+		e.EvalIfStmt(n.(*node.IfStmt))
 	case *node.FuncCall:
-		return e.EvalFuncCall(n.(*node.FuncCall))
+		e.EvalFuncCall(n.(*node.FuncCall))
 	case *node.ReturnStmt:
-		return e.EvalReturnStmt(n.(*node.ReturnStmt))
+		e.EvalReturnStmt(n.(*node.ReturnStmt))
 	case *node.WhileStyleFor:
-		return e.EvalWhileForStmt(n.(*node.WhileStyleFor))
+		e.EvalWhileForStmt(n.(*node.WhileStyleFor))
 	case *node.CStyleFor:
-		return e.EvalCStyleFrStmt(n.(*node.CStyleFor))
+		e.EvalCStyleFrStmt(n.(*node.CStyleFor))
 	case *node.IterStyleFor:
-		return e.EvalIterStyleForStmt(n.(*node.IterStyleFor))
+		e.EvalIterStyleForStmt(n.(*node.IterStyleFor))
 	case *node.BreakStmt:
-		return e.EvalBreakStmt(n.(*node.BreakStmt))
+		e.EvalBreakStmt(n.(*node.BreakStmt))
 	case *node.ContinueStmt:
-		return e.EvalContinueStmt(n.(*node.ContinueStmt))
+		e.EvalContinueStmt(n.(*node.ContinueStmt))
 	case *node.TryCatchStmt:
-		return e.EvalTryCatchStmt(n.(*node.TryCatchStmt))
+		e.EvalTryCatchStmt(n.(*node.TryCatchStmt))
 	case *node.MatchStmt:
-		return e.EvalMatchStmt(n.(*node.MatchStmt))
+		e.EvalMatchStmt(n.(*node.MatchStmt))
 	case *node.OpenStmt:
 		e.EvalOpenStmt(n.(*node.OpenStmt))
-		return nil
+	default:
+		panic("not implemented")
 	}
-	panic("not implemented")
 }
 
-func (e *Eval) EvalBreakStmt(n *node.BreakStmt) any {
+func (e *Eval) EvalBreakStmt(n *node.BreakStmt) {
 	if e.loopLvl <= 0 {
-		return nil
+		return
 	}
 	e.objTable.SetAtTop(reserved.Break, true)
-	return nil
+	return
 }
 
-func (e *Eval) EvalContinueStmt(n *node.ContinueStmt) any {
+func (e *Eval) EvalContinueStmt(n *node.ContinueStmt) {
 	if e.loopLvl <= 0 {
-		return nil
+		return
 	}
 	e.objTable.SetAtTop(reserved.Continue, true)
-	return nil
+	return
 }
 
-func (e *Eval) EvalReturnStmt(n *node.ReturnStmt) any {
+func (e *Eval) EvalReturnStmt(n *node.ReturnStmt) {
 	e.objTable.SetAtTop(reserved.Return, nil)
 	if n.Value != nil {
 		e.objTable.SetAtTop(reserved.Return, e.EvalExpr(n.Value))
 	}
-	return nil
+	return
 }

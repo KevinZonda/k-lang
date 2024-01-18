@@ -8,7 +8,7 @@ import (
 	orderedmap "github.com/wk8/go-ordered-map/v2"
 )
 
-func (e *Eval) _evalIterArray(n *node.IterStyleFor, iters []any) any {
+func (e *Eval) _evalIterArray(n *node.IterStyleFor, iters []any) {
 	for _, iter := range iters {
 		_ = e.EvalLoopCodeBlockWithHook(n.Body, func() {
 			e.objTable.SetAtTop(n.Variable.Value, iter)
@@ -19,18 +19,18 @@ func (e *Eval) _evalIterArray(n *node.IterStyleFor, iters []any) any {
 		}
 		if e.objTable.HasKeyAtTop(reserved.Return) {
 			e.loopLvl--
-			return nil
+			return
 		}
 		if e.objTable.HasKeyAtTop(reserved.Break) {
 			e.loopLvl--
 			e.objTable.RemoveKeyAtTop(reserved.Break)
-			return nil
+			return
 		}
 	}
-	return nil
+	return
 }
 
-func (e *Eval) _evalIterMap(n *node.IterStyleFor, iters map[any]any) any {
+func (e *Eval) _evalIterMap(n *node.IterStyleFor, iters map[any]any) {
 	for key, val := range iters {
 		_ = e.EvalLoopCodeBlockWithHook(n.Body, func() {
 			field := orderedmap.New[string, any]()
@@ -46,18 +46,18 @@ func (e *Eval) _evalIterMap(n *node.IterStyleFor, iters map[any]any) any {
 		}
 		if e.objTable.HasKeyAtTop(reserved.Return) {
 			e.loopLvl--
-			return nil
+			return
 		}
 		if e.objTable.HasKeyAtTop(reserved.Break) {
 			e.loopLvl--
 			e.objTable.RemoveKeyAtTop(reserved.Break)
-			return nil
+			return
 		}
 	}
-	return nil
+	return
 }
 
-func (e *Eval) EvalIterStyleForStmt(styleFor *node.IterStyleFor) any {
+func (e *Eval) EvalIterStyleForStmt(styleFor *node.IterStyleFor) {
 	e.loopLvl++
 	iters := e.EvalExpr(styleFor.Iterator)
 	switch iters.(type) {
@@ -68,24 +68,26 @@ func (e *Eval) EvalIterStyleForStmt(styleFor *node.IterStyleFor) any {
 		for i, r := range rs {
 			as[i] = string(rune(r))
 		}
-		return e._evalIterArray(styleFor, as)
+		e._evalIterArray(styleFor, as)
+		return
 	case []any:
-		return e._evalIterArray(styleFor, iters.([]any))
+		e._evalIterArray(styleFor, iters.([]any))
+		return
 	case map[any]any:
-		return e._evalIterMap(styleFor, iters.(map[any]any))
-
+		e._evalIterMap(styleFor, iters.(map[any]any))
+		return
 	}
 	panic("Not Supported Iteration Type")
 }
 
-func (e *Eval) EvalWhileForStmt(n *node.WhileStyleFor) any {
+func (e *Eval) EvalWhileForStmt(n *node.WhileStyleFor) {
 	e.loopLvl++
 	for {
 		if n.ConditionExpr != nil {
 			rst := e.EvalExpr(n.ConditionExpr).(bool)
 			if !rst {
 				e.loopLvl--
-				return nil
+				return
 			}
 		}
 		_ = e.EvalLoopCodeBlock(n.Body)
@@ -95,17 +97,17 @@ func (e *Eval) EvalWhileForStmt(n *node.WhileStyleFor) any {
 		}
 		if e.objTable.HasKeyAtTop(reserved.Return) {
 			e.loopLvl--
-			return nil
+			return
 		}
 		if e.objTable.HasKeyAtTop(reserved.Break) {
 			e.loopLvl--
 			e.objTable.RemoveKeyAtTop(reserved.Break)
-			return nil
+			return
 		}
 	}
 }
 
-func (e *Eval) EvalCStyleFrStmt(n *node.CStyleFor) any {
+func (e *Eval) EvalCStyleFrStmt(n *node.CStyleFor) {
 	e.loopLvl++
 	if n.InitialExpr != nil {
 		switch n.InitialExpr.(type) {
@@ -120,7 +122,7 @@ func (e *Eval) EvalCStyleFrStmt(n *node.CStyleFor) any {
 			rst := e.EvalExpr(n.ConditionExpr).(bool)
 			if !rst {
 				e.loopLvl--
-				return nil
+				return
 			}
 		}
 		_ = e.EvalLoopCodeBlock(n.Body)
@@ -131,12 +133,12 @@ func (e *Eval) EvalCStyleFrStmt(n *node.CStyleFor) any {
 		}
 		if e.objTable.HasKeyAtTop(reserved.Return) {
 			e.loopLvl--
-			return nil
+			return
 		}
 		if e.objTable.HasKeyAtTop(reserved.Break) {
 			e.loopLvl--
 			e.objTable.RemoveKeyAtTop(reserved.Break)
-			return nil
+			return
 		}
 		e.EvalExpr(n.AfterIterExpr)
 	}

@@ -2,17 +2,18 @@ package eval
 
 import "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 
-func (e *Eval) EvalIfStmt(n *node.IfStmt) any {
+func (e *Eval) EvalIfStmt(n *node.IfStmt) {
 	con := e.EvalExpr(n.Condition)
 	switch con.(type) {
 	case bool:
 		if con.(bool) {
-			return e.EvalCodeBlock(n.IfTrue)
+			e.EvalCodeBlock(n.IfTrue)
+			return
 		}
 		if n.IfFalse != nil {
-			return e.EvalCodeBlock(n.IfFalse)
+			e.EvalCodeBlock(n.IfFalse)
 		}
-		return nil
+		return
 	}
 	panic("NOT BOOL")
 }
