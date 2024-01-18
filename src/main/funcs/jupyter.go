@@ -33,7 +33,7 @@ func JupyterKernel(file string) {
 			Name:           "K",
 			Version:        runtime.Version(),
 			FileExtension:  ".k",
-			CodeMirrorMode: "application/x-cypher-query",
+			CodeMirrorMode: "text/x-julia",
 		},
 		HelpLinks: []jupyter.KernelInfoHelpLink{},
 	})
