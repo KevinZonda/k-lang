@@ -9,6 +9,7 @@ import (
 	"github.com/KevinZonda/go-jupyter"
 	"log"
 	"runtime"
+	"strings"
 )
 
 func JupyterKernel(file string) {
@@ -52,19 +53,24 @@ func (i *replBasedInterpreter) Eval(code string) (values []any, err error) {
 	parser := parserHelper.FromString(code)
 
 	if len(parser.Errors()) > 0 {
+		sb := strings.Builder{}
 		for _, e := range parser.Errors() {
-			fmt.Println("[Error]", e.Error())
+			sb.WriteString("[Error] ")
+			sb.WriteString(e.Error())
+			sb.WriteString("\n")
 		}
-		return nil, nil
+		return nil, fmt.Errorf(strings.TrimSpace(sb.String()))
 	}
 
 	ast := parser.Ast()
 
 	e := eval.New(ast, "")
 	e.LoadContext(i.context)
-	e.Do()
+	if val, hasV := e.DoRetLastExpr(); hasV && val != nil {
+		values = append(values, val)
+	}
 	i.context = e
-	return nil, nil
+	return values, nil
 }
 
 func newReplInterpreter() *replBasedInterpreter {

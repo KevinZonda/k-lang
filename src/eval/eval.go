@@ -52,8 +52,16 @@ func (e *Eval) LoadContext(o *Eval) {
 	e.objTable = o.objTable
 }
 
-func (e *Eval) runWithBreak(breaks ...string) (retV *obj.Object, hasRet bool) {
-	for _, n := range e.ast {
+type runResult struct {
+	retV           *obj.Object
+	hasRet         bool
+	lastExpr       any
+	isLastElemExpr bool
+}
+
+func (e *Eval) runWithBreak(breaks ...string) runResult {
+	result := runResult{}
+	for idx, n := range e.ast {
 		for _, key := range breaks {
 			if e.objTable.HasKeyAtTop(key) {
 				goto end
@@ -63,7 +71,16 @@ func (e *Eval) runWithBreak(breaks ...string) (retV *obj.Object, hasRet bool) {
 		case *node.CodeBlock:
 			e.EvalCodeBlock(n.(*node.CodeBlock))
 		case node.Expr:
-			e.EvalExpr(n.(node.Expr))
+			exprR := e.EvalExpr(n.(node.Expr))
+			if idx == len(e.ast)-1 {
+				switch n.(type) {
+				case *node.AssignStmt:
+					result.isLastElemExpr = false
+				default:
+					result.isLastElemExpr = true
+					result.lastExpr = exprR
+				}
+			}
 		case node.Stmt:
 			e.EvalStmt(n.(node.Stmt))
 		case *node.FuncBlock:
@@ -82,26 +99,33 @@ func (e *Eval) runWithBreak(breaks ...string) (retV *obj.Object, hasRet bool) {
 		}
 	}
 end:
-	retV, hasRet = e.objTable.Get(reserved.Return)
-	return
+	retV, hasRet := e.objTable.Get(reserved.Return)
+	result.retV = retV
+	result.hasRet = hasRet
+	return result
 }
 
 func (e *Eval) run() any {
-	retV, hasRet := e.runWithBreak(reserved.Return, reserved.Break, reserved.Continue)
-	if hasRet {
-		return retV.Val
+	r := e.runWithBreak(reserved.Return, reserved.Break, reserved.Continue)
+	if r.hasRet {
+		return r.retV.Val
 	}
 	return nil
 }
 
 func (e *Eval) Do() {
-	if retV, hasRetV := e.runWithBreak(reserved.Return); hasRetV {
-		fmt.Println(retV == nil, reflect.TypeOf(retV))
-		fmt.Println("[Interpreter] Program returned: ", retV.Val)
+	if r := e.runWithBreak(reserved.Return); r.hasRet {
+		fmt.Println(r.retV == nil, reflect.TypeOf(r.retV))
+		fmt.Println("[Interpreter] Program returned: ", r.retV.Val)
 		return
 	}
 
 	e.EvalMain()
+}
+
+func (e *Eval) DoRetLastExpr() (val any, hasVal bool) {
+	rr := e.runWithBreak(reserved.Return)
+	return rr.lastExpr, rr.isLastElemExpr
 }
 
 func (e *Eval) EvalMain() any {
