@@ -71,8 +71,25 @@ func Match(ns ...string) any {
 		return Panic
 	case "range":
 		return Range
+	case "len":
+		return Len
 	}
 	return nil
+}
+
+func Len(v any) int {
+	if v == nil {
+		return 0
+	}
+	switch v.(type) {
+	case string:
+		return len([]rune(v.(string)))
+	case []any:
+		return len(v.([]any))
+	case map[any]any:
+		return len(v.(map[any]any))
+	}
+	return 0
 }
 
 func Range(v any) []any {
