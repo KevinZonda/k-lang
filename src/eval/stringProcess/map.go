@@ -5,7 +5,6 @@ var mapList = map[string]string{
 	"\\n":  "\n",
 	"\\t":  "\t",
 	"\\r":  "\r",
-	"\\f":  "\f",
 	"\\\\": "\\",
 }
 
