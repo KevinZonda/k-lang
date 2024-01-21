@@ -8,17 +8,20 @@ import (
 )
 
 func (e *Eval) EvalFuncCall(fc *node.FuncCall) any {
+	// Eval Args
 	exprArgs := fc.Args
 	var args []any
 	for _, expr := range exprArgs {
 		args = append(args, e.EvalExpr(expr))
 	}
 
+	// Find Func
 	funcName := fc.Caller.Value
 	fx, ok := e.objTable.Get(funcName)
 	if !ok || !(fx.Is(obj.Func, obj.Lambda)) {
 		return e.EvalBuiltInCall(fc, args)
 	}
+
 	var fn *node.FuncBlock
 	if fx.Is(obj.Lambda) {
 		fn = fx.ToLambda().ToFunc(funcName)

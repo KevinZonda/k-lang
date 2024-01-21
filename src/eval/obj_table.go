@@ -94,6 +94,7 @@ func getFromObjTable[T any](t *TableStack, key string) (T, bool) {
 	return tV, ok
 }
 
+// Get gets the value from the table stack
 func (t *TableStack) Get(key string) (*obj.Object, bool) {
 	// Get only valid on 2 tables
 	// Top
@@ -114,7 +115,7 @@ func (t *TableStack) Get(key string) (*obj.Object, bool) {
 	//		return v, true
 	//	}
 	//}
-	for i := len(t.q) - 1; i >= 0; i-- {
+	for i := t.Len() - 1; i >= 0; i-- {
 		if v, ok := t.q[i][key]; ok {
 			return v, true
 		}
@@ -122,9 +123,11 @@ func (t *TableStack) Get(key string) (*obj.Object, bool) {
 	return nil, false
 }
 
+// Set overwrites the value if it exists in the table stack
+// otherwise it sets the value at the top of the stack
 func (t *TableStack) Set(key string, val any) {
 	o := cons(val)
-	if len(t.q) == 0 {
+	if t.Empty() {
 		v := make(Table)
 		v[key] = o
 		t.q = append(t.q, v)
@@ -140,7 +143,7 @@ func (t *TableStack) Set(key string, val any) {
 	//	}
 	//}
 
-	for i := len(t.q) - 1; i >= 0; i-- {
+	for i := t.Len() - 1; i >= 0; i-- {
 		if _, ok := t.q[i][key]; ok {
 			t.q[i][key] = o
 			return
@@ -149,6 +152,7 @@ func (t *TableStack) Set(key string, val any) {
 	t.q[len(t.q)-1][key] = o
 }
 
+// SetAtTop always sets the value at the top of the stack
 func (t *TableStack) SetAtTop(key string, val any) {
 	o := cons(val)
 	if t.Empty() {
@@ -157,6 +161,7 @@ func (t *TableStack) SetAtTop(key string, val any) {
 	t.q[len(t.q)-1][key] = o
 }
 
+// GetAtTop always gets the value at the top of the stack
 func (t *TableStack) GetAtTop(key string) (any, bool) {
 	if t.Empty() {
 		return nil, false
