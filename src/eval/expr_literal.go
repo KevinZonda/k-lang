@@ -81,7 +81,7 @@ func (e *Eval) getZeroValue(t *node.Type) any {
 		if ok {
 			baseEval = newEval.Val.(*Eval)
 		} else {
-			panic("No Package Found")
+			panic("No Package Found: " + t.Package)
 		}
 	}
 	switch t.Name {
@@ -96,7 +96,7 @@ func (e *Eval) getZeroValue(t *node.Type) any {
 	default:
 		def, ok := getFromObjTable[*node.StructBlock](baseEval.objTable, t.Name)
 		if !ok {
-			panic("No Struct Definition Found")
+			panic("No Struct Definition Found: " + t.Name)
 		}
 		m := orderedmap.New[string, any]()
 		// TODO: Is duplicate code??
