@@ -45,7 +45,7 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) any {
 }
 
 func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []any, onAfterFrameStart func()) any {
-	e.frameStart()
+	e.frameStart(true)
 	if onAfterFrameStart != nil {
 		onAfterFrameStart()
 	}

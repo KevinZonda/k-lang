@@ -134,7 +134,7 @@ func (e *Eval) EvalMain() any {
 		return nil
 	}
 	fx := fn.ToFunc()
-	e.frameStart()
+	e.frameStart(true)
 	fe := e.new((tree.Ast)(fx.Body.Nodes))
 	ret := fe.run()
 	e.frameEnd()

@@ -145,6 +145,12 @@ func (t *TableStack) Get(key string) (*obj.Object, bool) {
 			return v, true
 		}
 		if stack.Protect {
+			if t.Len() >= 1 {
+				stack = t.q[0]
+				if v, ok := stack.Get(key); ok {
+					return v, true
+				}
+			}
 			return nil, false
 		}
 	}
@@ -178,6 +184,13 @@ func (t *TableStack) Set(key string, val any) {
 			return
 		}
 		if stack.Protect {
+			if t.Len() >= 1 {
+				stack = t.q[0]
+				if _, ok := stack.Get(key); ok {
+					stack.Set(key, o)
+					return
+				}
+			}
 			break
 		}
 	}

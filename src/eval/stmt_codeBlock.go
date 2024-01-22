@@ -6,7 +6,7 @@ import (
 )
 
 func (e *Eval) EvalCodeBlock(fc *node.CodeBlock) any {
-	e.frameStart()
+	e.frameStart(false)
 	fe := e.new((tree.Ast)(fc.Nodes))
 	_ = fe.run()
 	e.frameEndWithAll()

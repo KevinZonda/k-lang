@@ -145,7 +145,7 @@ func (e *Eval) EvalCStyleFrStmt(n *node.CStyleFor) {
 }
 
 func (e *Eval) EvalLoopCodeBlock(fc *node.CodeBlock) any {
-	e.frameStart()
+	e.frameStart(false)
 	fe := e.new((tree.Ast)(fc.Nodes))
 	_ = fe.run()
 	e.frameEndWithAll()
@@ -153,7 +153,7 @@ func (e *Eval) EvalLoopCodeBlock(fc *node.CodeBlock) any {
 }
 
 func (e *Eval) EvalLoopCodeBlockWithHook(fc *node.CodeBlock, onNewFrame func()) any {
-	e.frameStart()
+	e.frameStart(false)
 	if onNewFrame != nil {
 		onNewFrame()
 	}
