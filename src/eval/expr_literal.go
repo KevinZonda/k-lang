@@ -1,6 +1,7 @@
 package eval
 
 import (
+	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/stringProcess"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
@@ -23,9 +24,12 @@ func (e *Eval) EvalStringLiteral(n *node.StringLiteral) string {
 		case stringProcess.KindText:
 			sb.WriteString(token.Value)
 		case stringProcess.KindVar:
-			// TODO: get value from objTable
 			tokenV := strings.TrimSpace(token.Value)
-			sb.WriteString("<VAR = {" + tokenV + "}>")
+			if val, hasVal := e.objTable.Get(tokenV); hasVal {
+				sb.WriteString(fmt.Sprint(val.Val))
+			} else {
+				sb.WriteString("<!!! VAR NOT FOUND! = {" + tokenV + "}>")
+			}
 		}
 	}
 	return sb.String()
