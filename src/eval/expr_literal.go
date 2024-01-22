@@ -68,7 +68,7 @@ func (e *Eval) EvalIdentifier(n *node.Identifier) any {
 	if ok {
 		return v.Val
 	}
-	panic("No Var Found")
+	panic("No Var Found: " + n.Value)
 }
 
 func (e *Eval) getZeroValue(t *node.Type) any {

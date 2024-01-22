@@ -17,6 +17,9 @@ func (s *StdStringLib) FuncCall(caller string, args []any) any {
 	case "len":
 		ensureArgsLen(args, 1)
 		return len([]rune(args[0].(string)))
+	case "fromAsci":
+		ensureArgsLen(args, 1)
+		return string(args[0].(int))
 	case "trim":
 		ensureArgsLen(args, 1)
 		return strings.TrimSpace(args[0].(string))
@@ -28,7 +31,12 @@ func (s *StdStringLib) FuncCall(caller string, args []any) any {
 		return strings.TrimRight(args[0].(string), " \t\n\r")
 	case "split":
 		ensureArgsLen(args, 2)
-		return strings.Split(args[0].(string), args[1].(string))
+		sps := strings.Split(args[0].(string), args[1].(string))
+		var res []any
+		for _, sp := range sps {
+			res = append(res, sp)
+		}
+		return res
 	case "int":
 		ensureArgsLen(args, 1)
 		i, e := strconv.ParseInt(args[0].(string), 10, 64)
