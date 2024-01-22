@@ -26,7 +26,7 @@ func (e *Eval) EvalTryCatchStmt(t *node.TryCatchStmt) {
 //}
 
 func (e *Eval) evalCatch(c *node.CatchBranch, exc any) {
-	e.objTable.PushEmpty()
+	e.objTable.PushEmpty(false)
 	if c.VarName != "" {
 		e.objTable.SetAtTop(c.VarName, exc)
 	}

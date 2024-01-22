@@ -7,7 +7,8 @@ import (
 )
 
 func (e *Eval) frameStart() {
-	e.objTable.PushEmpty()
+	// TODO: protection
+	e.objTable.PushEmpty(false)
 }
 
 func (e *Eval) frameEnd() {

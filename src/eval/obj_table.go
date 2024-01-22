@@ -6,7 +6,8 @@ import (
 )
 
 type Table struct {
-	m map[string]*obj.Object
+	m       map[string]*obj.Object
+	Protect bool
 }
 
 func (t *Table) Get(key string) (*obj.Object, bool) {
@@ -26,12 +27,12 @@ func (t *Table) Set(key string, val *obj.Object) {
 	t.m[key] = val
 }
 
-func newTable() *Table {
-	return &Table{m: make(map[string]*obj.Object)}
+func newTable(protect bool) *Table {
+	return &Table{m: make(map[string]*obj.Object), Protect: protect}
 }
 
 func NewObjectTable() *TableStack {
-	return &TableStack{q: []*Table{newTable()}}
+	return &TableStack{q: []*Table{newTable(true)}}
 }
 
 type TableStack struct {
@@ -46,8 +47,8 @@ func (t *TableStack) Push(n *Table) {
 	t.q = append(t.q, n)
 }
 
-func (t *TableStack) PushEmpty() {
-	t.q = append(t.q, newTable())
+func (t *TableStack) PushEmpty(protect bool) {
+	t.q = append(t.q, newTable(protect))
 }
 
 func (t *TableStack) Pop() *Table {
@@ -139,8 +140,12 @@ func (t *TableStack) Get(key string) (*obj.Object, bool) {
 	//	}
 	//}
 	for i := t.Len() - 1; i >= 0; i-- {
-		if v, ok := t.q[i].Get(key); ok {
+		stack := t.q[i]
+		if v, ok := stack.Get(key); ok {
 			return v, true
+		}
+		if stack.Protect {
+			return nil, false
 		}
 	}
 	return nil, false
@@ -151,7 +156,7 @@ func (t *TableStack) Get(key string) (*obj.Object, bool) {
 func (t *TableStack) Set(key string, val any) {
 	o := cons(val)
 	if t.Empty() {
-		v := newTable()
+		v := newTable(false)
 		v.Set(key, o)
 		t.q = append(t.q, v)
 		return
@@ -167,9 +172,13 @@ func (t *TableStack) Set(key string, val any) {
 	//}
 
 	for i := t.Len() - 1; i >= 0; i-- {
-		if _, ok := t.q[i].Get(key); ok {
+		stack := t.q[i]
+		if _, ok := stack.Get(key); ok {
 			t.q[i].Set(key, o)
 			return
+		}
+		if stack.Protect {
+			break
 		}
 	}
 	t.q[len(t.q)-1].Set(key, o)
@@ -179,7 +188,7 @@ func (t *TableStack) Set(key string, val any) {
 func (t *TableStack) SetAtTop(key string, val any) {
 	o := cons(val)
 	if t.Empty() {
-		t.PushEmpty()
+		t.PushEmpty(false)
 	}
 	t.q[len(t.q)-1].Set(key, o)
 }
