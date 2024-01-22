@@ -10,6 +10,11 @@ func (e *Eval) EvalIndexExpr(n *node.IndexExpr) any {
 	left := e.EvalExpr(n.Left)
 	idx := e.EvalExpr(n.Index)
 	if arr, ok := left.([]any); ok {
+		//if idx, ok := idx.(int); ok {
+		//	if idx < 0 || idx >= len(arr) {
+		//	}
+		//}
+		// FIXME: PANIC INFORMATION
 		return arr[idx.(int)]
 	}
 	if m, ok := left.(map[any]any); ok {

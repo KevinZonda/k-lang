@@ -17,7 +17,7 @@ func (e *Eval) frameEnd() {
 func (e *Eval) frameEndWith(keys ...string) {
 	m := e.objTable.Pop()
 	for _, key := range keys {
-		if v, ok := m[key]; ok {
+		if v, ok := m.Get(key); ok {
 			e.objTable.Set(key, v)
 		}
 	}
@@ -26,10 +26,10 @@ func (e *Eval) frameEndWith(keys ...string) {
 func (e *Eval) frameEndWithAll() any {
 	e.frameEndWith(reserved.Return, reserved.Break, reserved.Continue)
 	peek := e.objTable.Peek()
-	if len(peek) == 0 {
+	if peek.Empty() {
 		return nil
 	}
-	retV, _ := e.objTable.Peek()[reserved.Return]
+	retV, _ := e.objTable.Peek().Get(reserved.Return)
 	return retV
 }
 

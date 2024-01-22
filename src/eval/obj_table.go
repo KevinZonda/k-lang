@@ -5,35 +5,58 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 )
 
-type Table map[string]*obj.Object
+type Table struct {
+	m map[string]*obj.Object
+}
+
+func (t *Table) Get(key string) (*obj.Object, bool) {
+	v, ok := t.m[key]
+	return v, ok
+}
+
+func (t *Table) Len() int {
+	return len(t.m)
+}
+
+func (t *Table) Empty() bool {
+	return t.Len() == 0
+}
+
+func (t *Table) Set(key string, val *obj.Object) {
+	t.m[key] = val
+}
+
+func newTable() *Table {
+	return &Table{m: make(map[string]*obj.Object)}
+}
 
 func NewObjectTable() *TableStack {
-	return &TableStack{q: []Table{make(Table)}}
+	return &TableStack{q: []*Table{newTable()}}
 }
 
 type TableStack struct {
-	q []Table
+	q []*Table
 }
 
-func (t *TableStack) Raw() []Table {
+func (t *TableStack) Raw() []*Table {
 	return t.q
 }
 
-func (t *TableStack) Push(n Table) {
+func (t *TableStack) Push(n *Table) {
 	t.q = append(t.q, n)
 }
 
 func (t *TableStack) PushEmpty() {
-	t.q = append(t.q, make(Table))
+	t.q = append(t.q, newTable())
 }
 
-func (t *TableStack) Pop() Table {
+func (t *TableStack) Pop() *Table {
 	n := t.q[len(t.q)-1]
 	t.q = t.q[:len(t.q)-1]
 	return n
 }
 
-func (t *TableStack) Peek() Table {
+func (t *TableStack) Peek() *Table {
 	if t.Empty() {
 		return nil
 	}
@@ -44,7 +67,7 @@ func (t *TableStack) HasKeyAtTop(key string) bool {
 	if t.Empty() {
 		return false
 	}
-	_, ok := t.q[len(t.q)-1][key]
+	_, ok := t.q[len(t.q)-1].Get(key)
 	return ok
 }
 
@@ -52,7 +75,7 @@ func (t *TableStack) RemoveKeyAtTop(key string) {
 	if t.Empty() {
 		return
 	}
-	delete(t.q[len(t.q)-1], key)
+	delete(t.q[len(t.q)-1].m, key)
 }
 
 func (t *TableStack) Len() int {
@@ -70,7 +93,7 @@ func (t *TableStack) Println() {
 	}
 	for i := len(t.q) - 1; i >= 0; i-- {
 		fmt.Println("TABLE [", i, "]")
-		for k, v := range t.q[i] {
+		for k, v := range t.q[i].m {
 			printId(i)
 			fmt.Printf("%s: %v\n", k, v)
 		}
@@ -106,7 +129,7 @@ func (t *TableStack) Get(key string) (*obj.Object, bool) {
 		return nil, false
 	}
 	if t.Len() == 1 {
-		v, ok := t.q[0][key]
+		v, ok := t.q[0].Get(key)
 		return v, ok
 	}
 	//ts := []Table{t.q[len(t.q)-1], t.q[0]}
@@ -116,7 +139,7 @@ func (t *TableStack) Get(key string) (*obj.Object, bool) {
 	//	}
 	//}
 	for i := t.Len() - 1; i >= 0; i-- {
-		if v, ok := t.q[i][key]; ok {
+		if v, ok := t.q[i].Get(key); ok {
 			return v, true
 		}
 	}
@@ -128,8 +151,8 @@ func (t *TableStack) Get(key string) (*obj.Object, bool) {
 func (t *TableStack) Set(key string, val any) {
 	o := cons(val)
 	if t.Empty() {
-		v := make(Table)
-		v[key] = o
+		v := newTable()
+		v.Set(key, o)
 		t.q = append(t.q, v)
 		return
 	}
@@ -144,12 +167,12 @@ func (t *TableStack) Set(key string, val any) {
 	//}
 
 	for i := t.Len() - 1; i >= 0; i-- {
-		if _, ok := t.q[i][key]; ok {
-			t.q[i][key] = o
+		if _, ok := t.q[i].Get(key); ok {
+			t.q[i].Set(key, o)
 			return
 		}
 	}
-	t.q[len(t.q)-1][key] = o
+	t.q[len(t.q)-1].Set(key, o)
 }
 
 // SetAtTop always sets the value at the top of the stack
@@ -158,7 +181,7 @@ func (t *TableStack) SetAtTop(key string, val any) {
 	if t.Empty() {
 		t.PushEmpty()
 	}
-	t.q[len(t.q)-1][key] = o
+	t.q[len(t.q)-1].Set(key, o)
 }
 
 // GetAtTop always gets the value at the top of the stack
@@ -166,7 +189,7 @@ func (t *TableStack) GetAtTop(key string) (any, bool) {
 	if t.Empty() {
 		return nil, false
 	}
-	v, ok := t.q[len(t.q)-1][key]
+	v, ok := t.q[len(t.q)-1].Get(key)
 	if !ok {
 		return nil, false
 	}
