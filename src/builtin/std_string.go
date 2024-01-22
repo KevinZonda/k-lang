@@ -26,6 +26,9 @@ func (s *StdStringLib) FuncCall(caller string, args []any) any {
 	case "trimRight":
 		ensureArgsLen(args, 1)
 		return strings.TrimRight(args[0].(string), " \t\n\r")
+	case "split":
+		ensureArgsLen(args, 2)
+		return strings.Split(args[0].(string), args[1].(string))
 	case "int":
 		ensureArgsLen(args, 1)
 		i, e := strconv.ParseInt(args[0].(string), 10, 64)
