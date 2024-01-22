@@ -2,12 +2,33 @@ package eval
 
 import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/stringProcess"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	orderedmap "github.com/wk8/go-ordered-map/v2"
+	"strings"
 )
 
 func (e *Eval) EvalStringLiteral(n *node.StringLiteral) string {
-	return n.Value
+	mode := stringProcess.ModeNormal
+	switch n.Mode {
+	case '@':
+		mode = stringProcess.ModeConst
+	case '$':
+		mode = stringProcess.ModeVar
+	}
+	tokens := stringProcess.Parse(mode, n.Value)
+	sb := strings.Builder{}
+	for _, token := range tokens {
+		switch token.Kind {
+		case stringProcess.KindText:
+			sb.WriteString(token.Value)
+		case stringProcess.KindVar:
+			// TODO: get value from objTable
+			tokenV := strings.TrimSpace(token.Value)
+			sb.WriteString("<VAR = {" + tokenV + "}>")
+		}
+	}
+	return sb.String()
 }
 
 func (e *Eval) EvalFloatLiteral(n *node.FloatLiteral) float64 {

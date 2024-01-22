@@ -61,6 +61,7 @@ func (f *FloatLiteral) ConstVal() any {
 type StringLiteral struct {
 	Token token.Token
 	Value string
+	Mode  uint8
 }
 
 func (s *StringLiteral) expr() {}

@@ -35,10 +35,19 @@ func (v *AntlrVisitor) visitLiteral(ctx parser.ILiteralContext) node.Expr {
 	}
 	if ctx.StringLiteral() != nil {
 		txt := ctx.GetStart().GetText()
-		return &node.StringLiteral{
+		modeRune := txt[0]
+		str := node.StringLiteral{
 			Token: token.FromAntlrToken(ctx.GetStart()),
-			Value: txt[1 : len(txt)-1],
 		}
+		switch modeRune {
+		case '@', '$':
+			str.Mode = modeRune
+			str.Value = txt[2 : len(txt)-1]
+		default:
+			str.Mode = ' '
+			str.Value = txt[1 : len(txt)-1]
+		}
+		return &str
 	}
 	if ctx.True() != nil {
 		return &node.BoolLiteral{
