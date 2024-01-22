@@ -50,7 +50,7 @@ func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []any, onAfterFrameStart f
 		onAfterFrameStart()
 	}
 	for i, funcArg := range fn.Args {
-		e.objTable.Set(funcArg.Name.Value, args[i])
+		e.objTable.SetAtTop(funcArg.Name.Value, clone(args[i]))
 	}
 	fe := e.new((tree.Ast)(fn.Body.Nodes))
 	_ = fe.run()

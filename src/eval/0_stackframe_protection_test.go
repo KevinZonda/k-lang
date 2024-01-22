@@ -37,3 +37,18 @@ f()
 	expected := ""
 	tester.GeneralTest(true, t, code, expected)
 }
+
+func TestStackframeProtection2(t *testing.T) {
+	code := `
+fn f(i) {
+	i = i + 1
+	println(i)
+}
+i = 10
+println(i)
+f(i)
+println(i)
+`
+	expected := "10\n11\n10\n"
+	tester.GeneralTest(true, t, code, expected)
+}

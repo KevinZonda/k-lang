@@ -1,11 +1,51 @@
 package eval
 
 import (
+	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
+	orderedmap "github.com/wk8/go-ordered-map/v2"
+	"reflect"
 )
+
+func clone(v any) any {
+	if v == nil {
+		return nil
+	}
+	switch v.(type) {
+	case *obj.StructField:
+		sf := v.(*obj.StructField)
+		fields := orderedmap.New[string, any]()
+		for pair := sf.Fields.Oldest(); pair != nil; pair = pair.Next() {
+			fields.Set(pair.Key, clone(pair.Value))
+		}
+		return &obj.StructField{
+			TypeAs: sf.TypeAs,
+			Fields: fields,
+		}
+	case []any:
+		a := make([]any, len(v.([]any)))
+		copy(a, v.([]any))
+		return a
+	case map[any]any:
+		m := make(map[any]any)
+		for k, v := range v.(map[any]any) {
+			m[k] = v
+		}
+		return m
+	case int, float64, string, bool:
+		return v
+	case *node.LambdaExpr, *node.FuncBlock:
+		return v
+	default:
+		fmt.Println("[DEBUG] CLONE DEFAULT VAR ->", reflect.TypeOf(v))
+		return v
+	}
+}
 
 func (e *Eval) EvalAssignStmt(n *node.AssignStmt) any {
 	v := e.EvalExpr(n.Value)
+	v = clone(v)
 	// TODO: arr
 	baseV := n.Var.Value[len(n.Var.Value)-1]
 	obj, ok := e.objTable.Get(baseV.Name.Value)

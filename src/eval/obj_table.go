@@ -93,7 +93,7 @@ func (t *TableStack) Println() {
 		return
 	}
 	for i := len(t.q) - 1; i >= 0; i-- {
-		fmt.Println("TABLE [", i, "]")
+		fmt.Println("TABLE [", i, "]", t.q[i].Protect)
 		for k, v := range t.q[i].m {
 			printId(i)
 			fmt.Printf("%s: %v\n", k, v)
