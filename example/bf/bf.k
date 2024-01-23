@@ -4,6 +4,7 @@ pos = 0
 mem = [0]
 loop = []
 loopPos = -1
+instructions = []
 
 fn printMem() {
     cur = 0
@@ -51,18 +52,18 @@ fn eval(code) {
             }
             case "[": {
                 if (mem[pos] > 0) {
-                    end = findEndPair(i)
-                    print(instructions[end])
                     loopPos = loopPos + 1
                     if (loopPos >= len(loop)) { loop = loop + 0}
                     loop[loopPos] = pos
                 } else {
-                    findEndPair(i)
-                    # find it's pair ]
+                    i = findEndPair(i) # i will add 1 after the iter
                 }
 
             }
             case "]": {
+                if (loopPos >=) {
+                    i = loop[loopPos] - 1
+                }
 
             }
         }
