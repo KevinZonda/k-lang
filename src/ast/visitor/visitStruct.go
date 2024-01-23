@@ -9,7 +9,7 @@ import (
 
 func (v *AntlrVisitor) visitStructBlock(ctx parser.IStructBlockContext) *node.StructBlock {
 	return &node.StructBlock{
-		Token: token.FromAntlrToken(ctx.Struct().GetSymbol()),
+		Token: token.FromAntlrToken(ctx.Struct().GetSymbol()).WithBegin(ctx.GetStart()),
 		Body:  v.visitDeclareBlock(ctx.DeclareBlock()),
 		Name:  v.visitIdentifier(ctx.Identifier()).Value,
 	}

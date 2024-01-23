@@ -70,7 +70,7 @@ func (v *AntlrVisitor) visitIfStmt(ctx parser.IIfStmtContext) *node.IfStmt {
 
 func (v *AntlrVisitor) visitAssignStmt(ctx parser.IAssignStmtContext) *node.AssignStmt {
 	n := node.AssignStmt{
-		Token: token.FromAntlrToken(ctx.Assign().GetSymbol()),
+		Token: token.FromAntlrToken(ctx.Assign().GetSymbol()).WithBegin(ctx.GetStart()),
 		Type:  v.visitType(ctx.Type_()),
 		Var:   v.visitVar(ctx.Var_()),
 		Value: v.visitExprWithLambda(ctx.ExprWithLambda()),

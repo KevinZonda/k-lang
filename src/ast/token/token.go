@@ -5,15 +5,32 @@ import "github.com/antlr4-go/antlr/v4"
 type Kind int
 
 type Token struct {
-	Kind  Kind
-	Value string
+	Kind                   Kind
+	Value                  string
+	BeginLine, BeginColumn int
+	EndLine, EndColumn     int
+	Len                    int
 }
 
 func FromAntlrToken(t antlr.Token) Token {
+	l := len(t.GetText())
 	return Token{
-		Kind:  Kind(t.GetTokenType()),
-		Value: t.GetText(),
+		Kind:        Kind(t.GetTokenType()),
+		Value:       t.GetText(),
+		BeginLine:   t.GetLine(),
+		BeginColumn: t.GetColumn(),
+		Len:         l,
+		EndLine:     t.GetLine(),
+		EndColumn:   t.GetColumn() + l,
 	}
+}
+
+func (t Token) WithBegin(begin antlr.Token) Token {
+	t.BeginLine = begin.GetLine()
+	t.BeginColumn = begin.GetColumn()
+	t.EndLine = begin.GetLine()
+	t.EndColumn = begin.GetColumn() + t.Len
+	return t
 }
 
 const (

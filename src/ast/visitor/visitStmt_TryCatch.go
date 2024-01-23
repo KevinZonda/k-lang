@@ -11,7 +11,7 @@ func (v *AntlrVisitor) visitTryCatch(ctx parser.ITryCatchSmtContext) *node.TryCa
 		return nil
 	}
 	tcs := node.TryCatchStmt{
-		Token: token.FromAntlrToken(ctx.Try().GetSymbol()),
+		Token: token.FromAntlrToken(ctx.Try().GetSymbol()).WithBegin(ctx.GetStart()),
 		Try:   v.visitCodeBlock(ctx.CodeBlock()),
 		Catch: v.visitCatch(ctx.CatchStmt()),
 	}
