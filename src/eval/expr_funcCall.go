@@ -63,6 +63,10 @@ func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []any, onAfterFrameStart f
 }
 
 func (e *Eval) EvalBuiltInCall(fc *node.FuncCall, args []any) any {
+	if fc.Caller.Value == "MEM" {
+		e.objTable.Println()
+		return nil
+	}
 	fn := builtin.Match(fc.Caller.Value)
 	if fn == nil {
 		panic("func not found")

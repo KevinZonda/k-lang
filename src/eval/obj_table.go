@@ -88,17 +88,26 @@ func (t *TableStack) Empty() bool {
 }
 
 func (t *TableStack) Println() {
+	fmt.Println("***********************************")
+	fmt.Println("TABLE STACK")
+	fmt.Println("***********************************")
 	if t.Empty() {
 		fmt.Println("<EMPTY>")
+		fmt.Println("***********************************")
 		return
 	}
 	for i := len(t.q) - 1; i >= 0; i-- {
-		fmt.Println("TABLE [", i, "]", t.q[i].Protect)
+		fmt.Print("STACK [", i, "]")
+		if t.q[i].Protect {
+			fmt.Println(" PROTECTED")
+		} else {
+			fmt.Println()
+		}
 		for k, v := range t.q[i].m {
-			printId(i)
-			fmt.Printf("%s: %v\n", k, v)
+			fmt.Printf("  ->%s: %v\n", k, v)
 		}
 	}
+	fmt.Println("***********************************")
 }
 
 func printId(id int) {
