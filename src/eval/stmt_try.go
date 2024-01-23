@@ -3,6 +3,7 @@ package eval
 import "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 
 func (e *Eval) EvalTryCatchStmt(t *node.TryCatchStmt) {
+	e.currentToken = t.GetToken()
 	defer func() {
 		r := recover()
 		if r == nil || t.Catch == nil {

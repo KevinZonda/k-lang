@@ -15,6 +15,8 @@ func (e *Eval) EvalDotExpr(n *node.DotExpr) any {
 		left = e.EvalExpr(n.Left)
 	}
 
+	e.currentToken = n.GetToken()
+
 	if _, ok := n.Right.(*node.FuncCall); ok {
 		return e.EvalFuncCallAfterScope(left, n.Right.(*node.FuncCall))
 	} else {
@@ -68,7 +70,7 @@ func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) any {
 		{
 			v, ok := _sf.Fields.Get(funcCall.Caller.Value)
 			if !ok {
-				panic("No Func Found From Struct")
+				panic("No Func Found From Struct: " + funcCall.Caller.Value)
 			}
 			lambda = v.(*node.LambdaExpr)
 		}

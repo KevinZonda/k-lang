@@ -9,6 +9,7 @@ import (
 )
 
 func (e *Eval) _evalIterArray(n *node.IterStyleFor, iters []any) {
+	e.currentToken = n.GetToken()
 	for _, iter := range iters {
 		_ = e.EvalLoopCodeBlockWithHook(n.Body, func() {
 			e.objTable.SetAtTop(n.Variable.Value, iter)
@@ -31,6 +32,7 @@ func (e *Eval) _evalIterArray(n *node.IterStyleFor, iters []any) {
 }
 
 func (e *Eval) _evalIterMap(n *node.IterStyleFor, iters map[any]any) {
+	e.currentToken = n.GetToken()
 	for key, val := range iters {
 		_ = e.EvalLoopCodeBlockWithHook(n.Body, func() {
 			field := orderedmap.New[string, any]()
@@ -58,6 +60,7 @@ func (e *Eval) _evalIterMap(n *node.IterStyleFor, iters map[any]any) {
 }
 
 func (e *Eval) EvalIterStyleForStmt(styleFor *node.IterStyleFor) {
+	e.currentToken = styleFor.GetToken()
 	e.loopLvl++
 	iters := e.EvalExpr(styleFor.Iterator)
 	switch iters.(type) {
@@ -81,6 +84,7 @@ func (e *Eval) EvalIterStyleForStmt(styleFor *node.IterStyleFor) {
 }
 
 func (e *Eval) EvalWhileForStmt(n *node.WhileStyleFor) {
+	e.currentToken = n.GetToken()
 	e.loopLvl++
 	for {
 		if n.ConditionExpr != nil {
@@ -108,6 +112,7 @@ func (e *Eval) EvalWhileForStmt(n *node.WhileStyleFor) {
 }
 
 func (e *Eval) EvalCStyleFrStmt(n *node.CStyleFor) {
+	e.currentToken = n.GetToken()
 	e.loopLvl++
 	if n.InitialExpr != nil {
 		switch n.InitialExpr.(type) {
@@ -145,6 +150,7 @@ func (e *Eval) EvalCStyleFrStmt(n *node.CStyleFor) {
 }
 
 func (e *Eval) EvalLoopCodeBlock(fc *node.CodeBlock) any {
+	e.currentToken = fc.GetToken()
 	e.frameStart(false)
 	fe := e.new((tree.Ast)(fc.Nodes))
 	_ = fe.run()
@@ -153,6 +159,7 @@ func (e *Eval) EvalLoopCodeBlock(fc *node.CodeBlock) any {
 }
 
 func (e *Eval) EvalLoopCodeBlockWithHook(fc *node.CodeBlock, onNewFrame func()) any {
+	e.currentToken = fc.GetToken()
 	e.frameStart(false)
 	if onNewFrame != nil {
 		onNewFrame()

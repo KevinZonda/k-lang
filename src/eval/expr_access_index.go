@@ -9,6 +9,7 @@ import (
 func (e *Eval) EvalIndexExpr(n *node.IndexExpr) any {
 	left := e.EvalExpr(n.Left)
 	idx := e.EvalExpr(n.Index)
+	e.currentToken = n.GetToken()
 	if arr, ok := left.([]any); ok {
 		//if idx, ok := idx.(int); ok {
 		//	if idx < 0 || idx >= len(arr) {

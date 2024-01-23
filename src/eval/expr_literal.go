@@ -10,6 +10,7 @@ import (
 )
 
 func (e *Eval) EvalStringLiteral(n *node.StringLiteral) string {
+	e.currentToken = n.GetToken()
 	mode := stringProcess.ModeNormal
 	switch n.Mode {
 	case '@':
@@ -36,18 +37,22 @@ func (e *Eval) EvalStringLiteral(n *node.StringLiteral) string {
 }
 
 func (e *Eval) EvalFloatLiteral(n *node.FloatLiteral) float64 {
+	e.currentToken = n.GetToken()
 	return n.Value
 }
 
 func (e *Eval) EvalIntLiteral(n *node.IntLiteral) int {
+	e.currentToken = n.GetToken()
 	return n.Value
 }
 
 func (e *Eval) EvalBoolLiteral(n *node.BoolLiteral) bool {
+	e.currentToken = n.GetToken()
 	return n.Value
 }
 
 func (e *Eval) EvalArrayLiteral(n *node.ArrayLiteral) []any {
+	e.currentToken = n.GetToken()
 	var arr []any
 	for _, v := range n.Value {
 		arr = append(arr, e.EvalExpr(v))
@@ -56,6 +61,7 @@ func (e *Eval) EvalArrayLiteral(n *node.ArrayLiteral) []any {
 }
 
 func (e *Eval) EvalMapLiteral(n *node.MapLiteral) map[any]any {
+	e.currentToken = n.GetToken()
 	var m = make(map[any]any)
 	for _, v := range n.Value {
 		m[e.EvalExpr(v.Key)] = e.EvalExpr(v.Value)
@@ -64,6 +70,7 @@ func (e *Eval) EvalMapLiteral(n *node.MapLiteral) map[any]any {
 }
 
 func (e *Eval) EvalIdentifier(n *node.Identifier) any {
+	e.currentToken = n.GetToken()
 	v, ok := e.objTable.Get(n.Value)
 	if ok {
 		return v.Val
@@ -117,6 +124,7 @@ func (e *Eval) getZeroValue(t *node.Type) any {
 }
 
 func (e *Eval) EvalStructLiteral(n *node.StructLiteral) *obj.StructField {
+	e.currentToken = n.GetToken()
 	var sf *obj.StructField
 	if n.Type != nil {
 		sf = e.getZeroValue(n.Type).(*obj.StructField)

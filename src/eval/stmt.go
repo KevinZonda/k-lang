@@ -38,6 +38,7 @@ func (e *Eval) EvalStmt(n node.Stmt) {
 }
 
 func (e *Eval) EvalBreakStmt(n *node.BreakStmt) {
+	e.currentToken = n.GetToken()
 	if e.loopLvl <= 0 {
 		return
 	}
@@ -46,6 +47,7 @@ func (e *Eval) EvalBreakStmt(n *node.BreakStmt) {
 }
 
 func (e *Eval) EvalContinueStmt(n *node.ContinueStmt) {
+	e.currentToken = n.GetToken()
 	if e.loopLvl <= 0 {
 		return
 	}
@@ -54,6 +56,7 @@ func (e *Eval) EvalContinueStmt(n *node.ContinueStmt) {
 }
 
 func (e *Eval) EvalReturnStmt(n *node.ReturnStmt) {
+	e.currentToken = n.GetToken()
 	e.objTable.SetAtTop(reserved.Return, nil)
 	if n.Value != nil {
 		e.objTable.SetAtTop(reserved.Return, e.EvalExpr(n.Value))

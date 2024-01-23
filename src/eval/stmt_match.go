@@ -5,6 +5,7 @@ import (
 )
 
 func (e *Eval) EvalMatchStmt(m *node.MatchStmt) {
+	e.currentToken = m.GetToken()
 	match := e.EvalExpr(m.Match)
 	for _, c := range m.Cases {
 		if e.EvalExpr(c.Expr) == match {

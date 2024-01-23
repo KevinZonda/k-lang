@@ -19,6 +19,10 @@ type Eval struct {
 	currentToken token.Token
 }
 
+func (e *Eval) CurrentToken() token.Token {
+	return e.currentToken
+}
+
 var openedFiles map[string]*Eval
 
 func ResetGlobal() {

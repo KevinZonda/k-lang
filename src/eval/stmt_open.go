@@ -45,6 +45,7 @@ func (e *Eval) loadBuiltInLibrary(name, as string) (ok bool) {
 }
 
 func (e *Eval) EvalOpenStmt(n *node.OpenStmt) {
+	e.currentToken = n.GetToken()
 	if e.loadBuiltInLibrary(n.Path, n.As) {
 		return
 	}

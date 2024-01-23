@@ -8,6 +8,7 @@ import (
 )
 
 func (e *Eval) EvalFuncCall(fc *node.FuncCall) any {
+	e.currentToken = fc.GetToken()
 	// Eval Args
 	exprArgs := fc.Args
 	var args []any
@@ -45,6 +46,7 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) any {
 }
 
 func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []any, onAfterFrameStart func()) any {
+	e.currentToken = fn.GetToken()
 	e.frameStart(true)
 	if onAfterFrameStart != nil {
 		onAfterFrameStart()
@@ -63,6 +65,7 @@ func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []any, onAfterFrameStart f
 }
 
 func (e *Eval) EvalBuiltInCall(fc *node.FuncCall, args []any) any {
+	e.currentToken = fc.GetToken()
 	if fc.Caller.Value == "MEM" {
 		e.objTable.Println()
 		return nil

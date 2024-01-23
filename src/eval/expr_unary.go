@@ -7,6 +7,8 @@ import (
 
 func (e *Eval) EvalUnaryExpr(n *node.UnaryOperExpr) any {
 	val := e.EvalExpr(n.Expr)
+	e.currentToken = n.GetToken()
+	
 	factor := 1
 	if n.Token.Kind == token.Sub || n.Token.Kind == token.Not {
 		factor = -1

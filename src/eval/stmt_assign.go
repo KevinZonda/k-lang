@@ -46,6 +46,8 @@ func clone(v any) any {
 func (e *Eval) EvalAssignStmt(n *node.AssignStmt) any {
 	v := e.EvalExpr(n.Value)
 	v = clone(v)
+
+	e.currentToken = n.GetToken()
 	// TODO: arr
 	baseV := n.Var.Value[len(n.Var.Value)-1]
 	obj, ok := e.objTable.Get(baseV.Name.Value)
