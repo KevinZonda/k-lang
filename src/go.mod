@@ -4,7 +4,7 @@ go 1.21.2
 
 require (
 	github.com/KevinZonda/GoX v0.0.15
-	github.com/KevinZonda/go-jupyter v1.0.9
+	github.com/KevinZonda/go-jupyter v1.0.11
 	github.com/andybalholm/brotli v1.0.4
 	github.com/antlr4-go/antlr/v4 v4.13.0
 	github.com/brimdata/zed v1.10.0
@@ -17,7 +17,6 @@ require (
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
 	github.com/buger/jsonparser v1.1.1 // indirect
-	github.com/cosmos72/gomacro v0.0.0-20231101204900-3dc08f5f8fea // indirect
 	github.com/go-zeromq/goczmq/v4 v4.2.2 // indirect
 	github.com/go-zeromq/zmq4 v0.15.0 // indirect
 	github.com/gofrs/uuid v4.4.0+incompatible // indirect
@@ -28,7 +27,6 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/muesli/termenv v0.15.2 // indirect
-	github.com/peterh/liner v1.2.2 // indirect
 	github.com/petermattis/goid v0.0.0-20180202154549-b0b1615b78e5 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
@@ -39,7 +37,6 @@ require (
 	go.uber.org/atomic v1.9.0 // indirect
 	golang.org/x/crypto v0.15.0 // indirect
 	golang.org/x/exp v0.0.0-20230515195305-f3d0a9c9a5cc // indirect
-	golang.org/x/mod v0.13.0 // indirect
 	golang.org/x/sync v0.4.0 // indirect
 	golang.org/x/sys v0.14.0 // indirect
 	golang.org/x/term v0.14.0 // indirect
