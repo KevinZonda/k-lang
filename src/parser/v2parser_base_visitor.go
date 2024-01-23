@@ -88,10 +88,6 @@ func (v *BaseV2ParserVisitor) VisitFuncCallArgs(ctx *FuncCallArgsContext) interf
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseV2ParserVisitor) VisitStmtWithSep(ctx *StmtWithSepContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
 func (v *BaseV2ParserVisitor) VisitOpenStmt(ctx *OpenStmtContext) interface{} {
 	return v.VisitChildren(ctx)
 }

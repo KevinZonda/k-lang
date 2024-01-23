@@ -63,8 +63,6 @@ exprWithLambda : lambda | expr;
 funcCall : Identifier LParen funcCallArgs? RParen ;
 funcCallArgs : expr (Comma expr)*;
 
-stmtWithSep : stmt sep*;
-
 openStmt : Open StringLiteral (As Identifier)?;
 
 literal : True | False | IntegerLiteral | NumberLiteral | StringLiteral;

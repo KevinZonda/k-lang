@@ -68,9 +68,6 @@ type V2ParserVisitor interface {
 	// Visit a parse tree produced by V2Parser#funcCallArgs.
 	VisitFuncCallArgs(ctx *FuncCallArgsContext) interface{}
 
-	// Visit a parse tree produced by V2Parser#stmtWithSep.
-	VisitStmtWithSep(ctx *StmtWithSepContext) interface{}
-
 	// Visit a parse tree produced by V2Parser#openStmt.
 	VisitOpenStmt(ctx *OpenStmtContext) interface{}
 

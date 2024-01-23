@@ -141,12 +141,6 @@ func (s *BaseV2ParserListener) EnterFuncCallArgs(ctx *FuncCallArgsContext) {}
 // ExitFuncCallArgs is called when production funcCallArgs is exited.
 func (s *BaseV2ParserListener) ExitFuncCallArgs(ctx *FuncCallArgsContext) {}
 
-// EnterStmtWithSep is called when production stmtWithSep is entered.
-func (s *BaseV2ParserListener) EnterStmtWithSep(ctx *StmtWithSepContext) {}
-
-// ExitStmtWithSep is called when production stmtWithSep is exited.
-func (s *BaseV2ParserListener) ExitStmtWithSep(ctx *StmtWithSepContext) {}
-
 // EnterOpenStmt is called when production openStmt is entered.
 func (s *BaseV2ParserListener) EnterOpenStmt(ctx *OpenStmtContext) {}
 

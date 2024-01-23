@@ -68,9 +68,6 @@ type V2ParserListener interface {
 	// EnterFuncCallArgs is called when entering the funcCallArgs production.
 	EnterFuncCallArgs(c *FuncCallArgsContext)
 
-	// EnterStmtWithSep is called when entering the stmtWithSep production.
-	EnterStmtWithSep(c *StmtWithSepContext)
-
 	// EnterOpenStmt is called when entering the openStmt production.
 	EnterOpenStmt(c *OpenStmtContext)
 
@@ -196,9 +193,6 @@ type V2ParserListener interface {
 
 	// ExitFuncCallArgs is called when exiting the funcCallArgs production.
 	ExitFuncCallArgs(c *FuncCallArgsContext)
-
-	// ExitStmtWithSep is called when exiting the stmtWithSep production.
-	ExitStmtWithSep(c *StmtWithSepContext)
 
 	// ExitOpenStmt is called when exiting the openStmt production.
 	ExitOpenStmt(c *OpenStmtContext)
