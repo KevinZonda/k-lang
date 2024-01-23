@@ -50,32 +50,35 @@ fn eval(code) {
                 # TODO: INPUT
             }
             case "[": {
-                if (mem[pos] == 0) {
-                    loopLvl = loopLvl + 1
-                    for (instructions[i] != "]" || loopLvl != 0) {
-                        i = i + 1
-                        if (instructions[i] == "[") {
-                            loopLvl = loopLvl + 1
-                        }
-                        if (instructions[i] == "]") {
-                            loopLvl = loopLvl - 1
-                        }
+                if (mem[pos] != 0) {
+                    continue
+                }
+                loopLvl = loopLvl + 1
+                for (instructions[i] != "]" || loopLvl != 0) {
+                    i = i + 1
+                    if (instructions[i] == "[") {
+                        loopLvl = loopLvl + 1
+                    }
+                    if (instructions[i] == "]") {
+                        loopLvl = loopLvl - 1
                     }
                 }
             }
             case "]": {
-                if (mem[pos] != 0) {
-                    loopLvl = loopLvl + 1
-                    for (instructions[i] != "[" || loopLvl != 0) {
-                        i = i - 1
-                        if (instructions[i] == "]") {
-                            loopLvl = loopLvl + 1
-                        }
-                        if (instructions[i] == "[") {
-                            loopLvl = loopLvl - 1
-                        }
+                if (mem[pos] == 0) {
+                    continue
+                }
+                loopLvl = loopLvl + 1
+                for (instructions[i] != "[" || loopLvl != 0) {
+                    i = i - 1
+                    if (instructions[i] == "]") {
+                        loopLvl = loopLvl + 1
+                    }
+                    if (instructions[i] == "[") {
+                        loopLvl = loopLvl - 1
                     }
                 }
+                
             }
         }
 
