@@ -8,7 +8,7 @@ import (
 
 func (v *AntlrVisitor) visitMathStmt(ctx parser.IMatchStmtContext) *node.MatchStmt {
 	match := &node.MatchStmt{
-		Token: token.FromAntlrToken(ctx.Match().GetSymbol()).WithBegin(ctx.GetStart()),
+		Token: token.FromAntlrToken(ctx.Match().GetSymbol()).WithBegin(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		Match: v.visitExpr(ctx.Expr()),
 	}
 	for _, c := range ctx.AllMatchCase() {

@@ -33,6 +33,23 @@ func (t Token) WithBegin(begin antlr.Token) Token {
 	return t
 }
 
+func (t Token) WithEnd(end antlr.Token) Token {
+	if end == nil {
+		return t
+	}
+	endL := end.GetLine()
+	endCol := end.GetColumn() + len(end.GetText())
+	if endL > t.EndLine {
+		t.EndLine = endL
+		t.EndColumn = endCol
+		return t
+	}
+	if endL == t.EndLine && endCol > t.EndColumn {
+		t.EndColumn = endCol
+	}
+	return t
+}
+
 const (
 	EOF         = antlr.TokenEOF
 	LBrack Kind = iota

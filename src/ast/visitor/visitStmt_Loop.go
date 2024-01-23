@@ -21,7 +21,7 @@ func (v *AntlrVisitor) visitLoopStmt(ctx parser.ILoopStmtContext) node.Stmt {
 
 func (v *AntlrVisitor) visitCStyleFor(ctx parser.ICStyleForContext) *node.CStyleFor {
 	n := node.CStyleFor{
-		Token:         token.FromAntlrToken(ctx.For().GetSymbol()).WithBegin(ctx.GetStart()),
+		Token:         token.FromAntlrToken(ctx.For().GetSymbol()).WithBegin(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		Body:          v.visitCodeBlock(ctx.CodeBlock()),
 		InitialExpr:   v.visitExpr(ctx.GetOnInit()),
 		ConditionExpr: v.visitExpr(ctx.GetOnCondition()),
@@ -32,7 +32,7 @@ func (v *AntlrVisitor) visitCStyleFor(ctx parser.ICStyleForContext) *node.CStyle
 
 func (v *AntlrVisitor) visitWhileStyleFor(ctx parser.IWhileStyleForContext) *node.WhileStyleFor {
 	n := node.WhileStyleFor{
-		Token:         token.FromAntlrToken(ctx.For().GetSymbol()).WithBegin(ctx.GetStart()),
+		Token:         token.FromAntlrToken(ctx.For().GetSymbol()).WithBegin(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		Body:          v.visitCodeBlock(ctx.CodeBlock()),
 		ConditionExpr: v.visitExpr(ctx.Expr()),
 	}
@@ -41,7 +41,7 @@ func (v *AntlrVisitor) visitWhileStyleFor(ctx parser.IWhileStyleForContext) *nod
 
 func (v *AntlrVisitor) visitIterStyleFor(ctx parser.IIterForContext) *node.IterStyleFor {
 	n := node.IterStyleFor{
-		Token:    token.FromAntlrToken(ctx.For().GetSymbol()).WithBegin(ctx.GetStart()),
+		Token:    token.FromAntlrToken(ctx.For().GetSymbol()).WithBegin(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		Variable: v.visitIdentifier(ctx.Identifier()),
 		Iterator: v.visitExpr(ctx.Expr()),
 		Body:     v.visitCodeBlock(ctx.CodeBlock()),

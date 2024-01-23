@@ -10,7 +10,7 @@ func (v *AntlrVisitor) visitOpenStmt(ctx parser.IOpenStmtContext) *node.OpenStmt
 	txt := ctx.StringLiteral().GetText()
 
 	o := &node.OpenStmt{
-		Token: token.FromAntlrToken(ctx.GetStart()),
+		Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		Path:  txt[1 : len(txt)-1],
 	}
 	if ctx.As() == nil {
@@ -30,7 +30,7 @@ func (v *AntlrVisitor) visitOpenBlock(ctx parser.IOpenBlockContext) *node.OpenBl
 		openers = append(openers, v.visitOpenStmt(o))
 	}
 	return &node.OpenBlock{
-		Token:   token.FromAntlrToken(ctx.GetStart()),
+		Token:   token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		Openers: openers,
 	}
 }

@@ -8,14 +8,14 @@ import (
 
 func (v *AntlrVisitor) visitFuncBlock(ctx parser.IFuncBlockContext) *node.FuncBlock {
 	fx := v.visitFuncSig(ctx.FuncSig().(*parser.FuncSigContext))
-	fx.Token = token.FromAntlrToken(ctx.GetStart())
+	fx.Token = token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop())
 	fx.Body = v.visitCodeBlock(ctx.CodeBlock().(*parser.CodeBlockContext))
 	return fx
 }
 
 func (v *AntlrVisitor) visitLambda(ctx parser.ILambdaContext) *node.LambdaExpr {
 	fb := &node.LambdaExpr{
-		Token:   token.FromAntlrToken(ctx.GetStart()),
+		Token:   token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		Body:    v.visitCodeBlock(ctx.CodeBlock()),
 		Args:    v.visitFuncSignArgs(ctx.FuncSignArgs()),
 		RetType: v.visitType(ctx.Type_()),
@@ -69,6 +69,6 @@ func (v *AntlrVisitor) visitCodeBlock(ctx parser.ICodeBlockContext) *node.CodeBl
 	}
 	return &node.CodeBlock{
 		Nodes: body,
-		Token: token.FromAntlrToken(ctx.GetStart()),
+		Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
 	}
 }

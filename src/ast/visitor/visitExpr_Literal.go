@@ -18,7 +18,7 @@ func (v *AntlrVisitor) visitLiteral(ctx parser.ILiteralContext) node.Expr {
 			// FIXME: return nil?
 		}
 		return &node.IntLiteral{
-			Token: token.FromAntlrToken(ctx.GetStart()),
+			Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
 			Value: val,
 		}
 	}
@@ -29,7 +29,7 @@ func (v *AntlrVisitor) visitLiteral(ctx parser.ILiteralContext) node.Expr {
 			return nil
 		}
 		return &node.FloatLiteral{
-			Token: token.FromAntlrToken(ctx.GetStart()),
+			Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
 			Value: val,
 		}
 	}
@@ -37,7 +37,7 @@ func (v *AntlrVisitor) visitLiteral(ctx parser.ILiteralContext) node.Expr {
 		txt := ctx.GetStart().GetText()
 		modeRune := txt[0]
 		str := node.StringLiteral{
-			Token: token.FromAntlrToken(ctx.GetStart()),
+			Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		}
 		switch modeRune {
 		case '@', '$':
@@ -51,13 +51,13 @@ func (v *AntlrVisitor) visitLiteral(ctx parser.ILiteralContext) node.Expr {
 	}
 	if ctx.True() != nil {
 		return &node.BoolLiteral{
-			Token: token.FromAntlrToken(ctx.GetStart()),
+			Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
 			Value: true,
 		}
 	}
 	if ctx.False() != nil {
 		return &node.BoolLiteral{
-			Token: token.FromAntlrToken(ctx.GetStart()),
+			Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
 			Value: false,
 		}
 	}

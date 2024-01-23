@@ -14,7 +14,7 @@ func (v *AntlrVisitor) visitMapInitializer(ctx parser.IMapInitializerContext) *n
 		arr = append(arr, v.visitMapPairInitializer(e))
 	}
 	return &node.MapLiteral{
-		Token: token.FromAntlrToken(ctx.GetStart()),
+		Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		Value: arr,
 	}
 }
@@ -26,13 +26,13 @@ func (v *AntlrVisitor) visitMapPairInitializer(ctx parser.IMapPairContext) *node
 	if ctx.IdentifierPair() != nil {
 		k, v, _ := v.visitIdentifierPair(ctx.IdentifierPair())
 		return &node.MapPairLiteral{
-			Token: token.FromAntlrToken(ctx.GetStart()),
+			Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
 			Key:   &node.Identifier{Token: token.FromAntlrToken(ctx.GetStart()), Value: k},
 			Value: v,
 		}
 	}
 	return &node.MapPairLiteral{
-		Token: token.FromAntlrToken(ctx.GetStart()),
+		Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		Key:   v.visitExpr(ctx.Expr()),
 		Value: v.visitExprWithLambda(ctx.ExprWithLambda()),
 	}
@@ -45,7 +45,7 @@ func (v *AntlrVisitor) visitArrayInitializer(ctx parser.IArrayInitializerContext
 		arr = append(arr, v.visitExpr(e))
 	}
 	return &node.ArrayLiteral{
-		Token: token.FromAntlrToken(ctx.GetStart()),
+		Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		Value: arr,
 	}
 }
@@ -59,7 +59,7 @@ func (v *AntlrVisitor) visitStructInitializer(ctx parser.IStructInitializerConte
 		}
 	}
 	return &node.StructLiteral{
-		Token: token.FromAntlrToken(ctx.GetStart()),
+		Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		Body:  body,
 		Type:  v.visitType(ctx.Type_()),
 	}

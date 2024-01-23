@@ -39,20 +39,20 @@ func (v *AntlrVisitor) visitStmt(ctx parser.IStmtContext) node.Stmt {
 func (v *AntlrVisitor) visitJumpStmt(ctx parser.IJumpStmtContext) node.Stmt {
 	if ctx.Return() != nil {
 		ret := node.ReturnStmt{
-			Token: token.FromAntlrToken(ctx.GetStart()),
+			Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
 			Value: v.visitExprWithLambda(ctx.ExprWithLambda()),
 		}
 		return &ret
 	}
 	if ctx.Break() != nil {
 		return &node.BreakStmt{
-			Token: token.FromAntlrToken(ctx.GetStart()),
+			Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		}
 	}
 
 	if ctx.Continue() != nil {
 		return &node.ContinueStmt{
-			Token: token.FromAntlrToken(ctx.GetStart()),
+			Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		}
 	}
 	panic("Unknown jumpStmt")
@@ -60,7 +60,7 @@ func (v *AntlrVisitor) visitJumpStmt(ctx parser.IJumpStmtContext) node.Stmt {
 
 func (v *AntlrVisitor) visitIfStmt(ctx parser.IIfStmtContext) *node.IfStmt {
 	i := node.IfStmt{
-		Token:     token.FromAntlrToken(ctx.GetStart()),
+		Token:     token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		IfTrue:    v.visitCodeBlock(ctx.CodeBlock(0)),
 		IfFalse:   v.visitCodeBlock(ctx.CodeBlock(1)),
 		Condition: v.visitExpr(ctx.Expr()),
@@ -70,7 +70,7 @@ func (v *AntlrVisitor) visitIfStmt(ctx parser.IIfStmtContext) *node.IfStmt {
 
 func (v *AntlrVisitor) visitAssignStmt(ctx parser.IAssignStmtContext) *node.AssignStmt {
 	n := node.AssignStmt{
-		Token: token.FromAntlrToken(ctx.Assign().GetSymbol()).WithBegin(ctx.GetStart()),
+		Token: token.FromAntlrToken(ctx.Assign().GetSymbol()).WithBegin(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		Type:  v.visitType(ctx.Type_()),
 		Var:   v.visitVar(ctx.Var_()),
 		Value: v.visitExprWithLambda(ctx.ExprWithLambda()),
@@ -80,7 +80,7 @@ func (v *AntlrVisitor) visitAssignStmt(ctx parser.IAssignStmtContext) *node.Assi
 
 func (v *AntlrVisitor) visitIdentifier(n antlr.TerminalNode) *node.Identifier {
 	return &node.Identifier{
-		Token: token.FromAntlrToken(n.GetSymbol()),
+		Token: token.FromAntlrToken(n.GetSymbol()), // Identifier
 		Value: n.GetText(),
 	}
 }
@@ -92,7 +92,7 @@ func (v *AntlrVisitor) visitType(ctx parser.ITypeContext) *node.Type {
 	}
 
 	t := node.Type{
-		Token: token.FromAntlrToken(ctx.GetStart()),
+		Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		Name:  ctx.GetTypeName().GetText(),
 	}
 	if ctx.GetPackageName() != nil {
@@ -109,7 +109,7 @@ func (v *AntlrVisitor) visitVar(ctx parser.IVarContext) *node.Variable {
 		bs = append(bs, v.visitBaseVar(bv))
 	}
 	return &node.Variable{
-		Token: token.FromAntlrToken(ctx.GetStart()),
+		Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		Value: bs,
 	}
 }
@@ -117,9 +117,9 @@ func (v *AntlrVisitor) visitVar(ctx parser.IVarContext) *node.Variable {
 func (v *AntlrVisitor) visitBaseVar(ctx parser.IBaseVarContext) *node.BaseVariable {
 	id := ctx.Identifier()
 	return &node.BaseVariable{
-		Token: token.FromAntlrToken(ctx.GetStart()),
+		Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		Name: &node.Identifier{
-			Token: token.FromAntlrToken(id.GetSymbol()),
+			Token: token.FromAntlrToken(id.GetSymbol()).WithEnd(ctx.GetStop()),
 			Value: id.GetText(),
 		},
 		Index: v.visitIndexes(ctx.Indexes()),

@@ -22,7 +22,7 @@ func (v *AntlrVisitor) visitDotExpr(ctx parser.IExprContext) *node.DotExpr {
 		return nil
 	}
 	return &node.DotExpr{
-		Token: token.FromAntlrToken(ctx.GetStart()),
+		Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		Left:  v.visitExpr(ctx.GetLHS()),
 		Right: v.visitExpr(ctx.GetRHS()),
 	}
@@ -30,7 +30,7 @@ func (v *AntlrVisitor) visitDotExpr(ctx parser.IExprContext) *node.DotExpr {
 
 func (v *AntlrVisitor) visitIndexExpr(ctx parser.IExprContext) *node.IndexExpr {
 	return &node.IndexExpr{
-		Token: token.FromAntlrToken(ctx.GetStart()),
+		Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		Left:  v.visitExpr(ctx.GetLHS()),
 		Index: v.visitExpr(ctx.GetIndex()),
 	}
@@ -108,7 +108,7 @@ func (v *AntlrVisitor) visitUnaryExpr(ctx parser.IExprContext) *node.UnaryOperEx
 	oper := ctx.UnaryOper()
 
 	return &node.UnaryOperExpr{
-		Token: token.FromAntlrToken(oper.GetStart()).WithBegin(ctx.GetStart()),
+		Token: token.FromAntlrToken(oper.GetStart()).WithBegin(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		Oper:  oper.GetText(),
 		Expr:  v.visitExpr(ctx.GetChild(1).(parser.IExprContext)),
 	}
@@ -123,7 +123,7 @@ func (v *AntlrVisitor) visitBinaryExpr(ctx parser.IExprContext) *node.BinaryOper
 		return nil
 	}
 	return &node.BinaryOperExpr{
-		Token: token.FromAntlrToken(ctx.GetOP()).WithBegin(ctx.GetStart()),
+		Token: token.FromAntlrToken(ctx.GetOP()).WithBegin(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		Left:  v.visitExpr(ctx.GetLHS()),
 		Oper:  ctx.GetOP().GetText(),
 		Right: v.visitExpr(ctx.GetRHS()),

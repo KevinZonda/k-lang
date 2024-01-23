@@ -8,7 +8,7 @@ import (
 
 func (v *AntlrVisitor) visitFuncCall(ctx parser.IFuncCallContext) *node.FuncCall {
 	fc := &node.FuncCall{
-		Token:  token.FromAntlrToken(ctx.GetStart()),
+		Token:  token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		Caller: v.visitIdentifier(ctx.Identifier()),
 		Args:   v.visitFuncCallArgs(ctx.FuncCallArgs()),
 	}
