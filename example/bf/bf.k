@@ -2,9 +2,8 @@ open "std/string" as strs
 
 pos = 0
 mem = [0]
-loop = []
-loopPos = -1
 instructions = []
+loopLvl = 0
 
 fn printMem() {
     cur = 0
@@ -26,8 +25,8 @@ fn eval(code) {
     println(instructions)
     for (i = 0; i < len(instructions); i = i + 1) {
         x = instructions[i]
-        print("Running -> ", x, " ")
-        printMem()
+        # print("Running -> ", x, " ")
+        # printMem()
         match(x) {
             case ">": {
                 pos = pos + 1
@@ -51,20 +50,32 @@ fn eval(code) {
                 # TODO: INPUT
             }
             case "[": {
-                if (mem[pos] > 0) {
-                    loopPos = loopPos + 1
-                    if (loopPos >= len(loop)) { loop = loop + 0}
-                    loop[loopPos] = pos
-                } else {
-                    i = findEndPair(i) # i will add 1 after the iter
+                if (mem[pos] == 0) {
+                    loopLvl = loopLvl + 1
+                    for (instructions[i] != "]" || loopLvl != 0) {
+                        i = i + 1
+                        if (instructions[i] == "[") {
+                            loopLvl = loopLvl + 1
+                        }
+                        if (instructions[i] == "]") {
+                            loopLvl = loopLvl - 1
+                        }
+                    }
                 }
-
             }
             case "]": {
-                if (loopPos >=) {
-                    i = loop[loopPos] - 1
+                if (mem[pos] != 0) {
+                    loopLvl = loopLvl + 1
+                    for (instructions[i] != "[" || loopLvl != 0) {
+                        i = i - 1
+                        if (instructions[i] == "]") {
+                            loopLvl = loopLvl + 1
+                        }
+                        if (instructions[i] == "[") {
+                            loopLvl = loopLvl - 1
+                        }
+                    }
                 }
-
             }
         }
 
@@ -72,27 +83,10 @@ fn eval(code) {
 
 }
 
-fn findEndPair(pos) {
-    # FIXME: baseline: frame protection
-    lvl = 1
-    pos = pos + 1
-    
-    for (i = pos; i < len(instructions); i = i + 1) {
-        cur = instructions[i]
-        if (cur == "[") {
-            lvl = lvl + 1
-        } 
-        
-        if (cur == "]") {
-            lvl = lvl - 1
-            if (lvl == 0) {
-                return i
-            }
-        }
-    }
-    return -1
-}
 
-eval("+++++++++++++++++++++++++++++[++++++++++++++++]++++++++++++++++++++.")
+eval(">++++++++[<+++++++++>-]<.>++++[<+++++++>-]<+.+++++++..+++.>>++++++[<+++++++>-]<+
++.------------.>++++++[<+++++++++>-]<+.<.+++.------.--------.>>>++++[<++++++++>-
+]<+.")
+
 println()
 printMem()
