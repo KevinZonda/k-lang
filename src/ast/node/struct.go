@@ -22,6 +22,10 @@ func (n *StructBlock) TokenValue() string {
 	return n.Token.Value
 }
 
+func (n *StructBlock) GetToken() token.Token {
+	return n.Token
+}
+
 type StructLiteral struct {
 	Token token.Token
 	Body  *orderedmap.OrderedMap[string, Expr]
@@ -32,4 +36,8 @@ func (n *StructLiteral) expr() {}
 
 func (n *StructLiteral) TokenValue() string {
 	return n.Token.Value
+}
+
+func (n *StructLiteral) GetToken() token.Token {
+	return n.Token
 }

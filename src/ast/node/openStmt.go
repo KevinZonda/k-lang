@@ -14,6 +14,10 @@ func (n *OpenStmt) TokenValue() string {
 
 func (n *OpenStmt) stmt() {}
 
+func (n *OpenStmt) GetToken() token.Token {
+	return n.Token
+}
+
 type OpenBlock struct {
 	Token   token.Token
 	Openers []*OpenStmt
@@ -22,4 +26,7 @@ type OpenBlock struct {
 func (o *OpenBlock) block() {}
 func (o *OpenBlock) TokenValue() string {
 	return o.Token.Value
+}
+func (o *OpenBlock) GetToken() token.Token {
+	return o.Token
 }

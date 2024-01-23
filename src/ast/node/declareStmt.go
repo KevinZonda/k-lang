@@ -13,4 +13,8 @@ func (a *DeclareStmt) TokenValue() string {
 	return "DeclareStmt"
 }
 
+func (a *DeclareStmt) GetToken() token.Token {
+	return a.Token
+}
+
 func (a *DeclareStmt) stmt() {}

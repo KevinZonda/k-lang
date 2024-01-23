@@ -12,6 +12,9 @@ func (a *DotExpr) expr() {}
 func (a *DotExpr) TokenValue() string {
 	return a.Token.Value
 }
+func (a *DotExpr) GetToken() token.Token {
+	return a.Token
+}
 
 type IndexExpr struct {
 	Token token.Token
@@ -22,4 +25,7 @@ type IndexExpr struct {
 func (a *IndexExpr) expr() {}
 func (a *IndexExpr) TokenValue() string {
 	return a.Token.Value
+}
+func (a *IndexExpr) GetToken() token.Token {
+	return a.Token
 }

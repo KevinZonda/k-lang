@@ -13,3 +13,6 @@ func (f *FuncCall) TokenValue() string {
 }
 func (f *FuncCall) stmt() {}
 func (f *FuncCall) expr() {}
+func (f *FuncCall) GetToken() token.Token {
+	return f.Token
+}

@@ -20,3 +20,7 @@ type CatchBranch struct {
 func (t *TryCatchStmt) TokenValue() string {
 	return t.Token.Value
 }
+
+func (t *TryCatchStmt) GetToken() token.Token {
+	return t.Token
+}

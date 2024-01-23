@@ -21,3 +21,7 @@ func (u *UnaryOperExpr) String() string {
 }
 
 func (u *UnaryOperExpr) expr() {}
+
+func (u *UnaryOperExpr) GetToken() token.Token {
+	return u.Token
+}

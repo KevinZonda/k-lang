@@ -13,6 +13,9 @@ func (f *LambdaExpr) expr() {}
 func (f *LambdaExpr) TokenValue() string {
 	return f.Token.Value
 }
+func (f *LambdaExpr) GetToken() token.Token {
+	return f.Token
+}
 
 func (f *LambdaExpr) ToFunc(name string) *FuncBlock {
 	return &FuncBlock{

@@ -22,5 +22,8 @@ func (i *BinaryOperExpr) TokenValue() string {
 func (i *BinaryOperExpr) String() string {
 	return fmt.Sprintf("{LHS=%s\nOper=%s\nRHS=%s}\n", i.Left, i.Oper, i.Right)
 }
+func (i *BinaryOperExpr) GetToken() token.Token {
+	return i.Token
+}
 
 var _ Expr = (*BinaryOperExpr)(nil)

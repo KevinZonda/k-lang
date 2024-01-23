@@ -14,6 +14,10 @@ func (c *CStyleFor) TokenValue() string {
 	return c.Token.Value
 }
 
+func (c *CStyleFor) GetToken() token.Token {
+	return c.Token
+}
+
 func (c *CStyleFor) stmt() {}
 
 type WhileStyleFor struct {
@@ -24,6 +28,10 @@ type WhileStyleFor struct {
 
 func (c *WhileStyleFor) TokenValue() string {
 	return c.Token.Value
+}
+
+func (c *WhileStyleFor) GetToken() token.Token {
+	return c.Token
 }
 
 func (a *WhileStyleFor) stmt() {}
@@ -38,5 +46,9 @@ type IterStyleFor struct {
 
 func (c *IterStyleFor) TokenValue() string {
 	return c.Token.Value
+}
+
+func (c *IterStyleFor) GetToken() token.Token {
+	return c.Token
 }
 func (a *IterStyleFor) stmt() {}

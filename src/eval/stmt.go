@@ -6,6 +6,7 @@ import (
 )
 
 func (e *Eval) EvalStmt(n node.Stmt) {
+	e.currentToken = n.GetToken()
 	switch n.(type) {
 	case *node.AssignStmt:
 		e.EvalAssignStmt(n.(*node.AssignStmt))

@@ -7,6 +7,7 @@ import (
 )
 
 func (e *Eval) EvalExpr(n node.Expr) any {
+	e.currentToken = n.GetToken()
 	switch n.(type) {
 	case *node.DotExpr:
 		return e.EvalDotExpr(n.(*node.DotExpr))

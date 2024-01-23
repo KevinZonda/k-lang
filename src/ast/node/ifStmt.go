@@ -14,3 +14,7 @@ func (i *IfStmt) TokenValue() string {
 }
 
 func (i *IfStmt) stmt() {}
+
+func (i *IfStmt) GetToken() token.Token {
+	return i.Token
+}

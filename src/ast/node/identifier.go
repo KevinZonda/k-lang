@@ -12,3 +12,7 @@ func (i *Identifier) expr() {}
 func (i *Identifier) TokenValue() string {
 	return i.Value
 }
+
+func (i *Identifier) GetToken() token.Token {
+	return i.Token
+}

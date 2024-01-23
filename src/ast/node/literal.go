@@ -31,6 +31,10 @@ func (i *IntLiteral) ConstVal() any {
 	return i.Value
 }
 
+func (i *IntLiteral) GetToken() token.Token {
+	return i.Token
+}
+
 //endregion
 
 //region Float
@@ -52,6 +56,10 @@ func (f *FloatLiteral) String() string {
 
 func (f *FloatLiteral) ConstVal() any {
 	return f.Value
+}
+
+func (f *FloatLiteral) GetToken() token.Token {
+	return f.Token
 }
 
 //endregion
@@ -78,6 +86,10 @@ func (s *StringLiteral) ConstVal() any {
 	return s.Value
 }
 
+func (s *StringLiteral) GetToken() token.Token {
+	return s.Token
+}
+
 //endregion
 
 //region Bool
@@ -101,6 +113,10 @@ func (b *BoolLiteral) ConstVal() any {
 	return b.Value
 }
 
+func (b *BoolLiteral) GetToken() token.Token {
+	return b.Token
+}
+
 //endregion
 
 //region ArrayLiteral
@@ -114,6 +130,10 @@ func (a *ArrayLiteral) expr() {}
 
 func (a *ArrayLiteral) TokenValue() string {
 	return a.Token.Value
+}
+
+func (a *ArrayLiteral) GetToken() token.Token {
+	return a.Token
 }
 
 //endregion
@@ -130,6 +150,10 @@ func (m *MapPairLiteral) TokenValue() string {
 	return m.Token.Value
 }
 
+func (m *MapPairLiteral) GetToken() token.Token {
+	return m.Token
+}
+
 type MapLiteral struct {
 	Token token.Token
 	Value []*MapPairLiteral
@@ -139,4 +163,8 @@ func (m *MapLiteral) expr() {}
 
 func (m *MapLiteral) TokenValue() string {
 	return m.Token.Value
+}
+
+func (m *MapLiteral) GetToken() token.Token {
+	return m.Token
 }

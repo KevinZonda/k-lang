@@ -20,6 +20,10 @@ func (v *Variable) TokenValue() string {
 	return strings.Join(n, ".")
 }
 
+func (v *Variable) GetToken() token.Token {
+	return v.Token
+}
+
 type BaseVariable struct {
 	Token token.Token
 	Name  *Identifier
@@ -37,4 +41,8 @@ func (v *BaseVariable) String() string {
 
 func (v *BaseVariable) TokenValue() string {
 	return "BaseVariable"
+}
+
+func (v *BaseVariable) GetToken() token.Token {
+	return v.Token
 }

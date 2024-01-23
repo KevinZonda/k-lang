@@ -14,6 +14,10 @@ func (m *MatchStmt) TokenValue() string {
 	return m.Token.Value
 }
 
+func (m *MatchStmt) GetToken() token.Token {
+	return m.Token
+}
+
 type MatchCase struct {
 	Expr Expr
 	Body *CodeBlock

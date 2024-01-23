@@ -14,6 +14,9 @@ func (f *FuncBlock) block() {}
 func (f *FuncBlock) TokenValue() string {
 	return f.Name.Value
 }
+func (f *FuncBlock) GetToken() token.Token {
+	return f.Token
+}
 
 type FuncArg struct {
 	Type *Type
@@ -30,4 +33,7 @@ func (c *CodeBlock) block() {}
 func (c *CodeBlock) stmt()  {}
 func (c *CodeBlock) TokenValue() string {
 	return "CodeBlock"
+}
+func (c *CodeBlock) GetToken() token.Token {
+	return c.Token
 }

@@ -3,6 +3,7 @@ package eval
 import (
 	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
@@ -11,10 +12,11 @@ import (
 )
 
 type Eval struct {
-	ast      tree.Ast
-	objTable *TableStack
-	basePath string
-	loopLvl  int
+	ast          tree.Ast
+	objTable     *TableStack
+	basePath     string
+	loopLvl      int
+	currentToken token.Token
 }
 
 var openedFiles map[string]*Eval
