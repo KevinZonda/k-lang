@@ -25,6 +25,24 @@ else
 	./scripts/src.sh
 endif
 
+gox:
+ifeq ($(OS),Windows_NT)
+	@echo '=== Source Code Builder X ==='
+	.\scripts\gox.bat
+else
+	echo '=== Source Code Builder X ==='
+	./scripts/gox.sh
+endif
+
+tidy:
+ifeq ($(OS),Windows_NT)
+	@echo '=== Tidy ==='
+	.\scripts\tidy.bat
+else
+	echo '=== Tidy ==='
+	./scripts/tidy.sh
+endif
+
 vsix:
 ifeq ($(OS),Windows_NT)
 	@echo '=== VSIX Builder ==='
