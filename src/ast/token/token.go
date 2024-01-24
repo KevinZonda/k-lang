@@ -95,6 +95,7 @@ const (
 	Continue
 	True
 	False
+	Ref
 	IntegerLiteral
 	NumberLiteral
 	StringLiteral

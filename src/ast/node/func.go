@@ -21,6 +21,7 @@ func (f *FuncBlock) GetToken() token.Token {
 type FuncArg struct {
 	Type *Type
 	Name *Identifier
+	Ref  bool
 }
 
 type CodeBlock struct {

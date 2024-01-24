@@ -50,6 +50,8 @@ Continue : 'next' | 'pass' | 'continue';
 True : 'true' ;
 False : 'false' ;
 
+Ref : 'ref';
+
 IntegerLiteral : [0-9]+ ;
 NumberLiteral  : [0-9]+ ('.' [0-9]+)? ;
 StringLiteral  : [$@]?'"' .*? '"' ;

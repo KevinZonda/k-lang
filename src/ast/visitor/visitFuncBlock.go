@@ -50,6 +50,7 @@ func (v *AntlrVisitor) visitFuncSignArgItem(ctx parser.IFuncSignArgItemContext) 
 	a := node.FuncArg{
 		Name: v.visitIdentifier(ctx.Identifier()),
 		Type: v.visitType(ctx.Type_()),
+		Ref:  ctx.Ref() != nil,
 	}
 	return &a
 }
