@@ -34,7 +34,8 @@ func (e *Eval) EvalExpr(n node.Expr) any {
 	case *node.LambdaExpr:
 		return e.EvalLambdaExpr(n.(*node.LambdaExpr))
 	case *node.AssignStmt:
-		return e.EvalAssignStmt(n.(*node.AssignStmt))
+		e.EvalAssignStmt(n.(*node.AssignStmt))
+		return nil
 	case *node.StructLiteral:
 		return e.EvalStructLiteral(n.(*node.StructLiteral))
 	case *node.IndexExpr:

@@ -43,7 +43,7 @@ func clone(v any) any {
 	}
 }
 
-func (e *Eval) evalAssignStmt(n *node.AssignStmt, v any) any {
+func (e *Eval) evalAssignStmt(n *node.AssignStmt, v any) {
 	e.currentToken = n.GetToken()
 
 	var from any = e
@@ -69,21 +69,7 @@ func (e *Eval) evalAssignStmt(n *node.AssignStmt, v any) any {
 		}
 
 		if len(bvar.Index) > 0 {
-			for _, idxExpr := range bvar.Index {
-				switch from.(type) {
-				case *obj.Object:
-					from = from.(*obj.Object).Val
-				}
-				idx := e.EvalExpr(idxExpr)
-				switch from.(type) {
-				case []any:
-					from = from.([]any)[idx.(int)]
-				case map[any]any:
-					from = from.(map[any]any)[idx]
-				default:
-					panic(fmt.Sprint("not supported type to access by index: "+reflect.TypeOf(from).String(), "INDEX:", idx))
-				}
-			}
+			from = e.evalObjByIndex(from, bvar.Index)
 		}
 		// TODO: INDEX!
 	}
@@ -114,41 +100,64 @@ func (e *Eval) evalAssignStmt(n *node.AssignStmt, v any) any {
 
 	fmt.Println("SET VAL", reflect.TypeOf(from), from, "->", v)
 
-	return nil
+	return
 }
 
-func (e *Eval) EvalAssignStmt(n *node.AssignStmt) any {
+func (e *Eval) evalObjByIndex(from any, indexes []node.Expr) any {
+	if len(indexes) == 0 {
+		return from
+	}
+	for _, idxExpr := range indexes {
+		switch from.(type) {
+		case *obj.Object:
+			from = from.(*obj.Object).Val
+		}
+		idx := e.EvalExpr(idxExpr)
+		switch from.(type) {
+		case []any:
+			from = from.([]any)[idx.(int)]
+		case map[any]any:
+			from = from.(map[any]any)[idx]
+		default:
+			panic(fmt.Sprint("not supported type to access by index: "+reflect.TypeOf(from).String(), "INDEX:", idx))
+		}
+	}
+	return from
+}
+
+func (e *Eval) EvalAssignStmt(n *node.AssignStmt) {
 	v := e.EvalExpr(n.Value)
 	v = clone(v)
 
 	e.currentToken = n.GetToken()
-	// TODO: arr
 	if len(n.Var.Value) > 1 {
-		return e.evalAssignStmt(n, v)
+		e.evalAssignStmt(n, v)
+		return
 	}
 	baseV := n.Var.Value[0]
 	obj, ok := e.objTable.Get(baseV.Name.Value)
 	if ok && len(baseV.Index) != 0 {
 		switch obj.Val.(type) {
 		case []any:
-			bIdx := baseV.Index[:len(baseV.Index)-1]
-			if tgt := e.evalValWithIdx(bIdx, &obj.Val); tgt != nil {
-				switch (*tgt).(type) {
+			root := e.evalObjByIndex(obj.Val, baseV.Index[:len(baseV.Index)-1])
+			if root != nil {
+				switch (root).(type) {
 				case []any:
-					((*tgt).([]any))[e.EvalExpr(baseV.Index[len(baseV.Index)-1]).(int)] = v
+					(root.([]any))[e.EvalExpr(baseV.Index[len(baseV.Index)-1]).(int)] = v
 				}
 			}
+
 			// Consider we use pointer to modify the value, we are not okay to
 			// set back with new value by using objTable.Set(..., v) method.
-			e.objTable.Set(baseV.Name.Value, obj)
-			return v
+			// e.objTable.Set(baseV.Name.Value, obj)
+			return
 		case map[any]any:
 			m := obj.Val.(map[any]any)
 			m[e.EvalExpr(baseV.Index[len(baseV.Index)-1])] = v
 			e.objTable.Set(baseV.Name.Value, obj)
-			return v
+			return
 		}
 	}
 	e.objTable.Set(baseV.Name.Value, v)
-	return v
+	return
 }

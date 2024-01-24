@@ -1,9 +1,6 @@
 package eval
 
 import (
-	"reflect"
-
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
 )
 
@@ -32,23 +29,6 @@ func (e *Eval) frameEndWithAll() any {
 	}
 	retV, _ := e.objTable.Peek().Get(reserved.Return)
 	return retV
-}
-
-func (e *Eval) evalValWithIdx(idxs []node.Expr, root *any) *any {
-	val := root
-	for _, idxExpr := range idxs {
-		idx := e.EvalExpr(idxExpr)
-		switch reflect.TypeOf(*val).Kind() {
-		case reflect.Slice, reflect.Array:
-			*val = (*val).([]any)[idx.(int)]
-		case reflect.Map:
-			//if reflect.TypeOf(*val).Key() != reflect.TypeOf(idx) {
-			//	panic("Invalid key type")
-			//}
-			*val = (*val).(map[any]any)[idx]
-		}
-	}
-	return val
 }
 
 func (e *Eval) ObjTable() *TableStack {
