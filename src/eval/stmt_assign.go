@@ -67,6 +67,24 @@ func (e *Eval) evalAssignStmt(n *node.AssignStmt, v any) any {
 		default:
 			panic("not supported type: " + reflect.TypeOf(from).String())
 		}
+
+		if len(bvar.Index) > 0 {
+			for _, idxExpr := range bvar.Index {
+				switch from.(type) {
+				case *obj.Object:
+					from = from.(*obj.Object).Val
+				}
+				idx := e.EvalExpr(idxExpr)
+				switch from.(type) {
+				case []any:
+					from = from.([]any)[idx.(int)]
+				case map[any]any:
+					from = from.(map[any]any)[idx]
+				default:
+					panic(fmt.Sprint("not supported type to access by index: "+reflect.TypeOf(from).String(), "INDEX:", idx))
+				}
+			}
+		}
 		// TODO: INDEX!
 	}
 	fmt.Println("FROM", reflect.TypeOf(from))
