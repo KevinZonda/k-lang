@@ -137,13 +137,15 @@ func (e *Eval) EvalAssignStmt(n *node.AssignStmt) {
 	baseV := n.Var.Value[0]
 	obj, ok := e.objTable.Get(baseV.Name.Value)
 	if ok && len(baseV.Index) != 0 {
-		switch obj.Val.(type) {
+		needAccess := baseV.Index[:len(baseV.Index)-1]
+		lastIndex := e.EvalExpr(baseV.Index[len(baseV.Index)-1])
+		root := e.evalObjByIndex(obj.Val, needAccess)
+		switch root.(type) {
 		case []any:
-			root := e.evalObjByIndex(obj.Val, baseV.Index[:len(baseV.Index)-1])
 			if root != nil {
 				switch (root).(type) {
 				case []any:
-					(root.([]any))[e.EvalExpr(baseV.Index[len(baseV.Index)-1]).(int)] = v
+					(root.([]any))[lastIndex.(int)] = v
 				}
 			}
 
@@ -152,9 +154,9 @@ func (e *Eval) EvalAssignStmt(n *node.AssignStmt) {
 			// e.objTable.Set(baseV.Name.Value, obj)
 			return
 		case map[any]any:
-			m := obj.Val.(map[any]any)
-			m[e.EvalExpr(baseV.Index[len(baseV.Index)-1])] = v
-			e.objTable.Set(baseV.Name.Value, obj)
+			m := root.(map[any]any)
+			m[lastIndex] = v
+			// e.objTable.Set(baseV.Name.Value, obj)
 			return
 		}
 	}
