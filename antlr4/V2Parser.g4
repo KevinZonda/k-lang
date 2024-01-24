@@ -18,7 +18,7 @@ codeBlock : LBrack ((stmt | expr) sep*)* RBrack;
 declareBlock : LBrack declareStmt* RBrack;
 funcSig : Identifier LParen funcSignArgs RParen type?;
 funcSignArgs : funcSignArgItem? (Comma funcSignArgItem)*;
-funcSignArgItem : Ref? type? Identifier;
+funcSignArgItem : type? Ref? Identifier;
 
 type: Map | Function | (PackageName=Identifier Dot)? TypeName=Identifier (LSquare RSquare)?;
 var : baseVar (Dot baseVar)*; // x.y[X].z

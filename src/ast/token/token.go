@@ -95,12 +95,12 @@ const (
 	Continue
 	True
 	False
-	Ref
 	IntegerLiteral
 	NumberLiteral
 	StringLiteral
 	Not
 	Assign
+	Ref
 	Identifier
 	Comment
 	WS

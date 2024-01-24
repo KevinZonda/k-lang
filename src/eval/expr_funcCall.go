@@ -1,10 +1,12 @@
 package eval
 
 import (
+	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/builtin"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
+	"reflect"
 )
 
 func (e *Eval) EvalFuncCall(fc *node.FuncCall) any {
@@ -52,7 +54,13 @@ func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []any, onAfterFrameStart f
 		onAfterFrameStart()
 	}
 	for i, funcArg := range fn.Args {
-		e.objTable.SetAtTop(funcArg.Name.Value, clone(args[i]))
+		v := args[i]
+		if !funcArg.Ref {
+			v = clone(v)
+		} else {
+			fmt.Println(reflect.TypeOf(v))
+		}
+		e.objTable.SetAtTop(funcArg.Name.Value, v)
 	}
 	fe := e.new((tree.Ast)(fn.Body.Nodes))
 	_ = fe.run()

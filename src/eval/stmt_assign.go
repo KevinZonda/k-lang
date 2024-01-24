@@ -43,13 +43,72 @@ func clone(v any) any {
 	}
 }
 
+func (e *Eval) evalAssignStmt(n *node.AssignStmt, v any) any {
+	e.currentToken = n.GetToken()
+
+	var from any = e
+
+	for i, bvar := range n.Var.Value[:len(n.Var.Value)-1] {
+		switch from.(type) {
+		case *Eval:
+			if i == 0 {
+				ok := false
+				from, ok = from.(*Eval).objTable.Get(bvar.Name.Value)
+				if !ok {
+					panic(fmt.Sprintf("object %s not found", bvar.Name.Value))
+				}
+			} else {
+				ok := false
+				from, ok = from.(*Eval).objTable.Bottom().Get(bvar.Name.Value)
+				if !ok {
+					panic(fmt.Sprintf("object %s not found", bvar.Name.Value))
+				}
+			}
+		default:
+			panic("not supported type: " + reflect.TypeOf(from).String())
+		}
+		// TODO: INDEX!
+	}
+	fmt.Println("FROM", reflect.TypeOf(from))
+	switch from.(type) {
+	case *obj.Object:
+		fromObj := from.(*obj.Object)
+		switch fromObj.Val.(type) {
+		case *obj.StructField:
+			from = fromObj.Val.(*obj.StructField)
+		}
+		//fmt.Println("SET VAL", reflect.TypeOf(from.(*obj.Object).Val), from.(*obj.Object).Val, "->", v)
+		//from.(*obj.Object).Val = v
+	}
+
+	lastVar := n.Var.Value[len(n.Var.Value)-1]
+	switch from.(type) {
+	case *obj.StructField:
+		ok := false
+		_, ok = from.(*obj.StructField).Fields.Get(lastVar.Name.Value)
+		if !ok {
+			panic(fmt.Sprintf("field %s not found", lastVar.Name.Value))
+		}
+		from.(*obj.StructField).Fields.Set(lastVar.Name.Value, v)
+		// TODO: More case !
+		// TODO: INDEX!
+	}
+
+	fmt.Println("SET VAL", reflect.TypeOf(from), from, "->", v)
+
+	return nil
+}
+
 func (e *Eval) EvalAssignStmt(n *node.AssignStmt) any {
 	v := e.EvalExpr(n.Value)
 	v = clone(v)
 
 	e.currentToken = n.GetToken()
 	// TODO: arr
-	baseV := n.Var.Value[len(n.Var.Value)-1]
+	if len(n.Var.Value) > 1 {
+		return e.evalAssignStmt(n, v)
+	}
+	baseV := n.Var.Value[0]
 	obj, ok := e.objTable.Get(baseV.Name.Value)
 	if ok && len(baseV.Index) != 0 {
 		switch obj.Val.(type) {

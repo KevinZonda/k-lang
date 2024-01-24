@@ -39,6 +39,13 @@ type TableStack struct {
 	q []*Table
 }
 
+func (t *TableStack) Bottom() *Table {
+	if t.Empty() {
+		return nil
+	}
+	return t.q[0]
+}
+
 func (t *TableStack) Raw() []*Table {
 	return t.q
 }

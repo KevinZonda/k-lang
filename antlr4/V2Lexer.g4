@@ -50,8 +50,6 @@ Continue : 'next' | 'pass' | 'continue';
 True : 'true' ;
 False : 'false' ;
 
-Ref : 'ref';
-
 IntegerLiteral : [0-9]+ ;
 NumberLiteral  : [0-9]+ ('.' [0-9]+)? ;
 StringLiteral  : [$@]?'"' .*? '"' ;
@@ -59,6 +57,8 @@ StringLiteral  : [$@]?'"' .*? '"' ;
 
 Not       : '!' | 'not';
 Assign    : ':=' | '=' | '<-';
+
+Ref : '&';
 Identifier: [a-zA-Z_][a-zA-Z_0-9]* ;
 Comment   : '#' ~[\r\n]* -> channel(2); // channel 2 is for comments
 WS: [ \t\n\r\f]+ -> skip ;
