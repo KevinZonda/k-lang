@@ -3,7 +3,7 @@ package eval
 import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/builtin"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/builtin"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 )
 

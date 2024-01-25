@@ -1,5 +1,9 @@
 # TODO List
 
 - [ ] `if {...} else if`: else if syntax
-- [ ] referencing: `ref()` syntax
-- [ ] Token contains pos idx
+- [ ] Robust dotExpr
+- [ ] Ref to int
+
+- [x] referencing: `ref()` syntax
+  - Use `&` represents `ref()`
+- [x] Token contains pos idx
