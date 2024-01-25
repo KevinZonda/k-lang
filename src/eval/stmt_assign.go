@@ -49,31 +49,10 @@ func (e *Eval) evalAssignStmt(n *node.AssignStmt, v any) {
 	var from any = e
 
 	for i, bvar := range n.Var.Value[:len(n.Var.Value)-1] {
-		switch from.(type) {
-		case *Eval:
-			if i == 0 {
-				ok := false
-				from, ok = from.(*Eval).objTable.Get(bvar.Name.Value)
-				if !ok {
-					panic(fmt.Sprintf("object %s not found", bvar.Name.Value))
-				}
-			} else {
-				ok := false
-				from, ok = from.(*Eval).objTable.Bottom().Get(bvar.Name.Value)
-				if !ok {
-					panic(fmt.Sprintf("object %s not found", bvar.Name.Value))
-				}
-			}
-		default:
-			panic("not supported type: " + reflect.TypeOf(from).String())
-		}
-
-		if len(bvar.Index) > 0 {
-			from = e.evalObjByIndex(from, bvar.Index)
-		}
-		// TODO: INDEX!
+		from = e.evalObjByField(from, i == 0, bvar.Name.Value)
+		from = e.evalObjByIndex(from, bvar.Index)
 	}
-	fmt.Println("FROM", reflect.TypeOf(from))
+	// fmt.Println("FROM", reflect.TypeOf(from))
 	switch from.(type) {
 	case *obj.Object:
 		fromObj := from.(*obj.Object)
@@ -86,21 +65,49 @@ func (e *Eval) evalAssignStmt(n *node.AssignStmt, v any) {
 	}
 
 	lastVar := n.Var.Value[len(n.Var.Value)-1]
-	switch from.(type) {
-	case *obj.StructField:
-		ok := false
-		_, ok = from.(*obj.StructField).Fields.Get(lastVar.Name.Value)
-		if !ok {
-			panic(fmt.Sprintf("field %s not found", lastVar.Name.Value))
+	if len(lastVar.Index) == 0 {
+		switch from.(type) {
+		case *obj.StructField:
+			ok := false
+			_, ok = from.(*obj.StructField).Fields.Get(lastVar.Name.Value)
+			if !ok {
+				panic(fmt.Sprintf("field %s not found", lastVar.Name.Value))
+			}
+			from.(*obj.StructField).Fields.Set(lastVar.Name.Value, v)
+			// TODO: More case !
+			// TODO: INDEX!
 		}
-		from.(*obj.StructField).Fields.Set(lastVar.Name.Value, v)
-		// TODO: More case !
-		// TODO: INDEX!
+	} else {
+		from = e.evalObjByIndex(from, lastVar.Index[0:len(lastVar.Index)-1])
 	}
 
-	fmt.Println("SET VAL", reflect.TypeOf(from), from, "->", v)
+	// fmt.Println("SET VAL", reflect.TypeOf(from), from, "->", v)
 
 	return
+}
+
+func (e *Eval) evalObjByField(from any, canFromLocalVar bool, field string) any {
+	switch from.(type) {
+	case *Eval:
+		if canFromLocalVar {
+			ok := false
+			from, ok = from.(*Eval).objTable.Get(field)
+			if !ok {
+				panic(fmt.Sprintf("object %s not found", field))
+			}
+			return from
+		} else {
+			ok := false
+			from, ok = from.(*Eval).objTable.Bottom().Get(field)
+			if !ok {
+				panic(fmt.Sprintf("object %s not found", field))
+			}
+		}
+		// TODO Support struct
+	default:
+		panic("not supported type: " + reflect.TypeOf(from).String())
+	}
+	return nil
 }
 
 func (e *Eval) evalObjByIndex(from any, indexes []node.Expr) any {
@@ -125,6 +132,29 @@ func (e *Eval) evalObjByIndex(from any, indexes []node.Expr) any {
 	return from
 }
 
+func (e *Eval) assignObjIndexValue(root any, index node.Expr, v any) {
+	lastIndex := e.EvalExpr(index)
+	switch root.(type) {
+	case []any:
+		if root != nil {
+			switch (root).(type) {
+			case []any:
+				(root.([]any))[lastIndex.(int)] = v
+			}
+		}
+
+		// Consider we use pointer to modify the value, we are not okay to
+		// set back with new value by using objTable.Set(..., v) method.
+		// e.objTable.Set(baseV.Name.Value, obj)
+		return
+	case map[any]any:
+		m := root.(map[any]any)
+		m[lastIndex] = v
+		// e.objTable.Set(baseV.Name.Value, obj)
+		return
+	}
+}
+
 func (e *Eval) EvalAssignStmt(n *node.AssignStmt) {
 	v := e.EvalExpr(n.Value)
 	v = clone(v)
@@ -138,27 +168,9 @@ func (e *Eval) EvalAssignStmt(n *node.AssignStmt) {
 	obj, ok := e.objTable.Get(baseV.Name.Value)
 	if ok && len(baseV.Index) != 0 {
 		needAccess := baseV.Index[:len(baseV.Index)-1]
-		lastIndex := e.EvalExpr(baseV.Index[len(baseV.Index)-1])
+		lastIndex := baseV.Index[len(baseV.Index)-1]
 		root := e.evalObjByIndex(obj.Val, needAccess)
-		switch root.(type) {
-		case []any:
-			if root != nil {
-				switch (root).(type) {
-				case []any:
-					(root.([]any))[lastIndex.(int)] = v
-				}
-			}
-
-			// Consider we use pointer to modify the value, we are not okay to
-			// set back with new value by using objTable.Set(..., v) method.
-			// e.objTable.Set(baseV.Name.Value, obj)
-			return
-		case map[any]any:
-			m := root.(map[any]any)
-			m[lastIndex] = v
-			// e.objTable.Set(baseV.Name.Value, obj)
-			return
-		}
+		e.assignObjIndexValue(root, lastIndex, v)
 	}
 	e.objTable.Set(baseV.Name.Value, v)
 	return
