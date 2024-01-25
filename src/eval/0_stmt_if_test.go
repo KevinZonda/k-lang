@@ -28,3 +28,19 @@ if (1 == -2) {
 	expected := `2`
 	tester.GeneralTest(true, ts, code, expected)
 }
+
+func TestElseIf(ts *testing.T) {
+	code := `
+i = 3
+if (i == 1) {
+	println("1")
+} else if (i == 2) {
+	println("2")
+} else {
+	println("otherwise")
+}
+`
+	expected := `otherwise
+`
+	tester.GeneralTest(true, ts, code, expected)
+}

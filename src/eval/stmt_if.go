@@ -10,8 +10,12 @@ func (e *Eval) EvalIfStmt(n *node.IfStmt) {
 			e.EvalCodeBlock(n.IfTrue)
 			return
 		}
-		if n.IfFalse != nil {
-			e.EvalCodeBlock(n.IfFalse)
+		if n.IfFalseIfStmt != nil {
+			e.EvalIfStmt(n.IfFalseIfStmt)
+			return
+		}
+		if n.IfFalseCodeBlock != nil {
+			e.EvalCodeBlock(n.IfFalseCodeBlock)
 		}
 		return
 	}

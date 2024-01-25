@@ -97,7 +97,7 @@ declareStmt
 
 
 ifStmt
-    : If LParen expr RParen codeBlock (Else codeBlock)?
+    : If LParen expr RParen codeBlock (Else (codeBlock|ifStmt))?
     ;
 
 tryCatchSmt
