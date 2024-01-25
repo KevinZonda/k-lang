@@ -78,7 +78,9 @@ func (e *Eval) evalAssignStmt(n *node.AssignStmt, v any) {
 			// TODO: INDEX!
 		}
 	} else {
+		from = e.evalObjByField(from, false, lastVar.Name.Value)
 		from = e.evalObjByIndex(from, lastVar.Index[0:len(lastVar.Index)-1])
+		e.assignObjIndexValue(from, lastVar.Index[len(lastVar.Index)-1], v)
 	}
 
 	// fmt.Println("SET VAL", reflect.TypeOf(from), from, "->", v)
@@ -95,7 +97,6 @@ func (e *Eval) evalObjByField(from any, canFromLocalVar bool, field string) any 
 			if !ok {
 				panic(fmt.Sprintf("object %s not found", field))
 			}
-			return from
 		} else {
 			ok := false
 			from, ok = from.(*Eval).objTable.Bottom().Get(field)
@@ -103,7 +104,16 @@ func (e *Eval) evalObjByField(from any, canFromLocalVar bool, field string) any 
 				panic(fmt.Sprintf("object %s not found", field))
 			}
 		}
-		// TODO Support struct
+		return from
+	// TODO Support struct
+	case *obj.StructField:
+		ok := false
+		from, ok = from.(*obj.StructField).Fields.Get(field)
+		if !ok {
+			panic(fmt.Sprintf("field %s not found", field))
+		}
+		return from
+
 	default:
 		panic("not supported type: " + reflect.TypeOf(from).String())
 	}
@@ -171,7 +181,8 @@ func (e *Eval) EvalAssignStmt(n *node.AssignStmt) {
 		lastIndex := baseV.Index[len(baseV.Index)-1]
 		root := e.evalObjByIndex(obj.Val, needAccess)
 		e.assignObjIndexValue(root, lastIndex, v)
+	} else {
+		e.objTable.Set(baseV.Name.Value, v)
 	}
-	e.objTable.Set(baseV.Name.Value, v)
 	return
 }
