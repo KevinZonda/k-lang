@@ -43,13 +43,18 @@ func clone(v any) any {
 	}
 }
 
-func (e *Eval) evalAssignStmt(n *node.AssignStmt, v any) {
+func (e *Eval) EvalAssignStmt(n *node.AssignStmt) {
+	v := e.EvalExpr(n.Value)
+	v = clone(v)
+
 	e.currentToken = n.GetToken()
 
 	var from any = e
 
 	for i, bvar := range n.Var.Value[:len(n.Var.Value)-1] {
+		from, _ = e.unboxObj(from)
 		from = e.evalObjByField(from, i == 0, bvar.Name.Value)
+		from, _ = e.unboxObj(from)
 		from = e.evalObjByIndex(from, bvar.Index)
 	}
 	// fmt.Println("FROM", reflect.TypeOf(from))
@@ -74,12 +79,17 @@ func (e *Eval) evalAssignStmt(n *node.AssignStmt, v any) {
 				panic(fmt.Sprintf("field %s not found", lastVar.Name.Value))
 			}
 			from.(*obj.StructField).Fields.Set(lastVar.Name.Value, v)
-			// TODO: More case !
-			// TODO: INDEX!
+
+		case *Eval:
+			e.objTable.Set(lastVar.Name.Value, v)
 		}
 	} else {
-		from = e.evalObjByField(from, false, lastVar.Name.Value)
+		// TODO: TEST
+		// TODO: INDEX!
+		from = e.evalObjByField(from, len(n.Var.Value) == 0, lastVar.Name.Value)
+		from, _ = e.unboxObj(from)
 		from = e.evalObjByIndex(from, lastVar.Index[0:len(lastVar.Index)-1])
+		from, _ = e.unboxObj(from)
 		e.assignObjIndexValue(from, lastVar.Index[len(lastVar.Index)-1], v)
 	}
 
@@ -120,15 +130,21 @@ func (e *Eval) evalObjByField(from any, canFromLocalVar bool, field string) any 
 	return nil
 }
 
+func (e *Eval) unboxObj(from any) (any, bool) {
+	switch from.(type) {
+	case *obj.Object:
+		return from.(*obj.Object).Val, true
+	}
+	return from, false
+}
+
 func (e *Eval) evalObjByIndex(from any, indexes []node.Expr) any {
 	if len(indexes) == 0 {
 		return from
 	}
+
 	for _, idxExpr := range indexes {
-		switch from.(type) {
-		case *obj.Object:
-			from = from.(*obj.Object).Val
-		}
+		from, _ = e.unboxObj(from)
 		idx := e.EvalExpr(idxExpr)
 		switch from.(type) {
 		case []any:
@@ -163,26 +179,4 @@ func (e *Eval) assignObjIndexValue(root any, index node.Expr, v any) {
 		// e.objTable.Set(baseV.Name.Value, obj)
 		return
 	}
-}
-
-func (e *Eval) EvalAssignStmt(n *node.AssignStmt) {
-	v := e.EvalExpr(n.Value)
-	v = clone(v)
-
-	e.currentToken = n.GetToken()
-	if len(n.Var.Value) > 1 {
-		e.evalAssignStmt(n, v)
-		return
-	}
-	baseV := n.Var.Value[0]
-	obj, ok := e.objTable.Get(baseV.Name.Value)
-	if ok && len(baseV.Index) != 0 {
-		needAccess := baseV.Index[:len(baseV.Index)-1]
-		lastIndex := baseV.Index[len(baseV.Index)-1]
-		root := e.evalObjByIndex(obj.Val, needAccess)
-		e.assignObjIndexValue(root, lastIndex, v)
-	} else {
-		e.objTable.Set(baseV.Name.Value, v)
-	}
-	return
 }
