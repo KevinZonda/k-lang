@@ -81,7 +81,13 @@ func (e *Eval) EvalAssignStmt(n *node.AssignStmt) {
 			from.(*obj.StructField).Fields.Set(lastVar.Name.Value, v)
 
 		case *Eval:
-			e.objTable.Set(lastVar.Name.Value, v)
+			f := from.(*Eval)
+			if e == f {
+				e.objTable.Set(lastVar.Name.Value, v)
+			} else {
+				f.objTable.Bottom().Set(lastVar.Name.Value, cons(v))
+			}
+
 		}
 	} else {
 		// TODO: TEST
@@ -131,6 +137,9 @@ func (e *Eval) evalObjByField(from any, canFromLocalVar bool, field string) any 
 }
 
 func (e *Eval) unboxObj(from any) (any, bool) {
+	if from == nil {
+		return nil, false
+	}
 	switch from.(type) {
 	case *obj.Object:
 		return from.(*obj.Object).Val, true

@@ -31,9 +31,12 @@ func (e *Eval) EvalPropertyAfterScope(scope any, property node.Expr) any {
 		actualPpt = property.(*node.Identifier).Value
 	case *node.DotExpr:
 		actualPpt = e.EvalDotExpr(property.(*node.DotExpr))
+	default:
+		panic("Not Implemented EvalPropertyAfterScope" + reflect.TypeOf(property).String())
 	}
 	//fmt.Println("Scope: ", actualPpt)
 	//fmt.Println("Property: ", property)
+	scope, _ = e.unboxObj(scope)
 	switch scope.(type) {
 	case *obj.StructField:
 		_sf := scope.(*obj.StructField)
@@ -42,6 +45,15 @@ func (e *Eval) EvalPropertyAfterScope(scope any, property node.Expr) any {
 			res = nil
 		}
 		return res
+	case *Eval:
+		_e := scope.(*Eval)
+		if o, ok := _e.objTable.Bottom().Get(actualPpt.(string)); ok {
+			v, _ := _e.unboxObj(o)
+			return v
+		}
+		panic("No Property Found: " + actualPpt.(string))
+	default:
+		panic("Not Implemented EvalPropertyAfterScope " + reflect.TypeOf(scope).String())
 	}
 	return nil
 

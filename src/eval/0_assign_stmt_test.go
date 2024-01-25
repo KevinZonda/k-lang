@@ -37,3 +37,21 @@ println(x)
 `
 	tester.GeneralTest(false, t, code, expected)
 }
+
+func TestAssignToOtherFile(t *testing.T) {
+	code := `
+open "testFile/assign.k" as a
+
+fn add(x) {
+	a.x = a.x + x
+}
+
+println(a.x)
+add(6)
+println(a.x)
+`
+	expected := `19
+25
+`
+	tester.GeneralTest(false, t, code, expected)
+}
