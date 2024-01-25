@@ -73,11 +73,11 @@ func (e *Eval) runWithBreak(breaks ...string) runResult {
 				goto end
 			}
 		}
-		switch n.(type) {
+		switch nT := n.(type) {
 		case *node.CodeBlock:
-			e.EvalCodeBlock(n.(*node.CodeBlock))
+			e.EvalCodeBlock(nT)
 		case node.Expr:
-			exprR := e.EvalExpr(n.(node.Expr))
+			exprR := e.EvalExpr(nT)
 			if idx == len(e.ast)-1 {
 				switch n.(type) {
 				case *node.AssignStmt:
@@ -88,16 +88,13 @@ func (e *Eval) runWithBreak(breaks ...string) runResult {
 				}
 			}
 		case node.Stmt:
-			e.EvalStmt(n.(node.Stmt))
+			e.EvalStmt(nT)
 		case *node.FuncBlock:
-			fb := n.(*node.FuncBlock)
-			e.objTable.Set(fb.Name.Value, fb)
+			e.objTable.Set(nT.Name.Value, nT)
 		case *node.StructBlock:
-			structBlock := n.(*node.StructBlock)
-			e.objTable.Set(structBlock.Name, structBlock)
+			e.objTable.Set(nT.Name, nT)
 		case *node.OpenBlock:
-			ob := n.(*node.OpenBlock)
-			for _, stmt := range ob.Openers {
+			for _, stmt := range nT.Openers {
 				e.EvalStmt(stmt)
 			}
 		default:

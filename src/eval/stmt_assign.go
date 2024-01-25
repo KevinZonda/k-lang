@@ -13,25 +13,24 @@ func clone(v any) any {
 	if v == nil {
 		return nil
 	}
-	switch v.(type) {
+	switch vT := v.(type) {
 	case *obj.StructField:
-		sf := v.(*obj.StructField)
 		fields := orderedmap.New[string, any]()
-		for pair := sf.Fields.Oldest(); pair != nil; pair = pair.Next() {
+		for pair := vT.Fields.Oldest(); pair != nil; pair = pair.Next() {
 			fields.Set(pair.Key, clone(pair.Value))
 		}
 		return &obj.StructField{
-			TypeAs: sf.TypeAs,
+			TypeAs: vT.TypeAs,
 			Fields: fields,
 		}
 	case []any:
-		a := make([]any, len(v.([]any)))
+		a := make([]any, len(vT))
 		copy(a, v.([]any))
 		return a
 	case map[any]any:
 		m := make(map[any]any)
-		for k, v := range v.(map[any]any) {
-			m[k] = v
+		for k, val := range vT {
+			m[k] = val
 		}
 		return m
 	case int, float64, string, bool:
@@ -72,18 +71,17 @@ func (e *Eval) EvalAssignStmt(n *node.AssignStmt) {
 
 	lastVar := n.Var.Value[len(n.Var.Value)-1]
 	if len(lastVar.Index) == 0 {
-		switch from.(type) {
+		switch fromT := from.(type) {
 		case *obj.StructField:
 			ok := false
-			_, ok = from.(*obj.StructField).Fields.Get(lastVar.Name.Value)
+			_, ok = fromT.Fields.Get(lastVar.Name.Value)
 			if !ok {
 				panic(fmt.Sprintf("field %s not found", lastVar.Name.Value))
 			}
-			from.(*obj.StructField).Fields.Set(lastVar.Name.Value, v)
+			fromT.Fields.Set(lastVar.Name.Value, v)
 
 		case *Eval:
-			f := from.(*Eval)
-			if e == f {
+			if e == fromT {
 				o, ok := e.objTable.Get(lastVar.Name.Value)
 				if ok {
 					o.Val = v
@@ -91,7 +89,7 @@ func (e *Eval) EvalAssignStmt(n *node.AssignStmt) {
 					e.objTable.SetAtTop(lastVar.Name.Value, cons(v))
 				}
 			} else {
-				o, ok := f.objTable.Bottom().Get(lastVar.Name.Value)
+				o, ok := fromT.objTable.Bottom().Get(lastVar.Name.Value)
 				if ok {
 					o.Val = v
 				} else {
@@ -167,11 +165,11 @@ func (e *Eval) evalObjByIndex(from any, indexes []node.Expr) any {
 	for _, idxExpr := range indexes {
 		from, _ = e.unboxObj(from)
 		idx := e.EvalExpr(idxExpr)
-		switch from.(type) {
+		switch fromT := from.(type) {
 		case []any:
-			from = from.([]any)[idx.(int)]
+			from = fromT[idx.(int)]
 		case map[any]any:
-			from = from.(map[any]any)[idx]
+			from = fromT[idx]
 		default:
 			panic(fmt.Sprint("not supported type to access by index: "+reflect.TypeOf(from).String(), "INDEX:", idx))
 		}
@@ -181,13 +179,10 @@ func (e *Eval) evalObjByIndex(from any, indexes []node.Expr) any {
 
 func (e *Eval) assignObjIndexValue(root any, index node.Expr, v any) {
 	lastIndex := e.EvalExpr(index)
-	switch root.(type) {
+	switch rT := root.(type) {
 	case []any:
-		if root != nil {
-			switch (root).(type) {
-			case []any:
-				(root.([]any))[lastIndex.(int)] = v
-			}
+		if rT != nil {
+			rT[lastIndex.(int)] = v
 		}
 
 		// Consider we use pointer to modify the value, we are not okay to
@@ -195,9 +190,10 @@ func (e *Eval) assignObjIndexValue(root any, index node.Expr, v any) {
 		// e.objTable.Set(baseV.Name.Value, obj)
 		return
 	case map[any]any:
-		m := root.(map[any]any)
-		m[lastIndex] = v
+		rT[lastIndex] = v
 		// e.objTable.Set(baseV.Name.Value, obj)
 		return
+	default:
+		panic(fmt.Sprint("not supported type to access by index: "+reflect.TypeOf(root).String(), "INDEX:", index))
 	}
 }

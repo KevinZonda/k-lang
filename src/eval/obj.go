@@ -17,15 +17,15 @@ func cons(a any) *obj.Object {
 	case *obj.Object:
 		return a.(*obj.Object)
 	case *node.LambdaExpr:
-		return obj.NewObj(obj.Lambda, a.(*node.LambdaExpr))
+		return obj.NewObj(obj.Lambda, a)
 	case *node.FuncBlock:
-		return obj.NewObj(obj.Func, a.(*node.FuncBlock))
+		return obj.NewObj(obj.Func, a)
 	//case []any:
 	//	return NewArrayObject(a.([]any))
 	//case map[any]any:
 	//	return NewMapObject(a.(map[any]any))
 	case *obj.StructField:
-		return obj.NewObj(obj.Struct, a.(*obj.StructField))
+		return obj.NewObj(obj.Struct, a)
 	case obj.StructField:
 		sf := a.(obj.StructField)
 		return obj.NewObj(obj.Struct, &sf)

@@ -65,22 +65,15 @@ func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) any {
 	_fc.Args = funcCall.Args
 	_fc.Token = funcCall.Token
 
-	switch scope.(type) {
+	switch scopeT := scope.(type) {
 	case *Eval:
-		_e := scope.(*Eval)
-		return _e.EvalFuncCall(funcCall)
+		return scopeT.EvalFuncCall(funcCall)
 	case obj.ILibrary:
-		_lib := scope.(obj.ILibrary)
-		var args []any
-		for _, expr := range _fc.Args {
-			args = append(args, e.EvalExpr(expr))
-		}
-		return _lib.FuncCall(_fc.Caller.Value, args)
+		return scopeT.FuncCall(_fc.Caller.Value, e.evalExprs(_fc.Args...))
 	case *obj.StructField:
-		_sf := scope.(*obj.StructField)
 		var lambda *node.LambdaExpr
 		{
-			v, ok := _sf.Fields.Get(funcCall.Caller.Value)
+			v, ok := scopeT.Fields.Get(funcCall.Caller.Value)
 			if !ok {
 				panic("No Func Found From Struct: " + funcCall.Caller.Value)
 			}
@@ -88,7 +81,7 @@ func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) any {
 		}
 		_lmd := lambda.ToFunc("")
 		return e.EvalFuncBlock(_lmd, _fc.Args, func() {
-			e.objTable.SetAtTop("self", _sf)
+			e.objTable.SetAtTop("self", scopeT)
 		})
 		// TODO: More situation!
 	default:
