@@ -7,20 +7,23 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 )
 
+func (e *Eval) evalExprs(exprs ...node.Expr) []any {
+	var ret []any
+	for _, expr := range exprs {
+		ret = append(ret, e.EvalExpr(expr))
+	}
+	return ret
+}
+
 func (e *Eval) EvalFuncCall(fc *node.FuncCall) any {
 	e.currentToken = fc.GetToken()
 	// Eval Args
-	exprArgs := fc.Args
-	var args []any
-	for _, expr := range exprArgs {
-		args = append(args, e.EvalExpr(expr))
-	}
 
 	// Find Func
 	funcName := fc.Caller.Value
 	fx, ok := e.objTable.Get(funcName)
 	if !ok || !(fx.Is(obj.Func, obj.Lambda)) {
-		return e.EvalBuiltInCall(fc, args)
+		return e.EvalBuiltInCall(fc, e.evalExprs(fc.Args...))
 	}
 
 	var fn *node.FuncBlock
@@ -30,7 +33,7 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) any {
 		fn = fx.ToFunc()
 	}
 
-	return e.EvalFuncBlock(fn, args, nil)
+	return e.EvalFuncBlock(fn, fc.Args, nil)
 	//e.frameStart()
 	//for i, funcArg := range fn.Args {
 	//	e.objTable.Set(funcArg.Name.Value, args[i])
@@ -45,16 +48,18 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) any {
 	//return nil
 }
 
-func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []any, onAfterFrameStart func()) any {
+func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, onAfterFrameStart func()) any {
 	e.currentToken = fn.GetToken()
 	e.frameStart(true)
 	if onAfterFrameStart != nil {
 		onAfterFrameStart()
 	}
 	for i, funcArg := range fn.Args {
-		v := args[i]
-		if !funcArg.Ref {
-			v = clone(v)
+		var v any = nil
+		if funcArg.Ref {
+			v = e.evalExpr(args[i], true)
+		} else {
+			v = clone(e.EvalExpr(args[i]))
 		}
 		e.objTable.SetAtTop(funcArg.Name.Value, v)
 	}

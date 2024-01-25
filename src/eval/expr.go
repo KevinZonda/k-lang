@@ -6,7 +6,7 @@ import (
 	"reflect"
 )
 
-func (e *Eval) EvalExpr(n node.Expr) any {
+func (e *Eval) evalExpr(n node.Expr, keepRef bool) any {
 	e.currentToken = n.GetToken()
 	switch n.(type) {
 	case *node.DotExpr:
@@ -24,7 +24,7 @@ func (e *Eval) EvalExpr(n node.Expr) any {
 	case *node.BoolLiteral:
 		return e.EvalBoolLiteral(n.(*node.BoolLiteral))
 	case *node.Identifier:
-		return e.EvalIdentifier(n.(*node.Identifier))
+		return e.EvalIdentifier(n.(*node.Identifier), keepRef)
 	case *node.ArrayLiteral:
 		return e.EvalArrayLiteral(n.(*node.ArrayLiteral))
 	case *node.MapLiteral:
@@ -44,4 +44,9 @@ func (e *Eval) EvalExpr(n node.Expr) any {
 		fmt.Println(reflect.TypeOf(n))
 		panic("not implemented")
 	}
+
+}
+
+func (e *Eval) EvalExpr(n node.Expr) any {
+	return e.evalExpr(n, false)
 }

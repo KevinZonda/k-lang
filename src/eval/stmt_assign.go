@@ -2,10 +2,11 @@ package eval
 
 import (
 	"fmt"
+	"reflect"
+
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	orderedmap "github.com/wk8/go-ordered-map/v2"
-	"reflect"
 )
 
 func clone(v any) any {
@@ -83,9 +84,20 @@ func (e *Eval) EvalAssignStmt(n *node.AssignStmt) {
 		case *Eval:
 			f := from.(*Eval)
 			if e == f {
-				e.objTable.Set(lastVar.Name.Value, v)
+				o, ok := e.objTable.Get(lastVar.Name.Value)
+				if ok {
+					o.Val = v
+				} else {
+					e.objTable.SetAtTop(lastVar.Name.Value, cons(v))
+				}
 			} else {
-				f.objTable.Bottom().Set(lastVar.Name.Value, cons(v))
+				o, ok := f.objTable.Bottom().Get(lastVar.Name.Value)
+				if ok {
+					o.Val = v
+				} else {
+					// f.objTable.SetAtTop(lastVar.Name.Value, cons(v))
+					panic("not support create new variable in other file")
+				}
 			}
 
 		}

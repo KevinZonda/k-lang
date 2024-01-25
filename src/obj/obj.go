@@ -1,7 +1,9 @@
 package obj
 
 import (
+	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
+	"strings"
 )
 
 type ILibrary interface {
@@ -25,6 +27,21 @@ const (
 	//Map     Kind = "Map"
 	Struct Kind = "Struct"
 )
+
+func (o *Object) String() string {
+	if o == nil {
+		return "<nil object>"
+	}
+	sb := strings.Builder{}
+	sb.WriteString("Object{ Kind: ")
+	sb.WriteString(string(o.Kind))
+	sb.WriteString(", Val: ")
+	sb.WriteString(fmt.Sprint(o.Val))
+	sb.WriteString(", Addr: ")
+	sb.WriteString(fmt.Sprintf("%p", o))
+	sb.WriteString(" }")
+	return sb.String()
+}
 
 func (o *Object) TypeOf() string {
 	return string(o.Kind)

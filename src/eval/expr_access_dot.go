@@ -86,12 +86,8 @@ func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) any {
 			}
 			lambda = v.(*node.LambdaExpr)
 		}
-		var args []any
-		for _, expr := range _fc.Args {
-			args = append(args, e.EvalExpr(expr))
-		}
 		_lmd := lambda.ToFunc("")
-		return e.EvalFuncBlock(_lmd, args, func() {
+		return e.EvalFuncBlock(_lmd, _fc.Args, func() {
 			e.objTable.SetAtTop("self", _sf)
 		})
 		// TODO: More situation!

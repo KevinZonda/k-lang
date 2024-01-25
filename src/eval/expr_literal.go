@@ -69,10 +69,13 @@ func (e *Eval) EvalMapLiteral(n *node.MapLiteral) map[any]any {
 	return m
 }
 
-func (e *Eval) EvalIdentifier(n *node.Identifier) any {
+func (e *Eval) EvalIdentifier(n *node.Identifier, keepRef bool) any {
 	e.currentToken = n.GetToken()
 	v, ok := e.objTable.Get(n.Value)
 	if ok {
+		if keepRef {
+			return v
+		}
 		return v.Val
 	}
 	panic("No Var Found: " + n.Value)
