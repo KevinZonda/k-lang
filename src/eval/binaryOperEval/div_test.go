@@ -10,4 +10,6 @@ import (
 func TestDiv(t *testing.T) {
 	tester.Assert(t, binaryOperEval.BinaryOper(token.Div, 1, 2), 0.5)
 	tester.Assert(t, binaryOperEval.BinaryOper(token.Div, 1.1, 2), 0.55)
+	tester.Assert(t, binaryOperEval.BinaryOper(token.Div, 1, 2.2), 1/2.2)
+	tester.Assert(t, binaryOperEval.BinaryOper(token.Div, 2.2, 1.1), 2.2/1.1)
 }

@@ -3,11 +3,11 @@ package binaryOperEval
 import "fmt"
 
 func Mod(left any, right any) int {
-	switch left.(type) {
+	switch leftT := left.(type) {
 	case int:
-		switch right.(type) {
+		switch rightT := right.(type) {
 		case int:
-			return left.(int) % right.(int)
+			return leftT % rightT
 		}
 	}
 	panic(fmt.Sprintf("cannot mod %T and %T", left, right))
