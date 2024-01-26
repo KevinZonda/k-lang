@@ -14,7 +14,7 @@
 		"keywords": {
 			"patterns": [{
 				"name": "keyword.control.klang",
-				"match": "\\b(if|else|struct|fn|match|for|break|continue|return|open|as|:=)\\b"
+				"match": "\\b(if|else|struct|fn|match|case|for|break|continue|return|open|as|:=)\\b"
 			}]
 		},
 		"operator": {
@@ -22,7 +22,7 @@
 			"name": "keyword.operator.klang"
 		},
 		"type": {
-			"match": "\\b(int|num|bool|str)\\b",
+			"match": "\\b(int|num|bool|str|any)\\b",
 			"name": "keyword.type.klang"
 		},
 		"strings": {
