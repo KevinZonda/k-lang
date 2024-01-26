@@ -60,7 +60,27 @@ func (e *Eval) EvalReturnStmt(n *node.ReturnStmt) {
 	e.currentToken = n.GetToken()
 	e.objTable.SetAtTop(reserved.Return, nil)
 	if n.Value != nil {
-		e.objTable.SetAtTop(reserved.Return, e.EvalExpr(n.Value[0])) // TODO: RETURN MULTIPLE VALUES
+		if len(n.Value) == 1 {
+			e.objTable.SetAtTop(reserved.Return, e.EvalExpr(n.Value[0]))
+			return
+		}
+		e.objTable.SetAtTop(reserved.Return, e.evalExprs(n.Value...))
 	}
 	return
+}
+
+func (e *Eval) evalReturnVal() (vals []any, hasRet bool) {
+	v, hasRet := e.objTable.GetAtTop(reserved.Return)
+	if !hasRet {
+		return nil, false
+	}
+	if v == nil {
+		return nil, true
+	}
+	switch t := v.(type) {
+	case []any:
+		return t, true
+	default:
+		return []any{t}, true
+	}
 }

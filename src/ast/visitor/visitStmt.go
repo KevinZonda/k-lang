@@ -79,19 +79,22 @@ func (v *AntlrVisitor) visitIfStmt(ctx parser.IIfStmtContext) *node.IfStmt {
 
 func (v *AntlrVisitor) visitAssignStmt(ctx parser.IAssignStmtContext) *node.AssignStmt {
 	var assignee []*node.Assignee
+	var val node.Expr
 	if ctx.Vars() != nil {
 		assignee = v.visitAssignStmtAssignee(ctx.Vars())
+		val = v.visitExpr(ctx.Expr())
 	} else {
 		assignee = append(assignee, &node.Assignee{
 			Type: v.visitType(ctx.Type_()),
 			Var:  v.visitVar(ctx.Var_()),
 			Ref:  ctx.Ref() != nil,
 		})
+		val = v.visitExprWithLambda(ctx.ExprWithLambda())
 	}
 	n := node.AssignStmt{
 		Token:    token.FromAntlrToken(ctx.Assign().GetSymbol()).WithBegin(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		Assignee: assignee,
-		Value:    v.visitExprWithLambda(ctx.ExprWithLambda()),
+		Value:    val,
 	}
 	return &n
 }

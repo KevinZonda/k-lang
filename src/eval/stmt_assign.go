@@ -45,19 +45,31 @@ func clone(v any) any {
 
 func (e *Eval) EvalAssignStmt(n *node.AssignStmt) {
 	if len(n.Assignee) == 1 {
-		e.EvalAssignStmtX(n, n.Assignee[0], n.Value)
+		var v any
+		if n.Assignee[0].Ref {
+			v = e.evalExpr(n.Value, true)
+		} else {
+			v = clone(e.EvalExpr(n.Value))
+		}
+		e.EvalAssignStmtX(n, n.Assignee[0], v)
 		return
+	}
+	vals, ok := e.EvalExpr(n.Value).([]any)
+	if !ok {
+		panic("not supported type: " + reflect.TypeOf(n.Value).String())
+	}
+	if len(vals) != len(n.Assignee) {
+		panic("assign cannot happened if have different numbers of receivers and senders have: " + fmt.Sprint(len(n.Assignee)) + " receivers, but have: " + fmt.Sprint(len(vals)) + " senders")
+	}
+	vals = clone(vals).([]any)
+	for i, assignee := range n.Assignee {
+		e.EvalAssignStmtX(n, assignee, vals[i])
 	}
 
 }
 
 func (e *Eval) EvalAssignStmtX(n *node.AssignStmt, assignee *node.Assignee, value any) {
-	var v any = nil
-	if assignee.Ref {
-		v = e.evalExpr(n.Value, true)
-	} else {
-		v = clone(e.EvalExpr(n.Value))
-	}
+	var v any = value
 	e.currentToken = n.GetToken()
 
 	nVar := assignee.Var
