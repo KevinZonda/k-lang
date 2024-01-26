@@ -44,17 +44,27 @@ func clone(v any) any {
 }
 
 func (e *Eval) EvalAssignStmt(n *node.AssignStmt) {
+	if len(n.Assignee) == 1 {
+		e.EvalAssignStmtX(n, n.Assignee[0], n.Value)
+		return
+	}
+
+}
+
+func (e *Eval) EvalAssignStmtX(n *node.AssignStmt, assignee *node.Assignee, value any) {
 	var v any = nil
-	if n.Ref {
+	if assignee.Ref {
 		v = e.evalExpr(n.Value, true)
 	} else {
 		v = clone(e.EvalExpr(n.Value))
 	}
 	e.currentToken = n.GetToken()
 
+	nVar := assignee.Var
+
 	var from any = e
 
-	for i, bvar := range n.Var.Value[:len(n.Var.Value)-1] {
+	for i, bvar := range nVar.Value[:len(nVar.Value)-1] {
 		from, _ = e.unboxObj(from)
 		from = e.evalObjByField(from, i == 0, bvar.Name.Value)
 		from, _ = e.unboxObj(from)
@@ -72,7 +82,7 @@ func (e *Eval) EvalAssignStmt(n *node.AssignStmt) {
 		//from.(*obj.Object).Val = v
 	}
 
-	lastVar := n.Var.Value[len(n.Var.Value)-1]
+	lastVar := nVar.Value[len(nVar.Value)-1]
 	if len(lastVar.Index) == 0 {
 		switch fromT := from.(type) {
 		case *obj.StructField:
@@ -105,7 +115,7 @@ func (e *Eval) EvalAssignStmt(n *node.AssignStmt) {
 	} else {
 		// TODO: TEST
 		// TODO: INDEX!
-		from = e.evalObjByField(from, len(n.Var.Value) == 0, lastVar.Name.Value)
+		from = e.evalObjByField(from, len(nVar.Value) == 0, lastVar.Name.Value)
 		from, _ = e.unboxObj(from)
 		from = e.evalObjByIndex(from, lastVar.Index[0:len(lastVar.Index)-1])
 		from, _ = e.unboxObj(from)

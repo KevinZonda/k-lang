@@ -128,6 +128,10 @@ func (v *BaseV2ParserVisitor) VisitAssignStmt(ctx *AssignStmtContext) interface{
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseV2ParserVisitor) VisitVars(ctx *VarsContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseV2ParserVisitor) VisitDeclareStmt(ctx *DeclareStmtContext) interface{} {
 	return v.VisitChildren(ctx)
 }

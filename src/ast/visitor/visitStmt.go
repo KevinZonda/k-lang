@@ -38,9 +38,15 @@ func (v *AntlrVisitor) visitStmt(ctx parser.IStmtContext) node.Stmt {
 
 func (v *AntlrVisitor) visitJumpStmt(ctx parser.IJumpStmtContext) node.Stmt {
 	if ctx.Return() != nil {
+		var retV []node.Expr
+		if len(ctx.AllExprWithLambda()) > 0 {
+			for _, kid := range ctx.AllExprWithLambda() {
+				retV = append(retV, v.visitExprWithLambda(kid))
+			}
+		}
 		ret := node.ReturnStmt{
 			Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
-			Value: v.visitExprWithLambda(ctx.ExprWithLambda()),
+			Value: retV,
 		}
 		return &ret
 	}
@@ -72,14 +78,32 @@ func (v *AntlrVisitor) visitIfStmt(ctx parser.IIfStmtContext) *node.IfStmt {
 }
 
 func (v *AntlrVisitor) visitAssignStmt(ctx parser.IAssignStmtContext) *node.AssignStmt {
+	var assignee []*node.Assignee
+	if ctx.Vars() != nil {
+		assignee = v.visitAssignStmtAssignee(ctx.Vars())
+	} else {
+		assignee = append(assignee, &node.Assignee{
+			Type: v.visitType(ctx.Type_()),
+			Var:  v.visitVar(ctx.Var_()),
+			Ref:  ctx.Ref() != nil,
+		})
+	}
 	n := node.AssignStmt{
-		Token: token.FromAntlrToken(ctx.Assign().GetSymbol()).WithBegin(ctx.GetStart()).WithEnd(ctx.GetStop()),
-		Type:  v.visitType(ctx.Type_()),
-		Var:   v.visitVar(ctx.Var_()),
-		Value: v.visitExprWithLambda(ctx.ExprWithLambda()),
-		Ref:   ctx.Ref() != nil,
+		Token:    token.FromAntlrToken(ctx.Assign().GetSymbol()).WithBegin(ctx.GetStart()).WithEnd(ctx.GetStop()),
+		Assignee: assignee,
+		Value:    v.visitExprWithLambda(ctx.ExprWithLambda()),
 	}
 	return &n
+}
+
+func (v *AntlrVisitor) visitAssignStmtAssignee(ctx parser.IVarsContext) []*node.Assignee {
+	var assignee []*node.Assignee
+	for _, kid := range ctx.AllVar_() {
+		assignee = append(assignee, &node.Assignee{
+			Var: v.visitVar(kid),
+		})
+	}
+	return assignee
 }
 
 func (v *AntlrVisitor) visitIdentifier(n antlr.TerminalNode) *node.Identifier {

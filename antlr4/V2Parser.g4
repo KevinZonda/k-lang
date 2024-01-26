@@ -87,7 +87,11 @@ stmt
     | funcCall
     ;
 assignStmt
-    : type? var Assign Ref? exprWithLambda ;
+    : type? var Assign Ref? exprWithLambda
+    | vars Assign expr
+    ;
+
+vars : var (Comma var)*;
 
 declareStmt
     : type Identifier (Comma Identifier)*
@@ -130,7 +134,7 @@ matchCase
 jumpStmt
     : Continue
     | Break
-    | Return exprWithLambda?
+    | Return (exprWithLambda (Comma exprWithLambda)*)?
     ;
 
 sep : NewLine | Semi;

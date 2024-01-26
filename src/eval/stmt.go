@@ -60,7 +60,7 @@ func (e *Eval) EvalReturnStmt(n *node.ReturnStmt) {
 	e.currentToken = n.GetToken()
 	e.objTable.SetAtTop(reserved.Return, nil)
 	if n.Value != nil {
-		e.objTable.SetAtTop(reserved.Return, e.EvalExpr(n.Value))
+		e.objTable.SetAtTop(reserved.Return, e.EvalExpr(n.Value[0])) // TODO: RETURN MULTIPLE VALUES
 	}
 	return
 }
