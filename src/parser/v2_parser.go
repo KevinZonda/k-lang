@@ -61,7 +61,7 @@ func v2parserParserInit() {
 	}
 	staticData.PredictionContextCache = antlr.NewPredictionContextCache()
 	staticData.serializedATN = []int32{
-		4, 1, 53, 499, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
+		4, 1, 53, 497, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
 		4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 2, 9, 7, 9, 2, 10, 7,
 		10, 2, 11, 7, 11, 2, 12, 7, 12, 2, 13, 7, 13, 2, 14, 7, 14, 2, 15, 7, 15,
 		2, 16, 7, 16, 2, 17, 7, 17, 2, 18, 7, 18, 2, 19, 7, 19, 2, 20, 7, 20, 2,
@@ -111,25 +111,25 @@ func v2parserParserInit() {
 		36, 1, 36, 1, 36, 1, 36, 1, 36, 1, 36, 1, 37, 1, 37, 1, 37, 3, 37, 459,
 		8, 37, 1, 37, 3, 37, 462, 8, 37, 1, 37, 1, 37, 1, 38, 1, 38, 1, 38, 1,
 		38, 1, 38, 1, 38, 5, 38, 472, 8, 38, 10, 38, 12, 38, 475, 9, 38, 1, 38,
-		1, 38, 1, 39, 1, 39, 1, 39, 1, 39, 1, 39, 1, 39, 1, 39, 1, 39, 3, 39, 487,
-		8, 39, 1, 40, 1, 40, 1, 40, 1, 40, 3, 40, 493, 8, 40, 3, 40, 495, 8, 40,
-		1, 41, 1, 41, 1, 41, 0, 1, 32, 42, 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20,
-		22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56,
-		58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 82, 0, 8, 2, 0, 21, 22,
-		47, 47, 1, 0, 10, 15, 1, 0, 16, 17, 2, 0, 19, 20, 23, 23, 1, 0, 21, 22,
-		1, 0, 42, 46, 2, 0, 8, 8, 25, 25, 2, 0, 9, 9, 53, 53, 540, 0, 84, 1, 0,
-		0, 0, 2, 107, 1, 0, 0, 0, 4, 110, 1, 0, 0, 0, 6, 114, 1, 0, 0, 0, 8, 118,
-		1, 0, 0, 0, 10, 136, 1, 0, 0, 0, 12, 145, 1, 0, 0, 0, 14, 153, 1, 0, 0,
-		0, 16, 163, 1, 0, 0, 0, 18, 181, 1, 0, 0, 0, 20, 183, 1, 0, 0, 0, 22, 191,
-		1, 0, 0, 0, 24, 195, 1, 0, 0, 0, 26, 200, 1, 0, 0, 0, 28, 204, 1, 0, 0,
-		0, 30, 213, 1, 0, 0, 0, 32, 229, 1, 0, 0, 0, 34, 263, 1, 0, 0, 0, 36, 265,
+		1, 38, 1, 39, 1, 39, 1, 39, 1, 39, 1, 39, 1, 39, 3, 39, 485, 8, 39, 1,
+		40, 1, 40, 1, 40, 1, 40, 3, 40, 491, 8, 40, 3, 40, 493, 8, 40, 1, 41, 1,
+		41, 1, 41, 0, 1, 32, 42, 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24,
+		26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60,
+		62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 82, 0, 8, 2, 0, 21, 22, 47, 47,
+		1, 0, 10, 15, 1, 0, 16, 17, 2, 0, 19, 20, 23, 23, 1, 0, 21, 22, 1, 0, 42,
+		46, 2, 0, 8, 8, 25, 25, 2, 0, 9, 9, 53, 53, 538, 0, 84, 1, 0, 0, 0, 2,
+		107, 1, 0, 0, 0, 4, 110, 1, 0, 0, 0, 6, 114, 1, 0, 0, 0, 8, 118, 1, 0,
+		0, 0, 10, 136, 1, 0, 0, 0, 12, 145, 1, 0, 0, 0, 14, 153, 1, 0, 0, 0, 16,
+		163, 1, 0, 0, 0, 18, 181, 1, 0, 0, 0, 20, 183, 1, 0, 0, 0, 22, 191, 1,
+		0, 0, 0, 24, 195, 1, 0, 0, 0, 26, 200, 1, 0, 0, 0, 28, 204, 1, 0, 0, 0,
+		30, 213, 1, 0, 0, 0, 32, 229, 1, 0, 0, 0, 34, 263, 1, 0, 0, 0, 36, 265,
 		1, 0, 0, 0, 38, 272, 1, 0, 0, 0, 40, 280, 1, 0, 0, 0, 42, 286, 1, 0, 0,
 		0, 44, 290, 1, 0, 0, 0, 46, 293, 1, 0, 0, 0, 48, 307, 1, 0, 0, 0, 50, 320,
 		1, 0, 0, 0, 52, 324, 1, 0, 0, 0, 54, 339, 1, 0, 0, 0, 56, 365, 1, 0, 0,
 		0, 58, 368, 1, 0, 0, 0, 60, 394, 1, 0, 0, 0, 62, 396, 1, 0, 0, 0, 64, 408,
 		1, 0, 0, 0, 66, 412, 1, 0, 0, 0, 68, 426, 1, 0, 0, 0, 70, 428, 1, 0, 0,
-		0, 72, 444, 1, 0, 0, 0, 74, 455, 1, 0, 0, 0, 76, 465, 1, 0, 0, 0, 78, 486,
-		1, 0, 0, 0, 80, 494, 1, 0, 0, 0, 82, 496, 1, 0, 0, 0, 84, 99, 3, 2, 1,
+		0, 72, 444, 1, 0, 0, 0, 74, 455, 1, 0, 0, 0, 76, 465, 1, 0, 0, 0, 78, 484,
+		1, 0, 0, 0, 80, 492, 1, 0, 0, 0, 82, 494, 1, 0, 0, 0, 84, 99, 3, 2, 1,
 		0, 85, 90, 3, 4, 2, 0, 86, 90, 3, 6, 3, 0, 87, 90, 3, 56, 28, 0, 88, 90,
 		3, 32, 16, 0, 89, 85, 1, 0, 0, 0, 89, 86, 1, 0, 0, 0, 89, 87, 1, 0, 0,
 		0, 89, 88, 1, 0, 0, 0, 90, 94, 1, 0, 0, 0, 91, 93, 3, 82, 41, 0, 92, 91,
@@ -276,18 +276,17 @@ func v2parserParserInit() {
 		5, 1, 0, 0, 470, 472, 3, 78, 39, 0, 471, 470, 1, 0, 0, 0, 472, 475, 1,
 		0, 0, 0, 473, 471, 1, 0, 0, 0, 473, 474, 1, 0, 0, 0, 474, 476, 1, 0, 0,
 		0, 475, 473, 1, 0, 0, 0, 476, 477, 5, 2, 0, 0, 477, 77, 1, 0, 0, 0, 478,
-		479, 5, 30, 0, 0, 479, 480, 3, 32, 16, 0, 480, 481, 5, 8, 0, 0, 481, 482,
-		3, 8, 4, 0, 482, 487, 1, 0, 0, 0, 483, 484, 5, 31, 0, 0, 484, 485, 5, 8,
-		0, 0, 485, 487, 3, 8, 4, 0, 486, 478, 1, 0, 0, 0, 486, 483, 1, 0, 0, 0,
-		487, 79, 1, 0, 0, 0, 488, 495, 5, 41, 0, 0, 489, 495, 5, 40, 0, 0, 490,
-		492, 5, 29, 0, 0, 491, 493, 3, 34, 17, 0, 492, 491, 1, 0, 0, 0, 492, 493,
-		1, 0, 0, 0, 493, 495, 1, 0, 0, 0, 494, 488, 1, 0, 0, 0, 494, 489, 1, 0,
-		0, 0, 494, 490, 1, 0, 0, 0, 495, 81, 1, 0, 0, 0, 496, 497, 7, 7, 0, 0,
-		497, 83, 1, 0, 0, 0, 58, 89, 94, 99, 107, 121, 126, 131, 140, 150, 153,
-		159, 163, 166, 174, 179, 181, 188, 193, 202, 209, 229, 256, 258, 263, 268,
-		277, 284, 290, 293, 298, 302, 320, 324, 329, 333, 339, 346, 351, 365, 368,
-		380, 389, 394, 404, 406, 415, 419, 426, 431, 435, 439, 447, 458, 461, 473,
-		486, 492, 494,
+		479, 5, 30, 0, 0, 479, 480, 3, 32, 16, 0, 480, 481, 3, 8, 4, 0, 481, 485,
+		1, 0, 0, 0, 482, 483, 5, 31, 0, 0, 483, 485, 3, 8, 4, 0, 484, 478, 1, 0,
+		0, 0, 484, 482, 1, 0, 0, 0, 485, 79, 1, 0, 0, 0, 486, 493, 5, 41, 0, 0,
+		487, 493, 5, 40, 0, 0, 488, 490, 5, 29, 0, 0, 489, 491, 3, 34, 17, 0, 490,
+		489, 1, 0, 0, 0, 490, 491, 1, 0, 0, 0, 491, 493, 1, 0, 0, 0, 492, 486,
+		1, 0, 0, 0, 492, 487, 1, 0, 0, 0, 492, 488, 1, 0, 0, 0, 493, 81, 1, 0,
+		0, 0, 494, 495, 7, 7, 0, 0, 495, 83, 1, 0, 0, 0, 58, 89, 94, 99, 107, 121,
+		126, 131, 140, 150, 153, 159, 163, 166, 174, 179, 181, 188, 193, 202, 209,
+		229, 256, 258, 263, 268, 277, 284, 290, 293, 298, 302, 320, 324, 329, 333,
+		339, 346, 351, 365, 368, 380, 389, 394, 404, 406, 415, 419, 426, 431, 435,
+		439, 447, 458, 461, 473, 484, 490, 492,
 	}
 	deserializer := antlr.NewATNDeserializer(nil)
 	staticData.atn = deserializer.Deserialize(staticData.serializedATN)
@@ -8971,7 +8970,6 @@ type IMatchCaseContext interface {
 	// Getter signatures
 	Case() antlr.TerminalNode
 	Expr() IExprContext
-	Col() antlr.TerminalNode
 	CodeBlock() ICodeBlockContext
 	Default() antlr.TerminalNode
 
@@ -9031,10 +9029,6 @@ func (s *MatchCaseContext) Expr() IExprContext {
 	return t.(IExprContext)
 }
 
-func (s *MatchCaseContext) Col() antlr.TerminalNode {
-	return s.GetToken(V2ParserCol, 0)
-}
-
 func (s *MatchCaseContext) CodeBlock() ICodeBlockContext {
 	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
@@ -9088,7 +9082,7 @@ func (s *MatchCaseContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 func (p *V2Parser) MatchCase() (localctx IMatchCaseContext) {
 	localctx = NewMatchCaseContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 78, V2ParserRULE_matchCase)
-	p.SetState(486)
+	p.SetState(484)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -9111,21 +9105,13 @@ func (p *V2Parser) MatchCase() (localctx IMatchCaseContext) {
 		}
 		{
 			p.SetState(480)
-			p.Match(V2ParserCol)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
-		}
-		{
-			p.SetState(481)
 			p.CodeBlock()
 		}
 
 	case V2ParserDefault:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(483)
+			p.SetState(482)
 			p.Match(V2ParserDefault)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -9133,15 +9119,7 @@ func (p *V2Parser) MatchCase() (localctx IMatchCaseContext) {
 			}
 		}
 		{
-			p.SetState(484)
-			p.Match(V2ParserCol)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
-			}
-		}
-		{
-			p.SetState(485)
+			p.SetState(483)
 			p.CodeBlock()
 		}
 
@@ -9273,7 +9251,7 @@ func (s *JumpStmtContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 func (p *V2Parser) JumpStmt() (localctx IJumpStmtContext) {
 	localctx = NewJumpStmtContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 80, V2ParserRULE_jumpStmt)
-	p.SetState(494)
+	p.SetState(492)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
 		goto errorExit
@@ -9283,7 +9261,7 @@ func (p *V2Parser) JumpStmt() (localctx IJumpStmtContext) {
 	case V2ParserContinue:
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(488)
+			p.SetState(486)
 			p.Match(V2ParserContinue)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -9294,7 +9272,7 @@ func (p *V2Parser) JumpStmt() (localctx IJumpStmtContext) {
 	case V2ParserBreak:
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(489)
+			p.SetState(487)
 			p.Match(V2ParserBreak)
 			if p.HasError() {
 				// Recognition error - abort rule
@@ -9305,19 +9283,19 @@ func (p *V2Parser) JumpStmt() (localctx IJumpStmtContext) {
 	case V2ParserReturn:
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(490)
+			p.SetState(488)
 			p.Match(V2ParserReturn)
 			if p.HasError() {
 				// Recognition error - abort rule
 				goto errorExit
 			}
 		}
-		p.SetState(492)
+		p.SetState(490)
 		p.GetErrorHandler().Sync(p)
 
 		if p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 56, p.GetParserRuleContext()) == 1 {
 			{
-				p.SetState(491)
+				p.SetState(489)
 				p.ExprWithLambda()
 			}
 
@@ -9435,7 +9413,7 @@ func (p *V2Parser) Sep() (localctx ISepContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(496)
+		p.SetState(494)
 		_la = p.GetTokenStream().LA(1)
 
 		if !(_la == V2ParserSemi || _la == V2ParserNewLine) {

@@ -122,8 +122,8 @@ matchStmt
     ;
 
 matchCase
-    : Case expr Col codeBlock
-    | Default Col codeBlock
+    : Case expr codeBlock
+    | Default codeBlock
     ;
 
 

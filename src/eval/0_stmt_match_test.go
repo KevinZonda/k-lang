@@ -10,13 +10,13 @@ func TestMatchStmt(t *testing.T) {
 	code := `
 x := 11
 match (x) {
-    case 7: {
+    case 7 {
         println("seven")
     }
-	case 11: {
+	case 11 {
 	    println("eleven")
 	}
-	default: {
+	default {
 	    println("default")
 	}
 }
@@ -29,10 +29,10 @@ func TestMatchStmtWithoutDefault(t *testing.T) {
 	code := `
 x := 18
 match (x) {
-    case 7: {
+    case 7 {
         println("seven")
     }
-	case 11: {
+	case 11 {
         println("eleven")
 	}
 }
@@ -45,13 +45,13 @@ func TestMatchStmtDefault(t *testing.T) {
 	code := `
 x := 19
 match (x) {
-    case 7: {
+    case 7 {
         println("seven")
     }
-	case 11: {
+	case 11 {
         println("eleven")
 	}
-	default: {
+	default {
         println("default")
 	}
 }

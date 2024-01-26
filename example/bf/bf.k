@@ -28,28 +28,28 @@ fn eval(code) {
         # print("Running -> ", x, " ")
         # printMem()
         match(x) {
-            case ">": {
+            case ">" {
                 pos = pos + 1
                 if (pos >= len(mem)) {
                     mem = mem + 0
                 }
             }
-            case "<": {
+            case "<" {
                 pos = pos - 1
             }
-            case "+": {
+            case "+" {
                 mem[pos] = mem[pos] + 1
             }
-            case "-": {
+            case "-" {
                 mem[pos] = mem[pos] - 1
             }
-            case ".": {
+            case "." {
                 print(strs.fromAsci(mem[pos]))
             }
-            case ",": {
+            case "," {
                 # TODO: INPUT
             }
-            case "[": {
+            case "[" {
                 if (mem[pos] != 0) {
                     continue
                 }
@@ -64,7 +64,7 @@ fn eval(code) {
                     }
                 }
             }
-            case "]": {
+            case "]" {
                 if (mem[pos] == 0) {
                     continue
                 }
