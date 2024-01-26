@@ -62,11 +62,14 @@ func (e *Eval) _evalIterMap(n *node.IterStyleFor, iters map[any]any) {
 func (e *Eval) EvalIterStyleForStmt(styleFor *node.IterStyleFor) {
 	e.currentToken = styleFor.GetToken()
 	e.loopLvl++
+	e.frameStart(false)
+	defer e.frameEnd()
+
 	iters := e.EvalExpr(styleFor.Iterator)
-	switch iters.(type) {
+	switch itersT := iters.(type) {
 	case string:
 		// str to []rune to []string
-		rs := []rune(iters.(string))
+		rs := []rune(itersT)
 		as := make([]any, len(rs))
 		for i, r := range rs {
 			as[i] = string(rune(r))
@@ -74,16 +77,19 @@ func (e *Eval) EvalIterStyleForStmt(styleFor *node.IterStyleFor) {
 		e._evalIterArray(styleFor, as)
 		return
 	case []any:
-		e._evalIterArray(styleFor, iters.([]any))
+		e._evalIterArray(styleFor, itersT)
 		return
 	case map[any]any:
-		e._evalIterMap(styleFor, iters.(map[any]any))
+		e._evalIterMap(styleFor, itersT)
 		return
 	}
 	panic("Not Supported Iteration Type")
 }
 
 func (e *Eval) EvalWhileForStmt(n *node.WhileStyleFor) {
+	e.frameStart(false)
+	defer e.frameEnd()
+
 	e.currentToken = n.GetToken()
 	e.loopLvl++
 	for {
@@ -114,12 +120,15 @@ func (e *Eval) EvalWhileForStmt(n *node.WhileStyleFor) {
 func (e *Eval) EvalCStyleFrStmt(n *node.CStyleFor) {
 	e.currentToken = n.GetToken()
 	e.loopLvl++
+	e.frameStart(false)
+	defer e.frameEnd()
+
 	if n.InitialExpr != nil {
-		switch n.InitialExpr.(type) {
+		switch initExpr := n.InitialExpr.(type) {
 		case node.Stmt:
-			e.EvalStmt(n.InitialExpr.(node.Stmt))
+			e.EvalStmt(initExpr)
 		case node.Expr:
-			e.EvalExpr(n.InitialExpr.(node.Expr))
+			e.EvalExpr(initExpr)
 		}
 	}
 	for {

@@ -86,7 +86,7 @@ func (e *Eval) EvalAssignStmt(n *node.AssignStmt) {
 		case *Eval:
 			if e == fromT {
 				o, ok := e.objTable.Get(lastVar.Name.Value)
-				if ok { // TODO:  && n.Token.Value != ":=" shadow?
+				if ok && n.Token.Value != ":=" {
 					o.Val = v
 				} else {
 					e.objTable.SetAtTop(lastVar.Name.Value, cons(v))
