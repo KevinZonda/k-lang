@@ -55,3 +55,25 @@ println(a.x)
 `
 	tester.GeneralTest(false, t, code, expected)
 }
+
+func TestAssignStmtRef(t *testing.T) {
+	code := `
+x := 11
+y := &x
+y = 12
+println(x)
+`
+	expected := `12
+`
+	tester.GeneralTest(false, t, code, expected)
+
+	code = `
+x := 11
+y := x
+y = 12
+println(x)
+`
+	expected = `11
+`
+	tester.GeneralTest(false, t, code, expected)
+}

@@ -48,7 +48,7 @@ func TestWhileLoop(ts *testing.T) {
 	code := `
 i := 0
 for (i <= 5) {
-    i := i - (-1)
+    i = i - (-1)
     if (i == 3) {
         break
     }

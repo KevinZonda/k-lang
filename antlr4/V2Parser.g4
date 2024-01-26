@@ -87,7 +87,7 @@ stmt
     | funcCall
     ;
 assignStmt
-    : type? var Assign exprWithLambda ;
+    : type? var Assign Ref? exprWithLambda ;
 
 declareStmt
     : type Identifier (Comma Identifier)*

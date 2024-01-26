@@ -77,6 +77,7 @@ func (v *AntlrVisitor) visitAssignStmt(ctx parser.IAssignStmtContext) *node.Assi
 		Type:  v.visitType(ctx.Type_()),
 		Var:   v.visitVar(ctx.Var_()),
 		Value: v.visitExprWithLambda(ctx.ExprWithLambda()),
+		Ref:   ctx.Ref() != nil,
 	}
 	return &n
 }

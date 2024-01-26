@@ -7,6 +7,7 @@ type AssignStmt struct {
 
 	Type *Type
 	Var  *Variable
+	Ref  bool
 
 	Value Expr
 }

@@ -44,9 +44,12 @@ func clone(v any) any {
 }
 
 func (e *Eval) EvalAssignStmt(n *node.AssignStmt) {
-	v := e.EvalExpr(n.Value)
-	v = clone(v)
-
+	var v any = nil
+	if n.Ref {
+		v = e.evalExpr(n.Value, true)
+	} else {
+		v = clone(e.EvalExpr(n.Value))
+	}
 	e.currentToken = n.GetToken()
 
 	var from any = e
@@ -83,7 +86,7 @@ func (e *Eval) EvalAssignStmt(n *node.AssignStmt) {
 		case *Eval:
 			if e == fromT {
 				o, ok := e.objTable.Get(lastVar.Name.Value)
-				if ok {
+				if ok { // TODO:  && n.Token.Value != ":=" shadow?
 					o.Val = v
 				} else {
 					e.objTable.SetAtTop(lastVar.Name.Value, cons(v))

@@ -96,7 +96,7 @@ func (t *TableStack) Empty() bool {
 
 func (t *TableStack) Println() {
 	fmt.Println("***********************************")
-	fmt.Println("TABLE STACK")
+	fmt.Println("vMEM STACK")
 	fmt.Println("***********************************")
 	if t.Empty() {
 		fmt.Println("<EMPTY>")
