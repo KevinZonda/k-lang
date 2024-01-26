@@ -7,6 +7,43 @@ import (
 	"testing"
 )
 
+type Pair struct {
+	Code       string
+	Expected   string
+	ExpectFunc func(string) bool
+	AllowPanic bool
+}
+
+func BatchRun(t *testing.T, pairs ...Pair) {
+	for _, pair := range pairs {
+		if pair.ExpectFunc != nil {
+			GeneralTestLambda(pair.AllowPanic, t, pair.Code, pair.ExpectFunc)
+		} else {
+			GeneralTest(pair.AllowPanic, t, pair.Code, pair.Expected)
+		}
+		if t.Failed() {
+			return
+		}
+	}
+}
+
+func BatchRunSplit(t *testing.T, tests []string, expected []string) {
+	if len(tests) != len(expected) {
+		t.Fatal("len(tests) != len(expected)")
+		return
+	}
+	for i := 0; i < len(tests); i++ {
+		GeneralTest(false, t, tests[i], expected[i])
+		if t.Failed() {
+			return
+		}
+	}
+}
+
+func Strings(s ...string) []string {
+	return s
+}
+
 func GeneralTest(allowPanic bool, ts *testing.T, code, expected string) {
 	if err := IsStdoutAsExpected(allowPanic, func() {
 		ast, errs := parserHelper.Ast(code)
