@@ -96,7 +96,7 @@ func (t *TableStack) Empty() bool {
 
 func (t *TableStack) Println() {
 	fmt.Println("***********************************")
-	fmt.Println("vMEM STACK")
+	fmt.Println("V-MEM STACK")
 	fmt.Println("***********************************")
 	if t.Empty() {
 		fmt.Println("<EMPTY>")
@@ -104,14 +104,20 @@ func (t *TableStack) Println() {
 		return
 	}
 	for i := len(t.q) - 1; i >= 0; i-- {
-		fmt.Print("STACK [", i, "]")
+		fmt.Print("LEVEL [", i, "]")
+		if i == 0 {
+			fmt.Print(" GLOBAL")
+		}
+		if i == len(t.q)-1 {
+			fmt.Print(" TOP")
+		}
 		if t.q[i].Protect {
 			fmt.Println(" PROTECTED")
 		} else {
 			fmt.Println()
 		}
 		for k, v := range t.q[i].m {
-			fmt.Printf("  ->%s: %v\n", k, v)
+			fmt.Printf("  -> %s: %v\n", k, v)
 		}
 	}
 	fmt.Println("***********************************")
