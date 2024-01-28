@@ -248,7 +248,7 @@ func v2parserParserInit() {
 		382, 383, 3, 20, 10, 0, 383, 385, 5, 48, 0, 0, 384, 386, 5, 49, 0, 0, 385,
 		384, 1, 0, 0, 0, 385, 386, 1, 0, 0, 0, 386, 387, 1, 0, 0, 0, 387, 388,
 		3, 34, 17, 0, 388, 394, 1, 0, 0, 0, 389, 390, 3, 62, 31, 0, 390, 391, 5,
-		48, 0, 0, 391, 392, 3, 32, 16, 0, 392, 394, 1, 0, 0, 0, 393, 380, 1, 0,
+		48, 0, 0, 391, 392, 3, 56, 28, 0, 392, 394, 1, 0, 0, 0, 393, 380, 1, 0,
 		0, 0, 393, 389, 1, 0, 0, 0, 394, 61, 1, 0, 0, 0, 395, 400, 3, 20, 10, 0,
 		396, 397, 5, 7, 0, 0, 397, 399, 3, 20, 10, 0, 398, 396, 1, 0, 0, 0, 399,
 		402, 1, 0, 0, 0, 400, 398, 1, 0, 0, 0, 400, 401, 1, 0, 0, 0, 401, 63, 1,
@@ -6572,7 +6572,7 @@ func (s *CommaExprContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 func (p *V2Parser) CommaExpr() (localctx ICommaExprContext) {
 	localctx = NewCommaExprContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 56, V2ParserRULE_commaExpr)
-	var _la int
+	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
 	{
@@ -6584,28 +6584,35 @@ func (p *V2Parser) CommaExpr() (localctx ICommaExprContext) {
 	if p.HasError() {
 		goto errorExit
 	}
-	_la = p.GetTokenStream().LA(1)
-
-	for _la == V2ParserComma {
-		{
-			p.SetState(361)
-			p.Match(V2ParserComma)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
+	_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 38, p.GetParserRuleContext())
+	if p.HasError() {
+		goto errorExit
+	}
+	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
+		if _alt == 1 {
+			{
+				p.SetState(361)
+				p.Match(V2ParserComma)
+				if p.HasError() {
+					// Recognition error - abort rule
+					goto errorExit
+				}
 			}
-		}
-		{
-			p.SetState(362)
-			p.expr(0)
-		}
+			{
+				p.SetState(362)
+				p.expr(0)
+			}
 
+		}
 		p.SetState(367)
 		p.GetErrorHandler().Sync(p)
 		if p.HasError() {
 			goto errorExit
 		}
-		_la = p.GetTokenStream().LA(1)
+		_alt = p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 38, p.GetParserRuleContext())
+		if p.HasError() {
+			goto errorExit
+		}
 	}
 
 errorExit:
@@ -6953,7 +6960,7 @@ type IAssignStmtContext interface {
 	Type_() ITypeContext
 	Ref() antlr.TerminalNode
 	Vars() IVarsContext
-	Expr() IExprContext
+	CommaExpr() ICommaExprContext
 
 	// IsAssignStmtContext differentiates from other interfaces.
 	IsAssignStmtContext()
@@ -7063,10 +7070,10 @@ func (s *AssignStmtContext) Vars() IVarsContext {
 	return t.(IVarsContext)
 }
 
-func (s *AssignStmtContext) Expr() IExprContext {
+func (s *AssignStmtContext) CommaExpr() ICommaExprContext {
 	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IExprContext); ok {
+		if _, ok := ctx.(ICommaExprContext); ok {
 			t = ctx.(antlr.RuleContext)
 			break
 		}
@@ -7076,7 +7083,7 @@ func (s *AssignStmtContext) Expr() IExprContext {
 		return nil
 	}
 
-	return t.(IExprContext)
+	return t.(ICommaExprContext)
 }
 
 func (s *AssignStmtContext) GetRuleContext() antlr.RuleContext {
@@ -7186,7 +7193,7 @@ func (p *V2Parser) AssignStmt() (localctx IAssignStmtContext) {
 		}
 		{
 			p.SetState(391)
-			p.expr(0)
+			p.CommaExpr()
 		}
 
 	case antlr.ATNInvalidAltNumber:

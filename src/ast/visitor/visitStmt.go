@@ -82,7 +82,7 @@ func (v *AntlrVisitor) visitAssignStmt(ctx parser.IAssignStmtContext) *node.Assi
 	var val node.Expr
 	if ctx.Vars() != nil {
 		assignee = v.visitAssignStmtAssignee(ctx.Vars())
-		val = v.visitExpr(ctx.Expr())
+		val = v.visitCommaExpr(ctx.CommaExpr())
 	} else {
 		assignee = append(assignee, &node.Assignee{
 			Type: v.visitType(ctx.Type_()),

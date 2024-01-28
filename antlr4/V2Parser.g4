@@ -89,7 +89,7 @@ stmt
     ;
 assignStmt
     : type? var Assign Ref? exprWithLambda
-    | vars Assign expr
+    | vars Assign commaExpr
     ;
 
 vars : var (Comma var)*;
