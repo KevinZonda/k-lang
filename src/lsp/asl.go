@@ -28,13 +28,18 @@ func astToASL(ast tree.Ast) *ASL {
 	for _, n := range ast {
 		switch n.(type) {
 		case *node.AssignStmt:
-			as := n.(*node.AssignStmt)
-			v := &AslObj{
-				Name: as.Var,
-				Type: as.Type,
+			for _, assignee := range n.(*node.AssignStmt).Assignee {
+				v := &AslObj{
+					Name: assignee.Var,
+					Type: assignee.Type,
+				}
+
+				// FIXME: Could be a problem if there is package name?
+				asl.vars[v.Name.Value[0].Name.Value] = v
+				asl.all[v.Name.Value[0].Name.Value] = v
+
 			}
-			asl.vars[as.Var.Value[0].Name.Value] = v
-			asl.all[as.Var.Value[0].Name.Value] = v
+
 		case *node.FuncBlock:
 			fb := n.(*node.FuncBlock)
 			asl.funcs[fb.Name.Value] = fb
