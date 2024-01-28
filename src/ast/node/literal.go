@@ -70,6 +70,7 @@ type StringLiteral struct {
 	Token token.Token
 	Value string
 	Mode  uint8
+	Char  uint8 // " or ' as begin and end?
 }
 
 func (s *StringLiteral) expr() {}

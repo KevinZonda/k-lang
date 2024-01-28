@@ -8,6 +8,7 @@ type Lexer struct {
 	raw      []rune
 	pos      int
 	mode     Mode
+	sep      uint8
 	nextKind TokenKind
 }
 
@@ -51,6 +52,17 @@ func (l *Lexer) nextVarToken() (TokenKind, string) {
 	return KindVar, buf.String()
 }
 
+func (l *Lexer) hasMapToken(str string) (string, bool) {
+	if l.sep <= 0 {
+		l.sep = '"'
+	}
+	if str == "\\"+string(l.sep) {
+		return string(l.sep), true
+	}
+	val, ok := hasMapToken(l.mode, str)
+	return val, ok
+}
+
 func (l *Lexer) nextTextToken() (TokenKind, string) {
 	if l.pos >= len(l.raw) {
 		return KindEOF, ""
@@ -65,7 +77,7 @@ func (l *Lexer) nextTextToken() (TokenKind, string) {
 		}
 
 		if prevChar != rune(-1) {
-			mapVal, hasMap := hasMapToken(l.mode, string(prevChar)+string(c))
+			mapVal, hasMap := l.hasMapToken(string(prevChar) + string(c))
 			// fmt.Println("  -> MapVal: ", string(prevChar), string(c), mapVal, hasMap)
 			if !hasMap {
 				if prevChar == '{' && l.mode == ModeVar {

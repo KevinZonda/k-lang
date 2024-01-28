@@ -32,3 +32,13 @@ print(x)
 	expected := "Hello World\n\nHi 18"
 	tester.GeneralTest(false, t, code, expected)
 }
+
+func TestStringParser3(t *testing.T) {
+	code := `
+z := 18
+x := '\'\\ ""'
+print(x)
+`
+	expected := "'\\ \"\""
+	tester.GeneralTest(false, t, code, expected)
+}

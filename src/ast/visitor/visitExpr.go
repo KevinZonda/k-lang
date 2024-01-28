@@ -51,7 +51,7 @@ func (v *AntlrVisitor) visitExpr(ctx parser.IExprContext) node.Expr {
 		return v.visitUnaryExpr(ctx)
 	}
 	if ctx.Literal() != nil {
-		return v.visitLiteral(ctx.GetChild(0).(*parser.LiteralContext))
+		return v.visitLiteral(ctx.Literal())
 	}
 	if ctx.LParen() != nil {
 		return v.visitExpr(ctx.GetChild(1).(*parser.ExprContext))

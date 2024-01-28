@@ -18,7 +18,7 @@ func (e *Eval) EvalStringLiteral(n *node.StringLiteral) string {
 	case '$':
 		mode = stringProcess.ModeVar
 	}
-	tokens := stringProcess.Parse(mode, n.Value)
+	tokens := stringProcess.Parse(mode, n.Value, n.Char)
 	sb := strings.Builder{}
 	for _, token := range tokens {
 		switch token.Kind {

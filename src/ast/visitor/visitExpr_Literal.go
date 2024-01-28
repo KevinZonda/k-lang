@@ -43,9 +43,11 @@ func (v *AntlrVisitor) visitLiteral(ctx parser.ILiteralContext) node.Expr {
 		case '@', '$':
 			str.Mode = modeRune
 			str.Value = txt[2 : len(txt)-1]
+			str.Char = txt[1]
 		default:
 			str.Mode = ' '
 			str.Value = txt[1 : len(txt)-1]
+			str.Char = txt[0]
 		}
 		return &str
 	}

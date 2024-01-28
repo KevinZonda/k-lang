@@ -5,10 +5,11 @@ type Token struct {
 	Value string
 }
 
-func Parse(mode Mode, s string) []Token {
+func Parse(mode Mode, s string, c uint8) []Token {
 	lex := &Lexer{
 		raw:  []rune(s),
 		mode: mode,
+		sep:  c,
 	}
 	var parts []Token
 	for lex.HasNext() {
