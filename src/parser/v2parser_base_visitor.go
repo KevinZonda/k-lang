@@ -120,6 +120,10 @@ func (v *BaseV2ParserVisitor) VisitMapInitializer(ctx *MapInitializerContext) in
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseV2ParserVisitor) VisitCommaExpr(ctx *CommaExprContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseV2ParserVisitor) VisitStmt(ctx *StmtContext) interface{} {
 	return v.VisitChildren(ctx)
 }

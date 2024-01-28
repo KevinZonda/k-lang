@@ -92,6 +92,9 @@ type V2ParserListener interface {
 	// EnterMapInitializer is called when entering the mapInitializer production.
 	EnterMapInitializer(c *MapInitializerContext)
 
+	// EnterCommaExpr is called when entering the commaExpr production.
+	EnterCommaExpr(c *CommaExprContext)
+
 	// EnterStmt is called when entering the stmt production.
 	EnterStmt(c *StmtContext)
 
@@ -220,6 +223,9 @@ type V2ParserListener interface {
 
 	// ExitMapInitializer is called when exiting the mapInitializer production.
 	ExitMapInitializer(c *MapInitializerContext)
+
+	// ExitCommaExpr is called when exiting the commaExpr production.
+	ExitCommaExpr(c *CommaExprContext)
 
 	// ExitStmt is called when exiting the stmt production.
 	ExitStmt(c *StmtContext)

@@ -189,6 +189,12 @@ func (s *BaseV2ParserListener) EnterMapInitializer(ctx *MapInitializerContext) {
 // ExitMapInitializer is called when production mapInitializer is exited.
 func (s *BaseV2ParserListener) ExitMapInitializer(ctx *MapInitializerContext) {}
 
+// EnterCommaExpr is called when production commaExpr is entered.
+func (s *BaseV2ParserListener) EnterCommaExpr(ctx *CommaExprContext) {}
+
+// ExitCommaExpr is called when production commaExpr is exited.
+func (s *BaseV2ParserListener) ExitCommaExpr(ctx *CommaExprContext) {}
+
 // EnterStmt is called when production stmt is entered.
 func (s *BaseV2ParserListener) EnterStmt(ctx *StmtContext) {}
 

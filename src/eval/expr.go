@@ -27,6 +27,8 @@ func (e *Eval) evalExpr(n node.Expr, keepRef bool) any {
 		return e.EvalIdentifier(expr, keepRef)
 	case *node.ArrayLiteral:
 		return e.EvalArrayLiteral(expr)
+	case *node.CommaExpr:
+		return e.EvalCommaExpr(expr)
 	case *node.MapLiteral:
 		return e.EvalMapLiteral(expr)
 	case *node.FuncCall:

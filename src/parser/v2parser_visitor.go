@@ -92,6 +92,9 @@ type V2ParserVisitor interface {
 	// Visit a parse tree produced by V2Parser#mapInitializer.
 	VisitMapInitializer(ctx *MapInitializerContext) interface{}
 
+	// Visit a parse tree produced by V2Parser#commaExpr.
+	VisitCommaExpr(ctx *CommaExprContext) interface{}
+
 	// Visit a parse tree produced by V2Parser#stmt.
 	VisitStmt(ctx *StmtContext) interface{}
 

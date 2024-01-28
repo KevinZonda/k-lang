@@ -2,7 +2,7 @@ parser grammar V2Parser;
 options { tokenVocab=V2Lexer; }
 
 program
-    : openBlock ((structBlock | funcBlock | stmt | expr) (sep*))* EOF
+    : openBlock ((structBlock | funcBlock | stmt | commaExpr) (sep*))* EOF
     ;
 
 openBlock : openStmt*;
@@ -74,6 +74,7 @@ mapPair : LHS=expr (Col | To) RHS=exprWithLambda | LParen mapPair RParen | ident
 structInitializer : (type | Struct) LBrack (identifierPair Comma?)* RBrack;
 // structElementInitializer : Identifier Comma expr;
 mapInitializer : Map? LBrack (mapPair (Comma*))* RBrack;
+commaExpr : expr (Comma expr)*;
 
 stmt
     : assignStmt

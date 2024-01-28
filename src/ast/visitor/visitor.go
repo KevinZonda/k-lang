@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parser"
 	"github.com/antlr4-go/antlr/v4"
@@ -59,10 +60,37 @@ func (v *AntlrVisitor) VisitProgram(ctx *parser.ProgramContext) any {
 			if expr := v.visitExpr(t.(*parser.ExprContext)); expr != nil {
 				block = append(block, expr)
 			}
+		case *parser.CommaExprContext:
+			if expr := v.visitCommaExpr(t.(*parser.CommaExprContext)); expr != nil {
+				block = append(block, expr)
+			}
 		case *antlr.TerminalNodeImpl:
 			continue
 		}
 
 	}
 	return tree.Ast(block)
+}
+
+func (v *AntlrVisitor) visitCommaExpr(ctx parser.ICommaExprContext) node.Expr {
+	if ctx == nil {
+		return nil
+	}
+	if ctx.GetChildCount() == 0 {
+		return nil
+	}
+
+	exprs := ctx.AllExpr()
+	commas := ctx.AllComma()
+	if len(exprs) == 1 && len(commas) == 0 {
+		return v.visitExpr(exprs[0])
+	}
+	exprList := make([]node.Expr, 0, len(exprs))
+	for _, expr := range exprs {
+		exprList = append(exprList, v.visitExpr(expr))
+	}
+	return &node.CommaExpr{
+		Token: token.FromAntlrToken(ctx.GetStart()).WithBegin(ctx.GetStart()).WithEnd(ctx.GetStop()),
+		Exprs: exprList,
+	}
 }
