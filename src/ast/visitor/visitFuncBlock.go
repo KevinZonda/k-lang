@@ -43,6 +43,16 @@ func (v *AntlrVisitor) visitFuncSignArgs(ctx parser.IFuncSignArgsContext) []*nod
 	for _, t := range ts {
 		rst = append(rst, v.visitFuncSignArgItem(t))
 	}
+	// check has same name
+	names := make(map[string]bool)
+	for _, a := range rst {
+		_, ok := names[a.Name.Value]
+		if ok {
+			v.appendErr(ctx, "duplicate arg name: "+a.Name.Value, nil)
+		} else {
+			names[a.Name.Value] = true
+		}
+	}
 	return rst
 }
 
