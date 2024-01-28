@@ -6,20 +6,20 @@ import (
 )
 
 func Pow(left any, right any) any {
-	switch left.(type) {
+	switch leftT := left.(type) {
 	case float64:
-		switch right.(type) {
+		switch rightT := right.(type) {
 		case float64:
-			return math.Pow(left.(float64), right.(float64))
+			return math.Pow(leftT, rightT)
 		case int:
-			return math.Pow(left.(float64), float64(right.(int)))
+			return math.Pow(leftT, float64(rightT))
 		}
 	case int:
-		switch right.(type) {
+		switch rightT := right.(type) {
 		case float64:
-			return math.Pow(float64(left.(int)), right.(float64))
+			return math.Pow(float64(leftT), rightT)
 		case int:
-			return int(math.Pow(float64(left.(int)), float64(right.(int))))
+			return int(math.Pow(float64(leftT), float64(rightT)))
 		}
 	}
 	panic(fmt.Sprintf("cannot pow %T and %T", left, right))
