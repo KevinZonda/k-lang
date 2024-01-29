@@ -32,7 +32,7 @@ func (e *Eval) fineFile(s string) (abs string, ok bool) {
 }
 
 func (e *Eval) loadBuiltInLibrary(name, as string) (ok bool) {
-	lib := builtin.GetLibrary(name)
+	lib := builtin.GetLibrary(e.builtin, name)
 	if lib == nil {
 		return false
 	}

@@ -6,48 +6,48 @@ import (
 	"reflect"
 )
 
-func Print(v ...any) {
+func (b *BuiltIn) Print(v ...any) {
 	for _, arg := range v {
 		switch arg.(type) {
 		case *obj.StructField:
-			printStruct(arg.(*obj.StructField))
+			b.printStruct(arg.(*obj.StructField))
 		default:
-			fmt.Print(arg)
+			fmt.Fprint(b.StdOut, arg)
 		}
 	}
 }
 
-func printStruct(v *obj.StructField) {
+func (b *BuiltIn) printStruct(v *obj.StructField) {
 	if v == nil {
 		return
 	}
 	if v.TypeAs != nil {
-		fmt.Print(v.TypeAs.Name, " ")
+		b.Print(v.TypeAs.Name, " ")
 	} else {
-		fmt.Print("struct ")
+		b.Print("struct ")
 	}
 	fmt.Print("{")
 	count := 0
 	totalLen := v.Fields.Len()
 	for pair := v.Fields.Oldest(); pair != nil; pair = pair.Next() {
-		fmt.Print(pair.Key, ": ")
+		b.Print(pair.Key, ": ")
 		switch pair.Value.(type) {
 		case *obj.StructField:
-			printStruct(pair.Value.(*obj.StructField))
+			b.printStruct(pair.Value.(*obj.StructField))
 		default:
-			fmt.Print(pair.Value)
+			b.Print(pair.Value)
 		}
 		if count < totalLen-1 {
-			fmt.Print(", ")
+			b.Print(", ")
 		}
 		count++
 	}
-	fmt.Print("}")
+	b.Print("}")
 }
 
-func Println(v ...any) {
+func (b *BuiltIn) Println(v ...any) {
 	for _, arg := range v {
-		Print(arg)
+		b.Print(arg)
 	}
 	fmt.Println()
 }
@@ -58,8 +58,6 @@ func TypeOf(v any) string {
 	}
 	return reflect.TypeOf(v).String()
 }
-
-
 
 func Len(v any) int {
 	if v == nil {
@@ -102,4 +100,3 @@ func Range(v any) []any {
 func Panic(vs ...any) {
 	panic(fmt.Sprint(vs...))
 }
-

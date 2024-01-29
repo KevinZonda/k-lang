@@ -6,7 +6,7 @@ import (
 
 type StdExecLib struct{}
 
-func NewStdExecLib() *StdExecLib {
+func NewStdExecLib(_ *BuiltIn) *StdExecLib {
 	return &StdExecLib{}
 }
 

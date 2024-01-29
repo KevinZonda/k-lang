@@ -11,7 +11,7 @@ type ITypeOf interface {
 	TypeOf() string
 }
 
-func GetLibrary(name string) obj.ILibrary {
+func GetLibrary(shared *BuiltIn, name string) obj.ILibrary {
 	if lib, ok := libMap[name]; ok {
 		return lib
 	}
@@ -21,11 +21,11 @@ func GetLibrary(name string) obj.ILibrary {
 	var lib obj.ILibrary
 	switch name {
 	case "string":
-		lib = NewStdStringLib()
+		lib = NewStdStringLib(shared)
 	case "console":
-		lib = NewStdConsoleLib()
+		lib = NewStdConsoleLib(shared)
 	case "exec":
-		lib = NewStdExecLib()
+		lib = NewStdExecLib(shared)
 	}
 	if lib != nil {
 		libMap[name] = lib

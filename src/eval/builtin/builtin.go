@@ -1,8 +1,26 @@
 package builtin
 
-import "reflect"
+import (
+	"io"
+	"os"
+	"reflect"
+)
 
-func Call(fn any, args []any) []any {
+type BuiltIn struct {
+	StdIn  io.ReadCloser
+	StdOut io.WriteCloser
+	StdErr io.WriteCloser
+}
+
+func NewBuiltIn() *BuiltIn {
+	return &BuiltIn{
+		StdIn:  os.Stdin,
+		StdOut: os.Stdout,
+		StdErr: os.Stderr,
+	}
+}
+
+func (b *BuiltIn) Call(fn any, args []any) []any {
 	if fn == nil {
 		return nil // FIXME: Nil FUNC
 	}
@@ -23,12 +41,12 @@ func Call(fn any, args []any) []any {
 	return vs
 }
 
-func Match(ns ...string) any {
+func (b *BuiltIn) Match(ns ...string) any {
 	switch ns[0] {
 	case "print":
-		return Print
+		return b.Print
 	case "println":
-		return Println
+		return b.Println
 	case "typeOf":
 		return TypeOf
 	case "panic":

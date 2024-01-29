@@ -6,10 +6,14 @@ import (
 	"strings"
 )
 
-type StdStringLib struct{}
+type StdStringLib struct {
+	b *BuiltIn
+}
 
-func NewStdStringLib() *StdStringLib {
-	return &StdStringLib{}
+func NewStdStringLib(b *BuiltIn) *StdStringLib {
+	return &StdStringLib{
+		b: b,
+	}
 }
 
 func (s *StdStringLib) FuncCall(caller string, args []any) any {

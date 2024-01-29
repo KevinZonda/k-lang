@@ -5,13 +5,15 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 )
 
-type StdConsoleLib struct{}
-
-func NewStdConsoleLib() *StdConsoleLib {
-	return &StdConsoleLib{}
+type StdConsoleLib struct {
+	b *BuiltIn
 }
 
-func (s *StdConsoleLib) FuncCall(caller string, args []any) any {
+func NewStdConsoleLib(b *BuiltIn) *StdConsoleLib {
+	return &StdConsoleLib{b: b}
+}
+
+func (c *StdConsoleLib) FuncCall(caller string, args []any) any {
 	switch caller {
 	case "readln":
 		ensureArgsLen(args, 0)
@@ -22,10 +24,10 @@ func (s *StdConsoleLib) FuncCall(caller string, args []any) any {
 		}
 		return s
 	case "write":
-		Print(args...)
+		c.b.Print(args...)
 		return nil
 	case "writeln":
-		Println(args...)
+		c.b.Println(args...)
 		return nil
 	}
 	panic("Unknown function: " + caller)

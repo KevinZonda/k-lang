@@ -3,7 +3,6 @@ package eval
 import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/builtin"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 )
 
@@ -79,12 +78,12 @@ func (e *Eval) EvalBuiltInCall(fc *node.FuncCall, args []any) any {
 		e.objTable.Println()
 		return nil
 	}
-	fn := builtin.Match(fc.Caller.Value)
+	fn := e.builtin.Match(fc.Caller.Value)
 	if fn == nil {
 		panic("func not found")
 	}
 	var ret []any
-	xs := builtin.Call(fn, args)
+	xs := e.builtin.Call(fn, args)
 	for _, x := range xs {
 		ret = append(ret, x)
 	}

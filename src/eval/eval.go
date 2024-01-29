@@ -5,8 +5,11 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/builtin"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
+	"io"
+	"os"
 	"path/filepath"
 	"reflect"
 )
@@ -17,7 +20,41 @@ type Eval struct {
 	basePath     string
 	loopLvl      int
 	currentToken token.Token
+	builtin      *builtin.BuiltIn
 }
+
+// region STD {IN, OUT, ERR}
+func (e *Eval) SetStdOut(out io.WriteCloser) {
+	e.builtin.StdOut = out
+}
+
+func (e *Eval) SetStdIn(in io.ReadCloser) {
+	e.builtin.StdIn = in
+}
+
+func (e *Eval) SetStdErr(err io.WriteCloser) {
+	e.builtin.StdErr = err
+}
+
+func (e *Eval) GetStdOut() io.WriteCloser {
+	return e.builtin.StdOut
+}
+
+func (e *Eval) GetStdIn() io.ReadCloser {
+	return e.builtin.StdIn
+}
+
+func (e *Eval) GetStdErr() io.WriteCloser {
+	return e.builtin.StdErr
+}
+
+func (e *Eval) ResetStd() {
+	e.builtin.StdOut = os.Stdout
+	e.builtin.StdIn = os.Stdin
+	e.builtin.StdErr = os.Stderr
+}
+
+//endregion
 
 func (e *Eval) CurrentToken() token.Token {
 	return e.currentToken
@@ -38,6 +75,7 @@ func New(ast tree.Ast, inputFile string) *Eval {
 		ast:      ast,
 		objTable: NewObjectTable(),
 		basePath: path,
+		builtin:  builtin.NewBuiltIn(),
 	}
 }
 
@@ -47,6 +85,7 @@ func (e *Eval) new(ast tree.Ast) *Eval {
 		objTable: e.objTable,
 		loopLvl:  e.loopLvl,
 		basePath: e.basePath,
+		builtin:  e.builtin,
 	}
 }
 
@@ -56,6 +95,7 @@ func (e *Eval) LoadContext(o *Eval) {
 		return
 	}
 	e.objTable = o.objTable
+	e.builtin = o.builtin
 }
 
 type runResult struct {
