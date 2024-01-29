@@ -75,7 +75,7 @@ func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, onAfterFrameS
 func (e *Eval) EvalBuiltInCall(fc *node.FuncCall, args []any) any {
 	e.currentToken = fc.GetToken()
 	if fc.Caller.Value == "MEM" {
-		e.objTable.Println()
+		e.objTable.Println(e.builtin.StdOut)
 		return nil
 	}
 	fn := e.builtin.Match(fc.Caller.Value)

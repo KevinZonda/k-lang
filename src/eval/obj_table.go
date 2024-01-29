@@ -3,6 +3,7 @@ package eval
 import (
 	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
+	"io"
 )
 
 type Table struct {
@@ -94,40 +95,33 @@ func (t *TableStack) Empty() bool {
 	return len(t.q) == 0
 }
 
-func (t *TableStack) Println() {
-	fmt.Println("***********************************")
-	fmt.Println("V-MEM STACK")
-	fmt.Println("***********************************")
+func (t *TableStack) Println(w io.Writer) {
+	fmt.Fprintln(w, "***********************************")
+	fmt.Fprintln(w, "V-MEM STACK")
+	fmt.Fprintln(w, "***********************************")
 	if t.Empty() {
-		fmt.Println("<EMPTY>")
-		fmt.Println("***********************************")
+		fmt.Fprintln(w, "<EMPTY>")
+		fmt.Fprintln(w, "***********************************")
 		return
 	}
 	for i := len(t.q) - 1; i >= 0; i-- {
-		fmt.Print("LEVEL [", i, "]")
+		fmt.Fprint(w, "LEVEL [", i, "]")
 		if i == 0 {
-			fmt.Print(" GLOBAL")
+			fmt.Fprint(w, " GLOBAL")
 		}
 		if i == len(t.q)-1 {
-			fmt.Print(" TOP")
+			fmt.Fprint(w, " TOP")
 		}
 		if t.q[i].Protect {
-			fmt.Println(" PROTECTED")
+			fmt.Fprintln(w, " PROTECTED")
 		} else {
-			fmt.Println()
+			fmt.Fprintln(w)
 		}
 		for k, v := range t.q[i].m {
-			fmt.Printf("  -> %s: %v\n", k, v)
+			fmt.Fprintf(w, "  -> %s: %v\n", k, v)
 		}
 	}
-	fmt.Println("***********************************")
-}
-
-func printId(id int) {
-	for i := 0; i < id; i++ {
-		fmt.Print("  ")
-	}
-	fmt.Print("->")
+	fmt.Fprintln(w, "***********************************")
 }
 
 func getFromObjTable[T any](t *TableStack, key string) (T, bool) {
