@@ -6,7 +6,7 @@ import (
 	"reflect"
 )
 
-func (b *BuiltIn) Print(v ...any) {
+func (b BuiltIn) Print(v ...any) {
 	for _, arg := range v {
 		switch arg.(type) {
 		case *obj.StructField:
@@ -17,7 +17,7 @@ func (b *BuiltIn) Print(v ...any) {
 	}
 }
 
-func (b *BuiltIn) printStruct(v *obj.StructField) {
+func (b BuiltIn) printStruct(v *obj.StructField) {
 	if v == nil {
 		return
 	}
@@ -45,7 +45,7 @@ func (b *BuiltIn) printStruct(v *obj.StructField) {
 	b.Print("}")
 }
 
-func (b *BuiltIn) Println(v ...any) {
+func (b BuiltIn) Println(v ...any) {
 	for _, arg := range v {
 		b.Print(arg)
 	}

@@ -3,11 +3,18 @@ package obj
 import (
 	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
+	"io"
 	"strings"
 )
 
 type ILibrary interface {
-	FuncCall(name string, args []any) any
+	FuncCall(b BuiltInInterface, name string, args []any) any
+}
+
+type BuiltInInterface interface {
+	GetStdin() io.ReadCloser
+	GetStdout() io.WriteCloser
+	GetStderr() io.WriteCloser
 }
 
 type Object struct {

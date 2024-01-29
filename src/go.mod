@@ -8,6 +8,8 @@ require (
 	github.com/andybalholm/brotli v1.0.4
 	github.com/antlr4-go/antlr/v4 v4.13.0
 	github.com/brimdata/zed v1.10.0
+	github.com/gotk3/gotk3 v0.6.2
+	github.com/linuxerwang/sourceview3 v0.1.1
 	github.com/tliron/commonlog v0.2.8
 	github.com/tliron/glsp v0.2.0
 	github.com/wk8/go-ordered-map/v2 v2.1.8

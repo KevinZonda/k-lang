@@ -69,7 +69,7 @@ func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) any {
 	case *Eval:
 		return scopeT.EvalFuncCall(funcCall)
 	case obj.ILibrary:
-		return scopeT.FuncCall(_fc.Caller.Value, e.evalExprs(_fc.Args...))
+		return scopeT.FuncCall(e.builtin, _fc.Caller.Value, e.evalExprs(_fc.Args...))
 	case *obj.StructField:
 		var lambda *node.LambdaExpr
 		{

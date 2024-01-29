@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-func (e *Eval) fineFile(s string) (abs string, ok bool) {
+func (e *Eval) findFile(s string) (abs string, ok bool) {
 	s = strings.TrimSpace(s)
 	if s == "" {
 		return "", false
@@ -32,7 +32,7 @@ func (e *Eval) fineFile(s string) (abs string, ok bool) {
 }
 
 func (e *Eval) loadBuiltInLibrary(name, as string) (ok bool) {
-	lib := builtin.GetLibrary(e.builtin, name)
+	lib := builtin.GetLibrary(name)
 	if lib == nil {
 		return false
 	}
@@ -50,7 +50,7 @@ func (e *Eval) EvalOpenStmt(n *node.OpenStmt) {
 		return
 	}
 
-	abs, ok := e.fineFile(n.Path)
+	abs, ok := e.findFile(n.Path)
 	if !ok {
 		panic("File not found: " + n.Path)
 		return

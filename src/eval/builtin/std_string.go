@@ -6,17 +6,13 @@ import (
 	"strings"
 )
 
-type StdStringLib struct {
-	b *BuiltIn
+type StdStringLib struct{}
+
+func NewStdStringLib() *StdStringLib {
+	return &StdStringLib{}
 }
 
-func NewStdStringLib(b *BuiltIn) *StdStringLib {
-	return &StdStringLib{
-		b: b,
-	}
-}
-
-func (s *StdStringLib) FuncCall(caller string, args []any) any {
+func (s *StdStringLib) FuncCall(b obj.BuiltInInterface, caller string, args []any) any {
 	switch caller {
 	case "len":
 		ensureArgsLen(args, 1)

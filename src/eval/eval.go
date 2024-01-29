@@ -20,7 +20,7 @@ type Eval struct {
 	basePath     string
 	loopLvl      int
 	currentToken token.Token
-	builtin      *builtin.BuiltIn
+	builtin      builtin.BuiltIn
 }
 
 // region STD {IN, OUT, ERR}

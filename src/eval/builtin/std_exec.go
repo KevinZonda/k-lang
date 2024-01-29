@@ -1,16 +1,16 @@
 package builtin
 
 import (
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	"os/exec"
 )
 
 type StdExecLib struct{}
 
-func NewStdExecLib(_ *BuiltIn) *StdExecLib {
+func NewStdExecLib() *StdExecLib {
 	return &StdExecLib{}
 }
-
-func (s *StdExecLib) FuncCall(caller string, args []any) any {
+func (s *StdExecLib) FuncCall(b obj.BuiltInInterface, caller string, args []any) any {
 	switch caller {
 	case "cmd":
 		var _args []string

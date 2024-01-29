@@ -12,15 +12,33 @@ type BuiltIn struct {
 	StdErr io.WriteCloser
 }
 
-func NewBuiltIn() *BuiltIn {
-	return &BuiltIn{
+type IBuiltIn interface {
+	GetStdin() io.ReadCloser
+	GetStdout() io.WriteCloser
+	GetStderr() io.WriteCloser
+}
+
+func (b BuiltIn) GetStdout() io.WriteCloser {
+	return b.StdOut
+}
+
+func (b BuiltIn) GetStdin() io.ReadCloser {
+	return b.StdIn
+}
+
+func (b BuiltIn) GetStderr() io.WriteCloser {
+	return b.StdErr
+}
+
+func NewBuiltIn() BuiltIn {
+	return BuiltIn{
 		StdIn:  os.Stdin,
 		StdOut: os.Stdout,
 		StdErr: os.Stderr,
 	}
 }
 
-func (b *BuiltIn) Call(fn any, args []any) []any {
+func (b BuiltIn) Call(fn any, args []any) []any {
 	if fn == nil {
 		return nil // FIXME: Nil FUNC
 	}
@@ -41,7 +59,7 @@ func (b *BuiltIn) Call(fn any, args []any) []any {
 	return vs
 }
 
-func (b *BuiltIn) Match(ns ...string) any {
+func (b BuiltIn) Match(ns ...string) any {
 	switch ns[0] {
 	case "print":
 		return b.Print
