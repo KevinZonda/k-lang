@@ -1,14 +1,19 @@
 package idle
 
 import (
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"github.com/gotk3/gotk3/gtk"
 	sourceview "github.com/linuxerwang/sourceview3"
+	"log"
+	"strconv"
+	"strings"
 )
 
 type EditorW struct {
 	*gtk.Window
 	CodeE    *CodeEditor
-	Toolbar  *gtk.Toolbar
+	Toolbar  *ToolBar
 	CodeView *gtk.ScrolledWindow
 	VBox     *gtk.Box
 }
@@ -32,12 +37,75 @@ func NewEditorW() *EditorW {
 
 	w.Add(w.VBox)
 	w.SetDefaultSize(800, 600)
+
+	w.Toolbar.RunBtn.Connect("clicked", func() {
+		ast, errs := parserHelper.Ast(w.CodeE.Text())
+		if len(errs) > 0 {
+			sb := strings.Builder{}
+			sb.WriteString("Parse failed:\n")
+			for idx, err := range errs {
+				sb.WriteString("[" + strconv.Itoa(idx) + "] ")
+				sb.WriteString(err.Error())
+				sb.WriteString("\n")
+			}
+			dialog := gtk.MessageDialogNew(w, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, strings.TrimSpace(sb.String()))
+			dialog.SetTitle("Parse Failed")
+			dialog.Run()
+			dialog.Destroy()
+			return
+		}
+		e := eval.New(ast, "")
+		isPanic, stdio, panicMsg := runCode(e)
+		e = nil
+		if !isPanic {
+			dialog := gtk.MessageDialogNew(w, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, gtk.BUTTONS_OK, stdio)
+			dialog.SetTitle("Result")
+			dialog.Run()
+			dialog.Destroy()
+		} else {
+			msg := stdio + "\nBut with following panic:\n" + panicMsg
+			dialog := gtk.MessageDialogNew(w, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, msg)
+			dialog.SetTitle("Result with Panic")
+			dialog.Run()
+			dialog.Destroy()
+		}
+
+	})
 	return &w
+}
+
+func runCode(e *eval.Eval) (isPanic bool, stdio string, panicMsg string) {
+	buf := NewFakeWCloser()
+	log.Printf("CREATED BUF: %p", buf.Buf)
+	defer func() {
+		stdio = buf.ReadAllString()
+		if r := recover(); r != nil {
+			isPanic = true
+			panicMsg = r.(string)
+		}
+	}()
+	e.SetStdOut(buf)
+	e.SetStdErr(buf)
+	log.Printf("[START]STDOUT: %p STDIN: %p", e.GetStdOut().(*FakeWrCloser).Buf, e.GetStdErr().(*FakeWrCloser).Buf)
+	e.Do()
+	log.Printf("[END]STDOUT: %p STDIN: %p", e.GetStdOut().(*FakeWrCloser).Buf, e.GetStdErr().(*FakeWrCloser).Buf)
+
+	return false, "", ""
 }
 
 type CodeEditor struct {
 	*sourceview.SourceView
 	LanguageManager *sourceview.SourceLanguageManager
+	buf             *sourceview.SourceBuffer
+}
+
+func (ce *CodeEditor) Text() string {
+	start, end := ce.buf.GetBounds()
+	txt, err := ce.buf.GetText(start, end, false)
+	if err != nil {
+		log.Println("CodeEditor.Text() failed:", err)
+	}
+	return txt
 }
 
 func NewCodeEditor(lang string) *CodeEditor {
@@ -49,27 +117,26 @@ func NewCodeEditor(lang string) *CodeEditor {
 	}
 	l, _ := lm.GetLanguage(lang)
 	sv.SetShowLineNumbers(true)
-	buf, _ := sv.GetBuffer()
-	buf.SetLanguage(l)
+	ce.buf, _ = sv.GetBuffer()
+	ce.buf.SetLanguage(l)
 	return &ce
 }
 
-func NewToolBar() *gtk.Toolbar {
-	bar, _ := gtk.ToolbarNew()
+type ToolBar struct {
+	*gtk.Toolbar
+	RunBtn *gtk.ToolButton
+}
+
+func NewToolBar() *ToolBar {
+	bar := ToolBar{}
+	bar.Toolbar, _ = gtk.ToolbarNew()
 	bar.SetStyle(gtk.TOOLBAR_BOTH)
 
-	runBtn, _ := gtk.ToolButtonNew(nil, "Run")
-	runBtn.SetIconName("media-playback-start")
-	runBtn.Connect("clicked", func() {
-		// Show a MessageBox
-		dialog := gtk.MessageDialogNew(nil, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, gtk.BUTTONS_OK, "Hello world!")
-		dialog.Run()
-		dialog.Destroy()
-
-	})
+	bar.RunBtn, _ = gtk.ToolButtonNew(nil, "Run")
+	bar.RunBtn.SetIconName("media-playback-start")
 
 	sep, _ := gtk.SeparatorToolItemNew()
 	bar.Insert(sep, 0)
-	bar.Insert(runBtn, 1)
-	return bar
+	bar.Insert(bar.RunBtn, 1)
+	return &bar
 }
