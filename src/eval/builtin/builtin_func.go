@@ -2,8 +2,9 @@ package builtin
 
 import (
 	"fmt"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	"reflect"
+
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 )
 
 func (b BuiltIn) Print(v ...any) {
@@ -26,7 +27,7 @@ func (b BuiltIn) printStruct(v *obj.StructField) {
 	} else {
 		b.Print("struct ")
 	}
-	fmt.Print("{")
+	b.Print("{")
 	count := 0
 	totalLen := v.Fields.Len()
 	for pair := v.Fields.Oldest(); pair != nil; pair = pair.Next() {

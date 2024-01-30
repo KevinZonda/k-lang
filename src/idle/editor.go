@@ -1,6 +1,7 @@
 package idle
 
 import (
+	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"github.com/gotk3/gotk3/gtk"
@@ -76,19 +77,24 @@ func NewEditorW() *EditorW {
 
 func runCode(e *eval.Eval) (isPanic bool, stdio string, panicMsg string) {
 	buf := NewFakeWCloser()
-	log.Printf("CREATED BUF: %p", buf.Buf)
 	defer func() {
 		stdio = buf.ReadAllString()
 		if r := recover(); r != nil {
 			isPanic = true
-			panicMsg = r.(string)
+			switch rT := r.(type) {
+			case string:
+				panicMsg = rT
+			case error:
+				panicMsg = rT.Error()
+			default:
+				panicMsg = "Unknown panic: " + fmt.Sprint(r)
+			}
+
 		}
 	}()
 	e.SetStdOut(buf)
 	e.SetStdErr(buf)
-	log.Printf("[START]STDOUT: %p STDIN: %p", e.GetStdOut().(*FakeWrCloser).Buf, e.GetStdErr().(*FakeWrCloser).Buf)
 	e.Do()
-	log.Printf("[END]STDOUT: %p STDIN: %p", e.GetStdOut().(*FakeWrCloser).Buf, e.GetStdErr().(*FakeWrCloser).Buf)
 
 	return false, "", ""
 }

@@ -1,8 +1,10 @@
 package builtin
 
 import (
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
+	"errors"
 	"os/exec"
+
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 )
 
 type StdExecLib struct{}
@@ -21,6 +23,11 @@ func (s *StdExecLib) FuncCall(b obj.BuiltInInterface, caller string, args []any)
 		out, err := cmd.Output()
 		if err != nil {
 			// FIXME: Panic?
+			// Q
+			var exitError *exec.ExitError
+			if errors.As(err, &exitError) {
+				// log.Println(exitError.ExitCode())
+			}
 			panic(err)
 		}
 		return string(out)
