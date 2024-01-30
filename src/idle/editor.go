@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
+	"github.com/KevinZonda/GoX/pkg/iox"
 	"github.com/gotk3/gotk3/gtk"
 	sourceview "github.com/linuxerwang/sourceview3"
 	"log"
@@ -17,10 +18,26 @@ type EditorW struct {
 	Toolbar  *ToolBar
 	CodeView *gtk.ScrolledWindow
 	VBox     *gtk.Box
+	MainW    *MainW
+	Path     string
 }
 
-func NewEditorW() *EditorW {
-	w := EditorW{}
+func (e *EditorW) LoadFile(path string) {
+	s, err := iox.ReadAllText(path)
+	if err != nil {
+		dialog := gtk.MessageDialogNew(e, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, err.Error())
+		dialog.SetTitle("Open File Failed")
+		dialog.Run()
+		dialog.Destroy()
+	}
+	e.Path = path
+	e.CodeE.buf.SetText(s)
+}
+
+func NewEditorW(mainW *MainW) *EditorW {
+	w := EditorW{
+		MainW: mainW,
+	}
 	w.Window, _ = gtk.WindowNew(gtk.WINDOW_TOPLEVEL)
 	w.SetTitle("IDLE")
 
@@ -40,6 +57,7 @@ func NewEditorW() *EditorW {
 	w.SetDefaultSize(800, 600)
 
 	w.Toolbar.RunBtn.Connect("clicked", func() {
+		mainW.CodeEditor.AppendEnd("\n===================NEW RUN===================\n")
 		ast, errs := parserHelper.Ast(w.CodeE.Text())
 		if len(errs) > 0 {
 			sb := strings.Builder{}
@@ -49,20 +67,22 @@ func NewEditorW() *EditorW {
 				sb.WriteString(err.Error())
 				sb.WriteString("\n")
 			}
-			dialog := gtk.MessageDialogNew(w, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, strings.TrimSpace(sb.String()))
-			dialog.SetTitle("Parse Failed")
-			dialog.Run()
-			dialog.Destroy()
+			mainW.CodeEditor.AppendEnd(sb.String())
+			//dialog := gtk.MessageDialogNew(w, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, strings.TrimSpace(sb.String()))
+			//dialog.SetTitle("Parse Failed")
+			//dialog.Run()
+			//dialog.Destroy()
 			return
 		}
 		e := eval.New(ast, "")
 		isPanic, stdio, panicMsg := runCode(e)
 		e = nil
 		if !isPanic {
-			dialog := gtk.MessageDialogNew(w, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, gtk.BUTTONS_OK, stdio)
-			dialog.SetTitle("Result")
-			dialog.Run()
-			dialog.Destroy()
+			//dialog := gtk.MessageDialogNew(w, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, gtk.BUTTONS_OK, stdio)
+			//dialog.SetTitle("Result")
+			//dialog.Run()
+			//dialog.Destroy()
+			mainW.CodeEditor.AppendEnd(stdio)
 		} else {
 			msg := stdio + "\nBut with following panic:\n" + panicMsg
 			dialog := gtk.MessageDialogNew(w, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, msg)
@@ -105,6 +125,10 @@ type CodeEditor struct {
 	buf             *sourceview.SourceBuffer
 }
 
+func (ce *CodeEditor) AppendEnd(s string) {
+	_, end := ce.buf.GetBounds()
+	ce.buf.Insert(end, s)
+}
 func (ce *CodeEditor) Text() string {
 	start, end := ce.buf.GetBounds()
 	txt, err := ce.buf.GetText(start, end, false)

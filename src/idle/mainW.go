@@ -1,6 +1,8 @@
 package idle
 
-import "github.com/gotk3/gotk3/gtk"
+import (
+	"github.com/gotk3/gotk3/gtk"
+)
 
 type MainW struct {
 	*gtk.Window
@@ -36,10 +38,19 @@ func (w *MainW) NewMenuBar() *gtk.MenuBar {
 		newFile, _ := gtk.MenuItemNewWithLabel("New")
 
 		newFile.Connect("activate", func() {
-			d := NewEditorW()
+			d := NewEditorW(w)
 			d.ShowAll()
 		})
 		openFile, _ := gtk.MenuItemNewWithLabel("Open")
+		openFile.Connect("activate", func() {
+			fc, _ := gtk.FileChooserNativeDialogNew("Open file...", w, gtk.FILE_CHOOSER_ACTION_OPEN, "_Open", "_Cancel")
+			resp := fc.NativeDialog.Run()
+			if gtk.ResponseType(resp) == gtk.RESPONSE_ACCEPT {
+				edit := NewEditorW(w)
+				edit.LoadFile(fc.GetFilename())
+				edit.ShowAll()
+			}
+		})
 		exit, _ := gtk.MenuItemNewWithLabel("Exit")
 		sep, _ := gtk.SeparatorMenuItemNew()
 		_file.Append(newFile)
