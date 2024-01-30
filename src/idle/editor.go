@@ -111,17 +111,19 @@ func NewEditorW() *EditorW {
 }
 
 func (w *EditorW) RunCode() {
-	w.runCode(true)
+	w.runCode(w.CodeE.Text(), true, "===================NEW RUN===================")
 }
 
 func (w *EditorW) RerunCode() {
-	w.runCode(false)
+	w.runCode(w.CodeE.Text(), false, "===================NEW RUN===================")
 }
 
-func (w *EditorW) runCode(loadCtx bool) {
+func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (retV any, hasRet bool) {
 	w.ReplE.SmartNewLine()
-	w.ReplE.AppendEnd("===================NEW RUN===================\n")
-	ast, errs := parserHelper.Ast(w.CodeE.Text())
+	if beginMsg != "" {
+		w.ReplE.AppendEnd(beginMsg + "\n")
+	}
+	ast, errs := parserHelper.Ast(code)
 	if len(errs) > 0 {
 		w.ReplE.AppendEnd(parseErrors(errs))
 		return
@@ -131,16 +133,16 @@ func (w *EditorW) runCode(loadCtx bool) {
 		ev.LoadContext(w.e)
 	}
 	w.e = ev
-	isPanic, panicMsg, _, _ := runCode(ev, w.ReplE.WriterPipe())
-	if !isPanic {
-		w.ReplE.ScrollToEnd()
-	} else {
+	isPanic, panicMsg, retV, hasRet := runCode(ev, w.ReplE.WriterPipe())
+	w.ReplE.ScrollToEnd()
+	if isPanic {
 		msg := "Code Panicked:\n" + panicMsg
 		dialog := gtk.MessageDialogNew(w, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, msg)
 		dialog.SetTitle("Result with Panic")
 		dialog.Run()
 		dialog.Destroy()
 	}
+	return
 }
 
 func (w *EditorW) FormatCode() {
@@ -165,28 +167,12 @@ func (w *EditorW) InvokeUserRepl() {
 
 	w.ReplE.SmartNewLine()
 	w.ReplE.AppendEnd(">>> " + cmd + "\n")
-	ast, errs := parserHelper.Ast(cmd)
-	if len(errs) > 0 {
-		w.ReplE.AppendEnd(parseErrors(errs))
-		return
+	val, hasVal := w.runCode(cmd, true, "")
+	if hasVal {
+		w.ReplE.SmartNewLine()
+		w.ReplE.AppendEnd(fmt.Sprintf("<<< %v\n", val))
 	}
-	ev := eval.New(ast, "")
-	ev.LoadContext(w.e)
-	w.e = ev
-	isPanic, panicMsg, val, hasVal := runCode(ev, w.ReplE.WriterPipe())
-	if !isPanic {
-		if hasVal {
-			w.ReplE.SmartNewLine()
-			w.ReplE.AppendEnd(fmt.Sprintf("<<< %v\n", val))
-		}
-		w.ReplE.ScrollToEnd()
-	} else {
-		msg := "panic:\n" + panicMsg
-		dialog := gtk.MessageDialogNew(w, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, msg)
-		dialog.SetTitle("Result with Panic")
-		dialog.Run()
-		dialog.Destroy()
-	}
+	w.ReplE.ScrollToEnd()
 }
 
 func runCode(e *eval.Eval, stdout io.WriteCloser) (isPanic bool, panicMsg string, retV any, hasRet bool) {
