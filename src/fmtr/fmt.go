@@ -1,9 +1,10 @@
 package fmtr
 
 import (
+	"strings"
+
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parser"
 	"github.com/antlr4-go/antlr/v4"
-	"strings"
 )
 
 type str struct {
@@ -77,15 +78,13 @@ func Fmt(code string) string {
 				sb.WriteString("\n")
 			}
 			makeIdent(sb, ident)
-		case parser.V2LexerRParen:
+		case parser.V2LexerRParen, parser.V2LexerRSquare:
 			ident--
-			sb.WriteString(")")
-		case parser.V2LexerRSquare:
-			ident--
-			sb.WriteString("]")
+			// TODO: fix this
+			sb.WriteString(cur.GetText())
 		case parser.V2LexerLParen, parser.V2LexerLSquare:
 			ident++
-			if prevToken.GetTokenType() != parser.V2ParserIdentifier {
+			if prevToken != nil && prevToken.GetTokenType() != parser.V2ParserIdentifier {
 				sb.WriteString(" ")
 			} else if sb.EndsWithSpaces() {
 				sb.BackToLast("\n")
@@ -106,23 +105,25 @@ func Fmt(code string) string {
 		case parser.V2LexerSemi, parser.V2LexerComma, parser.V2LexerDot:
 			sb.WriteString(cur.GetText())
 		default:
-			switch prevToken.GetTokenType() {
-			case parser.V2LexerLSquare, parser.V2LexerLParen, parser.V2LexerDot:
-			default:
-				if !sb.EndsWith("\n") && !sb.EndsWithSpaces() {
-					sb.WriteString(" ")
-				}
-			}
-			if cur.GetTokenType() == parser.V2LexerFunction || cur.GetTokenType() == parser.V2LexerStruct {
-
-				if prevToken != nil && !sb.EndsWith("\n\n") {
-					switch prevToken.GetTokenType() {
-					case parser.V2LexerAssign, parser.V2LexerComment:
-					default:
-						sb.WriteString("\n\n")
+			if prevToken != nil {
+				switch prevToken.GetTokenType() {
+				case parser.V2LexerLSquare, parser.V2LexerLParen, parser.V2LexerDot:
+				default:
+					if !sb.EndsWith("\n") && !sb.EndsWithSpaces() {
+						sb.WriteString(" ")
 					}
 				}
 
+				if cur.GetTokenType() == parser.V2LexerFunction || cur.GetTokenType() == parser.V2LexerStruct {
+					if !sb.EndsWith("\n\n") {
+						switch prevToken.GetTokenType() {
+						case parser.V2LexerAssign, parser.V2LexerComment:
+						default:
+							sb.WriteString("\n\n")
+						}
+					}
+
+				}
 			}
 			sb.WriteString(cur.GetText())
 		}
