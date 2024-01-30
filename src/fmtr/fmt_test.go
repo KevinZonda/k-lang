@@ -99,3 +99,12 @@ fn eval(code) {
 `
 	fmt.Println(fmtr.Fmt(code))
 }
+
+func TestFmt(t *testing.T) {
+	code := `
+x = [
+10,
+20
+}`
+	fmt.Println(fmtr.Fmt(code))
+}

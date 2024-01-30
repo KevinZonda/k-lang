@@ -33,6 +33,12 @@ func (s *str) Back(n int) {
 	s.WriteString(_s[:len(_s)-n])
 }
 
+func (s *str) BackToLast(str string) {
+	_s := s.String()
+	s.Reset()
+	s.WriteString(_s[:strings.LastIndex(_s, str)])
+}
+
 func Fmt(code string) string {
 	sb := &str{}
 	lex := parser.NewV2Lexer(antlr.NewInputStream(code))
@@ -72,14 +78,21 @@ func Fmt(code string) string {
 			}
 			makeIdent(sb, ident)
 		case parser.V2LexerRParen:
+			ident--
 			sb.WriteString(")")
 		case parser.V2LexerRSquare:
+			ident--
 			sb.WriteString("]")
-		case parser.V2LexerLParen:
+		case parser.V2LexerLParen, parser.V2LexerLSquare:
+			ident++
 			if prevToken.GetTokenType() != parser.V2ParserIdentifier {
 				sb.WriteString(" ")
+			} else if sb.EndsWithSpaces() {
+				sb.BackToLast("\n")
+				sb.WriteString("\n")
+				makeIdent(sb, ident)
 			}
-			sb.WriteString("(")
+			sb.WriteString(cur.GetText())
 		case parser.V2LexerComment:
 			if !sb.EndsWith("\n") && !sb.EndsWithSpaces() {
 				sb.WriteString(" ")
