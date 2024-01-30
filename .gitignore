@@ -6,3 +6,6 @@
 gen/
 .DS_Store
 *.vsix
+
+*_priv.md
+*_priv.go

@@ -1,12 +1,13 @@
 package idle
 
 import (
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/idle/gtks"
 	"github.com/gotk3/gotk3/gtk"
 )
 
 type MainW struct {
 	*gtk.Window
-	CodeEditor *CodeEditor
+	CodeEditor *gtks.CodeEditor
 	MenuBar    *gtk.MenuBar
 }
 
@@ -17,7 +18,7 @@ func NewMainW() *MainW {
 	w.SetTitle("IDLE Shell")
 	w.SetDefaultSize(800, 600)
 
-	w.CodeEditor = NewCodeEditor("cpp")
+	w.CodeEditor = gtks.NewCodeEditor("cpp")
 
 	vbox, _ := gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 2)
 
