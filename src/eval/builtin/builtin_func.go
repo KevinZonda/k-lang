@@ -50,7 +50,7 @@ func (b BuiltIn) Println(v ...any) {
 	for _, arg := range v {
 		b.Print(arg)
 	}
-	fmt.Println()
+	fmt.Fprintln(b.StdOut)
 }
 
 func TypeOf(v any) string {
