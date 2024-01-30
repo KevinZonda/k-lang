@@ -24,13 +24,19 @@ func (v *AntlrVisitor) appendErr(ctx antlr.ParserRuleContext, msg string, raw er
 		raw = errors.New(msg)
 	}
 	e := VisitorError{
-		Line:      ctx.GetStart().GetLine(),
-		Column:    ctx.GetStart().GetColumn(),
-		EndLine:   ctx.GetStop().GetLine(),
-		EndColumn: ctx.GetStop().GetColumn() + len([]rune(ctx.GetStop().GetText())),
-		Msg:       msg,
-		Text:      ctx.GetText(),
-		Raw:       fmt.Errorf(msg),
+		Msg: msg,
+		Raw: fmt.Errorf(msg),
+	}
+	if ctx != nil {
+		e.Text = ctx.GetText()
+		if ctx.GetStart() != nil {
+			e.Line = ctx.GetStart().GetLine()
+			e.Column = ctx.GetStart().GetColumn()
+		}
+		if ctx.GetStop() != nil {
+			e.EndLine = ctx.GetStop().GetLine()
+			e.EndColumn = ctx.GetStop().GetColumn() + len([]rune(ctx.GetStop().GetText()))
+		}
 	}
 	v.Errs = append(v.Errs, e)
 }

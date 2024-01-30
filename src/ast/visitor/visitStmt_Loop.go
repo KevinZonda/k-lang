@@ -16,7 +16,9 @@ func (v *AntlrVisitor) visitLoopStmt(ctx parser.ILoopStmtContext) node.Stmt {
 	if ctx.IterFor() != nil {
 		return v.visitIterStyleFor(ctx.IterFor())
 	}
-	panic("implement me")
+
+	v.appendErr(ctx, "unknown loop statement", nil)
+	return nil
 }
 
 func (v *AntlrVisitor) visitCStyleFor(ctx parser.ICStyleForContext) *node.CStyleFor {

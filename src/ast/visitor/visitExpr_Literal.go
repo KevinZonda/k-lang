@@ -7,6 +7,7 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parser"
 	"reflect"
 	"strconv"
+	"strings"
 )
 
 func (v *AntlrVisitor) visitLiteral(ctx parser.ILiteralContext) node.Expr {
@@ -71,11 +72,12 @@ func (v *AntlrVisitor) visitLiteral(ctx parser.ILiteralContext) node.Expr {
 	//		Value: ctx.GetStart().GetText(),
 	//	}
 	//}
-	fmt.Println("VisitLiteralBlock : Unknown type")
-	fmt.Println("-> text     : ", ctx.GetStart().GetText())
-	fmt.Println("-> tokenType: ", ctx.GetStart().GetTokenType())
-	fmt.Println("-> reflect  :", reflect.TypeOf(ctx))
-	panic("VisitLiteralBlock : Unknown type")
+
+	sb := strings.Builder{}
+	sb.WriteString("VisitLiteralBlock : Unknown type\n")
+	sb.WriteString(fmt.Sprintln("-> reflect  :", reflect.TypeOf(ctx)))
+	v.appendErr(ctx, sb.String(), nil)
+	return nil
 }
 
 func (v *AntlrVisitor) visitInitializer(ctx parser.IInitializerContext) node.Expr {
@@ -86,8 +88,9 @@ func (v *AntlrVisitor) visitInitializer(ctx parser.IInitializerContext) node.Exp
 		return v.visitMapInitializer(ctx.MapInitializer())
 	}
 
-	fmt.Println("-> text     : ", ctx.GetStart().GetText())
-	fmt.Println("-> tokenType: ", ctx.GetStart().GetTokenType())
-	fmt.Println("-> reflect  :", reflect.TypeOf(ctx))
-	panic("VisitInitializer : Unknown type")
+	sb := strings.Builder{}
+	sb.WriteString("VisitInitializer : Unknown type\n")
+	sb.WriteString(fmt.Sprintln("-> reflect  :", reflect.TypeOf(ctx)))
+	v.appendErr(ctx, sb.String(), nil)
+	return nil
 }

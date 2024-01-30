@@ -61,7 +61,8 @@ func (v *AntlrVisitor) visitJumpStmt(ctx parser.IJumpStmtContext) node.Stmt {
 			Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		}
 	}
-	panic("Unknown jumpStmt")
+	v.appendErr(ctx, "unknown jump statement", nil)
+	return nil
 }
 
 func (v *AntlrVisitor) visitIfStmt(ctx parser.IIfStmtContext) *node.IfStmt {
