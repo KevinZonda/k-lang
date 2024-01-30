@@ -3,12 +3,25 @@ package gtks
 import (
 	sourceview "github.com/linuxerwang/sourceview3"
 	"log"
+	"strings"
 )
 
 type CodeEditor struct {
 	*sourceview.SourceView
 	LanguageManager *sourceview.SourceLanguageManager
 	Buf             *sourceview.SourceBuffer
+}
+
+func (ce *CodeEditor) ScrollToEnd() {
+	_, end := ce.Buf.GetBounds()
+	ce.ScrollToIter(end, 0, false, 0, 0)
+}
+
+func (ce *CodeEditor) SmartNewLine() {
+	t := ce.Text()
+	if !strings.HasSuffix(t, "\n") && len(t) > 0 {
+		ce.AppendEnd("\n")
+	}
 }
 
 func (ce *CodeEditor) AppendEnd(s string) {

@@ -91,10 +91,13 @@ func (e *Eval) new(ast tree.Ast) *Eval {
 
 func (e *Eval) LoadContext(o *Eval) {
 	if o == nil {
-		e.objTable = &TableStack{}
+		e.objTable = NewObjectTable()
 		return
 	}
 	e.objTable = o.objTable
+	if e.objTable.Empty() {
+		e.objTable = NewObjectTable()
+	}
 	e.builtin = o.builtin
 }
 
