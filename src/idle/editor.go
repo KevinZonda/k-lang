@@ -8,6 +8,7 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"github.com/KevinZonda/GoX/pkg/iox"
 	"github.com/gotk3/gotk3/gtk"
+	"io"
 	"strconv"
 	"strings"
 )
@@ -130,13 +131,11 @@ func (w *EditorW) runCode(loadCtx bool) {
 		ev.LoadContext(w.e)
 	}
 	w.e = ev
-	isPanic, stdio, panicMsg, _, _ := runCode(ev)
+	isPanic, panicMsg, _, _ := runCode(ev, w.ReplE.WriterPipe())
 	if !isPanic {
-		w.ReplE.AppendEnd(stdio)
 		w.ReplE.ScrollToEnd()
 	} else {
-		w.ReplE.AppendEnd(stdio)
-		msg := stdio + "Code Panicked:\n" + panicMsg
+		msg := "Code Panicked:\n" + panicMsg
 		dialog := gtk.MessageDialogNew(w, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, msg)
 		dialog.SetTitle("Result with Panic")
 		dialog.Run()
@@ -174,15 +173,15 @@ func (w *EditorW) InvokeUserRepl() {
 	ev := eval.New(ast, "")
 	ev.LoadContext(w.e)
 	w.e = ev
-	isPanic, stdio, panicMsg, val, hasVal := runCode(ev)
+	isPanic, panicMsg, val, hasVal := runCode(ev, w.ReplE.WriterPipe())
 	if !isPanic {
-		w.ReplE.AppendEnd(stdio)
 		if hasVal {
+			w.ReplE.SmartNewLine()
 			w.ReplE.AppendEnd(fmt.Sprintf("<<< %v\n", val))
 		}
 		w.ReplE.ScrollToEnd()
 	} else {
-		msg := stdio + "\nBut with following panic:\n" + panicMsg
+		msg := "panic:\n" + panicMsg
 		dialog := gtk.MessageDialogNew(w, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, msg)
 		dialog.SetTitle("Result with Panic")
 		dialog.Run()
@@ -190,10 +189,9 @@ func (w *EditorW) InvokeUserRepl() {
 	}
 }
 
-func runCode(e *eval.Eval) (isPanic bool, stdio string, panicMsg string, retV any, hasRet bool) {
-	buf := NewFakeWCloser()
+func runCode(e *eval.Eval, stdout io.WriteCloser) (isPanic bool, panicMsg string, retV any, hasRet bool) {
+	// buf := NewFakeWCloser()
 	defer func() {
-		stdio = buf.ReadAllString()
 		if r := recover(); r != nil {
 			isPanic = true
 			switch rT := r.(type) {
@@ -207,11 +205,11 @@ func runCode(e *eval.Eval) (isPanic bool, stdio string, panicMsg string, retV an
 
 		}
 	}()
-	e.SetStdOut(buf)
-	e.SetStdErr(buf)
+	e.SetStdOut(stdout)
+	e.SetStdErr(stdout)
 	val, hasVal := e.DoRetLastExpr()
 
-	return false, "", "", val, hasVal
+	return false, "", val, hasVal
 }
 
 type ToolBar struct {
