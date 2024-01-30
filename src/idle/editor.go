@@ -32,9 +32,11 @@ func (e *EditorW) LoadFile(path string) {
 		dialog.SetTitle("Open File Failed")
 		dialog.Run()
 		dialog.Destroy()
+		return
 	}
 	e.Path = path
 	e.CodeE.buf.SetText(s)
+	e.SetTitle("IDLE - " + e.Path)
 }
 
 func (e *EditorW) syncCursorPos() {
