@@ -31,6 +31,8 @@ func main() {
 		funcs.Help()
 	case "lsp":
 		funcs.Lsp(args.GetStrOr(0, nil))
+	case "fmt":
+		funcs.Format(args.GetStrOr(0, cli.Input))
 	case "jupyter":
 		funcs.JupyterKernel(args.GetStrOr(0, nil))
 	default:
