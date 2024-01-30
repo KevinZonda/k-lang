@@ -3,6 +3,7 @@ package idle
 import (
 	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/fmtr"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"github.com/KevinZonda/GoX/pkg/iox"
 	"github.com/gotk3/gotk3/gtk"
@@ -14,12 +15,14 @@ import (
 
 type EditorW struct {
 	*gtk.Window
-	CodeE    *CodeEditor
-	Toolbar  *ToolBar
-	CodeView *gtk.ScrolledWindow
-	VBox     *gtk.Box
-	MainW    *MainW
-	Path     string
+	CodeE     *CodeEditor
+	MenuBar   *gtk.MenuBar
+	Toolbar   *ToolBar
+	CodeView  *gtk.ScrolledWindow
+	VBox      *gtk.Box
+	ReplE     *CodeEditor
+	Path      string
+	StatusBar *gtk.Statusbar
 }
 
 func (e *EditorW) LoadFile(path string) {
@@ -34,14 +37,20 @@ func (e *EditorW) LoadFile(path string) {
 	e.CodeE.buf.SetText(s)
 }
 
-func NewEditorW(mainW *MainW) *EditorW {
-	w := EditorW{
-		MainW: mainW,
-	}
+func (e *EditorW) syncCursorPos() {
+	buf := e.CodeE.buf
+	iter := buf.GetIterAtMark(buf.GetInsert())
+	line := iter.GetLine()
+	col := iter.GetLineOffset()
+	e.StatusBar.Push(0, fmt.Sprintf("Line %d, Col %d", line+1, col+1))
+}
+
+func NewEditorW() *EditorW {
+	w := EditorW{}
 	w.Window, _ = gtk.WindowNew(gtk.WINDOW_TOPLEVEL)
 	w.SetTitle("IDLE")
 
-	w.VBox, _ = gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 2)
+	w.VBox, _ = gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0)
 
 	w.CodeView, _ = gtk.ScrolledWindowNew(nil, nil)
 	w.CodeView.SetVExpand(true)
@@ -49,15 +58,37 @@ func NewEditorW(mainW *MainW) *EditorW {
 	w.CodeView.Add(w.CodeE)
 
 	w.Toolbar = w.NewToolBar()
+	w.MenuBar = NewMenuBar()
 
+	w.StatusBar, _ = gtk.StatusbarNew()
+	w.StatusBar.SetBorderWidth(0)
+	w.StatusBar.SetMarginBottom(0)
+	w.StatusBar.SetMarginTop(0)
+	w.StatusBar.SetMarginStart(0)
+	w.StatusBar.SetMarginEnd(0)
+
+	w.VBox.Add(w.MenuBar)
 	w.VBox.Add(w.Toolbar)
-	w.VBox.PackStart(w.CodeView, true, true, 0)
 
+	pane1, _ := gtk.PanedNew(gtk.ORIENTATION_VERTICAL)
+	w.ReplE = NewCodeEditor("markdown")
+	replW, _ := gtk.ScrolledWindowNew(nil, nil)
+	replW.Add(w.ReplE)
+	pane1.Pack1(w.CodeView, true, false)
+	pane1.Pack2(replW, true, false)
+
+	w.VBox.PackStart(pane1, true, true, 0)
+	//w.VBox.PackStart(w.CodeView, true, true, 0)
+	w.VBox.Add(w.StatusBar)
 	w.Add(w.VBox)
 	w.SetDefaultSize(800, 600)
 
+	w.syncCursorPos()
+	w.CodeE.SourceView.TextView.Connect("move-cursor", w.syncCursorPos)
+	w.CodeE.buf.Connect("end-user-action", w.syncCursorPos)
+
 	w.Toolbar.RunBtn.Connect("clicked", func() {
-		mainW.CodeEditor.AppendEnd("\n===================NEW RUN===================\n")
+		w.ReplE.AppendEnd("\n===================NEW RUN===================\n")
 		ast, errs := parserHelper.Ast(w.CodeE.Text())
 		if len(errs) > 0 {
 			sb := strings.Builder{}
@@ -67,7 +98,7 @@ func NewEditorW(mainW *MainW) *EditorW {
 				sb.WriteString(err.Error())
 				sb.WriteString("\n")
 			}
-			mainW.CodeEditor.AppendEnd(sb.String())
+			w.ReplE.AppendEnd(sb.String())
 			//dialog := gtk.MessageDialogNew(w, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, strings.TrimSpace(sb.String()))
 			//dialog.SetTitle("Parse Failed")
 			//dialog.Run()
@@ -82,7 +113,7 @@ func NewEditorW(mainW *MainW) *EditorW {
 			//dialog.SetTitle("Result")
 			//dialog.Run()
 			//dialog.Destroy()
-			mainW.CodeEditor.AppendEnd(stdio)
+			w.ReplE.AppendEnd(stdio)
 		} else {
 			msg := stdio + "\nBut with following panic:\n" + panicMsg
 			dialog := gtk.MessageDialogNew(w, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, msg)
@@ -92,7 +123,14 @@ func NewEditorW(mainW *MainW) *EditorW {
 		}
 
 	})
+	w.Toolbar.FmtBtn.Connect("clicked", w.FormatCode)
+
 	return &w
+}
+
+func (e *EditorW) FormatCode() {
+	code := e.CodeE.Text()
+	e.CodeE.buf.SetText(fmtr.Fmt(code))
 }
 
 func runCode(e *eval.Eval) (isPanic bool, stdio string, panicMsg string) {
@@ -155,6 +193,7 @@ func NewCodeEditor(lang string) *CodeEditor {
 type ToolBar struct {
 	*gtk.Toolbar
 	RunBtn *gtk.ToolButton
+	FmtBtn *gtk.ToolButton
 }
 
 func (e *EditorW) NewToolBar() *ToolBar {
@@ -165,8 +204,12 @@ func (e *EditorW) NewToolBar() *ToolBar {
 	bar.RunBtn, _ = gtk.ToolButtonNew(nil, "Run")
 	bar.RunBtn.SetIconName("media-playback-start")
 
+	bar.FmtBtn, _ = gtk.ToolButtonNew(nil, "Format")
+	bar.FmtBtn.SetIconName("format-indent-more") //"document-page-setup")
 	sep, _ := gtk.SeparatorToolItemNew()
-	bar.Insert(sep, 0)
-	bar.Insert(bar.RunBtn, 1)
+
+	bar.Insert(bar.FmtBtn, 0)
+	bar.Insert(sep, 1)
+	bar.Insert(bar.RunBtn, 2)
 	return &bar
 }

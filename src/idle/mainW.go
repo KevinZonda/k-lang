@@ -13,7 +13,7 @@ type MainW struct {
 func NewMainW() *MainW {
 	w := MainW{}
 	w.Window, _ = gtk.WindowNew(gtk.WINDOW_TOPLEVEL)
-	w.MenuBar = w.NewMenuBar()
+	w.MenuBar = NewMenuBar()
 	w.SetTitle("IDLE Shell")
 	w.SetDefaultSize(800, 600)
 
@@ -28,7 +28,7 @@ func NewMainW() *MainW {
 	return &w
 }
 
-func (w *MainW) NewMenuBar() *gtk.MenuBar {
+func NewMenuBar() *gtk.MenuBar {
 	mb, _ := gtk.MenuBarNew()
 
 	fileMenu, _ := gtk.MenuItemNewWithLabel("File")
@@ -38,15 +38,15 @@ func (w *MainW) NewMenuBar() *gtk.MenuBar {
 		newFile, _ := gtk.MenuItemNewWithLabel("New")
 
 		newFile.Connect("activate", func() {
-			d := NewEditorW(w)
+			d := NewEditorW()
 			d.ShowAll()
 		})
 		openFile, _ := gtk.MenuItemNewWithLabel("Open")
 		openFile.Connect("activate", func() {
-			fc, _ := gtk.FileChooserNativeDialogNew("Open file...", w, gtk.FILE_CHOOSER_ACTION_OPEN, "_Open", "_Cancel")
+			fc, _ := gtk.FileChooserNativeDialogNew("Open file...", nil, gtk.FILE_CHOOSER_ACTION_OPEN, "_Open", "_Cancel")
 			resp := fc.NativeDialog.Run()
 			if gtk.ResponseType(resp) == gtk.RESPONSE_ACCEPT {
-				edit := NewEditorW(w)
+				edit := NewEditorW()
 				edit.LoadFile(fc.GetFilename())
 				edit.ShowAll()
 			}

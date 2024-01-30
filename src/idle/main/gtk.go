@@ -14,7 +14,7 @@ func main() {
 		settings.SetProperty("gtk-theme-name", "win32")
 	}
 
-	w := idle.NewMainW()
+	w := idle.NewEditorW()
 	w.Connect("destroy", func() {
 		gtk.MainQuit()
 	})
