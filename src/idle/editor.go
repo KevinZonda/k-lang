@@ -31,10 +31,10 @@ func NewEditorW() *EditorW {
 	w.CodeE = NewCodeEditor("cpp")
 	w.CodeView.Add(w.CodeE)
 
-	w.Toolbar = NewToolBar()
+	w.Toolbar = w.NewToolBar()
 
 	w.VBox.Add(w.Toolbar)
-	w.VBox.Add(w.CodeView)
+	w.VBox.PackStart(w.CodeView, true, true, 0)
 
 	w.Add(w.VBox)
 	w.SetDefaultSize(800, 600)
@@ -133,7 +133,7 @@ type ToolBar struct {
 	RunBtn *gtk.ToolButton
 }
 
-func NewToolBar() *ToolBar {
+func (e *EditorW) NewToolBar() *ToolBar {
 	bar := ToolBar{}
 	bar.Toolbar, _ = gtk.ToolbarNew()
 	bar.SetStyle(gtk.TOOLBAR_BOTH)

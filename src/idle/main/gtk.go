@@ -8,11 +8,11 @@ import (
 func main() {
 	gtk.Init(nil)
 
-	editW := idle.NewEditorW()
-	editW.Connect("destroy", func() {
+	w := idle.NewMainW()
+	w.Connect("destroy", func() {
 		gtk.MainQuit()
 	})
-	editW.ShowAll()
+	w.ShowAll()
 
 	gtk.Main()
 }
