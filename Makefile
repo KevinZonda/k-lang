@@ -25,6 +25,15 @@ else
 	./scripts/src.sh
 endif
 
+gui:
+ifeq ($(OS),Windows_NT)
+	@echo '=== Source Code Builder ==='
+	.\scripts\gui.bat
+else
+	echo '=== Source Code Builder ==='
+	./scripts/gui.sh
+endif
+
 gox:
 ifeq ($(OS),Windows_NT)
 	@echo '=== Source Code Builder X ==='
