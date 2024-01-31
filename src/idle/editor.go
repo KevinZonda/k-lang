@@ -24,6 +24,7 @@ type EditorW struct {
 	VBox    *gtk.Box
 
 	ReplE     *gtks.CodeEditor
+	ReplETags *ReplETags
 	ReplView  *gtk.ScrolledWindow
 	ReplEnter *gtk.Entry
 	ReplVBox  *gtk.Box
@@ -32,6 +33,11 @@ type EditorW struct {
 
 	e    *eval.Eval
 	Path string
+}
+
+type ReplETags struct {
+	Red  *gtk.TextTag
+	Blue *gtk.TextTag
 }
 
 func (w *EditorW) LoadFile(path string) {
@@ -64,9 +70,13 @@ func NewEditorW() *EditorW {
 	w.CodeE = gtks.NewCodeEditor("cpp")
 	w.CodeView = gtks.WrapToScrolledWindow(w.CodeE)
 
-	w.ReplE = gtks.NewCodeEditor("markdown")
+	w.ReplE = gtks.NewCodeEditor("")
 	w.ReplE.SetEditable(false)
 	w.ReplE.SetShowLineNumbers(false)
+	w.ReplETags = &ReplETags{}
+	w.ReplETags.Red = w.ReplE.NewTextTag("red", "#ff0000")
+	w.ReplETags.Blue = w.ReplE.NewTextTag("blue", "#0000ff")
+
 	w.ReplView = gtks.WrapToScrolledWindow(w.ReplE)
 
 	w.Toolbar = w.NewToolBar()
@@ -166,11 +176,13 @@ func (w *EditorW) InvokeUserRepl() {
 	w.ReplEnter.SetText("")
 
 	w.ReplE.SmartNewLine()
-	w.ReplE.AppendEnd(">>> " + cmd + "\n")
+	w.ReplE.AppendTag(w.ReplETags.Blue, ">>> ")
+	w.ReplE.AppendEnd(cmd + "\n")
 	val, hasVal := w.runCode(cmd, true, "")
 	if hasVal {
 		w.ReplE.SmartNewLine()
-		w.ReplE.AppendEnd(fmt.Sprintf("<<< %v\n", val))
+		w.ReplE.AppendTag(w.ReplETags.Blue, "<<< ")
+		w.ReplE.AppendEnd(fmt.Sprintf("%v\n", val))
 	}
 	w.ReplE.ScrollToEnd()
 }

@@ -1,6 +1,7 @@
 package gtks
 
 import (
+	"github.com/gotk3/gotk3/gtk"
 	sourceview "github.com/linuxerwang/sourceview3"
 	"log"
 	"strings"
@@ -41,6 +42,10 @@ func (ce *CodeEditor) SetText(s string) {
 	ce.Buf.SetText(s)
 }
 
+func (ce *CodeEditor) AppendTag(tag *gtk.TextTag, content string) {
+	ce.Buf.InsertWithTag(ce.Buf.GetEndIter(), content, tag)
+}
+
 func NewCodeEditor(lang string) *CodeEditor {
 	sv, _ := sourceview.SourceViewNew()
 	lm, _ := sourceview.SourceLanguageManagerGetDefault()
@@ -62,4 +67,10 @@ func NewCodeEditor(lang string) *CodeEditor {
 	ce.Buf, _ = sv.GetBuffer()
 	ce.Buf.SetLanguage(l)
 	return &ce
+}
+
+func (ce *CodeEditor) NewTextTag(name string, color string) *gtk.TextTag {
+	return ce.Buf.CreateTag(name, map[string]any{
+		"foreground": color,
+	})
 }
