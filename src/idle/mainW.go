@@ -11,25 +11,7 @@ type MainW struct {
 	MenuBar    *gtk.MenuBar
 }
 
-func NewMainW() *MainW {
-	w := MainW{}
-	w.Window, _ = gtk.WindowNew(gtk.WINDOW_TOPLEVEL)
-	w.MenuBar = NewMenuBar()
-	w.SetTitle("IDLE Shell")
-	w.SetDefaultSize(800, 600)
-
-	w.CodeEditor = gtks.NewCodeEditor("cpp")
-
-	vbox, _ := gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 2)
-
-	vbox.Add(w.MenuBar)
-	vbox.PackStart(w.CodeEditor, true, true, 0)
-	w.Add(vbox)
-
-	return &w
-}
-
-func NewMenuBar() *gtk.MenuBar {
+func (w *EditorW) NewMenuBar() *gtk.MenuBar {
 	mb, _ := gtk.MenuBarNew()
 
 	fileMenu, _ := gtk.MenuItemNewWithLabel("File")
@@ -52,10 +34,17 @@ func NewMenuBar() *gtk.MenuBar {
 				edit.ShowAll()
 			}
 		})
+		saveFile, _ := gtk.MenuItemNewWithLabel("Save")
+		saveFile.Connect("activate", w.Save)
+		saveAsFile, _ := gtk.MenuItemNewWithLabel("Save As")
+		saveAsFile.Connect("activate", w.SaveAs)
+
 		exit, _ := gtk.MenuItemNewWithLabel("Exit")
 		sep, _ := gtk.SeparatorMenuItemNew()
 		_file.Append(newFile)
 		_file.Append(openFile)
+		_file.Append(saveFile)
+		_file.Append(saveAsFile)
 		_file.Append(sep)
 		_file.Append(exit)
 	}

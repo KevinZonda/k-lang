@@ -2,15 +2,16 @@ package idle
 
 import (
 	"fmt"
+	"io"
+	"strconv"
+	"strings"
+
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/fmtr"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/idle/gtks"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"github.com/KevinZonda/GoX/pkg/iox"
 	"github.com/gotk3/gotk3/gtk"
-	"io"
-	"strconv"
-	"strings"
 )
 
 type EditorW struct {
@@ -31,13 +32,40 @@ type EditorW struct {
 
 	StatusBar *gtk.Statusbar
 
-	e    *eval.Eval
-	Path string
+	e       *eval.Eval
+	changed bool
+	Path    string
+}
+
+func (w *EditorW) SetChanged(changed bool) {
+	w.changed = changed
+	w.syncTitle()
+}
+
+func (w *EditorW) syncTitle() {
+	p := w.Path
+	if p == "" {
+		p = "Untitled"
+	}
+	if w.changed {
+		w.SetTitle("IDLE - " + p + " *")
+	} else {
+		w.SetTitle("IDLE - " + p)
+	}
 }
 
 type ReplETags struct {
 	Red  *gtk.TextTag
 	Blue *gtk.TextTag
+}
+
+func (w *EditorW) OpenFile() {
+	fc, _ := gtk.FileChooserNativeDialogNew("Open file...", w, gtk.FILE_CHOOSER_ACTION_OPEN, "_Open", "_Cancel")
+	resp := fc.NativeDialog.Run()
+	if gtk.ResponseType(resp) == gtk.RESPONSE_ACCEPT {
+		w.LoadFile(fc.GetFilename())
+		w.ShowAll()
+	}
 }
 
 func (w *EditorW) LoadFile(path string) {
@@ -51,7 +79,7 @@ func (w *EditorW) LoadFile(path string) {
 	}
 	w.Path = path
 	w.CodeE.SetText(s)
-	w.SetTitle("IDLE - " + w.Path)
+	w.SetChanged(false)
 }
 
 func (w *EditorW) syncCursorPos() {
@@ -65,10 +93,16 @@ func (w *EditorW) syncCursorPos() {
 func NewEditorW() *EditorW {
 	w := EditorW{}
 	w.Window, _ = gtk.WindowNew(gtk.WINDOW_TOPLEVEL)
-	w.SetTitle("IDLE")
+	w.syncTitle()
 
 	w.CodeE = gtks.NewCodeEditor("cpp")
 	w.CodeView = gtks.WrapToScrolledWindow(w.CodeE)
+	{
+		_buf, _ := w.CodeE.TextView.GetBuffer()
+		_buf.Connect("changed", func() {
+			w.SetChanged(true)
+		})
+	}
 
 	w.ReplE = gtks.NewCodeEditor("")
 	w.ReplE.SetEditable(false)
@@ -80,7 +114,7 @@ func NewEditorW() *EditorW {
 	w.ReplView = gtks.WrapToScrolledWindow(w.ReplE)
 
 	w.Toolbar = w.NewToolBar()
-	w.MenuBar = NewMenuBar()
+	w.MenuBar = w.NewMenuBar()
 
 	w.StatusBar, _ = gtk.StatusbarNew()
 	w.StatusBar.SetBorderWidth(0)
@@ -117,6 +151,15 @@ func NewEditorW() *EditorW {
 	w.Toolbar.RestartBtn.Connect("clicked", w.RerunCode)
 	w.Toolbar.FmtBtn.Connect("clicked", w.FormatCode)
 	w.ReplEnter.Connect("activate", w.InvokeUserRepl)
+
+	{
+		accel, _ := gtk.AccelGroupNew()
+		key, mod := gtk.AcceleratorParse("<Control>s")
+		accel.Connect(key, mod, gtk.ACCEL_VISIBLE, w.Save)
+		key, mod = gtk.AcceleratorParse("<Control>o")
+		accel.Connect(key, mod, gtk.ACCEL_VISIBLE, w.OpenFile)
+		w.AddAccelGroup(accel)
+	}
 	return &w
 }
 
@@ -188,7 +231,6 @@ func (w *EditorW) InvokeUserRepl() {
 }
 
 func runCode(e *eval.Eval, stdout io.WriteCloser) (isPanic bool, panicMsg string, retV any, hasRet bool) {
-	// buf := NewFakeWCloser()
 	defer func() {
 		if r := recover(); r != nil {
 			isPanic = true
@@ -212,6 +254,7 @@ func runCode(e *eval.Eval, stdout io.WriteCloser) (isPanic bool, panicMsg string
 
 type ToolBar struct {
 	*gtk.Toolbar
+	SaveBtn    *gtk.ToolButton
 	RestartBtn *gtk.ToolButton
 	RunBtn     *gtk.ToolButton
 	FmtBtn     *gtk.ToolButton
@@ -232,9 +275,45 @@ func (w *EditorW) NewToolBar() *ToolBar {
 	bar.FmtBtn.SetIconName("format-indent-more") //"document-page-setup")
 	sep, _ := gtk.SeparatorToolItemNew()
 
-	bar.Insert(bar.FmtBtn, 0)
-	bar.Insert(sep, 1)
-	bar.Insert(bar.RestartBtn, 2)
-	bar.Insert(bar.RunBtn, 3)
+	bar.SaveBtn, _ = gtk.ToolButtonNew(nil, "Save")
+	bar.SaveBtn.SetIconName("document-save")
+	bar.SaveBtn.Connect("clicked", w.Save)
+
+	bar.Insert(bar.SaveBtn, 0)
+	bar.Insert(bar.FmtBtn, 1)
+	bar.Insert(sep, 2)
+	bar.Insert(bar.RestartBtn, 3)
+	bar.Insert(bar.RunBtn, 4)
 	return &bar
+}
+
+func (w *EditorW) SaveAs() {
+	fc, _ := gtk.FileChooserNativeDialogNew("Save as file...", nil, gtk.FILE_CHOOSER_ACTION_SAVE, "_Save", "_Cancel")
+	{
+		filter, _ := gtk.FileFilterNew()
+		filter.AddPattern("*.k")
+		filter.SetName("Klang source file")
+		fc.AddFilter(filter)
+	}
+	{
+		filter, _ := gtk.FileFilterNew()
+		filter.AddPattern("*.*")
+		filter.SetName("All files")
+		fc.AddFilter(filter)
+	}
+	resp := fc.NativeDialog.Run()
+	if gtk.ResponseType(resp) == gtk.RESPONSE_ACCEPT {
+		w.Path = fc.GetFilename()
+		iox.WriteAllText(w.Path, w.CodeE.Text())
+		w.SetTitle("IDLE - " + w.Path)
+	}
+
+}
+
+func (w *EditorW) Save() {
+	if w.Path == "" {
+		w.SaveAs()
+		return
+	}
+	iox.WriteAllText(w.Path, w.CodeE.Text())
 }
