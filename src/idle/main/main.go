@@ -14,9 +14,6 @@ func main() {
 	//}
 
 	w := idle.NewEditorW()
-	w.Connect("destroy", func() {
-		gtk.MainQuit()
-	})
 	w.ShowAll()
 
 	gtk.Main()

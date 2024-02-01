@@ -92,6 +92,7 @@ func (w *EditorW) syncCursorPos() {
 
 func NewEditorW() *EditorW {
 	w := EditorW{}
+	lifecycle.IncrementCount()
 	w.Window, _ = gtk.WindowNew(gtk.WINDOW_TOPLEVEL)
 	w.syncTitle()
 
@@ -160,6 +161,10 @@ func NewEditorW() *EditorW {
 		accel.Connect(key, mod, gtk.ACCEL_VISIBLE, w.OpenFile)
 		w.AddAccelGroup(accel)
 	}
+
+	w.Connect("destroy", func() {
+		lifecycle.Decrease()
+	})
 	return &w
 }
 
