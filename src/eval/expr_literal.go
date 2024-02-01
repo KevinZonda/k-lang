@@ -115,6 +115,10 @@ func (e *Eval) getZeroValue(t *node.Type) any {
 		for pair := def.Body.Oldest(); pair != nil; pair = pair.Next() {
 			variable := pair.Key
 			varDeclare := pair.Value
+			if varDeclare.Func != nil {
+				m.Set(varDeclare.Func.Name.Value, varDeclare.Func)
+				continue
+			}
 			if varDeclare.Value != nil {
 				m.Set(variable, baseEval.EvalExpr(varDeclare.Value))
 				continue

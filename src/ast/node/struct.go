@@ -14,6 +14,7 @@ type StructBlock struct {
 type Declare struct {
 	Type  *Type
 	Value Expr
+	Func  *FuncBlock
 }
 
 func (n *StructBlock) block() {}

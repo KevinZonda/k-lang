@@ -98,6 +98,7 @@ declareStmt
     : type Identifier (Comma Identifier)*
     | type Identifier Assign exprWithLambda
     | type? Identifier Assign exprWithLambda
+    | funcBlock
     ;
 
 

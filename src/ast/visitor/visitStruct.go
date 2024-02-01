@@ -22,6 +22,12 @@ func (v *AntlrVisitor) visitDeclareBlock(ctx parser.IDeclareBlockContext) *order
 	body := orderedmap.New[string, *node.Declare]()
 	declares := ctx.AllDeclareStmt()
 	for _, declare := range declares {
+		if declare.FuncBlock() != nil {
+			block := v.visitFuncBlock(declare.FuncBlock())
+			body.Set(block.Name.Value, &node.Declare{
+				Func: block,
+			})
+		}
 		if declare.ExprWithLambda() != nil {
 			body.Set(declare.Identifier(0).GetText(), &node.Declare{
 				Type:  v.visitType(declare.Type_()),

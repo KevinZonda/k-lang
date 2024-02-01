@@ -71,21 +71,28 @@ func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) any {
 	case obj.ILibrary:
 		return scopeT.FuncCall(e.builtin, _fc.Caller.Value, e.evalExprs(_fc.Args...))
 	case *obj.StructField:
-		var lambda *node.LambdaExpr
-		{
-			v, ok := scopeT.Fields.Get(funcCall.Caller.Value)
-			if !ok {
-				panic("No Func Found From Struct: " + funcCall.Caller.Value)
-			}
-			lambda = v.(*node.LambdaExpr)
+		var funcB *node.FuncBlock
+
+		v, ok := scopeT.Fields.Get(funcCall.Caller.Value)
+		if !ok {
+			panic("No Value Found From Struct: " + funcCall.Caller.Value)
 		}
-		_lmd := lambda.ToFunc("")
-		return e.EvalFuncBlock(_lmd, _fc.Args, func() {
+		switch vT := v.(type) {
+		case *node.LambdaExpr:
+			funcB = vT.ToFunc(funcCall.Caller.Value)
+		case *node.FuncBlock:
+			funcB = vT
+		}
+		if funcB == nil {
+			panic("Func Nil Found From Struct: " + funcCall.Caller.Value)
+		}
+
+		return e.EvalFuncBlock(funcB, _fc.Args, func() {
 			e.objTable.SetAtTop("self", scopeT)
 		})
 		// TODO: More situation!
 	default:
-		panic("Not Implemented" + reflect.TypeOf(scope).String())
+		panic("EvalFuncCallAfterScope Not Implemented" + reflect.TypeOf(scope).String())
 	}
 	return nil
 }
