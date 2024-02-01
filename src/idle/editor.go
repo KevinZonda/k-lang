@@ -98,7 +98,9 @@ func NewEditorW() *EditorW {
 	w.Window, _ = gtk.WindowNew(gtk.WINDOW_TOPLEVEL)
 	w.syncTitle()
 
-	w.CodeE = gtks.NewCodeEditor("cpp")
+	fontSizeInt := 16
+
+	w.CodeE = gtks.NewCodeEditor("cpp", fontSizeInt)
 	w.CodeView = gtks.WrapToScrolledWindow(w.CodeE)
 	{
 		_buf, _ := w.CodeE.TextView.GetBuffer()
@@ -107,7 +109,7 @@ func NewEditorW() *EditorW {
 		})
 	}
 
-	w.ReplE = gtks.NewCodeEditor("")
+	w.ReplE = gtks.NewCodeEditor("", fontSizeInt)
 	w.ReplE.SetEditable(false)
 	w.ReplE.SetShowLineNumbers(false)
 	w.ReplETags = &ReplETags{}

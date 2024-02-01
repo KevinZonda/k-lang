@@ -1,6 +1,7 @@
 package gtks
 
 import (
+	"fmt"
 	"github.com/gotk3/gotk3/gtk"
 	sourceview "github.com/linuxerwang/sourceview3"
 	"log"
@@ -46,7 +47,10 @@ func (ce *CodeEditor) AppendTag(tag *gtk.TextTag, content string) {
 	ce.Buf.InsertWithTag(ce.Buf.GetEndIter(), content, tag)
 }
 
-func NewCodeEditor(lang string) *CodeEditor {
+func NewCodeEditor(lang string, fontSize int) *CodeEditor {
+	if fontSize <= 0 {
+		fontSize = 14
+	}
 	sv, _ := sourceview.SourceViewNew()
 	lm, _ := sourceview.SourceLanguageManagerGetDefault()
 	ce := CodeEditor{
@@ -54,12 +58,12 @@ func NewCodeEditor(lang string) *CodeEditor {
 		LanguageManager: lm,
 	}
 
-	SetCss(ce, `
+	SetCss(ce, fmt.Sprintf(`
 #CodeEditor {
-	font-size: 14px;
+	font-size: %dpx;
 	font-family: monospace;
 }
-`)
+`, fontSize))
 
 	ce.SetName("CodeEditor")
 	l, _ := lm.GetLanguage(lang)
