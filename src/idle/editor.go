@@ -35,6 +35,8 @@ type EditorW struct {
 	e       *eval.Eval
 	changed bool
 	Path    string
+
+	PanicWithDlg bool
 }
 
 func (w *EditorW) SetChanged(changed bool) {
@@ -194,11 +196,15 @@ func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (retV any,
 	isPanic, panicMsg, retV, hasRet := runCode(ev, w.ReplE.WriterPipe())
 	w.ReplE.ScrollToEnd()
 	if isPanic {
-		msg := "Code Panicked:\n" + panicMsg
-		dialog := gtk.MessageDialogNew(w, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, msg)
-		dialog.SetTitle("Result with Panic")
-		dialog.Run()
-		dialog.Destroy()
+		if w.PanicWithDlg {
+			msg := "Code Panicked:\n" + panicMsg
+			dialog := gtk.MessageDialogNew(w, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, msg)
+			dialog.SetTitle("Result with Panic")
+			dialog.Run()
+			dialog.Destroy()
+		} else {
+			w.ReplE.AppendTag(w.ReplETags.Red, "[PANIC RECEIVED] "+panicMsg)
+		}
 	}
 	return
 }
