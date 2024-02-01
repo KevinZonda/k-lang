@@ -2,11 +2,10 @@ package main
 
 import (
 	"fmt"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/funcs"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/cli/funcs"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/cli/shared"
 	"os"
 	"strings"
-
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/cli"
 )
 
 func main() {
@@ -18,21 +17,21 @@ func main() {
 	args := parseCmdArgs()
 	switch os.Args[1] {
 	case "ast":
-		funcs.Ast(args.GetStrOr(0, cli.Input), args.GetStrOr(1, cli.Output))
+		funcs.Ast(args.GetStrOr(0, shared.Input), args.GetStrOr(1, shared.Output))
 	case "repl":
-		(&funcs.Repl{}).Repl(args.GetStrOr(0, cli.Input))
+		(&funcs.Repl{}).Repl(args.GetStrOr(0, shared.Input))
 	case "compile":
-		funcs.Compile(args.GetStrOr(0, cli.Input), args.GetStrOr(1, cli.Output))
+		funcs.Compile(args.GetStrOr(0, shared.Input), args.GetStrOr(1, shared.Output))
 	case "run":
-		funcs.Run(args.GetStrOr(0, cli.Input))
+		funcs.Run(args.GetStrOr(0, shared.Input))
 	case "2ast":
-		funcs.ShowAst(args.GetStrOr(0, cli.Input))
+		funcs.ShowAst(args.GetStrOr(0, shared.Input))
 	case "help":
 		funcs.Help()
 	case "lsp":
 		funcs.Lsp(args.GetStrOr(0, nil))
 	case "fmt":
-		funcs.Format(args.GetStrOr(0, cli.Input))
+		funcs.Format(args.GetStrOr(0, shared.Input))
 	case "jupyter":
 		funcs.JupyterKernel(args.GetStrOr(0, nil))
 	default:

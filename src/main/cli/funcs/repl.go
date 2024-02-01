@@ -3,7 +3,7 @@ package funcs
 import (
 	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/consoleReader"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/cli/consoleReader"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/utils/jout"
 	"github.com/KevinZonda/GoX/pkg/iox"
