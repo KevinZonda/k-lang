@@ -206,6 +206,7 @@ func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (retV any,
 			dialog.Destroy()
 		} else {
 			w.ReplE.AppendTag(w.ReplETags.Red, "[PANIC RECEIVED] "+panicMsg)
+			w.ReplE.ScrollToEnd()
 		}
 	}
 	return
