@@ -87,6 +87,7 @@ NewLine=53
 'for'=38
 'match'=39
 'break'=40
+'continue'=41
 'true'=42
 'false'=43
 '&'=49

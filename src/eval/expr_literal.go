@@ -103,6 +103,8 @@ func (e *Eval) getZeroValue(t *node.Type) any {
 		return ""
 	case "bool":
 		return false
+	case "any":
+		return nil
 	default:
 		def, ok := getFromObjTable[*node.StructBlock](baseEval.objTable, t.Name)
 		if !ok {

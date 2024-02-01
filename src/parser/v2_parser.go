@@ -37,8 +37,8 @@ func v2parserParserInit() {
 		"'!='", "'>='", "'<='", "'>'", "'<'", "", "", "", "'*'", "'/'", "'+'",
 		"'-'", "", "'.'", "'->'", "'struct'", "'map'", "'fn'", "'return'", "'case'",
 		"'default'", "'open'", "'as'", "'try'", "'catch'", "'if'", "'else'",
-		"'for'", "'match'", "'break'", "", "'true'", "'false'", "", "", "",
-		"", "", "'&'",
+		"'for'", "'match'", "'break'", "'continue'", "'true'", "'false'", "",
+		"", "", "", "", "'&'",
 	}
 	staticData.SymbolicNames = []string{
 		"", "LBrack", "RBrack", "LParen", "RParen", "LSquare", "RSquare", "Comma",

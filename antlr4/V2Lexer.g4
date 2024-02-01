@@ -45,7 +45,7 @@ Else : 'else';
 For  : 'for';
 Match : 'match';
 Break : 'break';
-Continue : 'next' | 'pass' | 'continue';
+Continue : 'continue';
 
 True : 'true' ;
 False : 'false' ;

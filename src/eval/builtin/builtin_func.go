@@ -3,47 +3,15 @@ package builtin
 import (
 	"fmt"
 	"reflect"
-
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 )
 
 func (b BuiltIn) Print(v ...any) {
 	for _, arg := range v {
 		switch arg.(type) {
-		case *obj.StructField:
-			b.printStruct(arg.(*obj.StructField))
 		default:
 			fmt.Fprint(b.StdOut, arg)
 		}
 	}
-}
-
-func (b BuiltIn) printStruct(v *obj.StructField) {
-	if v == nil {
-		return
-	}
-	if v.TypeAs != nil {
-		b.Print(v.TypeAs.Name, " ")
-	} else {
-		b.Print("struct ")
-	}
-	b.Print("{")
-	count := 0
-	totalLen := v.Fields.Len()
-	for pair := v.Fields.Oldest(); pair != nil; pair = pair.Next() {
-		b.Print(pair.Key, ": ")
-		switch pair.Value.(type) {
-		case *obj.StructField:
-			b.printStruct(pair.Value.(*obj.StructField))
-		default:
-			b.Print(pair.Value)
-		}
-		if count < totalLen-1 {
-			b.Print(", ")
-		}
-		count++
-	}
-	b.Print("}")
 }
 
 func (b BuiltIn) Println(v ...any) {

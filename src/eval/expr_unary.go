@@ -26,6 +26,6 @@ func (e *Eval) EvalUnaryExpr(n *node.UnaryOperExpr) any {
 		}
 		return !valT
 	default:
-		panic("not supported type: " + reflect.TypeOf(val).String())
+		panic("eval unary expr not supported type: " + reflect.TypeOf(val).String())
 	}
 }

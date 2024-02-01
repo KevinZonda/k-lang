@@ -56,7 +56,7 @@ func (e *Eval) EvalAssignStmt(n *node.AssignStmt) {
 	}
 	vals, ok := e.EvalExpr(n.Value).([]any)
 	if !ok {
-		panic("not supported type: " + reflect.TypeOf(n.Value).String())
+		panic("eval expr not supported type: " + reflect.TypeOf(n.Value).String())
 	}
 	if len(vals) != len(n.Assignee) {
 		panic("assign cannot happened if have different numbers of receivers and senders have: " + fmt.Sprint(len(n.Assignee)) + " receivers, but have: " + fmt.Sprint(len(vals)) + " senders")
@@ -166,7 +166,7 @@ func (e *Eval) evalObjByField(from any, canFromLocalVar bool, field string) any 
 		return from
 
 	default:
-		panic("not supported type: " + reflect.TypeOf(from).String())
+		panic("assign to field not supported type: " + reflect.TypeOf(from).String())
 	}
 	return nil
 }
