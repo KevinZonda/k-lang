@@ -2,6 +2,7 @@ package idle
 
 import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/idle/gtks"
+	"github.com/gotk3/gotk3/gdk"
 	"github.com/gotk3/gotk3/gtk"
 )
 
@@ -49,6 +50,47 @@ func (w *EditorW) NewMenuBar() *gtk.MenuBar {
 		_file.Append(exit)
 	}
 
+	editMenu, _ := gtk.MenuItemNewWithLabel("Edit")
+	{
+		copyI, _ := gtk.MenuItemNewWithLabel("Copy")
+		copyI.Connect("activate", func() {
+			clip, _ := gtk.ClipboardGet(gdk.SELECTION_CLIPBOARD)
+			w.CodeE.Buf.CopyClipboard(clip)
+		})
+
+		cutI, _ := gtk.MenuItemNewWithLabel("Cut")
+		cutI.Connect("activate", func() {
+			clip, _ := gtk.ClipboardGet(gdk.SELECTION_CLIPBOARD)
+			w.CodeE.Buf.CutClipboard(clip, false)
+		})
+
+		pasteI, _ := gtk.MenuItemNewWithLabel("Paste")
+		pasteI.Connect("activate", func() {
+			clip, _ := gtk.ClipboardGet(gdk.SELECTION_CLIPBOARD)
+			w.CodeE.Buf.PasteClipboard(clip, nil, true)
+		})
+
+		delI, _ := gtk.MenuItemNewWithLabel("Delete")
+		delI.Connect("activate", func() {
+			w.CodeE.Buf.DeleteSelection(false, false)
+		})
+
+		clearI, _ := gtk.MenuItemNewWithLabel("Clear")
+		clearI.Connect("activate", func() {
+			w.CodeE.SetText("")
+		})
+
+		_edit, _ := gtk.MenuNew()
+
+		_edit.Append(copyI)
+		_edit.Append(cutI)
+		_edit.Append(pasteI)
+		_edit.Append(delI)
+		_edit.Append(clearI)
+
+		editMenu.SetSubmenu(_edit)
+	}
+
 	helpItem, _ := gtk.MenuItemNewWithLabel("Help")
 	{
 		_help, _ := gtk.MenuNew()
@@ -63,6 +105,7 @@ func (w *EditorW) NewMenuBar() *gtk.MenuBar {
 		helpItem.SetSubmenu(_help)
 	}
 	mb.Append(fileMenu)
+	mb.Append(editMenu)
 	mb.Append(helpItem)
 
 	return mb
