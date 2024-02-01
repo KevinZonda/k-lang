@@ -11,6 +11,11 @@ import (
 )
 
 func (v *AntlrVisitor) visitLiteral(ctx parser.ILiteralContext) node.Expr {
+	if ctx.Nil() != nil {
+		return &node.NilLiteral{
+			Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
+		}
+	}
 	if ctx.IntegerLiteral() != nil {
 		val, err := strconv.Atoi(ctx.GetStart().GetText())
 

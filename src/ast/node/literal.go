@@ -10,6 +10,28 @@ type ILiteralValue interface {
 	ConstVal() any
 }
 
+//region Nil
+
+type NilLiteral struct {
+	Token token.Token
+}
+
+func (i *NilLiteral) expr() {}
+
+func (i *NilLiteral) TokenValue() string {
+	return i.Token.Value
+}
+
+func (i *NilLiteral) String() string {
+	return "nil"
+}
+
+func (i *NilLiteral) GetToken() token.Token {
+	return i.Token
+}
+
+//endregion
+
 //region Int
 
 type IntLiteral struct {

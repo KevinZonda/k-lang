@@ -65,7 +65,7 @@ funcCallArgs : expr (Comma expr)*;
 
 openStmt : Open StringLiteral (As Identifier)?;
 
-literal : True | False | IntegerLiteral | NumberLiteral | StringLiteral;
+literal : Nil | True | False | IntegerLiteral | NumberLiteral | StringLiteral;
 initializer : arrayInitializer | mapInitializer;
 
 arrayInitializer : type? LSquare (expr Comma?)* RSquare;

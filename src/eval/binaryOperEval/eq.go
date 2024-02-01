@@ -6,6 +6,9 @@ import (
 )
 
 func Eq(left any, right any) bool {
+	if left == nil || right == nil {
+		return left == right
+	}
 	switch leftT := left.(type) {
 	case float64:
 		switch right.(type) {

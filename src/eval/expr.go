@@ -42,6 +42,8 @@ func (e *Eval) evalExpr(n node.Expr, keepRef bool) any {
 		return e.EvalStructLiteral(expr)
 	case *node.IndexExpr:
 		return e.EvalIndexExpr(expr)
+	case *node.NilLiteral:
+		return nil
 	default:
 		fmt.Println(reflect.TypeOf(n))
 		panic("not implemented")
