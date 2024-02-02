@@ -39,12 +39,12 @@ func (s SyntaxError) EndCol() int {
 	return s.endCol
 }
 
-type errorListener struct {
+type ErrorListener struct {
 	*antlr.DefaultErrorListener
 	Errors []CodeError
 }
 
-func (c *errorListener) SyntaxError(recognizer antlr.Recognizer, offendingSymbol interface{}, line, column int, msg string, e antlr.RecognitionException) {
+func (c *ErrorListener) SyntaxError(recognizer antlr.Recognizer, offendingSymbol interface{}, line, column int, msg string, e antlr.RecognitionException) {
 	synE := SyntaxError{
 		line:    line,
 		column:  column,

@@ -1,6 +1,7 @@
 package fmtr
 
 import (
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"strings"
 
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parser"
@@ -40,10 +41,17 @@ func (s *str) BackToLast(str string) {
 	s.WriteString(_s[:strings.LastIndex(_s, str)])
 }
 
-func Fmt(code string) string {
+func Fmt(code string) (string, []parserHelper.CodeError) {
 	sb := &str{}
 	lex := parser.NewV2Lexer(antlr.NewInputStream(code))
+	lerr := &parserHelper.ErrorListener{}
+
+	lex.RemoveErrorListeners()
+	lex.AddErrorListener(lerr)
+	var err []parserHelper.CodeError
 	tokens := lex.GetAllTokens()
+	err = lerr.Errors
+
 	ident := 0
 	var prevToken antlr.Token
 	for _, cur := range tokens {
@@ -129,7 +137,7 @@ func Fmt(code string) string {
 		}
 		prevToken = cur
 	}
-	return strings.TrimSpace(sb.String())
+	return strings.TrimSpace(sb.String()), err
 }
 
 func makeIdent(sb *str, n int) {

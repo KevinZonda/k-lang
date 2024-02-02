@@ -187,7 +187,7 @@ func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (retV any,
 	}
 	ast, errs := parserHelper.Ast(code)
 	if len(errs) > 0 {
-		w.ReplE.AppendEnd(parseErrors(errs))
+		w.ReplE.AppendTag(w.ReplETags.Red, "Parse failed:\n"+parseErrors(errs))
 		return
 	}
 	ev := eval.New(ast, "")
@@ -214,12 +214,17 @@ func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (retV any,
 
 func (w *EditorW) FormatCode() {
 	code := w.CodeE.Text()
-	w.CodeE.SetText(fmtr.Fmt(code))
+	code, err := fmtr.Fmt(code)
+	if len(err) > 0 {
+		w.ReplE.SmartNewLine()
+		w.ReplE.AppendTag(w.ReplETags.Red, "Formatter Failed:\n"+parseErrors(err))
+		return
+	}
+	w.CodeE.SetText(code)
 }
 
 func parseErrors(errs []parserHelper.CodeError) string {
 	sb := strings.Builder{}
-	sb.WriteString("Parse failed:\n")
 	for idx, err := range errs {
 		sb.WriteString("[" + strconv.Itoa(idx) + "] ")
 		sb.WriteString(err.Error())

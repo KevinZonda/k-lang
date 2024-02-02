@@ -10,7 +10,10 @@ func Format(path string) {
 	if err != nil {
 		panic(err)
 	}
-	txt = fmtr.Fmt(txt)
+	txt, errs := fmtr.Fmt(txt)
+	if len(errs) > 0 {
+		panic(err)
+	}
 	err = iox.WriteAllText(path, txt)
 	if err != nil {
 		panic(err)

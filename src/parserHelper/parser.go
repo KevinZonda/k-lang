@@ -11,8 +11,8 @@ import (
 type WrappedParser struct {
 	lexer  *parser.V2Lexer
 	parser *parser.V2Parser
-	lexE   *errorListener
-	parE   *errorListener
+	lexE   *ErrorListener
+	parE   *ErrorListener
 }
 
 func (p *WrappedParser) Ast() tree.Ast {
@@ -73,8 +73,8 @@ func FromString(s string) *WrappedParser {
 
 func FromLexer(l *parser.V2Lexer) *WrappedParser {
 	w := &WrappedParser{
-		lexE: &errorListener{},
-		parE: &errorListener{},
+		lexE: &ErrorListener{},
+		parE: &ErrorListener{},
 	}
 
 	l.RemoveErrorListeners()
