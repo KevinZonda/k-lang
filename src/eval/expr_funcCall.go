@@ -70,8 +70,8 @@ func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, onAfterFrameS
 	//_ = fe.run()
 	// retV, retOk := fe.objTable.GetAtTop("0")
 	e.frameEnd()
-	if result.hasRet {
-		return result.retV.Val
+	if result.HasReturn {
+		return result.ReturnValue
 	}
 	return nil
 }

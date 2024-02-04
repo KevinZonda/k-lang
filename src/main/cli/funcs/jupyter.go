@@ -66,8 +66,14 @@ func (i *replBasedInterpreter) Eval(code string) (values []any, err error) {
 
 	e := eval.New(ast, "")
 	e.LoadContext(i.context)
-	if val, hasV := e.DoRetLastExpr(); hasV && val != nil {
-		values = append(values, val)
+	e.LoadStdFromOS()
+
+	rst := e.DoSafely()
+	if rst.IsPanic {
+		return nil, fmt.Errorf(rst.PanicMsg)
+	}
+	if rst.IsLastExpr && rst.LastExprVal != nil {
+		values = append(values, rst.LastExprVal)
 	}
 	i.context = e
 	return values, nil

@@ -250,25 +250,10 @@ func (w *EditorW) InvokeUserRepl() {
 }
 
 func runCode(e *eval.Eval, stdout io.WriteCloser) (isPanic bool, panicMsg string, retV any, hasRet bool) {
-	defer func() {
-		if r := recover(); r != nil {
-			isPanic = true
-			switch rT := r.(type) {
-			case string:
-				panicMsg = rT
-			case error:
-				panicMsg = rT.Error()
-			default:
-				panicMsg = "Unknown panic: " + fmt.Sprint(r)
-			}
-
-		}
-	}()
 	e.SetStdOut(stdout)
 	e.SetStdErr(stdout)
-	val, hasVal := e.DoRetLastExpr()
-
-	return false, "", val, hasVal
+	rst := e.DoSafely()
+	return rst.IsPanic, rst.PanicMsg, rst.ReturnValue, rst.HasReturn
 }
 
 type ToolBar struct {

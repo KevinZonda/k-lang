@@ -8,8 +8,6 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/builtin"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
-	"io"
-	"os"
 	"path/filepath"
 )
 
@@ -21,39 +19,6 @@ type Eval struct {
 	currentToken token.Token
 	builtin      builtin.BuiltIn
 }
-
-// region STD {IN, OUT, ERR}
-func (e *Eval) SetStdOut(out io.WriteCloser) {
-	e.builtin.StdOut = out
-}
-
-func (e *Eval) SetStdIn(in io.ReadCloser) {
-	e.builtin.StdIn = in
-}
-
-func (e *Eval) SetStdErr(err io.WriteCloser) {
-	e.builtin.StdErr = err
-}
-
-func (e *Eval) GetStdOut() io.WriteCloser {
-	return e.builtin.StdOut
-}
-
-func (e *Eval) GetStdIn() io.ReadCloser {
-	return e.builtin.StdIn
-}
-
-func (e *Eval) GetStdErr() io.WriteCloser {
-	return e.builtin.StdErr
-}
-
-func (e *Eval) ResetStd() {
-	e.builtin.StdOut = os.Stdout
-	e.builtin.StdIn = os.Stdin
-	e.builtin.StdErr = os.Stderr
-}
-
-//endregion
 
 func (e *Eval) CurrentToken() token.Token {
 	return e.currentToken
@@ -78,6 +43,11 @@ func New(ast tree.Ast, inputFile string) *Eval {
 	}
 }
 
+func (e *Eval) SetAST(ast tree.Ast) {
+	e.ast = ast
+	e.currentToken = token.Token{}
+}
+
 func (e *Eval) LoadContext(o *Eval) {
 	if o == nil {
 		e.objTable = NewObjectTable()
@@ -90,22 +60,8 @@ func (e *Eval) LoadContext(o *Eval) {
 	e.builtin = o.builtin
 }
 
-type runResult struct {
-	retV           *obj.Object
-	hasRet         bool
-	lastExpr       any
-	isLastElemExpr bool
-}
-
-func (r runResult) ReturnValue() any {
-	if r.hasRet {
-		return r.retV.Val
-	}
-	return nil
-}
-
-func (e *Eval) runAst(ast tree.Ast, breaks ...string) runResult {
-	result := runResult{}
+func (e *Eval) runAst(ast tree.Ast, breaks ...string) DetailedRunResult {
+	result := DetailedRunResult{}
 	for idx, n := range ast {
 		for _, key := range breaks {
 			if e.objTable.HasKeyAtTop(key) {
@@ -120,10 +76,10 @@ func (e *Eval) runAst(ast tree.Ast, breaks ...string) runResult {
 			if idx == len(e.ast)-1 {
 				switch n.(type) {
 				case *node.AssignStmt:
-					result.isLastElemExpr = false
+					result.IsLastExpr = false
 				default:
-					result.isLastElemExpr = true
-					result.lastExpr = exprR
+					result.IsLastExpr = true
+					result.LastExprVal = exprR
 				}
 			}
 		case node.Stmt:
@@ -141,24 +97,31 @@ func (e *Eval) runAst(ast tree.Ast, breaks ...string) runResult {
 		}
 	}
 end:
-	retV, hasRet := e.objTable.Get(reserved.Return)
-	result.retV = retV
-	result.hasRet = hasRet
+	result.ReturnObj, result.HasReturn = e.objTable.Get(reserved.Return)
+	if result.HasReturn && result.ReturnObj != nil {
+		result.ReturnValue = result.ReturnObj.Val
+	}
+
+	result.CurrentToken = e.CurrentToken()
 	return result
 }
 
-func (e *Eval) runWithBreak(breaks ...string) runResult {
+func (e *Eval) runWithBreak(breaks ...string) DetailedRunResult {
 	return e.runAst(e.ast, breaks...)
 }
 
-func (e *Eval) Do() (retV any, hasRet bool) {
-	if r := e.runWithBreak(reserved.Return); r.hasRet {
-		return r.retV, r.hasRet
+func (e *Eval) Do() DetailedRunResult {
+	r := e.runWithBreak(reserved.Return)
+	if r.HasReturn {
+		return r
 	}
 
-	retV = e.EvalMain()
-	hasRet = retV != nil
-	return
+	retV := e.EvalMain()
+	r.HasReturn = retV != nil
+	if r.HasReturn {
+		r.ReturnValue = retV
+	}
+	return r
 }
 
 func (e *Eval) DoSafely() (rst DetailedRunResult) {
@@ -170,40 +133,10 @@ func (e *Eval) DoSafely() (rst DetailedRunResult) {
 		}
 	}()
 
+	rst = e.Do()
 	rst.stderr = e.GetStdErr()
-	rst.ReturnValue, rst.HasReturn = e.Do()
 	rst.CurrentToken = e.CurrentToken()
 	return
-}
-
-type DetailedRunResult struct {
-	ReturnValue  any
-	ReturnObj    *obj.Object
-	HasReturn    bool
-	IsPanic      bool
-	PanicMsg     string
-	CurrentToken token.Token
-	LastExprVal  any
-	IsLastExpr   bool
-	stderr       io.Writer
-}
-
-func (rst DetailedRunResult) PrintPanic() DetailedRunResult {
-	if !rst.IsPanic {
-		return rst
-	}
-	tk := rst.CurrentToken
-	stde := rst.stderr
-	if stde == nil {
-		stde = os.Stderr
-	}
-	fmt.Fprintf(rst.stderr, "%s at position L%d,%d-L%d,%d\n", rst.PanicMsg, tk.BeginLine, tk.BeginColumn, tk.EndLine, tk.EndColumn)
-	return rst
-}
-
-func (e *Eval) DoRetLastExpr() (lastExprVal any, isLastExpr bool) {
-	rr := e.runWithBreak(reserved.Return)
-	return rr.lastExpr, rr.isLastElemExpr
 }
 
 func (e *Eval) EvalMain() any {
@@ -218,13 +151,5 @@ func (e *Eval) EvalMain() any {
 
 	e.frameEnd()
 
-	return result.ReturnValue()
-}
-
-func (e *Eval) PtrAddr() string {
-	return fmt.Sprintf("%p", e)
-}
-
-func (e *Eval) String() string {
-	return fmt.Sprintf("Eval@%p", e)
+	return result.ReturnValue
 }
