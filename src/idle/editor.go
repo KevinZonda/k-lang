@@ -2,19 +2,16 @@ package idle
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
-	"io"
-	"strconv"
-	"strings"
-	"time"
-
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/fmtr"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/idle/gtks"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"github.com/KevinZonda/GoX/pkg/iox"
 	"github.com/gotk3/gotk3/gtk"
+	"io"
+	"strconv"
+	"strings"
 )
 
 type EditorW struct {
@@ -101,8 +98,11 @@ func (w *EditorW) syncCursorPos() {
 }
 
 func (w *EditorW) syncRunningStat() {
-	// TODO
+	if !w.isRunning {
+		w.cancelFunc = nil
+	}
 	w.Toolbar.RunBtn.SetSensitive(!w.isRunning)
+	w.Toolbar.StopBtn.SetSensitive(w.isRunning)
 }
 
 func NewEditorW() *EditorW {
@@ -182,15 +182,32 @@ func NewEditorW() *EditorW {
 	w.Connect("destroy", func() {
 		lifecycle.Decrease()
 	})
+	w.syncRunningStat()
 	return &w
 }
 
 func (w *EditorW) RunCode() {
-	go w.runCode(w.CodeE.Text(), true, "===================NEW RUN===================")
+	w.cancelFunc = AsyncFunc(func() {
+		w.runCode(w.CodeE.Text(), true, "===================NEW RUN===================")
+	})
 }
 
 func (w *EditorW) RerunCode() {
-	go w.runCode(w.CodeE.Text(), false, "===================NEW RUN===================")
+	w.Stop()
+	w.cancelFunc = AsyncFunc(func() {
+		w.runCode(w.CodeE.Text(), false, "===================NEW RUN===================")
+	})
+}
+
+func (w *EditorW) Stop() {
+	if !w.isRunning {
+		return
+	}
+	if w.cancelFunc != nil {
+		w.cancelFunc()
+		w.setRunning(false)
+		w.evalIn = nil
+	}
 }
 
 func (w *EditorW) setRunning(v bool) {
@@ -282,27 +299,27 @@ func (w *EditorW) InvokeUserRepl() {
 	w.ReplE.SmartNewLine()
 	w.ReplE.AppendTag(w.ReplETags.Blue, ">>> ")
 	w.ReplE.AppendEnd(cmd + "\n")
-	rst := w.runCode(cmd, true, "")
-	if rst.HasReturn {
-		w.ReplE.SmartNewLine()
-		w.ReplE.AppendTag(w.ReplETags.Blue, "<<< ")
-		w.ReplE.AppendEnd(fmt.Sprintf("%v\n", rst.ReturnValue))
-	} else if rst.IsLastExpr {
-		w.ReplE.SmartNewLine()
-		w.ReplE.AppendTag(w.ReplETags.Blue, "<<< ")
-		w.ReplE.AppendEnd(fmt.Sprintf("%v\n", rst.LastExprVal))
-	}
-	w.ReplE.ScrollToEnd()
-}
 
-func runCode(e *eval.Eval, stdout io.WriteCloser) eval.DetailedRunResult {
-	e.SetStdOut(stdout)
-	e.SetStdErr(stdout)
-	return e.DoSafely()
+	w.cancelFunc = AsyncFunc(func() {
+		rst := w.runCode(cmd, true, "")
+		var val any
+		if rst.HasReturn {
+			val = rst.ReturnValue
+		} else if rst.IsLastExpr {
+			val = rst.LastExprVal
+		} else {
+			return
+		}
+		w.ReplE.SmartNewLine()
+		w.ReplE.AppendTag(w.ReplETags.Blue, "<<< ")
+		w.ReplE.AppendEnd(fmt.Sprintf("%v\n", val))
+		w.ReplE.ScrollToEnd()
+	})
 }
 
 type ToolBar struct {
 	*gtk.Toolbar
+	StopBtn    *gtk.ToolButton
 	SaveBtn    *gtk.ToolButton
 	RestartBtn *gtk.ToolButton
 	RunBtn     *gtk.ToolButton
@@ -316,6 +333,10 @@ func (w *EditorW) NewToolBar() *ToolBar {
 
 	bar.RunBtn, _ = gtk.ToolButtonNew(nil, "Run")
 	bar.RunBtn.SetIconName("media-playback-start")
+
+	bar.StopBtn, _ = gtk.ToolButtonNew(nil, "Stop")
+	bar.StopBtn.SetIconName("media-playback-stop")
+	bar.StopBtn.Connect("clicked", w.Stop)
 
 	bar.RestartBtn, _ = gtk.ToolButtonNew(nil, "Restart")
 	bar.RestartBtn.SetIconName("view-refresh")
@@ -332,7 +353,8 @@ func (w *EditorW) NewToolBar() *ToolBar {
 	bar.Insert(bar.FmtBtn, 1)
 	bar.Insert(sep, 2)
 	bar.Insert(bar.RestartBtn, 3)
-	bar.Insert(bar.RunBtn, 4)
+	bar.Insert(bar.StopBtn, 4)
+	bar.Insert(bar.RunBtn, 5)
 	return &bar
 }
 
@@ -365,24 +387,4 @@ func (w *EditorW) Save() {
 		return
 	}
 	iox.WriteAllText(w.Path, w.CodeE.Text())
-}
-
-type FakeStdIn struct {
-	buf *bytes.Buffer
-}
-
-func (f *FakeStdIn) Read(p []byte) (n int, err error) {
-	n, err = f.buf.Read(p)
-	if err == nil {
-		return n, nil
-	}
-	if errors.Is(err, io.EOF) {
-		time.Sleep(100 * time.Millisecond)
-		return f.Read(p)
-	}
-	return n, err
-}
-
-func (f *FakeStdIn) Write(p []byte) (n int, err error) {
-	return f.buf.Write(p)
 }
