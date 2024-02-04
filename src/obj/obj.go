@@ -32,7 +32,8 @@ const (
 	Library Kind = "Library"
 	//Array   Kind = "Array"
 	//Map     Kind = "Map"
-	Struct Kind = "Struct"
+	Struct    Kind = "Struct"
+	StructDef Kind = "StructDef"
 )
 
 func (o *Object) String() string {

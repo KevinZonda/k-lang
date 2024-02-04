@@ -20,6 +20,8 @@ func cons(a any) *obj.Object {
 		return obj.NewObj(obj.Lambda, a)
 	case *node.FuncBlock:
 		return obj.NewObj(obj.Func, a)
+	case *node.StructBlock:
+		return obj.NewObj(obj.StructDef, a)
 	//case []any:
 	//	return NewArrayObject(a.([]any))
 	//case map[any]any:

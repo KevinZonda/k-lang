@@ -85,9 +85,9 @@ const (
 	Default
 	Open
 	As
-	If
 	Try
 	Catch
+	If
 	Else
 	For
 	Match
@@ -95,6 +95,7 @@ const (
 	Continue
 	True
 	False
+	Nil
 	IntegerLiteral
 	NumberLiteral
 	StringLiteral

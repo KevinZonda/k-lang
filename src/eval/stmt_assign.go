@@ -109,6 +109,9 @@ func (e *Eval) EvalAssignStmtX(n *node.AssignStmt, assignee *node.Assignee, valu
 			if e == fromT {
 				o, ok := e.objTable.Get(lastVar.Name.Value)
 				if ok && n.Token.Value != ":=" {
+					if o.Is(obj.EvalObj, obj.Func, obj.StructDef) {
+						panic("cannot assign to " + lastVar.Name.Value)
+					}
 					o.Val = v
 				} else {
 					e.objTable.SetAtTop(lastVar.Name.Value, cons(v))
