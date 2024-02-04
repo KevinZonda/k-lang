@@ -96,11 +96,13 @@ func (r *Repl) Repl(input string) {
 				jout.Println(node)
 			}
 		}
-		e := eval.New(ast, "")
-		e.LoadContext(r.context)
-		rst := e.DoSafely()
+		if r.context == nil {
+			r.context = eval.New(ast, "")
+		} else {
+			r.context.SetAST(ast)
+		}
+		rst := r.context.DoSafely()
 		rst.PrintPanic()
-		r.context = e
 	}
 
 }

@@ -190,11 +190,11 @@ func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (retV any,
 		w.ReplE.AppendTag(w.ReplETags.Red, "Parse failed:\n"+parseErrors(errs))
 		return
 	}
-	ev := eval.New(ast, "")
-	if loadCtx {
-		ev.LoadContext(w.e)
+	if !loadCtx || w.e == nil {
+		w.e = eval.New(ast, "")
 	}
-	w.e = ev
+	ev := w.e
+
 	isPanic, panicMsg, retV, hasRet := runCode(ev, w.ReplE.WriterPipe())
 	w.ReplE.ScrollToEnd()
 	if isPanic {

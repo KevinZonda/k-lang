@@ -48,18 +48,6 @@ func (e *Eval) SetAST(ast tree.Ast) {
 	e.currentToken = token.Token{}
 }
 
-func (e *Eval) LoadContext(o *Eval) {
-	if o == nil {
-		e.objTable = NewObjectTable()
-		return
-	}
-	e.objTable = o.objTable
-	if e.objTable.Empty() {
-		e.objTable = NewObjectTable()
-	}
-	e.builtin = o.builtin
-}
-
 func (e *Eval) runAst(ast tree.Ast, breaks ...string) DetailedRunResult {
 	result := DetailedRunResult{}
 	for idx, n := range ast {
