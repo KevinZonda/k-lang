@@ -38,6 +38,8 @@ func clone(v any) any {
 		return v
 	case *node.LambdaExpr, *node.FuncBlock:
 		return v
+	case *Eval:
+		return v
 	default:
 		fmt.Println("[DEBUG] CLONE DEFAULT VAR ->", reflect.TypeOf(v))
 		return v

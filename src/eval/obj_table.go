@@ -95,9 +95,9 @@ func (t *TableStack) Empty() bool {
 	return len(t.q) == 0
 }
 
-func (t *TableStack) Println(w io.Writer) {
+func (t *TableStack) Println(w io.Writer, addr string) {
 	fmt.Fprintln(w, "***********************************")
-	fmt.Fprintln(w, "V-MEM STACK")
+	fmt.Fprintln(w, "V-MEM STACK @", addr)
 	fmt.Fprintln(w, "***********************************")
 	if t.Empty() {
 		fmt.Fprintln(w, "<EMPTY>")

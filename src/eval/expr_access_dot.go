@@ -1,6 +1,7 @@
 package eval
 
 import (
+	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	"reflect"
@@ -82,7 +83,7 @@ func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) any {
 	case *obj.StructField:
 		if scopeT.ParentEval != nil && scopeT.ParentEval != e {
 			if strings.HasPrefix(funcCall.Caller.Value, "_") {
-				panic("No Access To Private Function: " + funcCall.Caller.Value)
+				panic(fmt.Sprint("No Access To Private Function :"+funcCall.Caller.Value, ", Required: ", scopeT.ParentEval, " But Got: ", e))
 			}
 		}
 
@@ -100,6 +101,12 @@ func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) any {
 		}
 		if funcB == nil {
 			panic("Func Nil Found From Struct: " + funcCall.Caller.Value)
+		}
+		if scopeT.ParentEval != nil {
+			scopeE := scopeT.ParentEval.(*Eval)
+			return scopeE.EvalFuncBlock(funcB, _fc.Args, func() {
+				scopeE.objTable.SetAtTop("self", scopeT)
+			})
 		}
 
 		return e.EvalFuncBlock(funcB, _fc.Args, func() {

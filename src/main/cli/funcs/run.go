@@ -38,7 +38,7 @@ func doWithPositionPanic(e *eval.Eval) {
 			tk := e.CurrentToken()
 			panic(fmt.Sprintf(
 				"!!!PANIC POSITION L%d,%d-L%d,%d\n%s",
-				tk.BeginLine, tk.BeginColumn, tk.EndLine, tk.EndColumn, r,
+				tk.BeginLine, tk.BeginColumn, tk.EndLine, tk.EndColumn, r.(string),
 			))
 		}
 	}()

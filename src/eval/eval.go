@@ -108,9 +108,9 @@ type runResult struct {
 	isLastElemExpr bool
 }
 
-func (e *Eval) runWithBreak(breaks ...string) runResult {
+func (e *Eval) runAst(ast tree.Ast, breaks ...string) runResult {
 	result := runResult{}
-	for idx, n := range e.ast {
+	for idx, n := range ast {
 		for _, key := range breaks {
 			if e.objTable.HasKeyAtTop(key) {
 				goto end
@@ -151,6 +151,10 @@ end:
 	return result
 }
 
+func (e *Eval) runWithBreak(breaks ...string) runResult {
+	return e.runAst(e.ast, breaks...)
+}
+
 func (e *Eval) run() any {
 	r := e.runWithBreak(reserved.Return, reserved.Break, reserved.Continue)
 	if r.hasRet {
@@ -185,4 +189,12 @@ func (e *Eval) EvalMain() any {
 	ret := fe.run()
 	e.frameEnd()
 	return ret
+}
+
+func (e *Eval) PtrAddr() string {
+	return fmt.Sprintf("%p", e)
+}
+
+func (e *Eval) String() string {
+	return fmt.Sprintf("Eval@%p", e)
 }

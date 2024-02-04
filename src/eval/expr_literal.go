@@ -128,7 +128,7 @@ func (e *Eval) getZeroValue(t *node.Type) any {
 		return &obj.StructField{
 			TypeAs:     t,
 			Fields:     m,
-			ParentEval: e,
+			ParentEval: baseEval,
 		}
 	}
 }
@@ -144,7 +144,6 @@ func (e *Eval) EvalStructLiteral(n *node.StructLiteral) *obj.StructField {
 			ParentEval: e,
 		}
 	}
-	sf.ParentEval = e
 
 	for pair := n.Body.Oldest(); pair != nil; pair = pair.Next() {
 		sf.Fields.Set(pair.Key, e.EvalExpr(pair.Value))
