@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/builtin"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"github.com/KevinZonda/GoX/pkg/iox"
 	"os"
@@ -75,7 +76,7 @@ func (e *Eval) EvalOpenStmt(n *node.OpenStmt) {
 
 		openedEval = New(ast, n.Path)
 		openedFiles[abs] = openedEval
-		openedEval.run()
+		openedEval.runWithBreak(reserved.Return)
 	}
 
 	if n.As != "" {

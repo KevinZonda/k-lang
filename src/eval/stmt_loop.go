@@ -2,7 +2,6 @@ package eval
 
 import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	orderedmap "github.com/wk8/go-ordered-map/v2"
@@ -158,23 +157,16 @@ func (e *Eval) EvalCStyleFrStmt(n *node.CStyleFor) {
 	}
 }
 
-func (e *Eval) EvalLoopCodeBlock(fc *node.CodeBlock) any {
-	e.currentToken = fc.GetToken()
-	e.frameStart(false)
-	fe := e.new((tree.Ast)(fc.Nodes))
-	_ = fe.run()
-	e.frameEndWithAll()
-	return nil
-}
-
 func (e *Eval) EvalLoopCodeBlockWithHook(fc *node.CodeBlock, onNewFrame func()) any {
 	e.currentToken = fc.GetToken()
 	e.frameStart(false)
 	if onNewFrame != nil {
 		onNewFrame()
 	}
-	fe := e.new((tree.Ast)(fc.Nodes))
-	_ = fe.run()
+
+	_ = e.runAst(fc.Nodes, reserved.Return, reserved.Break, reserved.Continue)
+	//fe := e.new((tree.Ast)(fc.Nodes))
+	//_ = fe.run()
 	e.frameEndWithAll()
 	return nil
 }

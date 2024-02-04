@@ -79,16 +79,6 @@ func New(ast tree.Ast, inputFile string) *Eval {
 	}
 }
 
-func (e *Eval) new(ast tree.Ast) *Eval {
-	return &Eval{
-		ast:      ast,
-		objTable: e.objTable,
-		loopLvl:  e.loopLvl,
-		basePath: e.basePath,
-		builtin:  e.builtin,
-	}
-}
-
 func (e *Eval) LoadContext(o *Eval) {
 	if o == nil {
 		e.objTable = NewObjectTable()
@@ -106,6 +96,13 @@ type runResult struct {
 	hasRet         bool
 	lastExpr       any
 	isLastElemExpr bool
+}
+
+func (r runResult) ReturnValue() any {
+	if r.hasRet {
+		return r.retV.Val
+	}
+	return nil
 }
 
 func (e *Eval) runAst(ast tree.Ast, breaks ...string) runResult {
@@ -155,14 +152,6 @@ func (e *Eval) runWithBreak(breaks ...string) runResult {
 	return e.runAst(e.ast, breaks...)
 }
 
-func (e *Eval) run() any {
-	r := e.runWithBreak(reserved.Return, reserved.Break, reserved.Continue)
-	if r.hasRet {
-		return r.retV.Val
-	}
-	return nil
-}
-
 func (e *Eval) Do() {
 	if r := e.runWithBreak(reserved.Return); r.hasRet {
 		fmt.Println(r.retV == nil, reflect.TypeOf(r.retV))
@@ -185,10 +174,12 @@ func (e *Eval) EvalMain() any {
 	}
 	fx := fn.ToFunc()
 	e.frameStart(true)
-	fe := e.new((tree.Ast)(fx.Body.Nodes))
-	ret := fe.run()
+
+	result := e.runAst((tree.Ast)(fx.Body.Nodes), reserved.Return)
+
 	e.frameEnd()
-	return ret
+
+	return result.ReturnValue()
 }
 
 func (e *Eval) PtrAddr() string {
