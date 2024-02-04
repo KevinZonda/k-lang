@@ -51,6 +51,7 @@ func (i *replBasedInterpreter) CompleteWords(code string, cursorPos int) (prefix
 
 func (i *replBasedInterpreter) Eval(code string) (values []any, err error) {
 	parser := parserHelper.FromString(code)
+	ast := parser.Ast()
 
 	if len(parser.Errors()) > 0 {
 		sb := strings.Builder{}
@@ -61,8 +62,6 @@ func (i *replBasedInterpreter) Eval(code string) (values []any, err error) {
 		}
 		return nil, fmt.Errorf(strings.TrimSpace(sb.String()))
 	}
-
-	ast := parser.Ast()
 
 	e := eval.New(ast, "")
 	e.LoadContext(i.context)
