@@ -7,26 +7,26 @@ import (
 )
 
 type BuiltIn struct {
-	StdIn  io.ReadCloser
-	StdOut io.WriteCloser
-	StdErr io.WriteCloser
+	StdIn  io.Reader
+	StdOut io.Writer
+	StdErr io.Writer
 }
 
 type IBuiltIn interface {
-	GetStdin() io.ReadCloser
-	GetStdout() io.WriteCloser
-	GetStderr() io.WriteCloser
+	GetStdin() io.Reader
+	GetStdout() io.Writer
+	GetStderr() io.Writer
 }
 
-func (b BuiltIn) GetStdout() io.WriteCloser {
+func (b BuiltIn) GetStdout() io.Writer {
 	return b.StdOut
 }
 
-func (b BuiltIn) GetStdin() io.ReadCloser {
+func (b BuiltIn) GetStdin() io.Reader {
 	return b.StdIn
 }
 
-func (b BuiltIn) GetStderr() io.WriteCloser {
+func (b BuiltIn) GetStderr() io.Writer {
 	return b.StdErr
 }
 

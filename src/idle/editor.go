@@ -1,10 +1,13 @@
 package idle
 
 import (
+	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"strconv"
 	"strings"
+	"time"
 
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/fmtr"
@@ -36,7 +39,12 @@ type EditorW struct {
 	changed bool
 	Path    string
 
+	evalIn io.ReadWriter
+
 	PanicWithDlg bool
+
+	isRunning  bool
+	cancelFunc func()
 }
 
 func (w *EditorW) SetChanged(changed bool) {
@@ -90,6 +98,11 @@ func (w *EditorW) syncCursorPos() {
 	line := iter.GetLine()
 	col := iter.GetLineOffset()
 	w.StatusBar.Push(0, fmt.Sprintf("Line %d, Col %d", line+1, col+1))
+}
+
+func (w *EditorW) syncRunningStat() {
+	// TODO
+	w.Toolbar.RunBtn.SetSensitive(!w.isRunning)
 }
 
 func NewEditorW() *EditorW {
@@ -173,14 +186,28 @@ func NewEditorW() *EditorW {
 }
 
 func (w *EditorW) RunCode() {
-	w.runCode(w.CodeE.Text(), true, "===================NEW RUN===================")
+	go w.runCode(w.CodeE.Text(), true, "===================NEW RUN===================")
 }
 
 func (w *EditorW) RerunCode() {
-	w.runCode(w.CodeE.Text(), false, "===================NEW RUN===================")
+	go w.runCode(w.CodeE.Text(), false, "===================NEW RUN===================")
 }
 
-func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (retV any, hasRet bool) {
+func (w *EditorW) setRunning(v bool) {
+	w.isRunning = v
+	w.syncRunningStat()
+}
+
+func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (rst eval.DetailedRunResult) {
+	w.evalIn = &FakeStdIn{buf: &bytes.Buffer{}}
+	if w.isRunning {
+		return
+	}
+	w.setRunning(true)
+	defer func() {
+		w.evalIn = nil
+		w.setRunning(false)
+	}()
 	w.ReplE.SmartNewLine()
 	if beginMsg != "" {
 		w.ReplE.AppendEnd(beginMsg + "\n")
@@ -192,20 +219,26 @@ func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (retV any,
 	}
 	if !loadCtx || w.e == nil {
 		w.e = eval.New(ast, "")
+	} else {
+		w.e.SetAST(ast)
 	}
 	ev := w.e
+	stdout := w.ReplE.WriterPipe()
+	ev.SetStdIn(w.evalIn)
+	ev.SetStdOut(stdout)
+	ev.SetStdErr(stdout)
+	rst = ev.DoSafely()
 
-	isPanic, panicMsg, retV, hasRet := runCode(ev, w.ReplE.WriterPipe())
 	w.ReplE.ScrollToEnd()
-	if isPanic {
+	if rst.IsPanic {
 		if w.PanicWithDlg {
-			msg := "Code Panicked:\n" + panicMsg
+			msg := "Code Panicked:\n" + rst.PanicMsg
 			dialog := gtk.MessageDialogNew(w, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, msg)
 			dialog.SetTitle("Result with Panic")
 			dialog.Run()
 			dialog.Destroy()
 		} else {
-			w.ReplE.AppendTag(w.ReplETags.Red, "[PANIC RECEIVED] "+panicMsg)
+			w.ReplE.AppendTag(w.ReplETags.Red, "[PANIC RECEIVED] "+rst.PanicMsg)
 			w.ReplE.ScrollToEnd()
 		}
 	}
@@ -237,23 +270,35 @@ func (w *EditorW) InvokeUserRepl() {
 	cmd, _ := w.ReplEnter.GetText()
 	w.ReplEnter.SetText("")
 
+	if w.isRunning {
+		if w.evalIn != nil {
+			cmd = cmd + "\n"
+			io.WriteString(w.evalIn, cmd)
+			w.ReplE.AppendEnd(cmd)
+		}
+		return
+	}
+
 	w.ReplE.SmartNewLine()
 	w.ReplE.AppendTag(w.ReplETags.Blue, ">>> ")
 	w.ReplE.AppendEnd(cmd + "\n")
-	val, hasVal := w.runCode(cmd, true, "")
-	if hasVal {
+	rst := w.runCode(cmd, true, "")
+	if rst.HasReturn {
 		w.ReplE.SmartNewLine()
 		w.ReplE.AppendTag(w.ReplETags.Blue, "<<< ")
-		w.ReplE.AppendEnd(fmt.Sprintf("%v\n", val))
+		w.ReplE.AppendEnd(fmt.Sprintf("%v\n", rst.ReturnValue))
+	} else if rst.IsLastExpr {
+		w.ReplE.SmartNewLine()
+		w.ReplE.AppendTag(w.ReplETags.Blue, "<<< ")
+		w.ReplE.AppendEnd(fmt.Sprintf("%v\n", rst.LastExprVal))
 	}
 	w.ReplE.ScrollToEnd()
 }
 
-func runCode(e *eval.Eval, stdout io.WriteCloser) (isPanic bool, panicMsg string, retV any, hasRet bool) {
+func runCode(e *eval.Eval, stdout io.WriteCloser) eval.DetailedRunResult {
 	e.SetStdOut(stdout)
 	e.SetStdErr(stdout)
-	rst := e.DoSafely()
-	return rst.IsPanic, rst.PanicMsg, rst.ReturnValue, rst.HasReturn
+	return e.DoSafely()
 }
 
 type ToolBar struct {
@@ -320,4 +365,24 @@ func (w *EditorW) Save() {
 		return
 	}
 	iox.WriteAllText(w.Path, w.CodeE.Text())
+}
+
+type FakeStdIn struct {
+	buf *bytes.Buffer
+}
+
+func (f *FakeStdIn) Read(p []byte) (n int, err error) {
+	n, err = f.buf.Read(p)
+	if err == nil {
+		return n, nil
+	}
+	if errors.Is(err, io.EOF) {
+		time.Sleep(100 * time.Millisecond)
+		return f.Read(p)
+	}
+	return n, err
+}
+
+func (f *FakeStdIn) Write(p []byte) (n int, err error) {
+	return f.buf.Write(p)
 }

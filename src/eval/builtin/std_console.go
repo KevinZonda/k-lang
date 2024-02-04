@@ -1,7 +1,7 @@
 package builtin
 
 import (
-	"fmt"
+	"bufio"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 )
 
@@ -15,12 +15,13 @@ func (c *StdConsoleLib) FuncCall(b obj.BuiltInInterface, caller string, args []a
 	switch caller {
 	case "readln":
 		ensureArgsLen(args, 0)
-		var s string
-		_, err := fmt.Fscanln(b.GetStdin(), &s)
+		reader := bufio.NewReader(b.GetStdin())
+		text, err := reader.ReadString('\n')
+
 		if err != nil {
 			panic(err)
 		}
-		return s
+		return text
 	case "write":
 		_b := b.(BuiltIn)
 		_b.Print(args...)

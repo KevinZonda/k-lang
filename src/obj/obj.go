@@ -12,9 +12,9 @@ type ILibrary interface {
 }
 
 type BuiltInInterface interface {
-	GetStdin() io.ReadCloser
-	GetStdout() io.WriteCloser
-	GetStderr() io.WriteCloser
+	GetStdin() io.Reader
+	GetStdout() io.Writer
+	GetStderr() io.Writer
 }
 
 type Object struct {

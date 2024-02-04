@@ -13,27 +13,27 @@ func (e *Eval) LoadStdFromOS() {
 	e.builtin.StdErr = os.Stderr
 }
 
-func (e *Eval) SetStdOut(out io.WriteCloser) {
+func (e *Eval) SetStdOut(out io.Writer) {
 	e.builtin.StdOut = out
 }
 
-func (e *Eval) SetStdIn(in io.ReadCloser) {
+func (e *Eval) SetStdIn(in io.Reader) {
 	e.builtin.StdIn = in
 }
 
-func (e *Eval) SetStdErr(err io.WriteCloser) {
+func (e *Eval) SetStdErr(err io.Writer) {
 	e.builtin.StdErr = err
 }
 
-func (e *Eval) GetStdOut() io.WriteCloser {
+func (e *Eval) GetStdOut() io.Writer {
 	return e.builtin.StdOut
 }
 
-func (e *Eval) GetStdIn() io.ReadCloser {
+func (e *Eval) GetStdIn() io.Reader {
 	return e.builtin.StdIn
 }
 
-func (e *Eval) GetStdErr() io.WriteCloser {
+func (e *Eval) GetStdErr() io.Writer {
 	return e.builtin.StdErr
 }
 
