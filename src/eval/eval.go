@@ -11,7 +11,6 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"reflect"
 )
 
 type Eval struct {
@@ -152,17 +151,57 @@ func (e *Eval) runWithBreak(breaks ...string) runResult {
 	return e.runAst(e.ast, breaks...)
 }
 
-func (e *Eval) Do() {
+func (e *Eval) Do() (retV any, hasRet bool) {
 	if r := e.runWithBreak(reserved.Return); r.hasRet {
-		fmt.Println(r.retV == nil, reflect.TypeOf(r.retV))
-		fmt.Println("[Interpreter] Program returned: ", r.retV.Val)
-		return
+		return r.retV, r.hasRet
 	}
 
-	e.EvalMain()
+	retV = e.EvalMain()
+	hasRet = retV != nil
+	return
 }
 
-func (e *Eval) DoRetLastExpr() (val any, hasVal bool) {
+func (e *Eval) DoSafely() (rst DetailedRunResult) {
+	defer func() {
+		if r := recover(); r != nil {
+			rst.IsPanic = true
+			rst.PanicMsg = fmt.Sprint(r)
+			rst.CurrentToken = e.CurrentToken()
+		}
+	}()
+
+	rst.stderr = e.GetStdErr()
+	rst.ReturnValue, rst.HasReturn = e.Do()
+	rst.CurrentToken = e.CurrentToken()
+	return
+}
+
+type DetailedRunResult struct {
+	ReturnValue  any
+	ReturnObj    *obj.Object
+	HasReturn    bool
+	IsPanic      bool
+	PanicMsg     string
+	CurrentToken token.Token
+	LastExprVal  any
+	IsLastExpr   bool
+	stderr       io.Writer
+}
+
+func (rst DetailedRunResult) PrintPanic() DetailedRunResult {
+	if !rst.IsPanic {
+		return rst
+	}
+	tk := rst.CurrentToken
+	stde := rst.stderr
+	if stde == nil {
+		stde = os.Stderr
+	}
+	fmt.Fprintf(rst.stderr, "%s at position L%d,%d-L%d,%d\n", rst.PanicMsg, tk.BeginLine, tk.BeginColumn, tk.EndLine, tk.EndColumn)
+	return rst
+}
+
+func (e *Eval) DoRetLastExpr() (lastExprVal any, isLastExpr bool) {
 	rr := e.runWithBreak(reserved.Return)
 	return rr.lastExpr, rr.isLastElemExpr
 }

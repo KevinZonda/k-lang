@@ -24,7 +24,10 @@ func (r *Repl) Repl(input string) {
 
 		ast, _ := parserHelper.Ast(str)
 		r.context = eval.New(ast, input)
-		r.context.Do()
+		rst := r.context.DoSafely()
+		if rst.PrintPanic().IsPanic {
+			os.Exit(1)
+		}
 	}
 
 	rl, err := consoleReader.New("> ")
@@ -95,7 +98,8 @@ func (r *Repl) Repl(input string) {
 		}
 		e := eval.New(ast, "")
 		e.LoadContext(r.context)
-		e.Do()
+		rst := e.DoSafely()
+		rst.PrintPanic()
 		r.context = e
 	}
 
