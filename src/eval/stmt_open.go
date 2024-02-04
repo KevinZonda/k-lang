@@ -6,17 +6,23 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/builtin"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"github.com/KevinZonda/GoX/pkg/iox"
+	"os"
 	"path"
 	"path/filepath"
 	"strings"
 )
+
+const K_HOME = "K_HOME"
 
 func (e *Eval) findFile(s string) (abs string, ok bool) {
 	s = strings.TrimSpace(s)
 	if s == "" {
 		return "", false
 	}
-	paths := []string{path.Join(e.basePath, s), s}
+	paths := []string{path.Join(e.basePath, s)}
+	if khome := os.Getenv(K_HOME); khome != "" {
+		paths = append(paths, path.Join(khome, s))
+	}
 	for _, p := range paths {
 		//{
 		//	a, e := filepath.Abs(p)
@@ -83,6 +89,9 @@ func (e *Eval) EvalOpenStmt(n *node.OpenStmt) {
 func normaliseName(n string) string {
 	ns := strings.Split(n, "/")
 	n = ns[len(ns)-1]
+	if strings.HasSuffix(n, ".k") {
+		n = n[:len(n)-2]
+	}
 	sb := strings.Builder{}
 	for _, c := range n {
 		if c != '_' && (c < 'a' || c > 'z') && (c < 'A' || c > 'Z') {

@@ -20,8 +20,9 @@ func clone(v any) any {
 			fields.Set(pair.Key, clone(pair.Value))
 		}
 		return &obj.StructField{
-			TypeAs: vT.TypeAs,
-			Fields: fields,
+			TypeAs:     vT.TypeAs,
+			Fields:     fields,
+			ParentEval: vT.ParentEval,
 		}
 	case []any:
 		a := make([]any, len(vT))

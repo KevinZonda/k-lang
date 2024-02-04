@@ -8,8 +8,9 @@ import (
 )
 
 type StructField struct {
-	TypeAs *node.Type
-	Fields *orderedmap.OrderedMap[string, any]
+	TypeAs     *node.Type
+	Fields     *orderedmap.OrderedMap[string, any]
+	ParentEval any
 }
 
 func (s *StructField) String() string {
