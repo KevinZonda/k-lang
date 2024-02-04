@@ -268,6 +268,7 @@ func (w *EditorW) FormatCode() {
 	if len(err) > 0 {
 		w.ReplE.SmartNewLine()
 		w.ReplE.AppendTag(w.ReplETags.Red, "Formatter Failed:\n"+parseErrors(err))
+		w.ReplE.ScrollToEnd()
 		return
 	}
 	w.CodeE.SetText(code)
