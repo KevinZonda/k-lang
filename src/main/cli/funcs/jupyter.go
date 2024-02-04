@@ -63,8 +63,12 @@ func (i *replBasedInterpreter) Eval(code string) (values []any, err error) {
 		return nil, fmt.Errorf(strings.TrimSpace(sb.String()))
 	}
 
-	e := eval.New(ast, "")
-	e.LoadContext(i.context)
+	if i.context == nil {
+		i.context = eval.New(ast, "")
+	}
+
+	e := i.context
+	e.SetAST(ast)
 	e.LoadStdFromOS()
 
 	rst := e.DoSafely()
