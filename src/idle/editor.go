@@ -302,18 +302,17 @@ func (w *EditorW) InvokeUserRepl() {
 
 	w.cancelFunc = AsyncFunc(func() {
 		rst := w.runCode(cmd, true, "")
-		var val any
 		if rst.HasReturn {
-			val = rst.ReturnValue
+			w.ReplE.SmartNewLine()
+			w.ReplE.AppendTag(w.ReplETags.Blue, "<<< ")
+			w.ReplE.AppendEnd(fmt.Sprintf("%v\n", rst.ReturnValue))
+			w.ReplE.ScrollToEnd()
 		} else if rst.IsLastExpr {
-			val = rst.LastExprVal
-		} else {
-			return
+			w.ReplE.SmartNewLine()
+			w.ReplE.AppendTag(w.ReplETags.Blue, "<<< ")
+			w.ReplE.AppendEnd(fmt.Sprintf("%v\n", rst.LastExprVal))
+			w.ReplE.ScrollToEnd()
 		}
-		w.ReplE.SmartNewLine()
-		w.ReplE.AppendTag(w.ReplETags.Blue, "<<< ")
-		w.ReplE.AppendEnd(fmt.Sprintf("%v\n", val))
-		w.ReplE.ScrollToEnd()
 	})
 }
 
