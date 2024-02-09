@@ -12,6 +12,7 @@ import (
 	"io"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 type EditorW struct {
@@ -40,8 +41,15 @@ type EditorW struct {
 
 	PanicWithDlg bool
 
-	isRunning  bool
-	cancelFunc func()
+	isRunning    bool
+	cancelFunc   func()
+	externalLock sync.Mutex
+}
+
+func (w *EditorW) RunInExternalLock(f func()) {
+	w.externalLock.Lock()
+	defer w.externalLock.Unlock()
+	f()
 }
 
 func (w *EditorW) SetChanged(changed bool) {
@@ -204,7 +212,7 @@ func (w *EditorW) Stop() {
 		return
 	}
 	if w.cancelFunc != nil {
-		w.cancelFunc()
+		w.RunInExternalLock(w.cancelFunc)
 		w.setRunning(false)
 		w.evalIn = nil
 	}
@@ -240,25 +248,27 @@ func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (rst eval.
 		w.e.SetAST(ast)
 	}
 	ev := w.e
-	stdout := w.ReplE.WriterPipe()
+	stdout := w.ReplE.WriterPipe(&w.externalLock)
 	ev.SetStdIn(w.evalIn)
 	ev.SetStdOut(stdout)
 	ev.SetStdErr(stdout)
 	rst = ev.DoSafely()
 
-	w.ReplE.ScrollToEnd()
-	if rst.IsPanic {
-		if w.PanicWithDlg {
-			msg := "Code Panicked:\n" + rst.PanicMsg
-			dialog := gtk.MessageDialogNew(w, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, msg)
-			dialog.SetTitle("Result with Panic")
-			dialog.Run()
-			dialog.Destroy()
-		} else {
-			w.ReplE.AppendTag(w.ReplETags.Red, "[PANIC RECEIVED] "+rst.PanicMsg)
-			w.ReplE.ScrollToEnd()
+	w.RunInExternalLock(func() {
+		w.ReplE.ScrollToEnd()
+		if rst.IsPanic {
+			if w.PanicWithDlg {
+				msg := "Code Panicked:\n" + rst.PanicMsg
+				dialog := gtk.MessageDialogNew(w, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, msg)
+				dialog.SetTitle("Result with Panic")
+				dialog.Run()
+				dialog.Destroy()
+			} else {
+				w.ReplE.AppendTag(w.ReplETags.Red, "[PANIC RECEIVED] "+rst.PanicMsg)
+				w.ReplE.ScrollToEnd()
+			}
 		}
-	}
+	})
 	return
 }
 
@@ -303,17 +313,20 @@ func (w *EditorW) InvokeUserRepl() {
 
 	w.cancelFunc = AsyncFunc(func() {
 		rst := w.runCode(cmd, true, "")
-		if rst.HasReturn {
+		w.RunInExternalLock(func() {
+			var val any
+			if rst.HasReturn {
+				val = rst.ReturnValue
+			} else if rst.IsLastExpr {
+				val = rst.LastExprVal
+			} else {
+				return
+			}
 			w.ReplE.SmartNewLine()
 			w.ReplE.AppendTag(w.ReplETags.Blue, "<<< ")
-			w.ReplE.AppendEnd(fmt.Sprintf("%v\n", rst.ReturnValue))
+			w.ReplE.AppendEnd(fmt.Sprintf("%v\n", val))
 			w.ReplE.ScrollToEnd()
-		} else if rst.IsLastExpr {
-			w.ReplE.SmartNewLine()
-			w.ReplE.AppendTag(w.ReplETags.Blue, "<<< ")
-			w.ReplE.AppendEnd(fmt.Sprintf("%v\n", rst.LastExprVal))
-			w.ReplE.ScrollToEnd()
-		}
+		})
 	})
 }
 
