@@ -20,6 +20,10 @@ type Eval struct {
 	builtin      builtin.BuiltIn
 }
 
+func (e *Eval) SetPath(path string) {
+	e.basePath = path
+}
+
 func (e *Eval) CurrentToken() token.Token {
 	return e.currentToken
 }
@@ -114,16 +118,14 @@ func (e *Eval) Do() DetailedRunResult {
 
 func (e *Eval) DoSafely() (rst DetailedRunResult) {
 	defer func() {
+		rst.CurrentToken = e.CurrentToken()
 		if r := recover(); r != nil {
 			rst.IsPanic = true
 			rst.PanicMsg = fmt.Sprint(r)
-			rst.CurrentToken = e.CurrentToken()
 		}
 	}()
-
-	rst = e.Do()
 	rst.stderr = e.GetStdErr()
-	rst.CurrentToken = e.CurrentToken()
+	rst = e.Do()
 	return
 }
 

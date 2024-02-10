@@ -37,6 +37,6 @@ func (rst DetailedRunResult) PrintPanic() DetailedRunResult {
 	if stde == nil {
 		stde = os.Stderr
 	}
-	fmt.Fprintf(rst.stderr, "%s at position L%d,%d-L%d,%d\n", rst.PanicMsg, tk.BeginLine, tk.BeginColumn, tk.EndLine, tk.EndColumn)
+	fmt.Fprintf(stde, "%s at position L%d,%d-L%d,%d\n", rst.PanicMsg, tk.BeginLine, tk.BeginColumn, tk.EndLine, tk.EndColumn)
 	return rst
 }
