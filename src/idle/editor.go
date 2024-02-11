@@ -212,8 +212,10 @@ func (w *EditorW) Stop() {
 		return
 	}
 	if w.cancelFunc != nil {
-		w.RunInExternalLock(w.cancelFunc)
-		w.setRunning(false)
+		w.RunInExternalLock(func() {
+			w.cancelFunc()
+			w.setRunning(false)
+		})
 		w.evalIn = nil
 	}
 }
@@ -228,18 +230,28 @@ func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (rst eval.
 	if w.isRunning {
 		return
 	}
-	w.setRunning(true)
+	w.RunInExternalLock(func() {
+		w.setRunning(true)
+	})
+
 	defer func() {
 		w.evalIn = nil
-		w.setRunning(false)
+		w.RunInExternalLock(func() {
+			w.setRunning(false)
+		})
 	}()
-	w.ReplE.SmartNewLine()
-	if beginMsg != "" {
-		w.ReplE.AppendEnd(beginMsg + "\n")
-	}
+
+	w.RunInExternalLock(func() {
+		w.ReplE.SmartNewLine()
+		if beginMsg != "" {
+			w.ReplE.AppendEnd(beginMsg + "\n")
+		}
+	})
 	ast, errs := parserHelper.Ast(code)
 	if len(errs) > 0 {
-		w.ReplE.AppendTag(w.ReplETags.Red, "Parse failed:\n"+parseErrors(errs))
+		w.RunInExternalLock(func() {
+			w.ReplE.AppendTag(w.ReplETags.Red, "Parse failed:\n"+parseErrors(errs))
+		})
 		return
 	}
 	if !loadCtx || w.e == nil {
