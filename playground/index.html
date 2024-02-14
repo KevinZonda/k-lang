@@ -4,11 +4,13 @@
 		<meta charset="utf-8"/>
 		<script src="wasm_exec.js"></script>
 		<meta charset='utf-8'>
+		<title>K Language Playground - The K Programming Language</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 	</head>
-	<body  onload="init()">
-		<div style="display: flex; gap:6px; align-items: center;">
+	<body onload="init()" style="margin-top: 0;">
+		<div style="display: flex; gap:12px; align-items: center; flex-wrap: wrap;">
 			<h1>The <font style="font-style: italic;">K Language</font> Playground</h1>
-			<button id="runCode">Run Code</button>
+			<button id="runCodeBtn">Run</button>
 		</div>
 		<textarea id="codeTxt" style="width: 100%; height: 50vh;"></textarea>
 		
@@ -17,7 +19,7 @@
 
 
 		<hr style="width: 100%;">
-		<div style="display: flex; align-items:bas; gap: 10px">
+		<div style="display: flex; align-items:bas; gap: 10px; flex-wrap: wrap;">
 			<img style="height: 50px;" src="https://upload.wikimedia.org/wikipedia/en/5/5d/Birmingham_logo.svg">
 			<span>Final Year Project<br>xxs166#student.bham.ac.uk<br>B.Sc. Computer Science</span>
 			<span>Built on Go, Antlr4, WebAssembly<br>Copyright &copy; 2024 xxs#student.bham.ac.uk</span>
@@ -27,7 +29,7 @@
 			const go = new Go();
 			let loaded = false;
 			function init(){
-            	document.getElementById("runCode").onclick = runCodeEvent;
+            	document.getElementById("runCodeBtn").onclick = runCodeEvent;
 				document.getElementById("codeTxt").value = 'println("Hello World!")'
         	}
 
@@ -37,6 +39,8 @@
 					const codeTxt = document.getElementById("codeTxt").value
 					const codeR = runCodeX(codeTxt);
 			    	document.getElementById('codeResult').innerHTML = codeR;
+				}).catch((e) => {
+					document.getElementById('codeResult').innerHTML = "RCE FATAL:\n"+e;
 				});
 			}
 		</script>
