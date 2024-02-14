@@ -97,6 +97,15 @@ func (e *Eval) getZeroValue(t *node.Type) any {
 	if t.Nullable {
 		return nil
 	}
+	if t.Array {
+		return make([]any, 0)
+	}
+	if t.Map {
+		return make(map[any]any, 0)
+	}
+	if t.Array {
+		return nil
+	}
 	switch t.Name {
 	case "int":
 		return 0

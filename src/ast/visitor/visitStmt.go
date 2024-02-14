@@ -32,6 +32,9 @@ func (v *AntlrVisitor) visitStmt(ctx parser.IStmtContext) node.Stmt {
 	if ctx.MatchStmt() != nil {
 		return v.visitMathStmt(ctx.MatchStmt())
 	}
+	if ctx.DeclareStmt() != nil {
+		return v.visitDeclareStmt(ctx.DeclareStmt())
+	}
 	v.appendErr(ctx, "unknown stmt: "+ctx.GetText(), nil)
 	return nil
 }
@@ -119,13 +122,32 @@ func (v *AntlrVisitor) visitIdentifier(n antlr.TerminalNode) *node.Identifier {
 
 func (v *AntlrVisitor) visitType(ctx parser.ITypeContext) *node.Type {
 	// fmt.Println("VisitType")
-	if ctx == nil || ctx.GetTypeName() == nil {
+	if ctx == nil {
+		return nil
+	}
+	if ctx.Map() != nil {
+		return &node.Type{
+			Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
+			Map:   true,
+		}
+	}
+
+	if ctx.Function() != nil {
+		return &node.Type{
+			Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
+			Func:  true,
+		}
+	}
+
+	if ctx.GetTypeName() == nil {
 		return nil
 	}
 
 	t := node.Type{
-		Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
-		Name:  ctx.GetTypeName().GetText(),
+		Token:    token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
+		Name:     ctx.GetTypeName().GetText(),
+		Nullable: ctx.Question() != nil,
+		Array:    ctx.LSquare() != nil,
 	}
 	if ctx.GetPackageName() != nil {
 		t.Package = ctx.GetPackageName().GetText()

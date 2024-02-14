@@ -6,5 +6,8 @@ type Type struct {
 	Token    token.Token
 	Package  string
 	Name     string
+	Array    bool
+	Map      bool
+	Func     bool
 	Nullable bool
 }

@@ -33,6 +33,8 @@ func (e *Eval) EvalStmt(n node.Stmt) {
 		e.EvalMatchStmt(nT)
 	case *node.OpenStmt:
 		e.EvalOpenStmt(nT)
+	case *node.DeclareStmt:
+		e.EvalDeclareStmt(nT)
 	default:
 		panic("not implemented for eval stmt type: " + reflect.TypeOf(n).String())
 	}

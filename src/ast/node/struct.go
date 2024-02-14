@@ -42,3 +42,19 @@ func (n *StructLiteral) TokenValue() string {
 func (n *StructLiteral) GetToken() token.Token {
 	return n.Token
 }
+
+type DeclareStmt struct {
+	Declare
+	Token token.Token
+	Names []string
+}
+
+func (a *DeclareStmt) TokenValue() string {
+	return "DeclareStmt"
+}
+
+func (a *DeclareStmt) GetToken() token.Token {
+	return a.Token
+}
+
+func (a *DeclareStmt) stmt() {}

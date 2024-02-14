@@ -25,6 +25,7 @@ Add       : '+';
 Sub       : '-';
 Mod       : '%' | 'mod';
 Dot       : '.';
+Question  : '?';
 
 To : '->';
 

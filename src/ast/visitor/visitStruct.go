@@ -22,27 +22,42 @@ func (v *AntlrVisitor) visitDeclareBlock(ctx parser.IDeclareBlockContext) *order
 	body := orderedmap.New[string, *node.Declare]()
 	declares := ctx.AllDeclareStmt()
 	for _, declare := range declares {
-		if declare.FuncBlock() != nil {
-			block := v.visitFuncBlock(declare.FuncBlock())
-			body.Set(block.Name.Value, &node.Declare{
-				Func: block,
-			})
-		}
-		if declare.ExprWithLambda() != nil {
-			body.Set(declare.Identifier(0).GetText(), &node.Declare{
-				Type:  v.visitType(declare.Type_()),
-				Value: v.visitExprWithLambda(declare.ExprWithLambda()),
-			})
-			continue
-		}
-		tN := v.visitType(declare.Type_())
-		if tN != nil {
-			for _, id := range declare.AllIdentifier() {
-				body.Set(id.GetText(), &node.Declare{
-					Type: tN,
-				})
-			}
+		ds := v.visitDeclareStmt(declare)
+		for _, name := range ds.Names {
+			body.Set(name, &ds.Declare)
 		}
 	}
 	return body
+}
+
+func (v *AntlrVisitor) visitDeclareStmt(ctx parser.IDeclareStmtContext) *node.DeclareStmt {
+	if ctx.FuncBlock() != nil {
+		block := v.visitFuncBlock(ctx.FuncBlock())
+		return &node.DeclareStmt{
+			Names: []string{block.Name.Value},
+			Declare: node.Declare{
+				Func: block,
+				Type: v.visitType(ctx.Type_()),
+			},
+		}
+	}
+	if ctx.ExprWithLambda() != nil {
+		return &node.DeclareStmt{
+			Names: []string{ctx.Identifier(0).GetText()},
+			Declare: node.Declare{
+				Type:  v.visitType(ctx.Type_()),
+				Value: v.visitExprWithLambda(ctx.ExprWithLambda()),
+			},
+		}
+	}
+	stmt := &node.DeclareStmt{
+		Declare: node.Declare{
+			Type: v.visitType(ctx.Type_()),
+		},
+	}
+	ids := ctx.AllIdentifier()
+	for _, id := range ids {
+		stmt.Names = append(stmt.Names, id.GetText())
+	}
+	return stmt
 }
