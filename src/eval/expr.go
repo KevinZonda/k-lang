@@ -1,7 +1,6 @@
 package eval
 
 import (
-	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"reflect"
 )
@@ -45,8 +44,7 @@ func (e *Eval) evalExpr(n node.Expr, keepRef bool) any {
 	case *node.NilLiteral:
 		return nil
 	default:
-		fmt.Println(reflect.TypeOf(n))
-		panic("not implemented")
+		panic("not implemented: " + reflect.TypeOf(n).String())
 	}
 
 }
