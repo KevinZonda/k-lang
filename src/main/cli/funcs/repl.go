@@ -3,6 +3,7 @@ package funcs
 import (
 	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/buildconst"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/cli/consoleReader"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/utils/jout"
@@ -29,6 +30,7 @@ func (r *Repl) Repl(input string) {
 			os.Exit(1)
 		}
 	}
+	fmt.Println(buildconst.Msg())
 
 	rl, err := consoleReader.New("> ")
 	panicx.PanicIfNotNil(err, err)
