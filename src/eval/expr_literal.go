@@ -94,6 +94,9 @@ func (e *Eval) getZeroValue(t *node.Type) any {
 			panic("No Package Found: " + t.Package)
 		}
 	}
+	if t.Nullable {
+		return nil
+	}
 	switch t.Name {
 	case "int":
 		return 0
@@ -111,19 +114,11 @@ func (e *Eval) getZeroValue(t *node.Type) any {
 			panic("No Struct Definition Found: " + t.Name)
 		}
 		m := orderedmap.New[string, any]()
-		// TODO: Is duplicate code??
+
 		for pair := def.Body.Oldest(); pair != nil; pair = pair.Next() {
-			variable := pair.Key
+			varName := pair.Key
 			varDeclare := pair.Value
-			if varDeclare.Func != nil {
-				m.Set(varDeclare.Func.Name.Value, varDeclare.Func)
-				continue
-			}
-			if varDeclare.Value != nil {
-				m.Set(variable, baseEval.EvalExpr(varDeclare.Value))
-				continue
-			}
-			m.Set(variable, baseEval.getZeroValue(varDeclare.Type))
+			m.Set(varName, getVarDeclareValue(baseEval, varDeclare))
 		}
 		return &obj.StructField{
 			TypeAs:     t,
@@ -131,6 +126,16 @@ func (e *Eval) getZeroValue(t *node.Type) any {
 			ParentEval: baseEval,
 		}
 	}
+}
+
+func getVarDeclareValue(e *Eval, varDeclare *node.Declare) any {
+	if varDeclare.Func != nil {
+		return varDeclare.Func
+	}
+	if varDeclare.Value != nil {
+		return e.EvalExpr(varDeclare.Value)
+	}
+	return e.getZeroValue(varDeclare.Type)
 }
 
 func (e *Eval) EvalStructLiteral(n *node.StructLiteral) *obj.StructField {

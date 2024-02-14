@@ -20,6 +20,7 @@ type BuiltInInterface interface {
 type Object struct {
 	Kind Kind
 	Val  any
+	// TODO: Type
 }
 
 type Kind string

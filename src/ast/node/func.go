@@ -29,7 +29,6 @@ type CodeBlock struct {
 	Nodes []Node
 }
 
-// TODO: Codeblock is a stmt, need stmt()?
 func (c *CodeBlock) block() {}
 func (c *CodeBlock) stmt()  {}
 func (c *CodeBlock) TokenValue() string {

@@ -95,9 +95,12 @@ func (e *Eval) EvalBuiltInCall(fc *node.FuncCall, args []any) any {
 	for _, x := range xs {
 		ret = append(ret, x)
 	}
-	// TODO: return multiple values
-	if len(ret) > 0 {
+	switch len(ret) {
+	case 1:
 		return ret[0]
+	case 0:
+		return nil
+	default:
+		return ret
 	}
-	return nil
 }

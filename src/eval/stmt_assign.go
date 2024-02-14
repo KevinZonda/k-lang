@@ -115,6 +115,9 @@ func (e *Eval) EvalAssignStmtX(n *node.AssignStmt, assignee *node.Assignee, valu
 					if o.Is(obj.EvalObj, obj.Func, obj.StructDef) {
 						panic("cannot assign to " + lastVar.Name.Value)
 					}
+					// following is not possible because ref syntax
+					// foo(&x) will let set val not possible
+					// e.objTable.Set(lastVar.Name.Value, cons(v))
 					o.Val = v
 				} else {
 					e.objTable.SetAtTop(lastVar.Name.Value, cons(v))
