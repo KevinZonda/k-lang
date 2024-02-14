@@ -24,3 +24,13 @@ println(x["a"])
 `
 	tester.GeneralTest(false, t, code, expected)
 }
+
+func TestAccessByIndexCJK(t *testing.T) {
+	code := `
+x := "中文测试"
+println(x[0])
+`
+	expected := `中
+`
+	tester.GeneralTest(false, t, code, expected)
+}
