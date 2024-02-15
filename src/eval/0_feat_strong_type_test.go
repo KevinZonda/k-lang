@@ -17,3 +17,31 @@ println(x)
 		return strings.HasPrefix(exp, "TypeCheck Failed")
 	})
 }
+
+func TestAssignType2(t *testing.T) {
+	code := `
+open "feat/staticType"
+
+struct foo {}
+foo x
+x = 11
+println(x)
+`
+	tester.ExpectPanic(t, code, func(exp string) bool {
+		return strings.HasPrefix(exp, "TypeCheck Failed")
+	})
+}
+
+func TestAssignType3(t *testing.T) {
+	code := `
+open "feat/staticType"
+
+struct foo {}
+x = foo{}
+x = 11
+println(x)
+`
+	tester.ExpectPanic(t, code, func(exp string) bool {
+		return strings.HasPrefix(exp, "TypeCheck Failed")
+	})
+}

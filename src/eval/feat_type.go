@@ -16,17 +16,23 @@ func (e *Eval) TypeCheck(t *node.Type, v any) bool {
 	}
 	switch v.(type) {
 	case []any:
-		return t.Array
+		return t.Package == "" && t.Array
 	case map[any]any:
-		return t.Map
+		return t.Package == "" && t.Map
 	case int:
-		return t.Name == "int"
+		return t.Package == "" && t.Name == "int"
 	case float64:
-		return t.Name == "num"
+		return t.Package == "" && t.Name == "num"
 	case string:
-		return t.Name == "string" || t.Name == "str"
+		return t.Package == "" && (t.Name == "string" || t.Name == "str")
 	case *node.LambdaExpr, *node.FuncBlock:
 		return t.Func
+	case *obj.StructField:
+		vT := v.(*obj.StructField)
+		if vT.TypeAs == nil {
+			return true
+		}
+		return vT.TypeAs.Name == t.Name
 	case *obj.Object:
 		vT := v.(*obj.Object)
 		if vT.Is(obj.Func, obj.Lambda) {
@@ -36,7 +42,8 @@ func (e *Eval) TypeCheck(t *node.Type, v any) bool {
 			return e.TypeCheck(t, vT.Value())
 		}
 		if vT.Is(obj.Struct) {
-			// TODO
+			vStruct := vT.ToStruct()
+			return e.TypeCheck(t, vStruct)
 		}
 		return true
 
@@ -49,7 +56,7 @@ func (e *Eval) TypeCheck(t *node.Type, v any) bool {
 func (e *Eval) TypeCheckOrPanic(t *node.Type, v any) {
 	checked := e.TypeCheck(t, v)
 	if !checked {
-		panic(fmt.Sprintf("TypeCheck Failed, expected %s, got %s (%s)", t.CodeName(), reflect.TypeOf(v), v))
+		panic(fmt.Sprintf("TypeCheck Failed, expected %s, got %s (%s)", t.CodeName(), reflect.TypeOf(v), fmt.Sprint(v)))
 	}
 }
 
@@ -63,6 +70,10 @@ func (e *Eval) AutoType(v any) *node.Type {
 		return &node.Type{
 			Map: true,
 		}
+	case *node.LambdaExpr, *node.FuncBlock:
+		return &node.Type{
+			Func: true,
+		}
 	case int:
 		return &node.Type{
 			Name: "int",
@@ -75,8 +86,21 @@ func (e *Eval) AutoType(v any) *node.Type {
 		return &node.Type{
 			Name: "string",
 		}
-	default:
-		// TODO: more type check
-		return nil
+	case *obj.StructField:
+		vT := v.(*obj.StructField)
+		return vT.TypeAs
+	case *obj.Object:
+		vT := v.(*obj.Object)
+		if vT.Is(obj.Lambda, obj.Func) {
+			return &node.Type{
+				Func: true,
+			}
+		}
+		if vT.Is(obj.Struct) {
+			return e.AutoType(vT.ToStruct())
+		}
 	}
+	// TODO: more type check
+	// fmt.Println(reflect.TypeOf(v))
+	return nil
 }

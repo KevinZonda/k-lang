@@ -70,6 +70,7 @@ func ExpectPanic(ts *testing.T, code string, expected func(exp string) bool) {
 		ts.Fatal("NOT PANIC")
 		return
 	}
+	ts.Log("PANIC WITH:", rst.PanicMsg)
 	if !expected(rst.PanicMsg) {
 		ts.Fatalf("got %s", rst.PanicMsg)
 		return
