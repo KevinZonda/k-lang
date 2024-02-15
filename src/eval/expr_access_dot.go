@@ -71,6 +71,7 @@ func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) any {
 	_fc.Caller = funcCall.Caller
 	_fc.Args = funcCall.Args
 	_fc.Token = funcCall.Token
+	scope, _ = e.unboxObj(scope)
 
 	switch scopeT := scope.(type) {
 	case *Eval:
