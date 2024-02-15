@@ -28,7 +28,7 @@ endif
 gui:
 ifeq ($(OS),Windows_NT)
 	@echo '=== Source Code Builder ==='
-	.\scripts\gui.ps1
+	powershell .\scripts\gui.ps1
 else
 	echo '=== Source Code Builder ==='
 	./scripts/gui.sh
@@ -37,7 +37,7 @@ endif
 gox:
 ifeq ($(OS),Windows_NT)
 	@echo '=== Source Code Builder X ==='
-	.\scripts\gox.ps1
+	powershell .\scripts\gox.ps1
 else
 	echo '=== Source Code Builder X ==='
 	./scripts/gox.sh
@@ -46,7 +46,7 @@ endif
 wasm:
 ifeq ($(OS),Windows_NT)
 	@echo '=== Source Code Builder X ==='
-	.\scripts\wasm.ps1
+	powershell .\scripts\wasm.ps1
 else
 	echo '=== Source Code Builder X ==='
 	./scripts/wasm.sh
