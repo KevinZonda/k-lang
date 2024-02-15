@@ -54,7 +54,7 @@ func (e *Eval) TypeCheck(t *node.Type, v any) bool {
 }
 
 func (e *Eval) NormaliseWithType(t *node.Type, v any) any {
-	if t == nil || !e.FeatStaticType {
+	if t == nil {
 		return v
 	}
 	if t.Name == "num" && t.Package == "" {

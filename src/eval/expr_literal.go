@@ -109,9 +109,9 @@ func (e *Eval) getZeroValue(t *node.Type) any {
 	switch t.Name {
 	case "int":
 		return 0
-	case "number", "float":
+	case "number", "float", "num":
 		return 0.0
-	case "string":
+	case "string", "str":
 		return ""
 	case "bool":
 		return false
