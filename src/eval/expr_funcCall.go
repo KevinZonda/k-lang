@@ -64,6 +64,7 @@ func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, onAfterFrameS
 		} else {
 			v = clone(e.EvalExpr(args[i]))
 		}
+		e.TypeCheckOrPanic(funcArg.Type, v)
 		e.objTable.SetAtTop(funcArg.Name.Value, v)
 	}
 
@@ -82,6 +83,10 @@ func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, onAfterFrameS
 
 func (e *Eval) Mem() {
 	e.objTable.Println(e.builtin.StdOut, e.PtrAddr())
+}
+
+func (e *Eval) MemStr() string {
+	return e.objTable.ToString(e.PtrAddr())
 }
 
 func (e *Eval) EvalBuiltInCall(fc *node.FuncCall, args []any) any {

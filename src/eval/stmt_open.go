@@ -43,6 +43,9 @@ func (e *Eval) loadBuiltInFeature(name string) bool {
 	case "feat/staticType":
 		e.FeatStaticType = true
 		return true
+	case "feat/verbose":
+		e.FeatVerbose = true
+		return true
 	default:
 		return false
 	}

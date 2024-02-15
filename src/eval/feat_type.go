@@ -3,6 +3,7 @@ package eval
 import (
 	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	"reflect"
 )
 
@@ -24,6 +25,21 @@ func (e *Eval) TypeCheck(t *node.Type, v any) bool {
 		return t.Name == "num"
 	case string:
 		return t.Name == "string" || t.Name == "str"
+	case *node.LambdaExpr, *node.FuncBlock:
+		return t.Func
+	case *obj.Object:
+		vT := v.(*obj.Object)
+		if vT.Is(obj.Func, obj.Lambda) {
+			return t.Func
+		}
+		if vT.Is(obj.Value) {
+			return e.TypeCheck(t, vT.Value())
+		}
+		if vT.Is(obj.Struct) {
+			// TODO
+		}
+		return true
+
 	default:
 		// TODO: more type check
 		return true

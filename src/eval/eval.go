@@ -20,6 +20,7 @@ type Eval struct {
 	builtin      builtin.BuiltIn
 
 	FeatStaticType bool
+	FeatVerbose    bool
 }
 
 func (e *Eval) SetPath(path string) {
@@ -124,6 +125,10 @@ func (e *Eval) DoSafely() (rst DetailedRunResult) {
 		if r := recover(); r != nil {
 			rst.IsPanic = true
 			rst.PanicMsg = fmt.Sprint(r)
+			if e.FeatVerbose {
+				rst.PanicMsg += "\n"
+				rst.PanicMsg += e.MemStr()
+			}
 		}
 	}()
 	rst.stderr = e.GetStdErr()

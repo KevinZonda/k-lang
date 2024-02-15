@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	"io"
+	"strings"
 )
 
 type Table struct {
@@ -98,13 +99,18 @@ func (t *TableStack) Empty() bool {
 }
 
 func (t *TableStack) Println(w io.Writer, addr string) {
+	fmt.Fprintln(w, t.ToString(addr))
+}
+
+func (t *TableStack) ToString(addr string) string {
+	w := &strings.Builder{}
 	fmt.Fprintln(w, "***********************************")
 	fmt.Fprintln(w, "V-MEM STACK @", addr)
 	fmt.Fprintln(w, "***********************************")
 	if t.Empty() {
 		fmt.Fprintln(w, "<EMPTY>")
 		fmt.Fprintln(w, "***********************************")
-		return
+		return w.String()
 	}
 	for i := len(t.q) - 1; i >= 0; i-- {
 		fmt.Fprint(w, "LEVEL [", i, "]")
@@ -124,6 +130,7 @@ func (t *TableStack) Println(w io.Writer, addr string) {
 		}
 	}
 	fmt.Fprintln(w, "***********************************")
+	return w.String()
 }
 
 func getFromObjTable[T any](t *TableStack, key string) (T, bool) {
