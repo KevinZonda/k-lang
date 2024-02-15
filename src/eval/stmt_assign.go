@@ -51,6 +51,9 @@ func (e *Eval) EvalAssignStmt(n *node.AssignStmt) {
 		var v any
 		if n.Assignee[0].Ref {
 			v = e.evalExpr(n.Value, true)
+			if vT, ok := v.(*obj.Object); ok {
+				v = vT.CreateRef()
+			}
 		} else {
 			v = clone(e.EvalExpr(n.Value))
 		}
@@ -89,9 +92,9 @@ func (e *Eval) EvalAssignStmtX(n *node.AssignStmt, assignee *node.Assignee, valu
 	switch from.(type) {
 	case *obj.Object:
 		fromObj := from.(*obj.Object)
-		switch fromObj.Val.(type) {
+		switch fromObj.Value().(type) {
 		case *obj.StructField:
-			from = fromObj.Val.(*obj.StructField)
+			from = fromObj.ToStruct()
 		}
 		//fmt.Println("SET VAL", reflect.TypeOf(from.(*obj.Object).Val), from.(*obj.Object).Val, "->", v)
 		//from.(*obj.Object).Val = v
@@ -118,14 +121,14 @@ func (e *Eval) EvalAssignStmtX(n *node.AssignStmt, assignee *node.Assignee, valu
 					// following is not possible because ref syntax
 					// foo(&x) will let set val not possible
 					// e.objTable.Set(lastVar.Name.Value, cons(v))
-					o.Val = v
+					o.SetValue(v)
 				} else {
 					e.objTable.SetAtTop(lastVar.Name.Value, cons(v))
 				}
 			} else {
 				o, ok := fromT.objTable.Bottom().Get(lastVar.Name.Value)
 				if ok {
-					o.Val = v
+					o.SetValue(v)
 				} else {
 					// f.objTable.SetAtTop(lastVar.Name.Value, cons(v))
 					panic("not support create new variable in other file")
@@ -186,7 +189,7 @@ func (e *Eval) unboxObj(from any) (any, bool) {
 	}
 	switch from.(type) {
 	case *obj.Object:
-		return from.(*obj.Object).Val, true
+		return from.(*obj.Object).Value(), true
 	}
 	return from, false
 }

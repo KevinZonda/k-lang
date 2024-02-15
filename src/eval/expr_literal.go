@@ -27,7 +27,7 @@ func (e *Eval) EvalStringLiteral(n *node.StringLiteral) string {
 		case stringProcess.KindVar:
 			tokenV := strings.TrimSpace(token.Value)
 			if val, hasVal := e.objTable.Get(tokenV); hasVal {
-				sb.WriteString(fmt.Sprint(val.Val))
+				sb.WriteString(fmt.Sprint(val.Value()))
 			} else {
 				sb.WriteString("<!!! VAR NOT FOUND! = {" + tokenV + "}>")
 			}
@@ -76,7 +76,7 @@ func (e *Eval) EvalIdentifier(n *node.Identifier, keepRef bool) any {
 		if keepRef {
 			return v
 		}
-		return v.Val
+		return v.Value()
 	}
 	panic("No Var Found: " + n.Value)
 }
@@ -89,7 +89,7 @@ func (e *Eval) getZeroValue(t *node.Type) any {
 	if t.Package != "" {
 		newEval, ok := e.objTable.Get(t.Package)
 		if ok {
-			baseEval = newEval.Val.(*Eval)
+			baseEval = newEval.Value().(*Eval)
 		} else {
 			panic("No Package Found: " + t.Package)
 		}

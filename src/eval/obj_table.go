@@ -130,7 +130,7 @@ func getFromObjTable[T any](t *TableStack, key string) (T, bool) {
 		var t T
 		return t, false
 	}
-	tV, ok := v.Val.(T)
+	tV, ok := v.Value().(T)
 	return tV, ok
 }
 
@@ -231,5 +231,5 @@ func (t *TableStack) GetAtTop(key string) (any, bool) {
 	if !ok {
 		return nil, false
 	}
-	return v.Val, true
+	return v.Value(), true
 }

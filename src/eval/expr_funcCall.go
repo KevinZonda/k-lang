@@ -58,6 +58,9 @@ func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, onAfterFrameS
 		var v any = nil
 		if funcArg.Ref {
 			v = e.evalExpr(args[i], true)
+			if vT, ok := v.(*obj.Object); ok {
+				v = vT.CreateRef()
+			}
 		} else {
 			v = clone(e.EvalExpr(args[i]))
 		}

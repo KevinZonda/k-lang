@@ -91,7 +91,7 @@ func (e *Eval) runAst(ast tree.Ast, breaks ...string) DetailedRunResult {
 end:
 	result.ReturnObj, result.HasReturn = e.objTable.Get(reserved.Return)
 	if result.HasReturn && result.ReturnObj != nil {
-		result.ReturnValue = result.ReturnObj.Val
+		result.ReturnValue = result.ReturnObj.Value()
 	}
 
 	result.CurrentToken = e.CurrentToken()

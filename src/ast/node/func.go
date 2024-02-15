@@ -1,6 +1,9 @@
 package node
 
-import "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
+import (
+	"fmt"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
+)
 
 type FuncBlock struct {
 	Token   token.Token
@@ -16,6 +19,13 @@ func (f *FuncBlock) TokenValue() string {
 }
 func (f *FuncBlock) GetToken() token.Token {
 	return f.Token
+}
+func (f *FuncBlock) String() string {
+	name := "Anonymous"
+	if f.Name != nil {
+		name = f.Name.Value
+	}
+	return fmt.Sprintf("Function<%s@%p>", name, f)
 }
 
 type FuncArg struct {

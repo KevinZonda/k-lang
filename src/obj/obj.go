@@ -21,6 +21,29 @@ type Object struct {
 	Kind Kind
 	Val  any
 	// TODO: Type
+	Ref *Object
+}
+
+func (o *Object) Value() any {
+	if o.Ref != nil {
+		return o.Ref.Value()
+	}
+	return o.Val
+}
+
+func (o *Object) SetValue(v any) {
+	if o.Ref != nil {
+		o.Ref.Val = v
+		return
+	}
+	o.Val = v
+}
+
+func (o *Object) CreateRef() *Object {
+	return &Object{
+		Kind: o.Kind,
+		Ref:  o,
+	}
 }
 
 type Kind string
@@ -45,7 +68,7 @@ func (o *Object) String() string {
 	sb.WriteString("Object{ Kind: ")
 	sb.WriteString(string(o.Kind))
 	sb.WriteString(", Val: ")
-	sb.WriteString(fmt.Sprint(o.Val))
+	sb.WriteString(fmt.Sprint(o.Value()))
 	sb.WriteString(", Addr: ")
 	sb.WriteString(fmt.Sprintf("%p", o))
 	sb.WriteString(" }")
@@ -61,11 +84,11 @@ func NewObj(k Kind, val any) *Object {
 }
 
 func (o *Object) ToStruct() *StructField {
-	return o.Val.(*StructField)
+	return o.Value().(*StructField)
 }
 
 func (o *Object) ToLambda() *node.LambdaExpr {
-	return o.Val.(*node.LambdaExpr)
+	return o.Value().(*node.LambdaExpr)
 }
 
 func (o *Object) ToFunc() *node.FuncBlock {
@@ -73,11 +96,11 @@ func (o *Object) ToFunc() *node.FuncBlock {
 }
 
 func (o *Object) ToLib() ILibrary {
-	return o.Val.(ILibrary)
+	return o.Value().(ILibrary)
 }
 
 func (o *Object) ToValue() any {
-	return o.Val
+	return o.Value()
 }
 
 func (o *Object) Is(kinds ...Kind) bool {
