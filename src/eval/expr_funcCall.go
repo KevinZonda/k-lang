@@ -50,7 +50,7 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) any {
 
 func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, onAfterFrameStart func()) any {
 	e.currentToken = fn.GetToken()
-	e.frameStart(true)
+	topFrame := e.frameStart(false)
 	if onAfterFrameStart != nil {
 		onAfterFrameStart()
 	}
@@ -67,6 +67,7 @@ func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, onAfterFrameS
 		e.objTable.SetAtTop(funcArg.Name.Value, v)
 	}
 
+	topFrame.Protect = true
 	result := e.runAst((tree.Ast)(fn.Body.Nodes), reserved.Return)
 
 	//fe := e.new((tree.Ast)(fn.Body.Nodes))

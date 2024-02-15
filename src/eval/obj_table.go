@@ -55,8 +55,10 @@ func (t *TableStack) Push(n *Table) {
 	t.q = append(t.q, n)
 }
 
-func (t *TableStack) PushEmpty(protect bool) {
-	t.q = append(t.q, newTable(protect))
+func (t *TableStack) PushEmpty(protect bool) *Table {
+	tbl := newTable(protect)
+	t.q = append(t.q, tbl)
+	return tbl
 }
 
 func (t *TableStack) Pop() *Table {

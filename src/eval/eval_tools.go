@@ -4,10 +4,15 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
 )
 
-func (e *Eval) frameStart(protect bool) {
-	e.objTable.PushEmpty(protect)
+func (e *Eval) frameStart(protect bool) *Table {
+	return e.objTable.PushEmpty(protect)
 }
 
+func (e *Eval) frameTopProtection(protect bool) {
+	if top := e.objTable.Peek(); top != nil {
+		top.Protect = protect
+	}
+}
 func (e *Eval) frameEnd() {
 	e.objTable.Pop()
 }
