@@ -12,6 +12,12 @@
 			<h1>The <font style="font-style: italic;">K Language</font> Playground</h1>
 			<p id="loadStatusLbl">Unknwon</p>
 			<button id="runCodeBtn">Run</button>
+			<button id="fmtBtn">Format</button>
+			<select id="sampleCodeSelect">
+				<option value="helloworld">HelloWorld</option>
+				<option value="loop">Loop</option>
+				<option value="fib">Fib</option>
+			</select>
 		</div>
 		<textarea id="codeTxt" style="width: 100%; height: 50vh;"></textarea>
 		
@@ -34,7 +40,9 @@
 			}
 			function init(){
             	document.getElementById("runCodeBtn").onclick = runCodeEvent;
-				document.getElementById("codeTxt").value = 'println("Hello World!")'
+				setCodeTxt('println("Hello World!")')
+				document.getElementById("fmtBtn").onclick = fmt
+				document.getElementById("sampleCodeSelect").onchange = sampleCode
 				status('Loading')
 				WebAssembly.instantiateStreaming(fetch("core.wasm"), go.importObject).then((result) => {
 					go.run(result.instance);
@@ -46,13 +54,57 @@
 				});
         	}
 
+			function setCodeTxt(v) {
+				document.getElementById("codeTxt").value = v
+			}
+
+			function fmt() {
+                const code = document.getElementById("codeTxt").value
+                setCodeTxt(fmtCodeX(code))
+			}
+
+			function sampleCode(e) {
+				const code = e.target.value
+				switch (code) {
+					case 'helloworld':
+						setCodeTxt('println("Hello World!")')
+						break
+					case 'loop':
+						setCodeTxt(
+							`for (i : range(5)) {
+    i = i + 1
+    for (j : range(i)) {
+        print("*")
+    }
+    println()
+}
+`
+						)
+						break
+					case 'fib':
+						setCodeTxt(`fn fib(n) {
+    if (n == 0) {
+        return 0
+    }
+    if (n == 1) {
+        return 1
+    }
+    return fib(n - 1) + fib(n - 2)
+}
+
+println(fib(5))`)
+				}
+			}
+
 			function runCodeEvent() {
 				if (!loaded) {
 					document.getElementById('codeResult').innerHTML = 'Core Language Not Loaded'
 					return
 				}
 				const codeTxt = document.getElementById("codeTxt").value
+                status('Running')
 				const codeR = runCodeX(codeTxt);
+                status('Ready')
 			    document.getElementById('codeResult').innerHTML = codeR;
 			}
 		</script>

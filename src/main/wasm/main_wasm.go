@@ -7,24 +7,35 @@ import (
 	"syscall/js"
 
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/fmtr"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 )
 
 func main() {
 	c := make(chan struct{}, 0)
-	js.Global().Set("runCode", js.FuncOf(RunCode))
 	js.Global().Set("runCodeX", js.FuncOf(RunCodeX))
+	js.Global().Set("fmtCodeX", js.FuncOf(FmtCode))
 	<-c
-}
-
-func RunCode(this js.Value, args []js.Value) any {
-	return js.ValueOf("Call from RunCode")
 }
 
 func RunCodeX(this js.Value, args []js.Value) any {
 	s := args[0].String()
 	result := executeCode(s)
 	return js.ValueOf(result)
+}
+
+func FmtCode(this js.Value, args []js.Value) any {
+	s := args[0].String()
+	result := fmtCode(s)
+	return js.ValueOf(result)
+}
+
+func fmtCode(code string) string {
+	codeX, err := fmtr.Fmt(code)
+	if len(err) > 0 {
+		return code
+	}
+	return codeX
 }
 
 func executeCode(code string) string {
