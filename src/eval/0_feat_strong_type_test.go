@@ -45,3 +45,13 @@ println(x)
 		return strings.HasPrefix(exp, "TypeCheck Failed")
 	})
 }
+
+func TestAssignTypeNum(t *testing.T) {
+	code := `
+open "feat/staticType"
+num x = 18
+x = 18.0
+println(x)
+`
+	tester.NoPanic(t, code)
+}

@@ -65,6 +65,7 @@ func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, onAfterFrameS
 			v = clone(e.EvalExpr(args[i]))
 		}
 		e.TypeCheckOrPanic(funcArg.Type, v)
+		v = e.NormaliseWithType(funcArg.Type, v)
 		e.objTable.SetAtTop(funcArg.Name.Value, v)
 	}
 

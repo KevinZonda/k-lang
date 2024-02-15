@@ -20,7 +20,7 @@ func (e *Eval) TypeCheck(t *node.Type, v any) bool {
 	case map[any]any:
 		return t.Package == "" && t.Map
 	case int:
-		return t.Package == "" && t.Name == "int"
+		return t.Package == "" && (t.Name == "int" || t.Name == "num")
 	case float64:
 		return t.Package == "" && t.Name == "num"
 	case string:
@@ -51,6 +51,23 @@ func (e *Eval) TypeCheck(t *node.Type, v any) bool {
 		// TODO: more type check
 		return true
 	}
+}
+
+func (e *Eval) NormaliseWithType(t *node.Type, v any) any {
+	if t == nil || !e.FeatStaticType {
+		return v
+	}
+	if t.Name == "num" && t.Package == "" {
+		switch vT := v.(type) {
+		case float64:
+			return vT
+		case int:
+			return float64(vT)
+		default:
+			panic("Not Possible Type Transformation")
+		}
+	}
+	return v
 }
 
 func (e *Eval) TypeCheckOrPanic(t *node.Type, v any) {
