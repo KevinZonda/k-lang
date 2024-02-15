@@ -55,3 +55,18 @@ println(x)
 `
 	tester.NoPanic(t, code)
 }
+
+func TestAssignTypeLambda(t *testing.T) {
+	code := `
+open "feat/staticType"
+
+map x = fn () {
+    println(11)
+}
+println(typeOf(x))
+x()
+`
+	tester.ExpectPanic(t, code, func(exp string) bool {
+		return strings.HasPrefix(exp, "TypeCheck Failed")
+	})
+}

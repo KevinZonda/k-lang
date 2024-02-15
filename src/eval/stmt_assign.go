@@ -121,15 +121,17 @@ func (e *Eval) EvalAssignStmtX(n *node.AssignStmt, assignee *node.Assignee, valu
 					// following is not possible because ref syntax
 					// foo(&x) will let set val not possible
 					// e.objTable.Set(lastVar.Name.Value, cons(v))
-					v = e.NormaliseWithType(o.Type, v)
 					e.TypeCheckOrPanic(o.Type, v)
+					v = e.NormaliseWithType(o.Type, v)
 					o.SetValue(v)
 				} else {
 					typeV := assignee.Type
-					if typeV == nil {
-						typeV = e.AutoType(typeV)
+					if typeV != nil {
+						e.TypeCheckOrPanic(typeV, v)
+						v = e.NormaliseWithType(typeV, v)
+					} else {
+						typeV = e.AutoType(v)
 					}
-					v = e.NormaliseWithType(typeV, v)
 					e.objTable.SetAtTop(lastVar.Name.Value, cons(v).WithType(typeV))
 				}
 			} else {
