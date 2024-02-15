@@ -10,13 +10,13 @@
 	<body onload="init()" style="margin-top: 0;">
 		<div style="display: flex; gap:12px; align-items: center; flex-wrap: wrap;">
 			<h1>The <font style="font-style: italic;">K Language</font> Playground</h1>
+			<p id="loadStatusLbl">Unknwon</p>
 			<button id="runCodeBtn">Run</button>
 		</div>
 		<textarea id="codeTxt" style="width: 100%; height: 50vh;"></textarea>
 		
 
 		<pre id="codeResult"></pre>
-
 
 		<hr style="width: 100%;">
 		<div style="display: flex; align-items:bas; gap: 10px; flex-wrap: wrap;">
@@ -28,20 +28,32 @@
 		<script>
 			const go = new Go();
 			let loaded = false;
+
+			function status(v) {
+				document.getElementById("loadStatusLbl").innerHTML = v
+			}
 			function init(){
             	document.getElementById("runCodeBtn").onclick = runCodeEvent;
 				document.getElementById("codeTxt").value = 'println("Hello World!")'
+				status('Loading')
+				WebAssembly.instantiateStreaming(fetch("core.wasm"), go.importObject).then((result) => {
+					go.run(result.instance);
+					status('Ready')
+					loaded = true
+				}).catch((e) => {
+					document.getElementById('codeResult').innerHTML = "LOADER FATAL:\n"+e;
+					status('FATAL')
+				});
         	}
 
 			function runCodeEvent() {
-				WebAssembly.instantiateStreaming(fetch("interpreter.wasm"), go.importObject).then((result) => {
-					go.run(result.instance);
-					const codeTxt = document.getElementById("codeTxt").value
-					const codeR = runCodeX(codeTxt);
-			    	document.getElementById('codeResult').innerHTML = codeR;
-				}).catch((e) => {
-					document.getElementById('codeResult').innerHTML = "RCE FATAL:\n"+e;
-				});
+				if (!loaded) {
+					document.getElementById('codeResult').innerHTML = 'Core Language Not Loaded'
+					return
+				}
+				const codeTxt = document.getElementById("codeTxt").value
+				const codeR = runCodeX(codeTxt);
+			    document.getElementById('codeResult').innerHTML = codeR;
 			}
 		</script>
 	</body>

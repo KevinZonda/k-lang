@@ -9,5 +9,5 @@ $flag = "-ldflags=`"$flag`""
 
 echo $flag
 $Env:GOOS = "js"; $Env:GOARCH = "wasm"
-go build -v $flag -o ../playground/interpreter.wasm main/wasm/main_wasm.go
+go build -v $flag -o ../playground/core.wasm main/wasm/main_wasm.go
 cd ..
