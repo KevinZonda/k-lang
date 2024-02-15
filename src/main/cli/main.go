@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/buildconst"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/cli/funcs"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/cli/shared"
 	"os"
@@ -34,6 +35,8 @@ func main() {
 		funcs.Format(args.GetStrOr(0, shared.Input))
 	case "jupyter":
 		funcs.JupyterKernel(args.GetStrOr(0, nil))
+	case "version", "info":
+		fmt.Println(buildconst.Msg())
 	default:
 		if len(args) == 0 {
 			funcs.Run(os.Args[1])

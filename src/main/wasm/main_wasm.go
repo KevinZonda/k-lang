@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/buildconst"
 	"strconv"
 	"strings"
 	"syscall/js"
@@ -15,7 +16,12 @@ func main() {
 	c := make(chan struct{}, 0)
 	js.Global().Set("runCodeX", js.FuncOf(RunCodeX))
 	js.Global().Set("fmtCodeX", js.FuncOf(FmtCode))
+	js.Global().Set("infoX", js.FuncOf(InfoX))
 	<-c
+}
+
+func InfoX(this js.Value, args []js.Value) any {
+	return js.ValueOf(buildconst.Msg())
 }
 
 func RunCodeX(this js.Value, args []js.Value) any {
