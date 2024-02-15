@@ -43,6 +43,15 @@ else
 	./scripts/gox.sh
 endif
 
+wasm:
+ifeq ($(OS),Windows_NT)
+	@echo '=== Source Code Builder X ==='
+	.\scripts\wasm.ps1
+else
+	echo '=== Source Code Builder X ==='
+	./scripts/wasm.sh
+endif
+
 tidy:
 ifeq ($(OS),Windows_NT)
 	@echo '=== Tidy ==='
