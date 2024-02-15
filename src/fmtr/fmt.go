@@ -69,7 +69,7 @@ func Fmt(code string) (string, []parserHelper.CodeError) {
 			ident++
 		case parser.V2LexerRBrack:
 			if !sb.EndsWith("\n") && !sb.EndsWithSpaces() {
-				sb.WriteString("\n")
+				sb.WriteString("\n}")
 				ident--
 				continue
 			}
