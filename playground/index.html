@@ -6,7 +6,12 @@
 		<meta charset='utf-8'>
 		<title>K Language Playground - The K Programming Language</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
+        <script language="javascript" type="text/javascript" src="syntax.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css"></link>
 	</head>
+
 	<body onload="init()" style="margin-top: 0;">
 		<div style="display: flex; gap:12px; align-items: center; flex-wrap: wrap;">
 			<h1 style="margin-block: 0;">The <font style="font-style: italic;">K Language</font> Playground</h1>
@@ -18,9 +23,11 @@
 				<option value="loop">Loop</option>
 				<option value="fib">Fib</option>
 			</select>
-			<pre style="margin: 0;" id="infoTxt"></pre>
+			<pre style="margin: 0; text-wrap: wrap;" id="infoTxt"></pre>
 		</div>
-		<textarea id="codeTxt" style="width: 100%; height: 50vh; font-family: monospace;"></textarea>
+        <div style="border:1px solid black;">
+		    <textarea id="codeTxt" style="width: 100%; height: 50vh; font-family: monospace;"></textarea>
+        </div>
 		
 
 		<pre id="codeResult"></pre>
@@ -36,10 +43,18 @@
 			const go = new Go();
 			let loaded = false;
 
+            const editor = CodeMirror.fromTextArea(document.getElementById('codeTxt'), {
+                lineNumbers: true,
+                mode: 'text/x-k',
+                theme: 'default',
+                indentUnit: 4,
+            });
+
 			function status(v) {
 				document.getElementById("loadStatusLbl").innerHTML = v
 			}
 			function init(){
+                
             	document.getElementById("runCodeBtn").onclick = runCodeEvent;
 				setCodeTxt('println("Hello World!")')
 				document.getElementById("fmtBtn").onclick = fmt
@@ -57,7 +72,8 @@
         	}
 
 			function setCodeTxt(v) {
-				document.getElementById("codeTxt").value = v
+				// document.getElementById("codeTxt").innerHTML = v
+                editor.setValue(v)
 			}
 
 			function fmt() {
@@ -105,7 +121,7 @@ println(fib(5))`)
 				}
 				status('Running')
 				document.getElementById('codeResult').innerHTML = '';
-				const codeTxt = document.getElementById("codeTxt").value
+				const codeTxt = editor.getValue()
 				const codeR = runCodeX(codeTxt);
                 status('Ready')
 			    document.getElementById('codeResult').innerHTML = codeR;
