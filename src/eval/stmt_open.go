@@ -38,6 +38,16 @@ func (e *Eval) findFile(s string) (abs string, ok bool) {
 	return "", false
 }
 
+func (e *Eval) loadBuiltInFeature(name string) bool {
+	switch name {
+	case "feat/staticType":
+		e.FeatStaticType = true
+		return true
+	default:
+		return false
+	}
+}
+
 func (e *Eval) loadBuiltInLibrary(name, as string) (ok bool) {
 	lib := builtin.GetLibrary(name)
 	if lib == nil {
@@ -53,6 +63,11 @@ func (e *Eval) loadBuiltInLibrary(name, as string) (ok bool) {
 
 func (e *Eval) EvalOpenStmt(n *node.OpenStmt) {
 	e.currentToken = n.GetToken()
+
+	if e.loadBuiltInFeature(n.Path) {
+		return
+	}
+
 	if e.loadBuiltInLibrary(n.Path, n.As) {
 		return
 	}

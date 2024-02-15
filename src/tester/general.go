@@ -58,6 +58,25 @@ func GeneralTest(allowPanic bool, ts *testing.T, code, expected string) {
 	}
 }
 
+func ExpectPanic(ts *testing.T, code string, expected func(exp string) bool) {
+	ast, errs := parserHelper.Ast(code)
+	if len(errs) > 0 {
+		ts.Fatal(errs)
+		return
+	}
+	e := eval.New(ast, "")
+	rst := e.DoSafely()
+	if !rst.IsPanic {
+		ts.Fatal("NOT PANIC")
+		return
+	}
+	if !expected(rst.PanicMsg) {
+		ts.Fatalf("got %s", rst.PanicMsg)
+		return
+	}
+
+}
+
 func GeneralTestLambda(allowPanic bool, ts *testing.T, code string, expected func(string) bool) {
 	op := Stdout(allowPanic, func() {
 		ast, errs := parserHelper.Ast(code)

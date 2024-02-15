@@ -21,7 +21,24 @@ type Object struct {
 	Kind Kind
 	Val  any
 	// TODO: Type
-	Ref *Object
+	Ref  *Object
+	Type *node.Type
+}
+
+func (o *Object) WithType(t *node.Type) *Object {
+	o.Type = t
+	return o
+}
+
+func (o *Object) AutoType() *Object {
+	if o.Type != nil || o.Ref != nil {
+		return o
+	}
+	if !o.Is(Value) {
+		return o
+	}
+	// TODO:
+	return o
 }
 
 func (o *Object) Value() any {
@@ -44,6 +61,10 @@ func (o *Object) CreateRef() *Object {
 		Kind: o.Kind,
 		Ref:  o,
 	}
+}
+
+func (o *Object) GetType() *node.Type {
+	return o.Type
 }
 
 type Kind string

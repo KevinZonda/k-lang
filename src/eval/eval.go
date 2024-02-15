@@ -18,6 +18,8 @@ type Eval struct {
 	loopLvl      int
 	currentToken token.Token
 	builtin      builtin.BuiltIn
+
+	FeatStaticType bool
 }
 
 func (e *Eval) SetPath(path string) {

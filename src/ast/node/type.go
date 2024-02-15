@@ -11,3 +11,26 @@ type Type struct {
 	Func     bool
 	Nullable bool
 }
+
+func (t *Type) CodeName() string {
+	tail := ""
+	if t.Nullable {
+		tail = "?"
+	}
+	if t.Func {
+		return "fn" + tail
+	}
+	if t.Array {
+		return "any[]" + tail
+	}
+	if t.Map {
+		return "map" + tail
+	}
+	tN := ""
+	if t.Package != "" {
+		tN += t.Package + "."
+	}
+	tN += t.Name
+	return tN + tail
+
+}
