@@ -2,6 +2,7 @@ package builtin
 
 import (
 	"fmt"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	"reflect"
 )
 
@@ -22,8 +23,35 @@ func (b BuiltIn) Println(v ...any) {
 }
 
 func TypeOf(v any) string {
-	if k, ok := v.(ITypeOf); ok {
-		return k.TypeOf()
+	switch v.(type) {
+	case obj.ILibrary:
+		return "lib"
+	case int:
+		return "int"
+	case float64:
+		return "num"
+	case string:
+		return "string"
+	case bool:
+		return "bool"
+	case []any:
+		return "array"
+	case map[any]any:
+		return "map"
+	case *obj.Object:
+		if v.(*obj.Object).Is(obj.Func, obj.Lambda) {
+			return "fn"
+		}
+		vT := v.(*obj.Object)
+		if v.(*obj.Object).Is(obj.Struct) {
+			return TypeOf(vT.ToStruct())
+		}
+		if vT.Type != nil {
+			return v.(*obj.Object).Type.CodeName()
+		}
+		return TypeOf(vT.Value())
+	case *obj.StructField:
+		return v.(*obj.StructField).TypeAs.Name
 	}
 	return reflect.TypeOf(v).String()
 }

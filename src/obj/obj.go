@@ -96,10 +96,6 @@ func (o *Object) String() string {
 	return sb.String()
 }
 
-func (o *Object) TypeOf() string {
-	return string(o.Kind)
-}
-
 func NewObj(k Kind, val any) *Object {
 	return &Object{Kind: k, Val: val}
 }

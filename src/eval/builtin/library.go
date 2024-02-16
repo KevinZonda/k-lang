@@ -7,10 +7,6 @@ import (
 
 var libMap = map[string]obj.ILibrary{}
 
-type ITypeOf interface {
-	TypeOf() string
-}
-
 func GetLibrary(name string) obj.ILibrary {
 	if lib, ok := libMap[name]; ok {
 		return lib
