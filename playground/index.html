@@ -18,6 +18,7 @@
 			<p style="margin-block: 0;;" id="loadStatusLbl">Unknwon</p>
 			<button id="runCodeBtn">Run</button>
 			<button id="fmtBtn">Format</button>
+            <button id="reloadCoreBtn">Reload Core</button>
 			<select id="sampleCodeSelect">
 				<option value="helloworld">HelloWorld</option>
 				<option value="loop">Loop</option>
@@ -54,12 +55,16 @@
 				document.getElementById("loadStatusLbl").innerHTML = v
 			}
 			function init(){
-                
             	document.getElementById("runCodeBtn").onclick = runCodeEvent;
 				setCodeTxt('println("Hello World!")')
 				document.getElementById("fmtBtn").onclick = fmt
+                document.getElementById("reloadCoreBtn").onclick = loadCore
 				document.getElementById("sampleCodeSelect").onchange = sampleCode
-				status('Loading')
+				loadCore()
+        	}
+            
+            function loadCore() {
+                status('Loading')
 				WebAssembly.instantiateStreaming(fetch("core.wasm"), go.importObject).then((result) => {
 					go.run(result.instance);
 					status('Ready')
@@ -69,7 +74,7 @@
 					document.getElementById('codeResult').innerHTML = "LOADER FATAL:\n"+e;
 					status('FATAL')
 				});
-        	}
+            }
 
 			function setCodeTxt(v) {
 				// document.getElementById("codeTxt").innerHTML = v
