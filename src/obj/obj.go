@@ -8,7 +8,12 @@ import (
 )
 
 type ILibrary interface {
-	FuncCall(b BuiltInInterface, name string, args []any) any
+	FuncCall(b BuiltInInterface, name string, args []any) ILibraryCall
+}
+
+type ILibraryCall interface {
+	HasValue() bool
+	Value() any
 }
 
 type BuiltInInterface interface {

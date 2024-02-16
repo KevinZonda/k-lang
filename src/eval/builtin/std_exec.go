@@ -12,7 +12,7 @@ type StdExecLib struct{}
 func NewStdExecLib() *StdExecLib {
 	return &StdExecLib{}
 }
-func (s *StdExecLib) FuncCall(b obj.BuiltInInterface, caller string, args []any) any {
+func (s *StdExecLib) FuncCall(b obj.BuiltInInterface, caller string, args []any) obj.ILibraryCall {
 	switch caller {
 	case "cmd":
 		var _args []string
@@ -30,7 +30,7 @@ func (s *StdExecLib) FuncCall(b obj.BuiltInInterface, caller string, args []any)
 			}
 			panic(err)
 		}
-		return string(out)
+		return resultVal(string(out))
 	}
 	panic("Unknown function: " + caller)
 }

@@ -77,7 +77,7 @@ func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) ExprRe
 		return scopeT.EvalFuncCall(funcCall)
 	case obj.ILibrary:
 		v := scopeT.FuncCall(e.builtin, _fc.Caller.Value, e.evalExprs(_fc.Args...))
-		return exprVal(v)
+		return ExprResult{HasValue: v.HasValue(), Value: v.Value()}
 	case *obj.StructField:
 		if scopeT.ParentEval != nil && scopeT.ParentEval != e {
 			if strings.HasPrefix(funcCall.Caller.Value, "_") {

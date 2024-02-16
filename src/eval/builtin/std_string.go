@@ -12,23 +12,23 @@ func NewStdStringLib() *StdStringLib {
 	return &StdStringLib{}
 }
 
-func (s *StdStringLib) FuncCall(b obj.BuiltInInterface, caller string, args []any) any {
+func (s *StdStringLib) FuncCall(b obj.BuiltInInterface, caller string, args []any) obj.ILibraryCall {
 	switch caller {
 	case "len":
 		ensureArgsLen(args, 1)
-		return len([]rune(args[0].(string)))
-	case "fromAsci":
+		return resultVal(len([]rune(args[0].(string))))
+	case "fromAscii":
 		ensureArgsLen(args, 1)
-		return string(args[0].(int))
+		return resultVal(string(args[0].(rune)))
 	case "trim":
 		ensureArgsLen(args, 1)
-		return strings.TrimSpace(args[0].(string))
+		return resultVal(strings.TrimSpace(args[0].(string)))
 	case "trimLeft":
 		ensureArgsLen(args, 1)
-		return strings.TrimLeft(args[0].(string), " \t\n\r")
+		return resultVal(strings.TrimLeft(args[0].(string), " \t\n\r"))
 	case "trimRight":
 		ensureArgsLen(args, 1)
-		return strings.TrimRight(args[0].(string), " \t\n\r")
+		return resultVal(strings.TrimRight(args[0].(string), " \t\n\r"))
 	case "split":
 		ensureArgsLen(args, 2)
 		sps := strings.Split(args[0].(string), args[1].(string))
@@ -36,21 +36,21 @@ func (s *StdStringLib) FuncCall(b obj.BuiltInInterface, caller string, args []an
 		for _, sp := range sps {
 			res = append(res, sp)
 		}
-		return res
+		return resultVal(res)
 	case "int":
 		ensureArgsLen(args, 1)
 		i, e := strconv.ParseInt(args[0].(string), 10, 64)
 		if e != nil {
 			panic(e)
 		}
-		return int(i)
+		return resultVal(int(i))
 	case "float":
 		ensureArgsLen(args, 1)
 		f, e := strconv.ParseFloat(args[0].(string), 64)
 		if e != nil {
 			panic(e)
 		}
-		return f
+		return resultVal(f)
 	}
 	panic("Unknown function: " + caller)
 }

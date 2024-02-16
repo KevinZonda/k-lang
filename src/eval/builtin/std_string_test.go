@@ -22,7 +22,7 @@ println(z)
 `
 	expected := `int
 128
-float64
+num
 128
 128.0    
   128.0
