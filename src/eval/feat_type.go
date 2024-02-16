@@ -8,7 +8,7 @@ import (
 )
 
 func (e *Eval) TypeCheck(t *node.Type, v any) bool {
-	if t == nil || !e.FeatStaticType {
+	if t == nil {
 		return true
 	}
 	if v == nil {
@@ -64,7 +64,8 @@ func (e *Eval) NormaliseWithType(t *node.Type, v any) any {
 		case int:
 			return float64(vT)
 		default:
-			panic("Not Possible Type Transformation")
+			return v
+			//panic("Not Possible Type Transformation")
 		}
 	}
 	return v

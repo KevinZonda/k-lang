@@ -55,7 +55,7 @@ func executeCode(code string) string {
 	e.SetStdErr(stdout)
 	rst := e.DoSafely()
 	if rst.IsPanic {
-		return rst.PanicMsg
+		rst.PrintPanic()
 	}
 	return stdout.String()
 }

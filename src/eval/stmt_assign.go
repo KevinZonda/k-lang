@@ -121,7 +121,9 @@ func (e *Eval) EvalAssignStmtX(n *node.AssignStmt, assignee *node.Assignee, valu
 					// following is not possible because ref syntax
 					// foo(&x) will let set val not possible
 					// e.objTable.Set(lastVar.Name.Value, cons(v))
-					e.TypeCheckOrPanic(o.Type, v)
+					if e.FeatStaticType {
+						e.TypeCheckOrPanic(o.Type, v)
+					}
 					v = e.NormaliseWithType(o.Type, v)
 					o.SetValue(v)
 				} else {
@@ -137,7 +139,9 @@ func (e *Eval) EvalAssignStmtX(n *node.AssignStmt, assignee *node.Assignee, valu
 			} else {
 				o, ok := fromT.objTable.Bottom().Get(lastVar.Name.Value)
 				if ok {
-					e.TypeCheckOrPanic(o.Type, v)
+					if e.FeatStaticType {
+						e.TypeCheckOrPanic(o.Type, v)
+					}
 					o.SetValue(v)
 				} else {
 					// f.objTable.SetAtTop(lastVar.Name.Value, cons(v))
