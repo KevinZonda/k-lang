@@ -5,7 +5,6 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	"reflect"
-	"strconv"
 	"strings"
 )
 
@@ -119,61 +118,10 @@ func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) any {
 		return e.builtInString(scopeT, _fc)
 	case []any:
 		return e.builtInArray(scopeT, _fc)
+	case map[any]any:
+		return e.builtInMap(scopeT, _fc)
 	default:
 		panic("EvalFuncCallAfterScope Not Implemented" + reflect.TypeOf(scope).String())
 	}
 	return nil
-}
-
-func (e *Eval) builtInString(recv string, fc node.FuncCall) any {
-	args := e.evalExprs(fc.Args...)
-	switch fc.Caller.Value {
-	case "replace":
-		return strings.ReplaceAll(recv, args[0].(string), args[1].(string))
-	case "trim":
-		return strings.TrimSpace(recv)
-	case "to_int":
-		i, err := strconv.Atoi(recv)
-		if err != nil {
-			panic("not valid int")
-		} else {
-			return i
-		}
-	case "to_num":
-		f, err := strconv.ParseFloat(recv, 64)
-		if err != nil {
-			panic("not valid number")
-		}
-		return f
-	case "len":
-		return len([]rune(recv))
-	}
-	panic("Unknown built-in string func: " + fc.Caller.Value)
-}
-
-func (e *Eval) builtInArray(recv []any, fc node.FuncCall) any {
-	args := e.evalExprs(fc.Args...)
-	switch fc.Caller.Value {
-	case "append":
-		return append(recv, args[0])
-	case "pop":
-		if len(recv) == 0 {
-			return []any{recv, nil}
-		}
-		fst := recv[0]
-		return []any{recv[1:], fst}
-	case "join":
-		sep := args[0].(string)
-		sb := strings.Builder{}
-		for i, v := range recv {
-			if i != 0 {
-				sb.WriteString(sep)
-			}
-			sb.WriteString(fmt.Sprint(v))
-		}
-		return sb.String()
-	case "len":
-		return len(recv)
-	}
-	panic("Unknown built-in string func: " + fc.Caller.Value)
 }
