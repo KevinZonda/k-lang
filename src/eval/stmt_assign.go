@@ -50,17 +50,17 @@ func (e *Eval) EvalAssignStmt(n *node.AssignStmt) {
 	if len(n.Assignee) == 1 {
 		var v any
 		if n.Assignee[0].Ref {
-			v = e.evalExpr(n.Value, true)
+			v = e.evalExpr(n.Value, true).EnsureValue()
 			if vT, ok := v.(*obj.Object); ok {
 				v = vT.CreateRef()
 			}
 		} else {
-			v = clone(e.EvalExpr(n.Value))
+			v = clone(e.EvalExpr(n.Value).EnsureValue())
 		}
 		e.EvalAssignStmtX(n, n.Assignee[0], v)
 		return
 	}
-	vals, ok := e.EvalExpr(n.Value).([]any)
+	vals, ok := e.EvalExpr(n.Value).EnsureValue().([]any)
 	if !ok {
 		panic("eval expr not supported type: " + reflect.TypeOf(n.Value).String())
 	}
@@ -215,7 +215,7 @@ func (e *Eval) evalObjByIndex(from any, indexes []node.Expr) any {
 
 	for _, idxExpr := range indexes {
 		from, _ = e.unboxObj(from)
-		idx := e.EvalExpr(idxExpr)
+		idx := e.EvalExpr(idxExpr).EnsureValue()
 		switch fromT := from.(type) {
 		case []any:
 			from = fromT[idx.(int)]
@@ -229,7 +229,7 @@ func (e *Eval) evalObjByIndex(from any, indexes []node.Expr) any {
 }
 
 func (e *Eval) assignObjIndexValue(root any, index node.Expr, v any) {
-	lastIndex := e.EvalExpr(index)
+	lastIndex := e.EvalExpr(index).EnsureValue()
 	switch rT := root.(type) {
 	case []any:
 		if rT != nil {

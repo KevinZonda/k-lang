@@ -7,8 +7,8 @@ import (
 )
 
 func (e *Eval) EvalIndexExpr(n *node.IndexExpr) any {
-	left := e.EvalExpr(n.Left)
-	idx := e.EvalExpr(n.Index)
+	left := e.EvalExpr(n.Left).EnsureValue()
+	idx := e.EvalExpr(n.Index).EnsureValue()
 	e.currentToken = n.GetToken()
 	switch leftT := left.(type) {
 	case string:

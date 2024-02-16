@@ -69,13 +69,8 @@ func (e *Eval) runAst(ast tree.Ast, breaks ...string) DetailedRunResult {
 		case node.Expr:
 			exprR := e.EvalExpr(nT)
 			if idx == len(e.ast)-1 {
-				switch n.(type) {
-				case *node.AssignStmt:
-					result.IsLastExpr = false
-				default:
-					result.IsLastExpr = true
-					result.LastExprVal = exprR
-				}
+				result.IsLastExpr = exprR.HasValue
+				result.LastExprVal = exprR.Value
 			}
 		case node.Stmt:
 			e.EvalStmt(nT)

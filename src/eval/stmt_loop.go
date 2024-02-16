@@ -64,7 +64,7 @@ func (e *Eval) EvalIterStyleForStmt(styleFor *node.IterStyleFor) {
 	e.frameStart(false)
 	defer e.frameEnd()
 
-	iters := e.EvalExpr(styleFor.Iterator)
+	iters := e.EvalExpr(styleFor.Iterator).EnsureValue()
 	switch itersT := iters.(type) {
 	case string:
 		// str to []rune to []string
@@ -93,7 +93,7 @@ func (e *Eval) EvalWhileForStmt(n *node.WhileStyleFor) {
 	e.loopLvl++
 	for {
 		if n.ConditionExpr != nil {
-			rst := e.EvalExpr(n.ConditionExpr).(bool)
+			rst := e.EvalExpr(n.ConditionExpr).EnsureValue().(bool)
 			if !rst {
 				e.loopLvl--
 				return
@@ -132,7 +132,7 @@ func (e *Eval) EvalCStyleFrStmt(n *node.CStyleFor) {
 	}
 	for {
 		if n.ConditionExpr != nil {
-			rst := e.EvalExpr(n.ConditionExpr).(bool)
+			rst := e.EvalExpr(n.ConditionExpr).EnsureValue().(bool)
 			if !rst {
 				e.loopLvl--
 				return

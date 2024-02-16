@@ -8,13 +8,13 @@ import (
 	"strings"
 )
 
-func (e *Eval) EvalDotExpr(n *node.DotExpr) any {
+func (e *Eval) EvalDotExpr(n *node.DotExpr) ExprResult {
 	var left any
 
 	if lfc, ok := n.Left.(*node.FuncCall); ok {
-		left = e.EvalFuncCall(lfc)
+		left = e.EvalFuncCall(lfc).EnsureValue()
 	} else {
-		left = e.EvalExpr(n.Left)
+		left = e.EvalExpr(n.Left).EnsureValue()
 	}
 
 	e.currentToken = n.GetToken()
@@ -26,13 +26,13 @@ func (e *Eval) EvalDotExpr(n *node.DotExpr) any {
 	}
 }
 
-func (e *Eval) EvalPropertyAfterScope(scope any, property node.Expr) any {
+func (e *Eval) EvalPropertyAfterScope(scope any, property node.Expr) ExprResult {
 	var actualPpt string
 	switch properT := property.(type) {
 	case *node.Identifier:
 		actualPpt = properT.Value
 	case *node.DotExpr:
-		actualPpt = e.EvalDotExpr(properT).(string)
+		actualPpt = e.EvalDotExpr(properT).EnsureValue().(string)
 	default:
 		panic("Not Implemented EvalPropertyAfterScope" + reflect.TypeOf(property).String())
 	}
@@ -45,27 +45,23 @@ func (e *Eval) EvalPropertyAfterScope(scope any, property node.Expr) any {
 			}
 		}
 		res, ok := leftT.Fields.Get(actualPpt)
-		if !ok {
-			res = nil
-		}
-		return res
+		return ExprResult{HasValue: ok, Value: res}
 	case *Eval:
 		if leftT != e && strings.HasPrefix(actualPpt, "_") {
 			panic("No Access To Private Function: " + actualPpt)
 		}
 		if o, ok := leftT.objTable.Bottom().Get(actualPpt); ok {
 			v, _ := leftT.unboxObj(o)
-			return v
+			return ExprResult{HasValue: true, Value: v}
 		}
 		panic("No Property Found: " + actualPpt)
 	default:
 		panic("Not Implemented EvalPropertyAfterScope " + reflect.TypeOf(scope).String())
 	}
-	return nil
-
+	return ExprResult{HasValue: false}
 }
 
-func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) any {
+func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) ExprResult {
 	var _fc node.FuncCall
 	_fc.Caller = funcCall.Caller
 	_fc.Args = funcCall.Args
@@ -80,7 +76,8 @@ func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) any {
 
 		return scopeT.EvalFuncCall(funcCall)
 	case obj.ILibrary:
-		return scopeT.FuncCall(e.builtin, _fc.Caller.Value, e.evalExprs(_fc.Args...))
+		v := scopeT.FuncCall(e.builtin, _fc.Caller.Value, e.evalExprs(_fc.Args...))
+		return ExprResult{HasValue: true, Value: v}
 	case *obj.StructField:
 		if scopeT.ParentEval != nil && scopeT.ParentEval != e {
 			if strings.HasPrefix(funcCall.Caller.Value, "_") {
@@ -115,13 +112,16 @@ func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) any {
 		})
 	// TODO: More situation!
 	case string:
-		return e.builtInString(scopeT, _fc)
+		v := e.builtInString(scopeT, _fc)
+		return ExprResult{HasValue: v != nil, Value: v}
 	case []any:
-		return e.builtInArray(scopeT, _fc)
+		v := e.builtInArray(scopeT, _fc)
+		return ExprResult{HasValue: v != nil, Value: v}
 	case map[any]any:
-		return e.builtInMap(scopeT, _fc)
+		v := e.builtInMap(scopeT, _fc)
+		return ExprResult{HasValue: v != nil, Value: v}
 	default:
 		panic("EvalFuncCallAfterScope Not Implemented" + reflect.TypeOf(scope).String())
 	}
-	return nil
+	return ExprResult{HasValue: false}
 }

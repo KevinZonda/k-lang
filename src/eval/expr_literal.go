@@ -55,7 +55,7 @@ func (e *Eval) EvalArrayLiteral(n *node.ArrayLiteral) []any {
 	e.currentToken = n.GetToken()
 	var arr []any
 	for _, v := range n.Value {
-		arr = append(arr, e.EvalExpr(v))
+		arr = append(arr, e.EvalExpr(v).EnsureValue())
 	}
 	return arr
 }
@@ -64,7 +64,7 @@ func (e *Eval) EvalMapLiteral(n *node.MapLiteral) map[any]any {
 	e.currentToken = n.GetToken()
 	var m = make(map[any]any)
 	for _, v := range n.Value {
-		m[e.EvalExpr(v.Key)] = e.EvalExpr(v.Value)
+		m[e.EvalExpr(v.Key).EnsureValue()] = e.EvalExpr(v.Value).EnsureValue()
 	}
 	return m
 }
@@ -142,7 +142,7 @@ func getVarDeclareValue(e *Eval, varDeclare *node.Declare) any {
 		return varDeclare.Func
 	}
 	if varDeclare.Value != nil {
-		return e.EvalExpr(varDeclare.Value)
+		return e.EvalExpr(varDeclare.Value).EnsureValue()
 	}
 	return e.getZeroValue(varDeclare.Type)
 }
@@ -160,7 +160,7 @@ func (e *Eval) EvalStructLiteral(n *node.StructLiteral) *obj.StructField {
 	}
 
 	for pair := n.Body.Oldest(); pair != nil; pair = pair.Next() {
-		sf.Fields.Set(pair.Key, e.EvalExpr(pair.Value))
+		sf.Fields.Set(pair.Key, e.EvalExpr(pair.Value).EnsureValue())
 	}
 	return sf
 }

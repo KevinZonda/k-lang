@@ -10,12 +10,12 @@ import (
 func (e *Eval) evalExprs(exprs ...node.Expr) []any {
 	var ret []any
 	for _, expr := range exprs {
-		ret = append(ret, e.EvalExpr(expr))
+		ret = append(ret, e.EvalExpr(expr).EnsureValue())
 	}
 	return ret
 }
 
-func (e *Eval) EvalFuncCall(fc *node.FuncCall) any {
+func (e *Eval) EvalFuncCall(fc *node.FuncCall) ExprResult {
 	e.currentToken = fc.GetToken()
 	// Eval Args
 
@@ -48,7 +48,7 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) any {
 	//return nil
 }
 
-func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, onAfterFrameStart func()) any {
+func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, onAfterFrameStart func()) ExprResult {
 	e.currentToken = fn.GetToken()
 	topFrame := e.frameStart(false)
 	if onAfterFrameStart != nil {
@@ -57,12 +57,12 @@ func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, onAfterFrameS
 	for i, funcArg := range fn.Args {
 		var v any = nil
 		if funcArg.Ref {
-			v = e.evalExpr(args[i], true)
+			v = e.evalExpr(args[i], true).EnsureValue()
 			if vT, ok := v.(*obj.Object); ok {
 				v = vT.CreateRef()
 			}
 		} else {
-			v = clone(e.EvalExpr(args[i]))
+			v = clone(e.EvalExpr(args[i]).EnsureValue())
 		}
 		e.TypeCheckOrPanic(funcArg.Type, v)
 		v = e.NormaliseWithType(funcArg.Type, v)
@@ -76,10 +76,7 @@ func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, onAfterFrameS
 	//_ = fe.run()
 	// retV, retOk := fe.objTable.GetAtTop("0")
 	e.frameEnd()
-	if result.HasReturn {
-		return result.ReturnValue
-	}
-	return nil
+	return ExprResult{HasValue: result.HasReturn, Value: result.ReturnValue}
 }
 
 func (e *Eval) Mem() {
@@ -90,11 +87,11 @@ func (e *Eval) MemStr() string {
 	return e.objTable.ToString(e.PtrAddr())
 }
 
-func (e *Eval) EvalBuiltInCall(fc *node.FuncCall, args []any) any {
+func (e *Eval) EvalBuiltInCall(fc *node.FuncCall, args []any) ExprResult {
 	e.currentToken = fc.GetToken()
 	if fc.Caller.Value == "MEM" {
 		e.Mem()
-		return nil
+		return ExprResult{HasValue: false, Value: nil}
 	}
 	fn := e.builtin.Match(fc.Caller.Value)
 	if fn == nil {
@@ -107,10 +104,10 @@ func (e *Eval) EvalBuiltInCall(fc *node.FuncCall, args []any) any {
 	}
 	switch len(ret) {
 	case 1:
-		return ret[0]
+		return ExprResult{HasValue: true, Value: ret[0]}
 	case 0:
-		return nil
+		return ExprResult{HasValue: false, Value: nil}
 	default:
-		return ret
+		return ExprResult{HasValue: true, Value: ret}
 	}
 }

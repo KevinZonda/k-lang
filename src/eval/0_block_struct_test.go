@@ -14,7 +14,7 @@ x := struct {
 }
 println(x)
 	`
-	tester.GeneralTestX(true, t, src, "colour{red:10, green:20, blue:30}")
+	tester.GeneralTest(true, t, src, "struct {red: 10, green: 20, blue: 30}\n")
 }
 
 func TestEvalStructLiteral2(t *testing.T) {

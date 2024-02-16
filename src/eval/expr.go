@@ -5,50 +5,62 @@ import (
 	"reflect"
 )
 
-func (e *Eval) evalExpr(n node.Expr, keepRef bool) any {
+type ExprResult struct {
+	HasValue bool
+	Value    any
+}
+
+func (r ExprResult) EnsureValue() any {
+	if !r.HasValue {
+		panic("no value")
+	}
+	return r.Value
+}
+
+func (e *Eval) evalExpr(n node.Expr, keepRef bool) ExprResult {
 	e.currentToken = n.GetToken()
 	switch expr := n.(type) {
 	case *node.DotExpr:
 		return e.EvalDotExpr(expr)
 	case *node.BinaryOperExpr:
-		return e.EvalBinOperExpr(expr)
+		return ExprResult{HasValue: true, Value: e.EvalBinOperExpr(expr)}
 	case *node.UnaryOperExpr:
-		return e.EvalUnaryExpr(expr)
+		return ExprResult{HasValue: true, Value: e.EvalUnaryExpr(expr)}
 	case *node.IntLiteral:
-		return e.EvalIntLiteral(expr)
+		return ExprResult{HasValue: true, Value: e.EvalIntLiteral(expr)}
 	case *node.FloatLiteral:
-		return e.EvalFloatLiteral(expr)
+		return ExprResult{HasValue: true, Value: e.EvalFloatLiteral(expr)}
 	case *node.StringLiteral:
-		return e.EvalStringLiteral(expr)
+		return ExprResult{HasValue: true, Value: e.EvalStringLiteral(expr)}
 	case *node.BoolLiteral:
-		return e.EvalBoolLiteral(expr)
+		return ExprResult{HasValue: true, Value: e.EvalBoolLiteral(expr)}
 	case *node.Identifier:
-		return e.EvalIdentifier(expr, keepRef)
+		return ExprResult{HasValue: true, Value: e.EvalIdentifier(expr, keepRef)}
 	case *node.ArrayLiteral:
-		return e.EvalArrayLiteral(expr)
+		return ExprResult{HasValue: true, Value: e.EvalArrayLiteral(expr)}
 	case *node.CommaExpr:
-		return e.EvalCommaExpr(expr)
+		return ExprResult{HasValue: true, Value: e.EvalCommaExpr(expr)}
 	case *node.MapLiteral:
-		return e.EvalMapLiteral(expr)
+		return ExprResult{HasValue: true, Value: e.EvalMapLiteral(expr)}
 	case *node.FuncCall:
 		return e.EvalFuncCall(expr)
 	case *node.LambdaExpr:
-		return e.EvalLambdaExpr(expr)
+		return ExprResult{HasValue: true, Value: e.EvalLambdaExpr(expr)}
 	case *node.AssignStmt:
 		e.EvalAssignStmt(expr)
-		return nil
+		return ExprResult{HasValue: false}
 	case *node.StructLiteral:
-		return e.EvalStructLiteral(expr)
+		return ExprResult{HasValue: true, Value: e.EvalStructLiteral(expr)}
 	case *node.IndexExpr:
-		return e.EvalIndexExpr(expr)
+		return ExprResult{HasValue: true, Value: e.EvalIndexExpr(expr)}
 	case *node.NilLiteral:
-		return nil
+		return ExprResult{HasValue: true, Value: nil}
 	default:
 		panic("not implemented: " + reflect.TypeOf(n).String())
 	}
 
 }
 
-func (e *Eval) EvalExpr(n node.Expr) any {
+func (e *Eval) EvalExpr(n node.Expr) ExprResult {
 	return e.evalExpr(n, false)
 }

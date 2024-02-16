@@ -6,9 +6,9 @@ import (
 
 func (e *Eval) EvalMatchStmt(m *node.MatchStmt) {
 	e.currentToken = m.GetToken()
-	match := e.EvalExpr(m.Match)
+	match := e.EvalExpr(m.Match).EnsureValue()
 	for _, c := range m.Cases {
-		if e.EvalExpr(c.Expr) == match {
+		if e.EvalExpr(c.Expr).EnsureValue() == match {
 			e.EvalCodeBlock(c.Body)
 			return
 		}

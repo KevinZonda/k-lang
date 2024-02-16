@@ -6,8 +6,8 @@ import (
 )
 
 func (e *Eval) EvalBinOperExpr(n *node.BinaryOperExpr) any {
-	left := e.EvalExpr(n.Left)
-	right := e.EvalExpr(n.Right)
+	left := e.EvalExpr(n.Left).EnsureValue()
+	right := e.EvalExpr(n.Right).EnsureValue()
 	e.currentToken = n.GetToken()
 	return binaryOperEval.BinaryOper(n.Token.Kind, left, right)
 }

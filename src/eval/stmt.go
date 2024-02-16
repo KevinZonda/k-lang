@@ -63,7 +63,7 @@ func (e *Eval) EvalReturnStmt(n *node.ReturnStmt) {
 	e.objTable.SetAtTop(reserved.Return, nil)
 	if n.Value != nil {
 		if len(n.Value) == 1 {
-			e.objTable.SetAtTop(reserved.Return, e.EvalExpr(n.Value[0]))
+			e.objTable.SetAtTop(reserved.Return, e.EvalExpr(n.Value[0]).EnsureValue())
 			return
 		}
 		e.objTable.SetAtTop(reserved.Return, e.evalExprs(n.Value...))
