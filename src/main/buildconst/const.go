@@ -3,6 +3,7 @@ package buildconst
 import (
 	"fmt"
 	"runtime"
+	"strings"
 )
 
 const LanguageVersion = "1.0.0"
@@ -13,7 +14,7 @@ var (
 )
 
 func Msg() string {
-	return fmt.Sprintf("K Language %s (%s, %s) %s on %s %s",
+	return fmt.Sprintf("K Language %s (%s, %s) [%s %s (%s)] on %s",
 		LanguageVersion, CommitHash, BuildTime,
-		runtime.Version(), runtime.GOOS, runtime.GOARCH)
+		runtime.Version(), runtime.Compiler, strings.ToUpper(runtime.GOARCH), runtime.GOOS)
 }
