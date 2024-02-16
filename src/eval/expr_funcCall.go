@@ -91,7 +91,7 @@ func (e *Eval) EvalBuiltInCall(fc *node.FuncCall, args []any) ExprResult {
 	e.currentToken = fc.GetToken()
 	if fc.Caller.Value == "MEM" {
 		e.Mem()
-		return ExprResult{HasValue: false, Value: nil}
+		return exprNoVal()
 	}
 	fn := e.builtin.Match(fc.Caller.Value)
 	if fn == nil {
@@ -104,10 +104,10 @@ func (e *Eval) EvalBuiltInCall(fc *node.FuncCall, args []any) ExprResult {
 	}
 	switch len(ret) {
 	case 1:
-		return ExprResult{HasValue: true, Value: ret[0]}
+		return exprVal(ret[0])
 	case 0:
-		return ExprResult{HasValue: false, Value: nil}
+		return exprNoVal()
 	default:
-		return ExprResult{HasValue: true, Value: ret}
+		return exprVal(ret)
 	}
 }

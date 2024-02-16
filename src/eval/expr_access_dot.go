@@ -52,13 +52,13 @@ func (e *Eval) EvalPropertyAfterScope(scope any, property node.Expr) ExprResult 
 		}
 		if o, ok := leftT.objTable.Bottom().Get(actualPpt); ok {
 			v, _ := leftT.unboxObj(o)
-			return ExprResult{HasValue: true, Value: v}
+			return exprVal(v)
 		}
 		panic("No Property Found: " + actualPpt)
 	default:
 		panic("Not Implemented EvalPropertyAfterScope " + reflect.TypeOf(scope).String())
 	}
-	return ExprResult{HasValue: false}
+	return exprNoVal()
 }
 
 func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) ExprResult {
@@ -77,7 +77,7 @@ func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) ExprRe
 		return scopeT.EvalFuncCall(funcCall)
 	case obj.ILibrary:
 		v := scopeT.FuncCall(e.builtin, _fc.Caller.Value, e.evalExprs(_fc.Args...))
-		return ExprResult{HasValue: true, Value: v}
+		return exprVal(v)
 	case *obj.StructField:
 		if scopeT.ParentEval != nil && scopeT.ParentEval != e {
 			if strings.HasPrefix(funcCall.Caller.Value, "_") {
@@ -123,5 +123,5 @@ func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) ExprRe
 	default:
 		panic("EvalFuncCallAfterScope Not Implemented" + reflect.TypeOf(scope).String())
 	}
-	return ExprResult{HasValue: false}
+	return exprNoVal()
 }
