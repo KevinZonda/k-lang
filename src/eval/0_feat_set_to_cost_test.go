@@ -8,30 +8,24 @@ import (
 func TestSetToConst(t *testing.T) {
 	code := `
 struct color {
-    r int = 19
+    int r = 19
 }
-color := color{}
-print(color.r)
+c := color{}
+print(c.r)
 `
-	tester.GeneralTestX(false, t, code, "19")
+	tester.GeneralTest(false, t, code, "19")
 }
 
 func TestSetToConst2(t *testing.T) {
-	defer func() {
-		if r := recover(); r != nil {
-			x := r.(string)
-			if x != "cannot assign to color" {
-				t.Fail()
-			}
-		}
-	}()
 	code := `
 struct color {
-    r int = 19
+    int r = 19
 }
 color = color{}
 print(color.r)
 `
 
-	tester.GeneralTestX(true, t, code, "19")
+	tester.ExpectPanic(t, code, func(exp string) bool {
+		return exp == "cannot assign to color"
+	})
 }

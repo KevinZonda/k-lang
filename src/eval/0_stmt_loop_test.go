@@ -45,7 +45,7 @@ println(i)
 3, 4 | 3, 5 | 3, 6 | 
 19
 `
-	tester.GeneralTestX(true, ts, code, expected)
+	tester.GeneralTest(true, ts, code, expected)
 }
 
 func TestWhileLoop(ts *testing.T) {

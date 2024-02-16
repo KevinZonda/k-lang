@@ -26,7 +26,7 @@ struct foo {
 x := foo{}
 println(x)
 	`
-	tester.GeneralTestX(true, t, src, "colour{red:10, green:20, blue:30}")
+	tester.GeneralTest(true, t, src, "foo {x: 12, y: true}\n")
 }
 
 func TestEvalStructLiteral3(t *testing.T) {
@@ -42,5 +42,5 @@ struct foo {
 x := foo{}
 x.help()
 	`
-	tester.GeneralTestX(true, t, src, "colour{red:10, green:20, blue:30}")
+	tester.GeneralTest(true, t, src, "hello\n12\n")
 }
