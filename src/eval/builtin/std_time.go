@@ -25,6 +25,7 @@ func (s *StdTimeLib) FuncCall(b obj.BuiltInInterface, caller string, args []any)
 	case "sleep":
 		ensureArgsLen(args, 1)
 		time.Sleep(time.Duration(args[0].(int)) * time.Millisecond)
+		return resultNoVal()
 	}
 	panic("Unknown function: " + caller)
 }

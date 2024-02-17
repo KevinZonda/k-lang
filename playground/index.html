@@ -64,8 +64,10 @@
         	}
             
             function loadCore() {
+				document.getElementById('infoTxt').innerHTML = ''
                 status('Loading')
-				WebAssembly.instantiateStreaming(fetch("core.wasm"), go.importObject).then((result) => {
+				const tail = "?ignore=" +  Math.floor(Math.random() * 10000)
+				WebAssembly.instantiateStreaming(fetch("core.wasm"+tail), go.importObject).then((result) => {
 					go.run(result.instance);
 					status('Ready')
 					loaded = true
@@ -79,6 +81,11 @@
 			function setCodeTxt(v) {
 				// document.getElementById("codeTxt").innerHTML = v
                 editor.setValue(v)
+			}
+
+			async function setResult(v) {
+				document.getElementById('codeResult').innerHTML = v
+				await delay(1)
 			}
 
 			function fmt() {
@@ -119,17 +126,20 @@ println(fib(5))`)
 				}
 			}
 
-			function runCodeEvent() {
+			async function delay(ms) {
+				await new Promise(r => setTimeout(r, ms));
+			}
+
+			async function runCodeEvent() {
 				if (!loaded) {
 					document.getElementById('codeResult').innerHTML = 'Core Language Not Loaded'
 					return
 				}
-				status('Running')
-				document.getElementById('codeResult').innerHTML = '';
 				const codeTxt = editor.getValue()
-				const codeR = runCodeX(codeTxt);
+				status('Running')
+				await setResult('')
+				runCodeStreamX(codeTxt, setResult);
                 status('Ready')
-			    document.getElementById('codeResult').innerHTML = codeR;
 			}
 		</script>
 	</body>
