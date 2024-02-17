@@ -34,3 +34,33 @@ println(x[0])
 `
 	tester.GeneralTest(false, t, code, expected)
 }
+
+func TestAccessByIndexCJK2(t *testing.T) {
+	code := `
+x := "中文测试"
+println(x[0:2])
+`
+	expected := `中文
+`
+	tester.GeneralTest(false, t, code, expected)
+}
+
+func TestAccessByIndexCJK3(t *testing.T) {
+	code := `
+x := "中文测试"
+println(x[2:])
+`
+	expected := `测试
+`
+	tester.GeneralTest(false, t, code, expected)
+}
+
+func TestAccessByIndexCJK4(t *testing.T) {
+	code := `
+x := "中文测试"
+println(x[2:0])
+`
+	expected := `文中
+`
+	tester.GeneralTest(false, t, code, expected)
+}

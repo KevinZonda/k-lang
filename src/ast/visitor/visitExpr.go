@@ -30,9 +30,11 @@ func (v *AntlrVisitor) visitDotExpr(ctx parser.IExprContext) *node.DotExpr {
 
 func (v *AntlrVisitor) visitIndexExpr(ctx parser.IExprContext) *node.IndexExpr {
 	return &node.IndexExpr{
-		Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
-		Left:  v.visitExpr(ctx.GetLHS()),
-		Index: v.visitExpr(ctx.GetIndex()),
+		Token:    token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
+		Left:     v.visitExpr(ctx.GetLHS()),
+		Index:    v.visitExpr(ctx.GetIndex()),
+		EndIndex: v.visitExpr(ctx.GetEndIndex()),
+		Col:      ctx.Col() != nil,
 	}
 }
 

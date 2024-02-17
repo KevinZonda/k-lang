@@ -41,7 +41,7 @@ lambda : Function LParen funcSignArgs RParen type? codeBlock;
 unaryOper : Add | Sub | Not;
 expr
     : LHS=expr Dot RHS=expr
-    | LHS=expr LSquare Index=expr RSquare
+    | LHS=expr LSquare Index=expr Col? EndIndex=expr? RSquare
     | funcCall
     | unaryOper expr
     | LParen expr RParen

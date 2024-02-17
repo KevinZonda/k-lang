@@ -17,9 +17,11 @@ func (a *DotExpr) GetToken() token.Token {
 }
 
 type IndexExpr struct {
-	Token token.Token
-	Left  Expr
-	Index Expr
+	Token    token.Token
+	Left     Expr
+	Index    Expr
+	EndIndex Expr
+	Col      bool
 }
 
 func (a *IndexExpr) expr() {}
