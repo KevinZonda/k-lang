@@ -218,7 +218,7 @@ func (e *Eval) evalObjByIndex(from any, indexes []node.Expr) any {
 		idx := e.EvalExpr(idxExpr).EnsureValue()
 		switch fromT := from.(type) {
 		case []any:
-			from = fromT[idx.(int)]
+			from = fromT[asType[int](idx)]
 		case map[any]any:
 			from = fromT[idx]
 		default:
@@ -233,7 +233,7 @@ func (e *Eval) assignObjIndexValue(root any, index node.Expr, v any) {
 	switch rT := root.(type) {
 	case []any:
 		if rT != nil {
-			rT[lastIndex.(int)] = v
+			rT[asType[int](lastIndex)] = v
 		}
 
 		// Consider we use pointer to modify the value, we are not okay to

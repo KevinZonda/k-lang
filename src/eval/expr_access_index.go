@@ -12,14 +12,14 @@ func (e *Eval) EvalIndexExpr(n *node.IndexExpr) any {
 	e.currentToken = n.GetToken()
 	switch leftT := left.(type) {
 	case string:
-		return string([]rune(leftT)[idx.(int)])
+		return string([]rune(leftT)[asType[int](idx)])
 	case []any:
 		//if idx, ok := idx.(int); ok {
 		//	if idx < 0 || idx >= len(arr) {
 		//	}
 		//}
 		// FIXME: PANIC INFORMATION
-		return leftT[idx.(int)]
+		return leftT[asType[int](idx)]
 	case map[any]any:
 		return leftT[idx]
 	}

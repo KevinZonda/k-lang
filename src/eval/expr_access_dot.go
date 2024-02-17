@@ -32,7 +32,7 @@ func (e *Eval) EvalPropertyAfterScope(scope any, property node.Expr) ExprResult 
 	case *node.Identifier:
 		actualPpt = properT.Value
 	case *node.DotExpr:
-		actualPpt = e.EvalDotExpr(properT).EnsureValue().(string)
+		actualPpt = asType[string](e.EvalDotExpr(properT).EnsureValue())
 	default:
 		panic("Not Implemented EvalPropertyAfterScope" + reflect.TypeOf(property).String())
 	}
