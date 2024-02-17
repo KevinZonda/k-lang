@@ -56,6 +56,7 @@
             }), t.tokenize(e, t);
             if (/[\d\.]/.test(n)) return "." == n ? e.match(/^[0-9]+([eE][\-+]?[0-9]+)?/) : "0" == n ? e.match(/^[xX][0-9a-fA-F]+/) || e.match(/^0[0-7]+/) : e.match(/^[0-9]*\.?[0-9]*([eE][\-+]?[0-9]+)?/), "number";
             if (/[\[\]{}\(\),;\:\.]/.test(n)) return i = n, null;
+            if (e.eat("#")) return e.skipToEnd(), "comment"
             if (c.test(n)) return e.eatWhile(c), "operator";
             e.eatWhile(/[\w\$_\xa1-\uffff]/);
             t = e.current();
