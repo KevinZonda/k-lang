@@ -5,13 +5,14 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/buildconst"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/cli/funcs"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/cli/shared"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/minimalfunc"
 	"os"
 	"strings"
 )
 
 func main() {
 	if len(os.Args) == 1 {
-		(&funcs.Repl{}).Repl("")
+		(&minimalfunc.Repl{}).Repl("")
 		return
 	}
 	// [from] [subCmd] [args...]
@@ -20,11 +21,11 @@ func main() {
 	case "ast":
 		funcs.Ast(args.GetStrOr(0, shared.Input), args.GetStrOr(1, shared.Output))
 	case "repl":
-		(&funcs.Repl{}).Repl(args.GetStrOr(0, shared.Input))
+		(&minimalfunc.Repl{}).Repl(args.GetStrOr(0, shared.Input))
 	case "compile":
 		funcs.Compile(args.GetStrOr(0, shared.Input), args.GetStrOr(1, shared.Output))
 	case "run":
-		funcs.Run(args.GetStrOr(0, shared.Input))
+		minimalfunc.Run(args.GetStrOr(0, shared.Input))
 	case "2ast":
 		funcs.ShowAst(args.GetStrOr(0, shared.Input))
 	case "help":
@@ -39,7 +40,7 @@ func main() {
 		fmt.Println(buildconst.Msg())
 	default:
 		if len(args) == 0 {
-			funcs.Run(os.Args[1])
+			minimalfunc.Run(os.Args[1])
 		} else {
 			fmt.Println("Not recognised command: " + strings.Join(os.Args[1:], " "))
 			fmt.Println("Use `help` to see all commands")

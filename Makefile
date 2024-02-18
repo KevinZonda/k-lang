@@ -25,6 +25,24 @@ else
 	./scripts/src.sh
 endif
 
+mini:
+ifeq ($(OS),Windows_NT)
+	@echo '=== Source Code Builder ==='
+	powershell .\scripts\minimal.ps1
+else
+	echo '=== Source Code Builder ==='
+	./scripts/minimal.sh
+endif
+
+minimal:
+ifeq ($(OS),Windows_NT)
+	@echo '=== Source Code Builder ==='
+	powershell .\scripts\minimal.ps1
+else
+	echo '=== Source Code Builder ==='
+	./scripts/minimal.sh
+endif
+
 gui:
 ifeq ($(OS),Windows_NT)
 	@echo '=== Source Code Builder ==='
