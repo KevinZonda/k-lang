@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
+	orderedmap "github.com/wk8/go-ordered-map/v2"
 	"reflect"
 )
 
@@ -80,13 +81,12 @@ func (e *Eval) checkStructType(t *node.Type, v *obj.StructField) bool {
 	for pair := def.Body.Oldest(); pair != nil; pair = pair.Next() {
 		varName := pair.Key
 		varDeclare := pair.Value
+		if varDeclare.Func != nil {
+			continue
+		}
 		vField, fieldOk := v.Fields.Get(varName)
 		if !fieldOk {
 			return false
-		}
-		switch vField.(type) {
-		case *node.FuncBlock:
-			continue
 		}
 
 		if !e.TypeCheck(varDeclare.Type, vField) {
@@ -99,6 +99,31 @@ func (e *Eval) checkStructType(t *node.Type, v *obj.StructField) bool {
 func (e *Eval) NormaliseWithType(t *node.Type, v any) any {
 	if t == nil {
 		return v
+	}
+	if vT, ok := v.(*obj.StructField); ok {
+		if vT.TypeAs != nil && vT.TypeAs.Name == t.Name {
+			return v
+		}
+		def := e.getStructDef(t)
+		m := orderedmap.New[string, any]()
+		for pair := def.Body.Oldest(); pair != nil; pair = pair.Next() {
+			varName := pair.Key
+			varDeclare := pair.Value
+			if varDeclare.Func != nil {
+				m.Set(varName, varDeclare.Func)
+				continue
+			}
+			vField, fieldOk := vT.Fields.Get(varName)
+			if !fieldOk {
+				vField = e.getZeroValue(varDeclare.Type)
+			}
+			m.Set(varName, e.NormaliseWithType(varDeclare.Type, vField))
+		}
+		return &obj.StructField{
+			TypeAs:     t,
+			Fields:     m,
+			ParentEval: vT.ParentEval,
+		}
 	}
 	if t.Name == "num" && t.Package == "" {
 		switch vT := v.(type) {

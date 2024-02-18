@@ -92,3 +92,20 @@ println(x)
 `
 	tester.NoPanic(t, code)
 }
+
+func TestAssignTypeStruct2(t *testing.T) {
+	code := `
+open "feat/staticType"
+
+struct foo {
+	int x
+    fn bar() {
+		self.x = self.x + 1
+	}
+}
+foo x = struct {x: 18}
+x.bar()
+print(x.x)
+`
+	tester.GeneralTest(false, t, code, "19")
+}
