@@ -11,6 +11,9 @@ func (e *Eval) TypeCheck(t *node.Type, v any) bool {
 	if t == nil {
 		return true
 	}
+	if t.Name == "any" {
+		return true
+	}
 	if v == nil {
 		return t.Nullable
 	}
@@ -28,11 +31,7 @@ func (e *Eval) TypeCheck(t *node.Type, v any) bool {
 	case *node.LambdaExpr, *node.FuncBlock:
 		return t.Func
 	case *obj.StructField:
-		vT := v.(*obj.StructField)
-		if vT.TypeAs == nil {
-			return true
-		}
-		return vT.TypeAs.Name == t.Name
+		return e.checkStructType(t, v.(*obj.StructField))
 	case *obj.Object:
 		vT := v.(*obj.Object)
 		if vT.Is(obj.Func, obj.Lambda) {
@@ -51,6 +50,50 @@ func (e *Eval) TypeCheck(t *node.Type, v any) bool {
 		// TODO: more type check
 		return true
 	}
+}
+
+func (e *Eval) getStructDef(t *node.Type) *node.StructBlock {
+	baseEval := e
+	if t.Package != "" {
+		newEval, ok := e.objTable.Get(t.Package)
+		if ok {
+			baseEval = newEval.Value().(*Eval)
+		} else {
+			panic("No Package Found: " + t.Package)
+		}
+	}
+	def, ok := getFromObjTable[*node.StructBlock](baseEval.objTable, t.Name)
+	if !ok {
+		panic("No Struct Definition Found: " + t.Name)
+	}
+	return def
+}
+
+func (e *Eval) checkStructType(t *node.Type, v *obj.StructField) bool {
+	if v.TypeAs != nil && v.TypeAs.Name == t.Name {
+		return true
+	}
+
+	// Only Check Type
+	// TODO: NEED TYPE TX
+	def := e.getStructDef(t)
+	for pair := def.Body.Oldest(); pair != nil; pair = pair.Next() {
+		varName := pair.Key
+		varDeclare := pair.Value
+		vField, fieldOk := v.Fields.Get(varName)
+		if !fieldOk {
+			return false
+		}
+		switch vField.(type) {
+		case *node.FuncBlock:
+			continue
+		}
+
+		if !e.TypeCheck(varDeclare.Type, vField) {
+			return false
+		}
+	}
+	return true
 }
 
 func (e *Eval) NormaliseWithType(t *node.Type, v any) any {

@@ -95,7 +95,7 @@ type jsWriter struct {
 
 func (j *jsWriter) Write(p []byte) (n int, err error) {
 	n, err = j.buf.Write(p)
-	js.Global().Call("setResult", js.ValueOf(j.buf.String()))
+	j.setText.Invoke(js.ValueOf(j.buf.String()))
 	return len(p), nil
 }
 

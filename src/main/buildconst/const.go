@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-const LanguageVersion = "1.0.0"
+const LanguageVersion = "6.6.6"
 
 var (
 	BuildTime  string = "2000/01/01"
