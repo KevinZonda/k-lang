@@ -79,3 +79,16 @@ x()
 		return strings.HasPrefix(exp, "TypeCheck Failed")
 	})
 }
+
+func TestAssignTypeStruct(t *testing.T) {
+	code := `
+open "feat/staticType"
+
+struct foo {
+	int x
+}
+foo x = struct {x: 18}
+println(x)
+`
+	tester.NoPanic(t, code)
+}
