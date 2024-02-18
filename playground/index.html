@@ -35,7 +35,6 @@
 
 		<hr style="width: 100%;">
 		<div style="display: flex; align-items:bas; gap: 10px; flex-wrap: wrap;">
-			<img style="height: 50px;" src="https://upload.wikimedia.org/wikipedia/en/5/5d/Birmingham_logo.svg">
 			<span>Final Year Project<br>xxs166#student.bham.ac.uk<br>B.Sc. Computer Science</span>
 			<span>Built on Go, Antlr4, WebAssembly<br>Copyright &copy; 2024 xxs#student.bham.ac.uk</span>
 		</div>
@@ -58,15 +57,19 @@
             	document.getElementById("runCodeBtn").onclick = runCodeEvent;
 				setCodeTxt('println("Hello World!")')
 				document.getElementById("fmtBtn").onclick = fmt
-                document.getElementById("reloadCoreBtn").onclick = loadCore
+                document.getElementById("reloadCoreBtn").onclick = reloadCore
 				document.getElementById("sampleCodeSelect").onchange = sampleCode
-				loadCore()
+				loadCore(false)
         	}
+
+			function reloadCore() {
+				loadCore(true)
+			}
             
-            function loadCore() {
+            function loadCore(rand) {
 				document.getElementById('infoTxt').innerHTML = ''
                 status('Loading')
-				const tail = "?ignore=" +  Math.floor(Math.random() * 10000)
+				const tail = rand ? "?ignore=" +  Math.floor(Math.random() * 10000) : ""
 				WebAssembly.instantiateStreaming(fetch("core.wasm"+tail), go.importObject).then((result) => {
 					go.run(result.instance);
 					status('Ready')
