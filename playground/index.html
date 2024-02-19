@@ -16,9 +16,9 @@
 		<div style="display: flex; gap:12px; align-items: center; flex-wrap: wrap; margin-top: 1em;">
 			<h1 style="margin-block: 0;">The <font style="font-style: italic;">K Language</font> Playground</h1>
 			<p style="margin-block: 0;;" id="loadStatusLbl">Unknwon</p>
-			<button id="runCodeBtn">Run</button>
-			<button id="fmtBtn">Format</button>
-            <button id="reloadCoreBtn">Reload Core</button>
+			<button id="runCodeBtn" onclick="runCodeEvent()">Run</button>
+			<button id="fmtBtn" onclick="fmt()">Format</button>
+            <button id="reloadCoreBtn" onclick="reloadCore()">Reload Core</button>
 			<select id="sampleCodeSelect">
 				<option value="helloworld">HelloWorld</option>
 				<option value="loop">Loop</option>
@@ -49,15 +49,12 @@
                 theme: 'default',
                 indentUnit: 4,
             });
-
+			
 			function status(v) {
 				document.getElementById("loadStatusLbl").innerHTML = v
 			}
 			function init(){
-            	document.getElementById("runCodeBtn").onclick = runCodeEvent;
-				setCodeTxt('println("Hello World!")')
-				document.getElementById("fmtBtn").onclick = fmt
-                document.getElementById("reloadCoreBtn").onclick = reloadCore
+				sampleCode(null)
 				document.getElementById("sampleCodeSelect").onchange = sampleCode
 				loadCore(false)
         	}
@@ -90,6 +87,11 @@
 				document.getElementById('codeResult').innerHTML = v
 				await delay(1)
 			}
+			
+			function setResultSync(v) {
+				document.getElementById('codeResult').innerHTML = v
+			}
+			
 
 			function fmt() {
                 const code = editor.getValue()
@@ -97,7 +99,7 @@
 			}
 
 			function sampleCode(e) {
-				const code = e.target.value
+				const code = !e ? 'helloworld' :  e.target.value
 				switch (code) {
 					case 'helloworld':
 						setCodeTxt('println("Hello World!")')
@@ -141,7 +143,7 @@ println(fib(5))`)
 				const codeTxt = editor.getValue()
 				status('Running')
 				await setResult('')
-				runCodeStreamX(codeTxt, setResult);
+				runCodeStreamX(codeTxt, setResultSync);
                 status('Ready')
 			}
 		</script>
