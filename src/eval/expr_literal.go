@@ -85,15 +85,6 @@ func (e *Eval) getZeroValue(t *node.Type) any {
 	if t == nil {
 		return nil
 	}
-	baseEval := e
-	if t.Package != "" {
-		newEval, ok := e.memory.Get(t.Package)
-		if ok {
-			baseEval = newEval.Value().(*Eval)
-		} else {
-			panic("No Package Found: " + t.Package)
-		}
-	}
 	if t.Nullable {
 		return nil
 	}
@@ -118,12 +109,13 @@ func (e *Eval) getZeroValue(t *node.Type) any {
 	case "any":
 		return nil
 	default:
+		baseEval := e.GetPackage(t.Package)
 		def := getStructDef(baseEval, t, true)
 		m := orderedmap.New[string, any]()
 		for pair := def.Body.Oldest(); pair != nil; pair = pair.Next() {
 			varName := pair.Key
 			varDeclare := pair.Value
-			m.Set(varName, getVarDeclareValue(baseEval, varDeclare))
+			m.Set(varName, baseEval.EvalVarDeclare(varDeclare))
 		}
 		return &obj.StructField{
 			TypeAs:     t,
@@ -133,7 +125,22 @@ func (e *Eval) getZeroValue(t *node.Type) any {
 	}
 }
 
-func getVarDeclareValue(e *Eval, varDeclare *node.Declare) any {
+func (e *Eval) GetPackage(pkg string) *Eval {
+	if pkg == "" {
+		return e
+	}
+	p, ok := e.memory.Get(pkg)
+	var ev *Eval
+	if ok {
+		ev = p.Value().(*Eval)
+	}
+	if !ok || ev == nil {
+		panic("No Package Found: " + pkg)
+	}
+	return ev
+}
+
+func (e *Eval) EvalVarDeclare(varDeclare *node.Declare) any {
 	if varDeclare.Func != nil {
 		return varDeclare.Func
 	}

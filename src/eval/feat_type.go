@@ -54,13 +54,8 @@ func (e *Eval) TypeCheck(t *node.Type, v any) bool {
 }
 
 func getStructDef(baseEval *Eval, t *node.Type, ignorePack bool) *node.StructBlock {
-	if t.Package != "" && !ignorePack {
-		newEval, ok := baseEval.memory.Get(t.Package)
-		if ok {
-			baseEval = newEval.Value().(*Eval)
-		} else {
-			panic("Package Not Found: " + t.Package)
-		}
+	if !ignorePack {
+		baseEval = baseEval.GetPackage(t.Package)
 	}
 	var def *node.StructBlock
 	defObj, ok := baseEval.memory.Get(t.Name)
