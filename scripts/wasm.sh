@@ -9,5 +9,5 @@ flag="-X git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/buildconst.CommitHas
 flag=" $flag -X git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/buildconst.BuildTime=$date"
 flag=" $flag -X git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/buildconst.BuildBranch=$branch"
 
-go build -ldflags "$flag" -v -o ./out/interpreter ./main/cli/*.go
+GOARCH=wasm GOOS=js go build -ldflags "$flag" -v -o ../playground/core.wasm main/wasm/main_wasm.go
 cd ..
