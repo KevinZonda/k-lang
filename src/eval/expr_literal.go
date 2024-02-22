@@ -118,17 +118,8 @@ func (e *Eval) getZeroValue(t *node.Type) any {
 	case "any":
 		return nil
 	default:
-		v, ok := baseEval.memory.Get(t.Name)
-		if !ok {
-			panic("No Struct Definition Found: " + t.Name)
-		}
-		def, ok := possibleType[*node.StructBlock](v)
-		baseEval.getStructDef(t)
-		if !ok {
-			panic("No Struct Definition Found: " + t.Name)
-		}
+		def := getStructDef(baseEval, t, true)
 		m := orderedmap.New[string, any]()
-
 		for pair := def.Body.Oldest(); pair != nil; pair = pair.Next() {
 			varName := pair.Key
 			varDeclare := pair.Value

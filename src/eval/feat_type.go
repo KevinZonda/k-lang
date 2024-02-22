@@ -53,21 +53,28 @@ func (e *Eval) TypeCheck(t *node.Type, v any) bool {
 	}
 }
 
-func (e *Eval) getStructDef(t *node.Type) *node.StructBlock {
-	baseEval := e
-	if t.Package != "" {
-		newEval, ok := e.memory.Get(t.Package)
+func getStructDef(baseEval *Eval, t *node.Type, ignorePack bool) *node.StructBlock {
+	if t.Package != "" && !ignorePack {
+		newEval, ok := baseEval.memory.Get(t.Package)
 		if ok {
 			baseEval = newEval.Value().(*Eval)
 		} else {
-			panic("No Package Found: " + t.Package)
+			panic("Package Not Found: " + t.Package)
 		}
 	}
-	def, ok := getFromObjTable[*node.StructBlock](baseEval.memory, t.Name)
+	var def *node.StructBlock
+	defObj, ok := baseEval.memory.Get(t.Name)
+	if ok {
+		def, ok = defObj.Value().(*node.StructBlock)
+	}
 	if !ok {
 		panic("No Struct Definition Found: " + t.Name)
 	}
 	return def
+}
+
+func (e *Eval) getStructDef(t *node.Type) *node.StructBlock {
+	return getStructDef(e, t, false)
 }
 
 func (e *Eval) checkStructType(t *node.Type, v *obj.StructField) bool {

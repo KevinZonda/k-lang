@@ -38,16 +38,6 @@ func NewMemory() *Memory {
 	return &Memory{q: []*MemLayer{newTable(true)}}
 }
 
-func getFromObjTable[T any](t *Memory, key string) (T, bool) {
-	v, ok := t.Get(key)
-	if !ok {
-		var t T
-		return t, false
-	}
-	tV, ok := v.Value().(T)
-	return tV, ok
-}
-
 // Get gets the value from the table stack
 func (t *Memory) Get(key string) (*obj.Object, bool) {
 	// Get only valid on 2 tables
