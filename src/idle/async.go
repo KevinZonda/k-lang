@@ -1,16 +1,22 @@
 package idle
 
-import "context"
+import (
+	"context"
+	"sync"
+)
 
-func AsyncFunc(f func()) func() {
+func AsyncFunc(l sync.Locker, f func()) func() {
 	ctx, cancel := context.WithCancel(context.Background())
-	go doWork(ctx, f)
+	go doWork(ctx, l, f)
 	return cancel
 }
 
-func doWork(ctx context.Context, f func()) {
+func doWork(ctx context.Context, l sync.Locker, f func()) {
 	select {
 	case <-ctx.Done():
+		l.Lock()
+		defer l.Unlock()
+
 		return
 	default:
 		if f != nil {

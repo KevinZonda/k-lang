@@ -194,18 +194,19 @@ func NewEditorW() *EditorW {
 	w.syncRunningStat()
 
 	w.ReplE.AppendEnd(buildconst.Msg() + "\n")
+	w.startPrompt()
 	return &w
 }
 
 func (w *EditorW) RunCode() {
-	w.cancelFunc = AsyncFunc(func() {
+	w.cancelFunc = AsyncFunc(&w.externalLock, func() {
 		w.runCode(w.CodeE.Text(), true, "===================NEW RUN===================")
 	})
 }
 
 func (w *EditorW) RerunCode() {
 	w.Stop()
-	w.cancelFunc = AsyncFunc(func() {
+	w.cancelFunc = AsyncFunc(&w.externalLock, func() {
 		w.runCode(w.CodeE.Text(), false, "===================NEW RUN===================")
 	})
 }
@@ -283,6 +284,7 @@ func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (rst eval.
 				w.ReplE.ScrollToEnd()
 			}
 		}
+		w.startPrompt()
 	})
 	return
 }
@@ -309,6 +311,11 @@ func parseErrors(errs []parserHelper.CodeError) string {
 	return sb.String()
 }
 
+func (w *EditorW) startPrompt() {
+	w.ReplE.SmartNewLine()
+	w.ReplE.AppendTag(w.ReplETags.Blue, ">>> ")
+}
+
 func (w *EditorW) InvokeUserRepl() {
 	cmd, _ := w.ReplEnter.GetText()
 	w.ReplEnter.SetText("")
@@ -322,11 +329,9 @@ func (w *EditorW) InvokeUserRepl() {
 		return
 	}
 
-	w.ReplE.SmartNewLine()
-	w.ReplE.AppendTag(w.ReplETags.Blue, ">>> ")
 	w.ReplE.AppendEnd(cmd + "\n")
 
-	w.cancelFunc = AsyncFunc(func() {
+	w.cancelFunc = AsyncFunc(&w.externalLock, func() {
 		rst := w.runCode(cmd, true, "")
 		w.RunInExternalLock(func() {
 			var val any
@@ -341,6 +346,7 @@ func (w *EditorW) InvokeUserRepl() {
 			w.ReplE.AppendTag(w.ReplETags.Blue, "<<< ")
 			w.ReplE.AppendEnd(fmt.Sprintf("%v\n", val))
 			w.ReplE.ScrollToEnd()
+			w.startPrompt()
 		})
 	})
 }
