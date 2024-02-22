@@ -6,6 +6,7 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/fmtr"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/idle/gtks"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/buildconst"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"github.com/KevinZonda/GoX/pkg/iox"
 	"github.com/gotk3/gotk3/gtk"
@@ -191,6 +192,8 @@ func NewEditorW() *EditorW {
 		lifecycle.Decrease()
 	})
 	w.syncRunningStat()
+
+	w.ReplE.AppendEnd(buildconst.Msg() + "\n")
 	return &w
 }
 

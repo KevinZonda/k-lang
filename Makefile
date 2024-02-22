@@ -91,12 +91,13 @@ endif
 all:
 	make grammar
 	make go
+	make gui
 
 out:
 ifeq ($(OS),Windows_NT)
 	explorer .\src\out
 else
-	open .\src\out
+	open ./src/out
 endif
 
 test:
@@ -106,4 +107,11 @@ ifeq ($(OS),Windows_NT)
 else
 	echo '=== Test ==='
 	./scripts/test.sh
+endif
+
+pack:
+ifeq ($(OS),Windows_NT)
+	@echo 'NOT SUPPORT IN WINDOWS'
+else
+	./scripts/macapp.sh
 endif
