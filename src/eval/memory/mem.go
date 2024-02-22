@@ -1,41 +1,52 @@
-package eval
+package memory
 
 import (
+	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
+	"io"
 )
 
-type MemLayer struct {
-	m       map[string]*obj.Object
-	Protect bool
+type Memory struct {
+	q []*Layer
 }
 
-func (t *MemLayer) Get(key string) (*obj.Object, bool) {
-	v, ok := t.m[key]
-	return v, ok
+func (t *Memory) Bottom() *Layer {
+	if t.Empty() {
+		return nil
+	}
+	return t.q[0]
 }
 
-func (t *MemLayer) Len() int {
-	return len(t.m)
+func (t *Memory) Raw() []*Layer {
+	return t.q
 }
 
-func (t *MemLayer) Empty() bool {
-	return t.Len() == 0
+func (t *Memory) Push(n *Layer) {
+	t.q = append(t.q, n)
 }
 
-func (t *MemLayer) Set(key string, val *obj.Object) {
-	t.m[key] = val
+func (t *Memory) PushEmpty(protect bool) *Layer {
+	tbl := newLayer(protect)
+	t.Push(tbl)
+	return tbl
 }
 
-func (t *MemLayer) SetValue(key string, val any) {
-	t.m[key] = cons(val)
+func (t *Memory) Pop() *Layer {
+	n := t.q[len(t.q)-1]
+	t.q = t.q[:len(t.q)-1]
+	return n
 }
 
-func newTable(protect bool) *MemLayer {
-	return &MemLayer{m: make(map[string]*obj.Object), Protect: protect}
+func (t *Memory) Len() int {
+	return len(t.q)
 }
 
-func NewMemory() *Memory {
-	return &Memory{q: []*MemLayer{newTable(true)}}
+func (t *Memory) Empty() bool {
+	return len(t.q) == 0
+}
+
+func (t *Memory) Println(w io.Writer, addr string) {
+	fmt.Fprintln(w, t.ToString(addr))
 }
 
 // Get gets the value from the table stack
@@ -53,7 +64,7 @@ func (t *Memory) Get(key string) (*obj.Object, bool) {
 		v, ok := t.q[0].Get(key)
 		return v, ok
 	}
-	//ts := []MemLayer{t.q[len(t.q)-1], t.q[0]}
+	//ts := []Layer{t.q[len(t.q)-1], t.q[0]}
 	//for _, _t := range ts {
 	//	if v, ok := _t[key]; ok {
 	//		return v, true
@@ -80,22 +91,11 @@ func (t *Memory) Get(key string) (*obj.Object, bool) {
 // Set overwrites the value if it exists in the table stack
 // otherwise it sets the value at the top of the stack
 func (t *Memory) Set(key string, val any) {
-	o := cons(val)
+	o := obj.Construct(val)
 	if t.Empty() {
-		v := newTable(false)
-		v.Set(key, o)
-		t.q = append(t.q, v)
+		t.q = append(t.q, newLayer(true).WithObj(key, o))
 		return
 	}
-
-	// FIXME: Could cause var not found
-	//ts := []MemLayer{t.q[len(t.q)-1], t.q[0]}
-	//for _, _t := range ts {
-	//	if _, ok := _t[key]; ok {
-	//		_t[key] = val
-	//		return
-	//	}
-	//}
 
 	for i := t.Len() - 1; i >= 0; i-- {
 		stack := t.q[i]
@@ -117,29 +117,10 @@ func (t *Memory) Set(key string, val any) {
 	t.q[len(t.q)-1].Set(key, o)
 }
 
-func (t *Memory) Top() *MemLayer {
+func (t *Memory) Top() *Layer {
 	if t.Empty() {
-		t.PushEmpty(true)
+		return nil
+		// t.PushEmpty(true)
 	}
 	return t.q[len(t.q)-1]
-}
-
-func (t *MemLayer) Has(key string) bool {
-	if t == nil {
-		return false
-	}
-	_, ok := t.m[key]
-	return ok
-}
-
-func (t *MemLayer) GetValue(key string) (any, bool) {
-	o, ok := t.Get(key)
-	if ok && o != nil {
-		return o.Val, ok
-	}
-	return nil, ok
-}
-
-func (t *MemLayer) Remove(key string) {
-	delete(t.m, key)
 }

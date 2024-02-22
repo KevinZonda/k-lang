@@ -6,6 +6,7 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/builtin"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/memory"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	"path/filepath"
@@ -13,7 +14,7 @@ import (
 
 type Eval struct {
 	ast          tree.Ast
-	memory       *Memory
+	memory       *memory.Memory
 	basePath     string
 	loopLvl      int
 	currentToken token.Token
@@ -44,7 +45,7 @@ func New(ast tree.Ast, inputFile string) *Eval {
 	path := filepath.Dir(inputFile)
 	return &Eval{
 		ast:      ast,
-		memory:   NewMemory(),
+		memory:   memory.NewMemory(),
 		basePath: path,
 		builtin:  builtin.NewBuiltIn(),
 	}

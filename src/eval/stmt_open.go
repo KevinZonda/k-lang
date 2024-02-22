@@ -5,6 +5,7 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/builtin"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"github.com/KevinZonda/GoX/pkg/iox"
 	"os"
@@ -97,12 +98,13 @@ func (e *Eval) EvalOpenStmt(n *node.OpenStmt) {
 		openedEval.runWithBreak(reserved.Return)
 	}
 
+	name := ""
 	if n.As != "" {
-		e.memory.Set(n.As, openedEval)
+		name = n.As
 	} else {
-		base := filepath.Base(abs)
-		e.memory.Set(normaliseName(base), openedEval)
+		name = normaliseName(filepath.Base(abs))
 	}
+	e.memory.Set(name, obj.NewObj(obj.EvalObj, openedEval))
 }
 
 func normaliseName(n string) string {

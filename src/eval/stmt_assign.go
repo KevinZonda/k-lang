@@ -120,7 +120,7 @@ func (e *Eval) EvalAssignStmtX(n *node.AssignStmt, assignee *node.Assignee, valu
 					}
 					// following is not possible because ref syntax
 					// foo(&x) will let set val not possible
-					// e.memory.Set(lastVar.Name.Value, cons(v))
+					// e.memory.Set(lastVar.Name.Value, Construct(v))
 					if e.FeatStaticType {
 						e.TypeCheckOrPanic(o.Type, v)
 					}
@@ -134,7 +134,7 @@ func (e *Eval) EvalAssignStmtX(n *node.AssignStmt, assignee *node.Assignee, valu
 					} else {
 						typeV = e.AutoType(v)
 					}
-					e.memory.Top().SetValue(lastVar.Name.Value, cons(v).WithType(typeV))
+					e.memory.Top().SetValue(lastVar.Name.Value, obj.Construct(v).WithType(typeV))
 				}
 			} else {
 				o, ok := fromT.memory.Bottom().Get(lastVar.Name.Value)
