@@ -47,12 +47,6 @@ type EditorW struct {
 	externalLock sync.Mutex
 }
 
-func (w *EditorW) RunInExternalLock(f func()) {
-	w.externalLock.Lock()
-	defer w.externalLock.Unlock()
-	f()
-}
-
 func (w *EditorW) SetChanged(changed bool) {
 	w.changed = changed
 	w.syncTitle()
@@ -199,16 +193,13 @@ func NewEditorW() *EditorW {
 }
 
 func (w *EditorW) RunCode() {
-	w.cancelFunc = AsyncFunc(&w.externalLock, func() {
-		w.runCode(w.CodeE.Text(), true, "===================NEW RUN===================")
-	})
+	go w.runCode(w.CodeE.Text(), true, "===================NEW RUN===================")
 }
 
 func (w *EditorW) RerunCode() {
 	w.Stop()
-	w.cancelFunc = AsyncFunc(&w.externalLock, func() {
-		w.runCode(w.CodeE.Text(), false, "===================NEW RUN===================")
-	})
+	go w.runCode(w.CodeE.Text(), false, "===================NEW RUN===================")
+
 }
 
 func (w *EditorW) Stop() {
@@ -216,10 +207,8 @@ func (w *EditorW) Stop() {
 		return
 	}
 	if w.cancelFunc != nil {
-		w.RunInExternalLock(func() {
-			w.cancelFunc()
-			w.setRunning(false)
-		})
+		w.cancelFunc()
+		w.setRunning(false)
 		w.evalIn = nil
 	}
 }
@@ -234,28 +223,20 @@ func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (rst eval.
 	if w.isRunning {
 		return
 	}
-	w.RunInExternalLock(func() {
-		w.setRunning(true)
-	})
 
 	defer func() {
 		w.evalIn = nil
-		w.RunInExternalLock(func() {
-			w.setRunning(false)
-		})
+		w.setRunning(false)
 	}()
 
-	w.RunInExternalLock(func() {
-		w.ReplE.SmartNewLine()
-		if beginMsg != "" {
-			w.ReplE.AppendEnd(beginMsg + "\n")
-		}
-	})
+	w.ReplE.SmartNewLine()
+	if beginMsg != "" {
+		w.ReplE.AppendEnd(beginMsg + "\n")
+	}
+
 	ast, errs := parserHelper.Ast(code)
 	if len(errs) > 0 {
-		w.RunInExternalLock(func() {
-			w.ReplE.AppendTag(w.ReplETags.Red, "Parse failed:\n"+parseErrors(errs))
-		})
+		w.ReplE.AppendTag(w.ReplETags.Red, "Parse failed:\n"+parseErrors(errs))
 		return
 	}
 	if !loadCtx || w.e == nil {
@@ -268,24 +249,33 @@ func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (rst eval.
 	ev.SetStdIn(w.evalIn)
 	ev.SetStdOut(stdout)
 	ev.SetStdErr(stdout)
-	rst = ev.DoSafely()
 
-	w.RunInExternalLock(func() {
-		w.ReplE.ScrollToEnd()
-		if rst.IsPanic {
-			if w.PanicWithDlg {
-				msg := "Code Panicked:\n" + rst.PanicMsg
-				dialog := gtk.MessageDialogNew(w, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, msg)
-				dialog.SetTitle("Result with Panic")
-				dialog.Run()
-				dialog.Destroy()
-			} else {
-				w.ReplE.AppendTag(w.ReplETags.Red, "[PANIC RECEIVED] "+rst.PanicMsg)
-				w.ReplE.ScrollToEnd()
-			}
-		}
-		w.startPrompt()
+	ch := make(chan eval.DetailedRunResult, 1)
+
+	w.setRunning(true)
+
+	w.cancelFunc = AsyncFunc(func() {
+		ch <- ev.DoSafely()
 	})
+	rst = <-ch
+	close(ch)
+
+	w.ReplE.ScrollToEnd()
+	if rst.IsPanic {
+		if w.PanicWithDlg {
+			msg := "Code Panicked:\n" + rst.PanicMsg
+			dialog := gtk.MessageDialogNew(w, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, msg)
+			dialog.SetTitle("Result with Panic")
+			dialog.Run()
+			dialog.Destroy()
+		} else {
+			w.ReplE.AppendTag(w.ReplETags.Red, "[PANIC RECEIVED] "+rst.PanicMsg)
+			w.ReplE.ScrollToEnd()
+		}
+	}
+	if beginMsg != "" {
+		w.startPrompt()
+	}
 	return
 }
 
@@ -331,24 +321,20 @@ func (w *EditorW) InvokeUserRepl() {
 
 	w.ReplE.AppendEnd(cmd + "\n")
 
-	w.cancelFunc = AsyncFunc(&w.externalLock, func() {
-		rst := w.runCode(cmd, true, "")
-		w.RunInExternalLock(func() {
-			var val any
-			if rst.HasReturn {
-				val = rst.ReturnValue
-			} else if rst.IsLastExpr {
-				val = rst.LastExprVal
-			} else {
-				return
-			}
-			w.ReplE.SmartNewLine()
-			w.ReplE.AppendTag(w.ReplETags.Blue, "<<< ")
-			w.ReplE.AppendEnd(fmt.Sprintf("%v\n", val))
-			w.ReplE.ScrollToEnd()
-			w.startPrompt()
-		})
-	})
+	rst := w.runCode(cmd, true, "")
+	var val any
+	if rst.HasReturn {
+		val = rst.ReturnValue
+	} else if rst.IsLastExpr {
+		val = rst.LastExprVal
+	} else {
+		return
+	}
+	w.ReplE.SmartNewLine()
+	w.ReplE.AppendTag(w.ReplETags.Blue, "<<< ")
+	w.ReplE.AppendEnd(fmt.Sprintf("%v\n", val))
+	w.ReplE.ScrollToEnd()
+	w.startPrompt()
 }
 
 type ToolBar struct {
