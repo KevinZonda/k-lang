@@ -1,139 +1,44 @@
 package eval
 
 import (
-	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
-	"io"
-	"strings"
 )
 
-type Table struct {
+type MemLayer struct {
 	m       map[string]*obj.Object
 	Protect bool
 }
 
-func (t *Table) Get(key string) (*obj.Object, bool) {
+func (t *MemLayer) Get(key string) (*obj.Object, bool) {
 	v, ok := t.m[key]
 	return v, ok
 }
 
-func (t *Table) Len() int {
+func (t *MemLayer) Len() int {
 	return len(t.m)
 }
 
-func (t *Table) Empty() bool {
+func (t *MemLayer) Empty() bool {
 	return t.Len() == 0
 }
 
-func (t *Table) Set(key string, val *obj.Object) {
+func (t *MemLayer) Set(key string, val *obj.Object) {
 	t.m[key] = val
 }
 
-func newTable(protect bool) *Table {
-	return &Table{m: make(map[string]*obj.Object), Protect: protect}
+func (t *MemLayer) SetValue(key string, val any) {
+	t.m[key] = cons(val)
 }
 
-func NewObjectTable() *TableStack {
-	return &TableStack{q: []*Table{newTable(true)}}
+func newTable(protect bool) *MemLayer {
+	return &MemLayer{m: make(map[string]*obj.Object), Protect: protect}
 }
 
-type TableStack struct {
-	q []*Table
+func NewMemory() *Memory {
+	return &Memory{q: []*MemLayer{newTable(true)}}
 }
 
-func (t *TableStack) Bottom() *Table {
-	if t.Empty() {
-		return nil
-	}
-	return t.q[0]
-}
-
-func (t *TableStack) Raw() []*Table {
-	return t.q
-}
-
-func (t *TableStack) Push(n *Table) {
-	t.q = append(t.q, n)
-}
-
-func (t *TableStack) PushEmpty(protect bool) *Table {
-	tbl := newTable(protect)
-	t.q = append(t.q, tbl)
-	return tbl
-}
-
-func (t *TableStack) Pop() *Table {
-	n := t.q[len(t.q)-1]
-	t.q = t.q[:len(t.q)-1]
-	return n
-}
-
-func (t *TableStack) Peek() *Table {
-	if t.Empty() {
-		return nil
-	}
-	return t.q[len(t.q)-1]
-}
-
-func (t *TableStack) HasKeyAtTop(key string) bool {
-	if t.Empty() {
-		return false
-	}
-	_, ok := t.q[len(t.q)-1].Get(key)
-	return ok
-}
-
-func (t *TableStack) RemoveKeyAtTop(key string) {
-	if t.Empty() {
-		return
-	}
-	delete(t.q[len(t.q)-1].m, key)
-}
-
-func (t *TableStack) Len() int {
-	return len(t.q)
-}
-
-func (t *TableStack) Empty() bool {
-	return len(t.q) == 0
-}
-
-func (t *TableStack) Println(w io.Writer, addr string) {
-	fmt.Fprintln(w, t.ToString(addr))
-}
-
-func (t *TableStack) ToString(addr string) string {
-	w := &strings.Builder{}
-	fmt.Fprintln(w, "***********************************")
-	fmt.Fprintln(w, "V-MEM STACK @", addr)
-	fmt.Fprintln(w, "***********************************")
-	if t.Empty() {
-		fmt.Fprintln(w, "<EMPTY>")
-		fmt.Fprintln(w, "***********************************")
-		return w.String()
-	}
-	for i := len(t.q) - 1; i >= 0; i-- {
-		fmt.Fprint(w, "LEVEL [", i, "]")
-		if i == 0 {
-			fmt.Fprint(w, " GLOBAL")
-		}
-		if i == len(t.q)-1 {
-			fmt.Fprint(w, " TOP")
-		}
-		if t.q[i].Protect {
-			fmt.Fprintln(w, " PROTECTED")
-		} else {
-			fmt.Fprintln(w)
-		}
-		for k, v := range t.q[i].m {
-			fmt.Fprintf(w, "  -> %s: %v\n", k, v)
-		}
-	}
-	fmt.Fprintln(w, "***********************************")
-	return w.String()
-}
-
-func getFromObjTable[T any](t *TableStack, key string) (T, bool) {
+func getFromObjTable[T any](t *Memory, key string) (T, bool) {
 	v, ok := t.Get(key)
 	if !ok {
 		var t T
@@ -144,7 +49,7 @@ func getFromObjTable[T any](t *TableStack, key string) (T, bool) {
 }
 
 // Get gets the value from the table stack
-func (t *TableStack) Get(key string) (*obj.Object, bool) {
+func (t *Memory) Get(key string) (*obj.Object, bool) {
 	// Get only valid on 2 tables
 	// Top
 	//  |
@@ -158,7 +63,7 @@ func (t *TableStack) Get(key string) (*obj.Object, bool) {
 		v, ok := t.q[0].Get(key)
 		return v, ok
 	}
-	//ts := []Table{t.q[len(t.q)-1], t.q[0]}
+	//ts := []MemLayer{t.q[len(t.q)-1], t.q[0]}
 	//for _, _t := range ts {
 	//	if v, ok := _t[key]; ok {
 	//		return v, true
@@ -184,7 +89,7 @@ func (t *TableStack) Get(key string) (*obj.Object, bool) {
 
 // Set overwrites the value if it exists in the table stack
 // otherwise it sets the value at the top of the stack
-func (t *TableStack) Set(key string, val any) {
+func (t *Memory) Set(key string, val any) {
 	o := cons(val)
 	if t.Empty() {
 		v := newTable(false)
@@ -194,7 +99,7 @@ func (t *TableStack) Set(key string, val any) {
 	}
 
 	// FIXME: Could cause var not found
-	//ts := []Table{t.q[len(t.q)-1], t.q[0]}
+	//ts := []MemLayer{t.q[len(t.q)-1], t.q[0]}
 	//for _, _t := range ts {
 	//	if _, ok := _t[key]; ok {
 	//		_t[key] = val
@@ -222,23 +127,29 @@ func (t *TableStack) Set(key string, val any) {
 	t.q[len(t.q)-1].Set(key, o)
 }
 
-// SetAtTop always sets the value at the top of the stack
-func (t *TableStack) SetAtTop(key string, val any) {
-	o := cons(val)
+func (t *Memory) Top() *MemLayer {
 	if t.Empty() {
-		t.PushEmpty(false)
+		t.PushEmpty(true)
 	}
-	t.q[len(t.q)-1].Set(key, o)
+	return t.q[len(t.q)-1]
 }
 
-// GetAtTop always gets the value at the top of the stack
-func (t *TableStack) GetAtTop(key string) (any, bool) {
-	if t.Empty() {
-		return nil, false
+func (t *MemLayer) Has(key string) bool {
+	if t == nil {
+		return false
 	}
-	v, ok := t.q[len(t.q)-1].Get(key)
-	if !ok {
-		return nil, false
+	_, ok := t.m[key]
+	return ok
+}
+
+func (t *MemLayer) GetValue(key string) (any, bool) {
+	o, ok := t.Get(key)
+	if ok && o != nil {
+		return o.Val, ok
 	}
-	return v.Value(), true
+	return nil, ok
+}
+
+func (t *MemLayer) Remove(key string) {
+	delete(t.m, key)
 }

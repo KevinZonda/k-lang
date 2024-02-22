@@ -26,7 +26,7 @@ func (e *Eval) EvalStringLiteral(n *node.StringLiteral) string {
 			sb.WriteString(token.Value)
 		case stringProcess.KindVar:
 			tokenV := strings.TrimSpace(token.Value)
-			if val, hasVal := e.objTable.Get(tokenV); hasVal {
+			if val, hasVal := e.memory.Get(tokenV); hasVal {
 				sb.WriteString(fmt.Sprint(val.Value()))
 			} else {
 				sb.WriteString("<!!! VAR NOT FOUND! = {" + tokenV + "}>")
@@ -71,7 +71,7 @@ func (e *Eval) EvalMapLiteral(n *node.MapLiteral) map[any]any {
 
 func (e *Eval) EvalIdentifier(n *node.Identifier, keepRef bool) any {
 	e.currentToken = n.GetToken()
-	v, ok := e.objTable.Get(n.Value)
+	v, ok := e.memory.Get(n.Value)
 	if ok {
 		if keepRef {
 			return v
@@ -87,7 +87,7 @@ func (e *Eval) getZeroValue(t *node.Type) any {
 	}
 	baseEval := e
 	if t.Package != "" {
-		newEval, ok := e.objTable.Get(t.Package)
+		newEval, ok := e.memory.Get(t.Package)
 		if ok {
 			baseEval = newEval.Value().(*Eval)
 		} else {
@@ -118,7 +118,12 @@ func (e *Eval) getZeroValue(t *node.Type) any {
 	case "any":
 		return nil
 	default:
-		def, ok := getFromObjTable[*node.StructBlock](baseEval.objTable, t.Name)
+		v, ok := baseEval.memory.Get(t.Name)
+		if !ok {
+			panic("No Struct Definition Found: " + t.Name)
+		}
+		def, ok := possibleType[*node.StructBlock](v)
+		baseEval.getStructDef(t)
 		if !ok {
 			panic("No Struct Definition Found: " + t.Name)
 		}

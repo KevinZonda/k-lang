@@ -60,7 +60,7 @@ func (e *Eval) loadBuiltInLibrary(name, as string) (ok bool) {
 	if as != "" {
 		name = as
 	}
-	e.objTable.Set(normaliseName(name), lib)
+	e.memory.Set(normaliseName(name), lib)
 	return true
 }
 
@@ -98,10 +98,10 @@ func (e *Eval) EvalOpenStmt(n *node.OpenStmt) {
 	}
 
 	if n.As != "" {
-		e.objTable.Set(n.As, openedEval)
+		e.memory.Set(n.As, openedEval)
 	} else {
 		base := filepath.Base(abs)
-		e.objTable.Set(normaliseName(base), openedEval)
+		e.memory.Set(normaliseName(base), openedEval)
 	}
 }
 

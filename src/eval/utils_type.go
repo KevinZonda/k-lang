@@ -9,3 +9,8 @@ func asType[T any](v any) T {
 	var r T
 	panic(fmt.Sprintf("expect type: %T, but got: %T", r, v))
 }
+
+func possibleType[T any](v any) (T, bool) {
+	vT, ok := v.(T)
+	return vT, ok
+}

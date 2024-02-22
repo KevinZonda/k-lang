@@ -13,7 +13,7 @@ import (
 
 type Eval struct {
 	ast          tree.Ast
-	objTable     *TableStack
+	memory       *Memory
 	basePath     string
 	loopLvl      int
 	currentToken token.Token
@@ -44,7 +44,7 @@ func New(ast tree.Ast, inputFile string) *Eval {
 	path := filepath.Dir(inputFile)
 	return &Eval{
 		ast:      ast,
-		objTable: NewObjectTable(),
+		memory:   NewMemory(),
 		basePath: path,
 		builtin:  builtin.NewBuiltIn(),
 	}
@@ -59,7 +59,7 @@ func (e *Eval) runAst(ast tree.Ast, breaks ...string) DetailedRunResult {
 	result := DetailedRunResult{}
 	for idx, n := range ast {
 		for _, key := range breaks {
-			if e.objTable.HasKeyAtTop(key) {
+			if e.memory.Top().Has(key) {
 				goto end
 			}
 		}
@@ -75,9 +75,9 @@ func (e *Eval) runAst(ast tree.Ast, breaks ...string) DetailedRunResult {
 		case node.Stmt:
 			e.EvalStmt(nT)
 		case *node.FuncBlock:
-			e.objTable.Set(nT.Name.Value, nT)
+			e.memory.Set(nT.Name.Value, nT)
 		case *node.StructBlock:
-			e.objTable.Set(nT.Name, nT)
+			e.memory.Set(nT.Name, nT)
 		case *node.OpenBlock:
 			for _, stmt := range nT.Openers {
 				e.EvalStmt(stmt)
@@ -87,7 +87,7 @@ func (e *Eval) runAst(ast tree.Ast, breaks ...string) DetailedRunResult {
 		}
 	}
 end:
-	result.ReturnObj, result.HasReturn = e.objTable.Get(reserved.Return)
+	result.ReturnObj, result.HasReturn = e.memory.Get(reserved.Return)
 	if result.HasReturn && result.ReturnObj != nil {
 		result.ReturnValue = result.ReturnObj.Value()
 	}
@@ -132,7 +132,7 @@ func (e *Eval) DoSafely() (rst DetailedRunResult) {
 }
 
 func (e *Eval) EvalMain() any {
-	fn, ok := e.objTable.Get("main")
+	fn, ok := e.memory.Get("main")
 	if !ok || !fn.Is(obj.Func) {
 		return nil
 	}

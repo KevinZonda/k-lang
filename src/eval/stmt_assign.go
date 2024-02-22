@@ -113,14 +113,14 @@ func (e *Eval) EvalAssignStmtX(n *node.AssignStmt, assignee *node.Assignee, valu
 
 		case *Eval:
 			if e == fromT {
-				o, ok := e.objTable.Get(lastVar.Name.Value)
+				o, ok := e.memory.Get(lastVar.Name.Value)
 				if ok && n.Token.Value != ":=" {
 					if o.Is(obj.EvalObj, obj.Func, obj.StructDef) {
 						panic("cannot assign to " + lastVar.Name.Value)
 					}
 					// following is not possible because ref syntax
 					// foo(&x) will let set val not possible
-					// e.objTable.Set(lastVar.Name.Value, cons(v))
+					// e.memory.Set(lastVar.Name.Value, cons(v))
 					if e.FeatStaticType {
 						e.TypeCheckOrPanic(o.Type, v)
 					}
@@ -134,17 +134,16 @@ func (e *Eval) EvalAssignStmtX(n *node.AssignStmt, assignee *node.Assignee, valu
 					} else {
 						typeV = e.AutoType(v)
 					}
-					e.objTable.SetAtTop(lastVar.Name.Value, cons(v).WithType(typeV))
+					e.memory.Top().SetValue(lastVar.Name.Value, cons(v).WithType(typeV))
 				}
 			} else {
-				o, ok := fromT.objTable.Bottom().Get(lastVar.Name.Value)
+				o, ok := fromT.memory.Bottom().Get(lastVar.Name.Value)
 				if ok {
 					if e.FeatStaticType {
 						e.TypeCheckOrPanic(o.Type, v)
 					}
 					o.SetValue(v)
 				} else {
-					// f.objTable.SetAtTop(lastVar.Name.Value, cons(v))
 					panic("not support create new variable in other file")
 				}
 			}
@@ -170,13 +169,13 @@ func (e *Eval) evalObjByField(from any, canFromLocalVar bool, field string) any 
 	case *Eval:
 		if canFromLocalVar {
 			ok := false
-			from, ok = from.(*Eval).objTable.Get(field)
+			from, ok = from.(*Eval).memory.Get(field)
 			if !ok {
 				panic(fmt.Sprintf("object %s not found", field))
 			}
 		} else {
 			ok := false
-			from, ok = from.(*Eval).objTable.Bottom().Get(field)
+			from, ok = from.(*Eval).memory.Bottom().Get(field)
 			if !ok {
 				panic(fmt.Sprintf("object %s not found", field))
 			}
@@ -237,12 +236,12 @@ func (e *Eval) assignObjIndexValue(root any, index node.Expr, v any) {
 		}
 
 		// Consider we use pointer to modify the value, we are not okay to
-		// set back with new value by using objTable.Set(..., v) method.
-		// e.objTable.Set(baseV.Name.Value, obj)
+		// set back with new value by using memory.Set(..., v) method.
+		// e.memory.Set(baseV.Name.Value, obj)
 		return
 	case map[any]any:
 		rT[lastIndex] = v
-		// e.objTable.Set(baseV.Name.Value, obj)
+		// e.memory.Set(baseV.Name.Value, obj)
 		return
 	default:
 		panic(fmt.Sprint("not supported type to access by index: "+reflect.TypeOf(root).String(), "INDEX:", index))

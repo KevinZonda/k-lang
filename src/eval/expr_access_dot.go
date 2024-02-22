@@ -50,7 +50,7 @@ func (e *Eval) EvalPropertyAfterScope(scope any, property node.Expr) ExprResult 
 		if leftT != e && strings.HasPrefix(actualPpt, "_") {
 			panic("No Access To Private Function: " + actualPpt)
 		}
-		if o, ok := leftT.objTable.Bottom().Get(actualPpt); ok {
+		if o, ok := leftT.memory.Bottom().Get(actualPpt); ok {
 			v, _ := leftT.unboxObj(o)
 			return exprVal(v)
 		}
@@ -103,12 +103,12 @@ func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) ExprRe
 		if scopeT.ParentEval != nil {
 			scopeE := scopeT.ParentEval.(*Eval)
 			return scopeE.EvalFuncBlock(funcB, _fc.Args, func() {
-				scopeE.objTable.SetAtTop("self", scopeT)
+				scopeE.memory.Top().SetValue("self", scopeT)
 			})
 		}
 
 		return e.EvalFuncBlock(funcB, _fc.Args, func() {
-			e.objTable.SetAtTop("self", scopeT)
+			e.memory.Top().SetValue("self", scopeT)
 		})
 	// TODO: More situation!
 	case string:

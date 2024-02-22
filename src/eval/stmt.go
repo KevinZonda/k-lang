@@ -45,7 +45,7 @@ func (e *Eval) EvalBreakStmt(n *node.BreakStmt) {
 	if e.loopLvl <= 0 {
 		return
 	}
-	e.objTable.SetAtTop(reserved.Break, true)
+	e.memory.Top().SetValue(reserved.Break, true)
 	return
 }
 
@@ -54,25 +54,25 @@ func (e *Eval) EvalContinueStmt(n *node.ContinueStmt) {
 	if e.loopLvl <= 0 {
 		return
 	}
-	e.objTable.SetAtTop(reserved.Continue, true)
+	e.memory.Top().SetValue(reserved.Continue, true)
 	return
 }
 
 func (e *Eval) EvalReturnStmt(n *node.ReturnStmt) {
 	e.currentToken = n.GetToken()
-	e.objTable.SetAtTop(reserved.Return, nil)
-	if n.Value != nil {
-		if len(n.Value) == 1 {
-			e.objTable.SetAtTop(reserved.Return, e.EvalExpr(n.Value[0]).EnsureValue())
-			return
-		}
-		e.objTable.SetAtTop(reserved.Return, e.evalExprs(n.Value...))
+	if n.Value == nil {
+		e.memory.Top().SetValue(reserved.Return, nil)
+		return
 	}
-	return
+	if len(n.Value) == 1 {
+		e.memory.Top().SetValue(reserved.Return, e.EvalExpr(n.Value[0]).EnsureValue())
+		return
+	}
+	e.memory.Top().SetValue(reserved.Return, e.evalExprs(n.Value...))
 }
 
 func (e *Eval) evalReturnVal() (vals []any, hasRet bool) {
-	v, hasRet := e.objTable.GetAtTop(reserved.Return)
+	v, hasRet := e.memory.Top().GetValue(reserved.Return)
 	if !hasRet {
 		return nil, false
 	}

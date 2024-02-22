@@ -11,19 +11,20 @@ func (e *Eval) _evalIterArray(n *node.IterStyleFor, iters []any) {
 	e.currentToken = n.GetToken()
 	for _, iter := range iters {
 		_ = e.EvalLoopCodeBlockWithHook(n.Body, func() {
-			e.objTable.SetAtTop(n.Variable.Value, iter)
+			e.memory.Top().SetValue(n.Variable.Value, iter)
 		})
-		if e.objTable.HasKeyAtTop(reserved.Continue) {
-			e.objTable.RemoveKeyAtTop(reserved.Continue)
+		top := e.memory.Top()
+		if top.Has(reserved.Continue) {
+			top.Remove(reserved.Continue)
 			continue
 		}
-		if e.objTable.HasKeyAtTop(reserved.Return) {
+		if top.Has(reserved.Return) {
 			e.loopLvl--
 			return
 		}
-		if e.objTable.HasKeyAtTop(reserved.Break) {
+		if top.Has(reserved.Break) {
 			e.loopLvl--
-			e.objTable.RemoveKeyAtTop(reserved.Break)
+			top.Remove(reserved.Break)
 			return
 		}
 	}
@@ -33,25 +34,26 @@ func (e *Eval) _evalIterArray(n *node.IterStyleFor, iters []any) {
 func (e *Eval) _evalIterMap(n *node.IterStyleFor, iters map[any]any) {
 	e.currentToken = n.GetToken()
 	for key, val := range iters {
+		top := e.memory.Top()
 		_ = e.EvalLoopCodeBlockWithHook(n.Body, func() {
 			field := orderedmap.New[string, any]()
 			field.Set("key", key)
 			field.Set("val", val)
-			e.objTable.SetAtTop(n.Variable.Value, &obj.StructField{
+			top.SetValue(n.Variable.Value, &obj.StructField{
 				Fields: field,
 			})
 		})
-		if e.objTable.HasKeyAtTop(reserved.Continue) {
-			e.objTable.RemoveKeyAtTop(reserved.Continue)
+		if top.Has(reserved.Continue) {
+			top.Remove(reserved.Continue)
 			continue
 		}
-		if e.objTable.HasKeyAtTop(reserved.Return) {
+		if top.Has(reserved.Return) {
 			e.loopLvl--
 			return
 		}
-		if e.objTable.HasKeyAtTop(reserved.Break) {
+		if top.Has(reserved.Break) {
 			e.loopLvl--
-			e.objTable.RemoveKeyAtTop(reserved.Break)
+			top.Remove(reserved.Break)
 			return
 		}
 	}
@@ -100,17 +102,18 @@ func (e *Eval) EvalWhileForStmt(n *node.WhileStyleFor) {
 			}
 		}
 		_ = e.EvalLoopCodeBlock(n.Body)
-		if e.objTable.HasKeyAtTop(reserved.Continue) {
-			e.objTable.RemoveKeyAtTop(reserved.Continue)
+		top := e.memory.Top()
+		if top.Has(reserved.Continue) {
+			top.Remove(reserved.Continue)
 			continue
 		}
-		if e.objTable.HasKeyAtTop(reserved.Return) {
+		if top.Has(reserved.Return) {
 			e.loopLvl--
 			return
 		}
-		if e.objTable.HasKeyAtTop(reserved.Break) {
+		if top.Has(reserved.Break) {
 			e.loopLvl--
-			e.objTable.RemoveKeyAtTop(reserved.Break)
+			top.Remove(reserved.Break)
 			return
 		}
 	}
@@ -139,18 +142,19 @@ func (e *Eval) EvalCStyleFrStmt(n *node.CStyleFor) {
 			}
 		}
 		_ = e.EvalLoopCodeBlock(n.Body)
-		if e.objTable.HasKeyAtTop(reserved.Continue) {
-			e.objTable.RemoveKeyAtTop(reserved.Continue)
+		top := e.memory.Top()
+		if top.Has(reserved.Continue) {
+			top.Remove(reserved.Continue)
 			e.EvalExpr(n.AfterIterExpr)
 			continue
 		}
-		if e.objTable.HasKeyAtTop(reserved.Return) {
+		if top.Has(reserved.Return) {
 			e.loopLvl--
 			return
 		}
-		if e.objTable.HasKeyAtTop(reserved.Break) {
+		if top.Has(reserved.Break) {
 			e.loopLvl--
-			e.objTable.RemoveKeyAtTop(reserved.Break)
+			top.Remove(reserved.Break)
 			return
 		}
 		e.EvalExpr(n.AfterIterExpr)

@@ -56,14 +56,14 @@ func (e *Eval) TypeCheck(t *node.Type, v any) bool {
 func (e *Eval) getStructDef(t *node.Type) *node.StructBlock {
 	baseEval := e
 	if t.Package != "" {
-		newEval, ok := e.objTable.Get(t.Package)
+		newEval, ok := e.memory.Get(t.Package)
 		if ok {
 			baseEval = newEval.Value().(*Eval)
 		} else {
 			panic("No Package Found: " + t.Package)
 		}
 	}
-	def, ok := getFromObjTable[*node.StructBlock](baseEval.objTable, t.Name)
+	def, ok := getFromObjTable[*node.StructBlock](baseEval.memory, t.Name)
 	if !ok {
 		panic("No Struct Definition Found: " + t.Name)
 	}

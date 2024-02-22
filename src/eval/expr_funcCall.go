@@ -21,7 +21,7 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) ExprResult {
 
 	// Find Func
 	funcName := fc.Caller.Value
-	fx, ok := e.objTable.Get(funcName)
+	fx, ok := e.memory.Get(funcName)
 	if !ok || !(fx.Is(obj.Func, obj.Lambda)) {
 		return e.EvalBuiltInCall(fc, e.evalExprs(fc.Args...))
 	}
@@ -36,11 +36,11 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) ExprResult {
 	return e.EvalFuncBlock(fn, fc.Args, nil)
 	//e.frameStart()
 	//for i, funcArg := range fn.Args {
-	//	e.objTable.Set(funcArg.Name.Value, args[i])
+	//	e.memory.Set(funcArg.Name.Value, args[i])
 	//}
 	//fe := e.new((tree.Ast)(fn.Body.Nodes))
 	//_ = fe.run()
-	//retV, retOk := fe.objTable.GetAtTop("0")
+	//retV, retOk := fe.memory.GetAtTop("0")
 	//e.frameEnd()
 	//if retOk {
 	//	return retV
@@ -66,7 +66,7 @@ func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, onAfterFrameS
 		}
 		e.TypeCheckOrPanic(funcArg.Type, v)
 		v = e.NormaliseWithType(funcArg.Type, v)
-		e.objTable.SetAtTop(funcArg.Name.Value, v)
+		e.memory.Top().SetValue(funcArg.Name.Value, v)
 	}
 
 	topFrame.Protect = true
@@ -74,17 +74,17 @@ func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, onAfterFrameS
 
 	//fe := e.new((tree.Ast)(fn.Body.Nodes))
 	//_ = fe.run()
-	// retV, retOk := fe.objTable.GetAtTop("0")
+	// retV, retOk := fe.memory.GetAtTop("0")
 	e.frameEnd()
 	return ExprResult{HasValue: result.HasReturn, Value: result.ReturnValue}
 }
 
 func (e *Eval) Mem() {
-	e.objTable.Println(e.builtin.StdOut, e.PtrAddr())
+	e.memory.Println(e.builtin.StdOut, e.PtrAddr())
 }
 
 func (e *Eval) MemStr() string {
-	return e.objTable.ToString(e.PtrAddr())
+	return e.memory.ToString(e.PtrAddr())
 }
 
 func (e *Eval) EvalBuiltInCall(fc *node.FuncCall, args []any) ExprResult {

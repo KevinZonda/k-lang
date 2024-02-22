@@ -27,10 +27,10 @@ func (e *Eval) EvalTryCatchStmt(t *node.TryCatchStmt) {
 //}
 
 func (e *Eval) evalCatch(c *node.CatchBranch, exc any) {
-	e.objTable.PushEmpty(false)
+	e.memory.PushEmpty(false)
 	if c.VarName != "" {
-		e.objTable.SetAtTop(c.VarName, exc)
+		e.memory.Top().SetValue(c.VarName, exc)
 	}
 	e.EvalCodeBlock(c.Content)
-	e.objTable.Pop()
+	e.memory.Pop()
 }
