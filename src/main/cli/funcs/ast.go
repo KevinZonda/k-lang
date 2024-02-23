@@ -13,7 +13,7 @@ func Ast(input string, output string) {
 	}
 
 	ast, errs := parserHelper.Ast(txt)
-	parserHelper.IfErrorsPrintAndPanic(errs)
+	errs.PanicIfError()
 
 	bs, _ := json.MarshalIndent(ast, "", "    ")
 

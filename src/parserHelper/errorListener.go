@@ -65,15 +65,3 @@ func (c *ErrorListener) SyntaxError(recognizer antlr.Recognizer, offendingSymbol
 	}
 	c.Errors = append(c.Errors, synE)
 }
-
-func IfErrorsPrintAndPanic(errs []CodeError) {
-	if len(errs) == 0 {
-		return
-	}
-	fmt.Println("Parser Error(s):")
-	for i, e := range errs {
-		fmt.Println("[", i, "] :", e)
-	}
-	fmt.Println("Count:", len(errs))
-	panic("Parsing Failed.")
-}

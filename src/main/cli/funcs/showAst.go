@@ -10,7 +10,6 @@ import (
 )
 
 func ShowAst(input string) {
-
 	bs, e := iox.ReadAllByte(input)
 	panicx.PanicIfNotNil(e, e)
 	var ast tree.Ast
@@ -21,9 +20,9 @@ func ShowAst(input string) {
 			panic(ce)
 		}
 	} else {
-		var errs []parserHelper.CodeError
+		var errs parserHelper.CodeErrors
 		ast, errs = parserHelper.Ast(string(bs))
-		parserHelper.IfErrorsPrintAndPanic(errs)
+		errs.PanicIfError()
 	}
 	jout.Println(ast)
 }

@@ -19,7 +19,7 @@ func Compile(input string, output string) {
 	}
 
 	ast, errs := parserHelper.Ast(str)
-	parserHelper.IfErrorsPrintAndPanic(errs)
+	errs.PanicIfError()
 
 	c, ce := compressor.Compress(ast)
 	if ce != nil {

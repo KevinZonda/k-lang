@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/buildconst"
 	"io"
-	"strconv"
-	"strings"
 	"syscall/js"
 
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
@@ -54,9 +52,7 @@ type writer interface {
 
 func executeCode(stdout writer, code string) string {
 	ast, errs := parserHelper.Ast(code)
-	if len(errs) > 0 {
-		return parseErrors(errs)
-	}
+	errs.PanicIfError()
 	e := eval.New()
 	e.SetStdOut(stdout)
 	e.SetStdErr(stdout)
@@ -65,16 +61,6 @@ func executeCode(stdout writer, code string) string {
 		rst.PrintPanic()
 	}
 	return stdout.String()
-}
-
-func parseErrors(errs []parserHelper.CodeError) string {
-	sb := strings.Builder{}
-	for idx, err := range errs {
-		sb.WriteString("[" + strconv.Itoa(idx) + "] ")
-		sb.WriteString(err.Error())
-		sb.WriteString("\n")
-	}
-	return sb.String()
 }
 
 func RunCodeStream(this js.Value, args []js.Value) any {

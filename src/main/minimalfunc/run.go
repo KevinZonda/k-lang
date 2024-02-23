@@ -22,9 +22,9 @@ func Run(input string) {
 			panic(ce)
 		}
 	} else {
-		var errs []parserHelper.CodeError
+		var errs parserHelper.CodeErrors
 		ast, errs = parserHelper.Ast(string(bs))
-		parserHelper.IfErrorsPrintAndPanic(errs)
+		errs.PanicIfError()
 	}
 	ev := eval.New().WithBasePath(input)
 	ev.DoSafely(ast).PrintPanic()

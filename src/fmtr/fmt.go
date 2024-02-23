@@ -41,14 +41,14 @@ func (s *str) BackToLast(str string) {
 	s.WriteString(_s[:strings.LastIndex(_s, str)])
 }
 
-func Fmt(code string) (string, []parserHelper.CodeError) {
+func Fmt(code string) (string, parserHelper.CodeErrors) {
 	sb := &str{}
 	lex := parser.NewV2Lexer(antlr.NewInputStream(code))
 	lerr := &parserHelper.ErrorListener{}
 
 	lex.RemoveErrorListeners()
 	lex.AddErrorListener(lerr)
-	var err []parserHelper.CodeError
+	var err parserHelper.CodeErrors
 	tokens := lex.GetAllTokens()
 	err = lerr.Errors
 
@@ -58,7 +58,6 @@ func Fmt(code string) (string, []parserHelper.CodeError) {
 		cur := cur // Old golang may use the same variable for each iteration
 		switch cur.GetTokenType() {
 		case parser.V2LexerLBrack:
-
 			if !sb.EndsWith("\n") && !sb.EndsWithSpaces() {
 				sb.WriteString(" ")
 				sb.WriteString("{\n")

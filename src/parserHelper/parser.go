@@ -1,10 +1,13 @@
 package parserHelper
 
 import (
+	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/visitor"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parser"
 	"github.com/antlr4-go/antlr/v4"
+	"strconv"
+	"strings"
 )
 
 // WrappedParser this is self defined parser
@@ -93,8 +96,28 @@ func FromLexer(l *parser.V2Lexer) *WrappedParser {
 
 //endregion
 
-func Ast(s string) (tree.Ast, []CodeError) {
+func Ast(s string) (tree.Ast, CodeErrors) {
 	p := FromString(s)
 	ast := p.Ast()
 	return ast, p.Errors()
+}
+
+type CodeErrors []CodeError
+
+func (c CodeErrors) String() string {
+	sb := &strings.Builder{}
+	sb.WriteString("Parser Error(s):\n")
+	for idx, err := range c {
+		sb.WriteString("[" + strconv.Itoa(idx) + "] ")
+		sb.WriteString(err.Error())
+		sb.WriteString("\n")
+	}
+	fmt.Fprintln(sb, "Count:", len(c))
+	return sb.String()
+}
+
+func (c CodeErrors) PanicIfError() {
+	if len(c) > 0 {
+		panic(c.String())
+	}
 }

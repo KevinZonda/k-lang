@@ -11,8 +11,6 @@ import (
 	"github.com/KevinZonda/GoX/pkg/iox"
 	"github.com/gotk3/gotk3/gtk"
 	"io"
-	"strconv"
-	"strings"
 	"sync"
 )
 
@@ -238,7 +236,7 @@ func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (rst eval.
 
 	ast, errs := parserHelper.Ast(code)
 	if len(errs) > 0 {
-		w.ReplE.AppendTag(w.ReplETags.Red, "Parse failed:\n"+parseErrors(errs))
+		w.ReplE.AppendTag(w.ReplETags.Red, "Parse failed:\n"+errs.String())
 		return
 	}
 	if !loadCtx || w.e == nil {
@@ -288,21 +286,11 @@ func (w *EditorW) FormatCode() {
 	code, err := fmtr.Fmt(code)
 	if len(err) > 0 {
 		w.ReplE.SmartNewLine()
-		w.ReplE.AppendTag(w.ReplETags.Red, "Formatter Failed:\n"+parseErrors(err))
+		w.ReplE.AppendTag(w.ReplETags.Red, "Formatter Failed:\n"+err.String())
 		w.ReplE.ScrollToEnd()
 		return
 	}
 	w.CodeE.SetText(code)
-}
-
-func parseErrors(errs []parserHelper.CodeError) string {
-	sb := strings.Builder{}
-	for idx, err := range errs {
-		sb.WriteString("[" + strconv.Itoa(idx) + "] ")
-		sb.WriteString(err.Error())
-		sb.WriteString("\n")
-	}
-	return sb.String()
 }
 
 func (w *EditorW) startPrompt() {
