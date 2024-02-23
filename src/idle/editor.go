@@ -242,7 +242,7 @@ func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (rst eval.
 		return
 	}
 	if !loadCtx || w.e == nil {
-		w.e = eval.New("")
+		w.e = eval.New()
 	}
 	ev := w.e
 	stdout := w.ReplE.WriterPipe(w.gtkIO)

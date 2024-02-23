@@ -93,7 +93,7 @@ func (e *Eval) EvalOpenStmt(n *node.OpenStmt) {
 		ast, errs := parserHelper.Ast(txt)
 		parserHelper.IfErrorsPrintAndPanic(errs)
 
-		openedEval = New(n.Path)
+		openedEval = New().WithBasePath(n.Path)
 		openedFiles[abs] = openedEval
 		openedEval.runAst(ast, reserved.Return)
 	}

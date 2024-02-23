@@ -9,6 +9,7 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/memory"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
+	"os"
 	"path/filepath"
 )
 
@@ -37,16 +38,28 @@ func ResetGlobal() {
 	openedFiles = make(map[string]*Eval)
 }
 
-func New(basePath string) *Eval {
+func New() *Eval {
 	if openedFiles == nil {
 		openedFiles = map[string]*Eval{}
 	}
-	path := filepath.Dir(basePath)
+
 	return &Eval{
-		memory:   memory.NewMemory(),
-		basePath: path,
-		builtin:  builtin.NewBuiltIn(),
+		memory:  memory.NewMemory(),
+		builtin: builtin.NewBuiltIn(),
 	}
+}
+
+func (e *Eval) WithBasePath(path string) *Eval {
+	if e == nil {
+		return nil
+	}
+	if path != "" {
+		path = filepath.Dir(path)
+	} else {
+		path, _ = os.Getwd()
+	}
+	e.basePath = path
+	return e
 }
 
 func (e *Eval) runAst(ast tree.Ast, breaks ...string) DetailedRunResult {
@@ -90,9 +103,10 @@ end:
 	return result
 }
 
+// Do run given AST & main
 func (e *Eval) Do(ast tree.Ast) DetailedRunResult {
 	r := e.runAst(ast, reserved.Return)
-	if r.HasReturn {
+	if r.HasReturn || r.IsPanic {
 		return r
 	}
 

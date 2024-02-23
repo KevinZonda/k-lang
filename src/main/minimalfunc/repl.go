@@ -58,7 +58,7 @@ func (r *Repl) Repl(input string) {
 
 		ast, _ := parserHelper.Ast(str)
 		// TODO;
-		r.context = eval.New(input)
+		r.context = eval.New().WithBasePath(input)
 		rst := r.context.DoSafely(ast)
 		if rst.PrintPanic().IsPanic {
 			os.Exit(1)
@@ -98,7 +98,7 @@ func (r *Repl) Repl(input string) {
 			}
 		}
 		if r.context == nil {
-			r.context = eval.New("")
+			r.context = eval.New()
 		}
 		rst := r.context.DoSafely(ast)
 		if rst.IsPanic {

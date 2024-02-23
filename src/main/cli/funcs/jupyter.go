@@ -64,7 +64,7 @@ func (i *replBasedInterpreter) Eval(code string) (values []any, err error) {
 	}
 
 	if i.context == nil {
-		i.context = eval.New("")
+		i.context = eval.New()
 	}
 
 	e := i.context
@@ -83,7 +83,7 @@ func (i *replBasedInterpreter) Eval(code string) (values []any, err error) {
 
 func newReplInterpreter() *replBasedInterpreter {
 	return &replBasedInterpreter{
-		e: eval.New(""),
+		e: eval.New(),
 	}
 }
 

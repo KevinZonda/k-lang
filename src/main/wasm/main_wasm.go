@@ -57,7 +57,7 @@ func executeCode(stdout writer, code string) string {
 	if len(errs) > 0 {
 		return parseErrors(errs)
 	}
-	e := eval.New("")
+	e := eval.New()
 	e.SetStdOut(stdout)
 	e.SetStdErr(stdout)
 	rst := e.DoSafely(ast)
