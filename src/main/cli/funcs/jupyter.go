@@ -64,14 +64,13 @@ func (i *replBasedInterpreter) Eval(code string) (values []any, err error) {
 	}
 
 	if i.context == nil {
-		i.context = eval.New(ast, "")
+		i.context = eval.New("")
 	}
 
 	e := i.context
-	e.SetAST(ast)
 	e.LoadStdFromOS()
 
-	rst := e.DoSafely()
+	rst := e.DoSafely(ast)
 	if rst.IsPanic {
 		return nil, fmt.Errorf(rst.PanicMsg)
 	}
@@ -84,7 +83,7 @@ func (i *replBasedInterpreter) Eval(code string) (values []any, err error) {
 
 func newReplInterpreter() *replBasedInterpreter {
 	return &replBasedInterpreter{
-		e: eval.New(nil, ""),
+		e: eval.New(""),
 	}
 }
 

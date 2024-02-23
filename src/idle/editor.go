@@ -242,9 +242,7 @@ func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (rst eval.
 		return
 	}
 	if !loadCtx || w.e == nil {
-		w.e = eval.New(ast, "")
-	} else {
-		w.e.SetAST(ast)
+		w.e = eval.New("")
 	}
 	ev := w.e
 	stdout := w.ReplE.WriterPipe(w.gtkIO)
@@ -255,7 +253,7 @@ func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (rst eval.
 	ch := make(chan eval.DetailedRunResult, 1)
 
 	cancel := AsyncFunc(func() {
-		ch <- ev.DoSafely()
+		ch <- ev.DoSafely(ast)
 	})
 	w.cancelFunc = func() {
 		w.gtkIO.Lock()

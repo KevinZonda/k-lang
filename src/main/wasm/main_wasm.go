@@ -57,10 +57,10 @@ func executeCode(stdout writer, code string) string {
 	if len(errs) > 0 {
 		return parseErrors(errs)
 	}
-	e := eval.New(ast, "")
+	e := eval.New("")
 	e.SetStdOut(stdout)
 	e.SetStdErr(stdout)
-	rst := e.DoSafely()
+	rst := e.DoSafely(ast)
 	if rst.IsPanic {
 		rst.PrintPanic()
 	}

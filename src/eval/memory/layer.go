@@ -51,6 +51,19 @@ func (t *Layer) Has(key string) bool {
 	return ok
 }
 
+func (t *Layer) HasAny(key ...string) bool {
+	if t == nil {
+		return false
+	}
+	for _, k := range key {
+		if t.Has(k) {
+			return true
+		}
+	}
+	return false
+
+}
+
 func (t *Layer) GetValue(key string) (any, bool) {
 	o, ok := t.Get(key)
 	if ok && o != nil {

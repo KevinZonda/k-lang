@@ -27,6 +27,6 @@ func Run(input string) {
 		parserHelper.IfErrorsPrintAndPanic(errs)
 
 	}
-	ev := eval.New(ast, input)
-	ev.DoSafely().PrintPanic()
+	ev := eval.New(input)
+	ev.DoSafely(ast).PrintPanic()
 }

@@ -57,8 +57,9 @@ func (r *Repl) Repl(input string) {
 		panicx.PanicIfNotNil(e, e)
 
 		ast, _ := parserHelper.Ast(str)
-		r.context = eval.New(ast, input)
-		rst := r.context.DoSafely()
+		// TODO;
+		r.context = eval.New(input)
+		rst := r.context.DoSafely(ast)
 		if rst.PrintPanic().IsPanic {
 			os.Exit(1)
 		}
@@ -97,11 +98,9 @@ func (r *Repl) Repl(input string) {
 			}
 		}
 		if r.context == nil {
-			r.context = eval.New(ast, "")
-		} else {
-			r.context.SetAST(ast)
+			r.context = eval.New("")
 		}
-		rst := r.context.DoSafely()
+		rst := r.context.DoSafely(ast)
 		if rst.IsPanic {
 			rst.PrintPanic()
 		}

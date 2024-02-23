@@ -93,9 +93,9 @@ func (e *Eval) EvalOpenStmt(n *node.OpenStmt) {
 		ast, errs := parserHelper.Ast(txt)
 		parserHelper.IfErrorsPrintAndPanic(errs)
 
-		openedEval = New(ast, n.Path)
+		openedEval = New(n.Path)
 		openedFiles[abs] = openedEval
-		openedEval.runWithBreak(reserved.Return)
+		openedEval.runAst(ast, reserved.Return)
 	}
 
 	name := ""

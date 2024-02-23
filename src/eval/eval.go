@@ -13,7 +13,6 @@ import (
 )
 
 type Eval struct {
-	ast          tree.Ast
 	memory       *memory.Memory
 	basePath     string
 	loopLvl      int
@@ -38,41 +37,35 @@ func ResetGlobal() {
 	openedFiles = make(map[string]*Eval)
 }
 
-func New(ast tree.Ast, inputFile string) *Eval {
+func New(basePath string) *Eval {
 	if openedFiles == nil {
 		openedFiles = map[string]*Eval{}
 	}
-	path := filepath.Dir(inputFile)
+	path := filepath.Dir(basePath)
 	return &Eval{
-		ast:      ast,
 		memory:   memory.NewMemory(),
 		basePath: path,
 		builtin:  builtin.NewBuiltIn(),
 	}
 }
 
-func (e *Eval) SetAST(ast tree.Ast) {
-	e.ast = ast
-	e.currentToken = token.Token{}
-}
-
 func (e *Eval) runAst(ast tree.Ast, breaks ...string) DetailedRunResult {
 	result := DetailedRunResult{}
 	for idx, n := range ast {
-		for _, key := range breaks {
-			if e.memory.Top().Has(key) {
-				goto end
-			}
+		if e.memory.Top().HasAny(breaks...) {
+			goto end
 		}
+
 		switch nT := n.(type) {
 		case *node.CodeBlock:
 			e.EvalCodeBlock(nT)
 		case node.Expr:
 			exprR := e.EvalExpr(nT)
-			if idx == len(e.ast)-1 {
-				result.IsLastExpr = exprR.HasValue
-				result.LastExprVal = exprR.Value
+			if idx != len(ast)-1 {
+				continue
 			}
+			result.IsLastExpr = exprR.HasValue
+			result.LastExprVal = exprR.Value
 		case node.Stmt:
 			e.EvalStmt(nT)
 		case *node.FuncBlock:
@@ -81,7 +74,7 @@ func (e *Eval) runAst(ast tree.Ast, breaks ...string) DetailedRunResult {
 			e.memory.Set(nT.Name, nT)
 		case *node.OpenBlock:
 			for _, stmt := range nT.Openers {
-				e.EvalStmt(stmt)
+				e.EvalOpenStmt(stmt)
 			}
 		default:
 			panic("not implemented")
@@ -97,12 +90,8 @@ end:
 	return result
 }
 
-func (e *Eval) runWithBreak(breaks ...string) DetailedRunResult {
-	return e.runAst(e.ast, breaks...)
-}
-
-func (e *Eval) Do() DetailedRunResult {
-	r := e.runWithBreak(reserved.Return)
+func (e *Eval) Do(ast tree.Ast) DetailedRunResult {
+	r := e.runAst(ast, reserved.Return)
 	if r.HasReturn {
 		return r
 	}
@@ -115,7 +104,7 @@ func (e *Eval) Do() DetailedRunResult {
 	return r
 }
 
-func (e *Eval) DoSafely() (rst DetailedRunResult) {
+func (e *Eval) DoSafely(ast tree.Ast) (rst DetailedRunResult) {
 	defer func() {
 		rst.CurrentToken = e.CurrentToken()
 		if r := recover(); r != nil {
@@ -128,7 +117,7 @@ func (e *Eval) DoSafely() (rst DetailedRunResult) {
 		}
 	}()
 	rst.stderr = e.GetStdErr()
-	rst = e.Do()
+	rst = e.Do(ast)
 	return
 }
 

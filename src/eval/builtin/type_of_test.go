@@ -11,7 +11,7 @@ func TestTypeOf(t *testing.T) {
 println(typeOf(1))
 `
 	p, _ := parserHelper.Ast(code)
-	e := eval.New(p, "")
-	e.Do()
+	e := eval.New("")
+	e.Do(p)
 
 }

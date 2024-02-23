@@ -51,8 +51,8 @@ func GeneralTest(allowPanic bool, ts *testing.T, code, expected string) {
 			ts.Fatal(errs)
 			return
 		}
-		e := eval.New(ast, "")
-		e.Do()
+		e := eval.New("")
+		e.Do(ast)
 	}, expected); err != nil {
 		ts.Fatal(err)
 	}
@@ -64,8 +64,8 @@ func ExpectPanic(ts *testing.T, code string, expected func(exp string) bool) {
 		ts.Fatal(errs)
 		return
 	}
-	e := eval.New(ast, "")
-	rst := e.DoSafely()
+	e := eval.New("")
+	rst := e.DoSafely(ast)
 	if !rst.IsPanic {
 		ts.Fatal("NOT PANIC")
 		return
@@ -84,8 +84,8 @@ func NoPanic(ts *testing.T, code string) {
 		ts.Fatal(errs)
 		return
 	}
-	e := eval.New(ast, "")
-	rst := e.DoSafely()
+	e := eval.New("")
+	rst := e.DoSafely(ast)
 	if rst.IsPanic {
 		ts.Fatal("PANIC WITH:", rst.PanicMsg)
 		return
@@ -99,8 +99,8 @@ func GeneralTestLambda(allowPanic bool, ts *testing.T, code string, expected fun
 			ts.Fatal(errs)
 			return
 		}
-		e := eval.New(ast, "")
-		e.Do()
+		e := eval.New("")
+		e.Do(ast)
 	})
 	if !expected(op) {
 		ts.Fatalf("expected failed, got: %v", op)
@@ -113,8 +113,8 @@ func GeneralTestX(allowPanic bool, ts *testing.T, code, expected string) {
 		ts.Fatal(errs)
 		return
 	}
-	e := eval.New(ast, "")
-	e.Do()
+	e := eval.New("")
+	e.Do(ast)
 }
 
 func ContainsAll(str string, subs ...string) bool {
