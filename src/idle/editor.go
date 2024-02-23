@@ -42,9 +42,9 @@ type EditorW struct {
 
 	PanicWithDlg bool
 
-	isRunning    bool
-	cancelFunc   func()
-	externalLock sync.Mutex
+	isRunning  bool
+	cancelFunc func()
+	gtkIO      *sync.Mutex
 }
 
 func (w *EditorW) SetChanged(changed bool) {
@@ -109,7 +109,9 @@ func (w *EditorW) syncRunningStat() {
 }
 
 func NewEditorW() *EditorW {
-	w := EditorW{}
+	w := EditorW{
+		gtkIO: &sync.Mutex{},
+	}
 	lifecycle.IncrementCount()
 	w.Window, _ = gtk.WindowNew(gtk.WINDOW_TOPLEVEL)
 	w.syncTitle()
@@ -245,18 +247,22 @@ func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (rst eval.
 		w.e.SetAST(ast)
 	}
 	ev := w.e
-	stdout := w.ReplE.WriterPipe(&w.externalLock)
+	stdout := w.ReplE.WriterPipe(w.gtkIO)
 	ev.SetStdIn(w.evalIn)
 	ev.SetStdOut(stdout)
 	ev.SetStdErr(stdout)
 
 	ch := make(chan eval.DetailedRunResult, 1)
 
-	w.setRunning(true)
-
-	w.cancelFunc = AsyncFunc(func() {
+	cancel := AsyncFunc(func() {
 		ch <- ev.DoSafely()
 	})
+	w.cancelFunc = func() {
+		w.gtkIO.Lock()
+		defer w.gtkIO.Unlock()
+		cancel()
+	}
+	w.setRunning(true)
 	rst = <-ch
 	close(ch)
 

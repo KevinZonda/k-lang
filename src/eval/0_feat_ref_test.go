@@ -56,3 +56,17 @@ color {r: 0, g: 256, b: 0, a: 20}
 `
 	tester.GeneralTest(false, t, code, expected)
 }
+
+//func TestRefIgnore(t *testing.T) {
+//	code := `
+//x = 12
+//y := &x
+//y = 13
+//println(x)
+//println(y)
+//`
+//	expected := `12
+//13
+//`
+//	tester.GeneralTest(false, t, code, expected)
+//}

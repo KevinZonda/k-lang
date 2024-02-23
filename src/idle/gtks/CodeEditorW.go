@@ -26,6 +26,7 @@ func (w *GtkCodeEditorPipeWriter) Write(p []byte) (n int, err error) {
 func (ce *CodeEditor) WriterPipe(l sync.Locker) io.WriteCloser {
 	return &GtkCodeEditorPipeWriter{
 		buf: ce,
+		l:   l,
 	}
 }
 

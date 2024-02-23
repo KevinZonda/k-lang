@@ -61,6 +61,11 @@ func (o *Object) SetValue(v any) {
 	o.Val = v
 }
 
+func (o *Object) NoRef() *Object {
+	o.Ref = nil
+	return o
+}
+
 func (o *Object) CreateRef() *Object {
 	return &Object{
 		Kind: o.Kind,
@@ -126,6 +131,9 @@ func (o *Object) ToValue() any {
 }
 
 func (o *Object) Is(kinds ...Kind) bool {
+	if o == nil {
+		return false
+	}
 	for _, kind := range kinds {
 		if o.Kind == kind {
 			return true

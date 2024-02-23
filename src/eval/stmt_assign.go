@@ -114,10 +114,11 @@ func (e *Eval) EvalAssignStmtX(n *node.AssignStmt, assignee *node.Assignee, valu
 		case *Eval:
 			if e == fromT {
 				o, ok := e.memory.Get(lastVar.Name.Value)
+				if o.Is(obj.EvalObj, obj.Func, obj.StructDef) {
+					panic("cannot assign to " + lastVar.Name.Value)
+				}
+
 				if ok && n.Token.Value != ":=" {
-					if o.Is(obj.EvalObj, obj.Func, obj.StructDef) {
-						panic("cannot assign to " + lastVar.Name.Value)
-					}
 					// following is not possible because ref syntax
 					// foo(&x) will let set val not possible
 					// e.memory.Set(lastVar.Name.Value, Construct(v))
@@ -125,6 +126,10 @@ func (e *Eval) EvalAssignStmtX(n *node.AssignStmt, assignee *node.Assignee, valu
 						e.TypeCheckOrPanic(o.Type, v)
 					}
 					v = e.NormaliseWithType(o.Type, v)
+
+					//if o.Ref != nil {
+					//	o = o.NoRef()
+					//}
 					o.SetValue(v)
 				} else {
 					typeV := assignee.Type
@@ -138,6 +143,10 @@ func (e *Eval) EvalAssignStmtX(n *node.AssignStmt, assignee *node.Assignee, valu
 				}
 			} else {
 				o, ok := fromT.memory.Bottom().Get(lastVar.Name.Value)
+				if o.Is(obj.EvalObj, obj.Func, obj.StructDef) {
+					panic("cannot assign to " + lastVar.Name.Value)
+				}
+
 				if ok {
 					if e.FeatStaticType {
 						e.TypeCheckOrPanic(o.Type, v)
