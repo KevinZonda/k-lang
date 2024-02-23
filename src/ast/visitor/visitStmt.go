@@ -73,11 +73,11 @@ func (v *AntlrVisitor) visitIfStmt(ctx parser.IIfStmtContext) *node.IfStmt {
 		return nil
 	}
 	return &node.IfStmt{
-		Token:            token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
-		IfTrue:           v.visitCodeBlock(ctx.CodeBlock(0)),
-		IfFalseCodeBlock: v.visitCodeBlock(ctx.CodeBlock(1)),
-		IfFalseIfStmt:    v.visitIfStmt(ctx.IfStmt()),
-		Condition:        v.visitExpr(ctx.Expr()),
+		Token:     token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
+		IfTrue:    v.visitCodeBlock(ctx.CodeBlock(0)),
+		IfFalse:   v.visitCodeBlock(ctx.CodeBlock(1)),
+		ElseIf:    v.visitIfStmt(ctx.IfStmt()),
+		Condition: v.visitExpr(ctx.Expr()),
 	}
 }
 
