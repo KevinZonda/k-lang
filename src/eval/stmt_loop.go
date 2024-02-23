@@ -10,7 +10,7 @@ import (
 func (e *Eval) _evalIterArray(n *node.IterStyleFor, iters []any) {
 	e.currentToken = n.GetToken()
 	for _, iter := range iters {
-		_ = e.EvalLoopCodeBlockWithHook(n.Body, func() {
+		e.EvalLoopCodeBlockWithHook(n.Body, func() {
 			e.memory.Top().SetValue(n.Variable.Value, iter)
 		})
 		top := e.memory.Top()
@@ -35,7 +35,7 @@ func (e *Eval) _evalIterMap(n *node.IterStyleFor, iters map[any]any) {
 	e.currentToken = n.GetToken()
 	for key, val := range iters {
 		top := e.memory.Top()
-		_ = e.EvalLoopCodeBlockWithHook(n.Body, func() {
+		e.EvalLoopCodeBlockWithHook(n.Body, func() {
 			field := orderedmap.New[string, any]()
 			field.Set("key", key)
 			field.Set("val", val)
@@ -101,7 +101,7 @@ func (e *Eval) EvalWhileForStmt(n *node.WhileStyleFor) {
 				return
 			}
 		}
-		_ = e.EvalLoopCodeBlock(n.Body)
+		e.EvalLoopCodeBlockWithHook(n.Body, nil)
 		top := e.memory.Top()
 		if top.Has(reserved.Continue) {
 			top.Remove(reserved.Continue)
@@ -141,7 +141,7 @@ func (e *Eval) EvalCStyleFrStmt(n *node.CStyleFor) {
 				return
 			}
 		}
-		_ = e.EvalLoopCodeBlock(n.Body)
+		e.EvalLoopCodeBlockWithHook(n.Body, nil)
 		top := e.memory.Top()
 		if top.Has(reserved.Continue) {
 			top.Remove(reserved.Continue)
@@ -161,7 +161,7 @@ func (e *Eval) EvalCStyleFrStmt(n *node.CStyleFor) {
 	}
 }
 
-func (e *Eval) EvalLoopCodeBlockWithHook(fc *node.CodeBlock, onNewFrame func()) any {
+func (e *Eval) EvalLoopCodeBlockWithHook(fc *node.CodeBlock, onNewFrame func()) {
 	e.currentToken = fc.GetToken()
 	e.frameStart(false)
 	if onNewFrame != nil {
@@ -169,8 +169,6 @@ func (e *Eval) EvalLoopCodeBlockWithHook(fc *node.CodeBlock, onNewFrame func()) 
 	}
 
 	_ = e.runAst(fc.Nodes, reserved.Return, reserved.Break, reserved.Continue)
-	//fe := e.new((tree.Ast)(fc.Nodes))
-	//_ = fe.run()
+
 	e.frameEndWithAll()
-	return nil
 }

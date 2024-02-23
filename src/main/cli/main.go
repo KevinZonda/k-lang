@@ -41,11 +41,12 @@ func main() {
 	default:
 		if len(args) == 0 {
 			minimalfunc.Run(os.Args[1])
-		} else {
-			fmt.Println("Not recognised command: " + strings.Join(os.Args[1:], " "))
-			fmt.Println("Use `help` to see all commands")
-			os.Exit(1)
+			return
 		}
+		fmt.Fprintln(os.Stderr, "Not recognised command: "+strings.Join(os.Args[1:], " "))
+		fmt.Fprintln(os.Stderr, "Use `help` to see all commands")
+		os.Exit(1)
+
 	}
 }
 

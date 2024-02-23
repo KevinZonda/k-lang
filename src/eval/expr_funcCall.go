@@ -48,11 +48,11 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) ExprResult {
 	//return nil
 }
 
-func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, onAfterFrameStart func()) ExprResult {
+func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, onNewFrame func()) ExprResult {
 	e.currentToken = fn.GetToken()
 	topFrame := e.frameStart(false)
-	if onAfterFrameStart != nil {
-		onAfterFrameStart()
+	if onNewFrame != nil {
+		onNewFrame()
 	}
 	for i, funcArg := range fn.Args {
 		var v any = nil

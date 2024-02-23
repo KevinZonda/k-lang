@@ -87,7 +87,7 @@ func (e *Eval) EvalOpenStmt(n *node.OpenStmt) {
 	if openedEval, ok = openedFiles[abs]; !ok {
 		txt, err := iox.ReadAllText(abs)
 		if err != nil {
-			panic(fmt.Sprintln("Error reading file: ", abs, err))
+			panic(fmt.Sprint("Error reading file: ", abs, err))
 		}
 
 		ast, errs := parserHelper.Ast(txt)
