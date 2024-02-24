@@ -1,4 +1,4 @@
-// Code generated from .//antlr4//V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
+// Code generated from ./antlr4/V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
 
 package parser // V2Parser
 
@@ -26,12 +26,6 @@ func (s *BaseV2ParserListener) EnterProgram(ctx *ProgramContext) {}
 
 // ExitProgram is called when production program is exited.
 func (s *BaseV2ParserListener) ExitProgram(ctx *ProgramContext) {}
-
-// EnterOpenBlock is called when production openBlock is entered.
-func (s *BaseV2ParserListener) EnterOpenBlock(ctx *OpenBlockContext) {}
-
-// ExitOpenBlock is called when production openBlock is exited.
-func (s *BaseV2ParserListener) ExitOpenBlock(ctx *OpenBlockContext) {}
 
 // EnterStructBlock is called when production structBlock is entered.
 func (s *BaseV2ParserListener) EnterStructBlock(ctx *StructBlockContext) {}

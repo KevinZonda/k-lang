@@ -43,7 +43,6 @@ func NewUnmarshal() *zson.UnmarshalContext {
 		node.MatchCase{},
 
 		node.OpenStmt{},
-		node.OpenBlock{},
 
 		node.ReturnStmt{},
 

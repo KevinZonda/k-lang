@@ -21,16 +21,3 @@ func (v *AntlrVisitor) visitOpenStmt(ctx parser.IOpenStmtContext) *node.OpenStmt
 	}
 	return o
 }
-
-func (v *AntlrVisitor) visitOpenBlock(ctx parser.IOpenBlockContext) *node.OpenBlock {
-	os := ctx.AllOpenStmt()
-
-	var openers []*node.OpenStmt
-	for _, o := range os {
-		openers = append(openers, v.visitOpenStmt(o))
-	}
-	return &node.OpenBlock{
-		Token:   token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
-		Openers: openers,
-	}
-}

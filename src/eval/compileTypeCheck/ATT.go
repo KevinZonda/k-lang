@@ -28,8 +28,6 @@ func (a *ATT) CheckAST(ast tree.Ast) {
 			a.CheckFuncBlock(nT)
 		case *node.StructBlock:
 			a.CheckStructBlock(nT)
-		case *node.OpenBlock:
-			a.CheckOpenBlock(nT)
 		default:
 			panic("not implemented")
 		}
@@ -51,10 +49,6 @@ func (a *ATT) TxType(t *node.Type) T {
 }
 
 func (a *ATT) CheckStructBlock(n *node.StructBlock) {
-
-}
-
-func (a *ATT) CheckOpenBlock(n *node.OpenBlock) {
 
 }
 

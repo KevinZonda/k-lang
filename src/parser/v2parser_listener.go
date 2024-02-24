@@ -1,4 +1,4 @@
-// Code generated from .//antlr4//V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
+// Code generated from ./antlr4/V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
 
 package parser // V2Parser
 
@@ -10,9 +10,6 @@ type V2ParserListener interface {
 
 	// EnterProgram is called when entering the program production.
 	EnterProgram(c *ProgramContext)
-
-	// EnterOpenBlock is called when entering the openBlock production.
-	EnterOpenBlock(c *OpenBlockContext)
 
 	// EnterStructBlock is called when entering the structBlock production.
 	EnterStructBlock(c *StructBlockContext)
@@ -142,9 +139,6 @@ type V2ParserListener interface {
 
 	// ExitProgram is called when exiting the program production.
 	ExitProgram(c *ProgramContext)
-
-	// ExitOpenBlock is called when exiting the openBlock production.
-	ExitOpenBlock(c *OpenBlockContext)
 
 	// ExitStructBlock is called when exiting the structBlock production.
 	ExitStructBlock(c *StructBlockContext)

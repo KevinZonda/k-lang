@@ -1,4 +1,4 @@
-// Code generated from .//antlr4//V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
+// Code generated from ./antlr4/V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
 
 package parser // V2Parser
 
@@ -9,10 +9,6 @@ type BaseV2ParserVisitor struct {
 }
 
 func (v *BaseV2ParserVisitor) VisitProgram(ctx *ProgramContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseV2ParserVisitor) VisitOpenBlock(ctx *OpenBlockContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

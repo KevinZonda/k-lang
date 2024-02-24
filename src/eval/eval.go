@@ -85,10 +85,6 @@ func (e *Eval) runAst(ast tree.Ast, breaks ...string) DetailedRunResult {
 			e.memory.Set(nT.Name.Value, nT)
 		case *node.StructBlock:
 			e.memory.Set(nT.Name, nT)
-		case *node.OpenBlock:
-			for _, stmt := range nT.Openers {
-				e.EvalOpenStmt(stmt)
-			}
 		default:
 			panic("not implemented")
 		}
@@ -121,13 +117,15 @@ func (e *Eval) Do(ast tree.Ast) DetailedRunResult {
 func (e *Eval) DoSafely(ast tree.Ast) (rst DetailedRunResult) {
 	defer func() {
 		rst.CurrentToken = e.CurrentToken()
-		if r := recover(); r != nil {
-			rst.IsPanic = true
-			rst.PanicMsg = fmt.Sprint(r)
-			if e.FeatVerbose {
-				rst.PanicMsg += "\n"
-				rst.PanicMsg += e.MemStr()
-			}
+		r := recover()
+		if r == nil {
+			return
+		}
+		rst.IsPanic = true
+		rst.PanicMsg = fmt.Sprint(r)
+		if e.FeatVerbose {
+			rst.PanicMsg += "\n"
+			rst.PanicMsg += e.MemStr()
 		}
 	}()
 	rst.stderr = e.GetStdErr()

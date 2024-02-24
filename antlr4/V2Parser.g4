@@ -2,10 +2,9 @@ parser grammar V2Parser;
 options { tokenVocab=V2Lexer; }
 
 program
-    : openBlock ((structBlock | funcBlock | stmt | commaExpr) (sep*))* EOF
+    : ((structBlock | funcBlock | stmt | commaExpr) (sep*))* EOF
     ;
 
-openBlock : openStmt*;
 structBlock
     : Struct Identifier declareBlock
     ;
@@ -85,6 +84,7 @@ stmt
     | matchStmt
     | codeBlock
     | tryCatchSmt
+    | openStmt
     | funcCall
     ;
 assignStmt
