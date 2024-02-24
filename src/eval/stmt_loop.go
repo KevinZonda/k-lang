@@ -10,23 +10,37 @@ import (
 func (e *Eval) _evalIterArray(n *node.IterStyleFor, iters []any) {
 	e.currentToken = n.GetToken()
 	for _, iter := range iters {
-		e.EvalLoopCodeBlockWithHook(n.Body, func() {
+		isContinue, isBreak, isReturn := e.loopCentral(n.Body, func() {
 			e.memory.Top().SetValue(n.Variable.Value, iter)
 		})
-		top := e.memory.Top()
-		if top.Has(reserved.Continue) {
-			top.Remove(reserved.Continue)
+		if isContinue {
 			continue
 		}
-		if top.Has(reserved.Return) {
-			e.loopLvl--
+		if isReturn || isBreak {
 			return
 		}
-		if top.Has(reserved.Break) {
-			e.loopLvl--
-			top.Remove(reserved.Break)
-			return
-		}
+	}
+	return
+}
+
+func (e *Eval) loopCentral(body *node.CodeBlock, onNewFrame func()) (isContinue, isBreak, isReturn bool) {
+	e.EvalLoopCodeBlockWithHook(body, onNewFrame)
+	top := e.memory.Top()
+	if top.Has(reserved.Continue) {
+		top.Remove(reserved.Continue)
+		isContinue = true
+		return
+	}
+	if top.Has(reserved.Return) {
+		e.loopLvl--
+		isReturn = true
+		return
+	}
+	if top.Has(reserved.Break) {
+		e.loopLvl--
+		top.Remove(reserved.Break)
+		isBreak = true
+		return
 	}
 	return
 }
@@ -34,26 +48,18 @@ func (e *Eval) _evalIterArray(n *node.IterStyleFor, iters []any) {
 func (e *Eval) _evalIterMap(n *node.IterStyleFor, iters map[any]any) {
 	e.currentToken = n.GetToken()
 	for key, val := range iters {
-		top := e.memory.Top()
-		e.EvalLoopCodeBlockWithHook(n.Body, func() {
+		isContinue, isBreak, isReturn := e.loopCentral(n.Body, func() {
 			field := orderedmap.New[string, any]()
 			field.Set("key", key)
 			field.Set("val", val)
-			top.SetValue(n.Variable.Value, &obj.StructField{
+			e.memory.Top().SetValue(n.Variable.Value, &obj.StructField{
 				Fields: field,
 			})
 		})
-		if top.Has(reserved.Continue) {
-			top.Remove(reserved.Continue)
+		if isContinue {
 			continue
 		}
-		if top.Has(reserved.Return) {
-			e.loopLvl--
-			return
-		}
-		if top.Has(reserved.Break) {
-			e.loopLvl--
-			top.Remove(reserved.Break)
+		if isReturn || isBreak {
 			return
 		}
 	}
@@ -101,19 +107,11 @@ func (e *Eval) EvalWhileForStmt(n *node.WhileStyleFor) {
 				return
 			}
 		}
-		e.EvalLoopCodeBlockWithHook(n.Body, nil)
-		top := e.memory.Top()
-		if top.Has(reserved.Continue) {
-			top.Remove(reserved.Continue)
+		isContinue, isBreak, isReturn := e.loopCentral(n.Body, nil)
+		if isContinue {
 			continue
 		}
-		if top.Has(reserved.Return) {
-			e.loopLvl--
-			return
-		}
-		if top.Has(reserved.Break) {
-			e.loopLvl--
-			top.Remove(reserved.Break)
+		if isReturn || isBreak {
 			return
 		}
 	}
@@ -141,20 +139,14 @@ func (e *Eval) EvalCStyleFrStmt(n *node.CStyleFor) {
 				return
 			}
 		}
-		e.EvalLoopCodeBlockWithHook(n.Body, nil)
-		top := e.memory.Top()
-		if top.Has(reserved.Continue) {
-			top.Remove(reserved.Continue)
+		isContinue, isBreak, isReturn := e.loopCentral(n.Body, nil)
+		if isContinue {
 			e.EvalExpr(n.AfterIterExpr)
+		}
+		if isContinue {
 			continue
 		}
-		if top.Has(reserved.Return) {
-			e.loopLvl--
-			return
-		}
-		if top.Has(reserved.Break) {
-			e.loopLvl--
-			top.Remove(reserved.Break)
+		if isReturn || isBreak {
 			return
 		}
 		e.EvalExpr(n.AfterIterExpr)
