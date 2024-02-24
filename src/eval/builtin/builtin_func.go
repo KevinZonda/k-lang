@@ -23,6 +23,9 @@ func (b BuiltIn) Println(v ...any) {
 }
 
 func TypeOf(v any) string {
+	if v == nil {
+		return "<nil>"
+	}
 	switch v.(type) {
 	case obj.ILibrary:
 		return "lib"
