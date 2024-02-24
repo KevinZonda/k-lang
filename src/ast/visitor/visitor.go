@@ -27,46 +27,42 @@ func (v *AntlrVisitor) appendErr(ctx antlr.ParserRuleContext, msg string, raw er
 		Msg: msg,
 		Raw: fmt.Errorf(msg),
 	}
-	if ctx != nil {
-		e.Text = ctx.GetText()
-		if ctx.GetStart() != nil {
-			e.Line = ctx.GetStart().GetLine()
-			e.Column = ctx.GetStart().GetColumn()
-		}
-		if ctx.GetStop() != nil {
-			e.EndLine = ctx.GetStop().GetLine()
-			e.EndColumn = ctx.GetStop().GetColumn() + len([]rune(ctx.GetStop().GetText()))
-		}
+	if ctx == nil {
+		goto end
 	}
+
+	e.Text = ctx.GetText()
+	if ctx.GetStart() != nil {
+		e.Line = ctx.GetStart().GetLine()
+		e.Column = ctx.GetStart().GetColumn()
+	}
+	if ctx.GetStop() != nil {
+		e.EndLine = ctx.GetStop().GetLine()
+		e.EndColumn = ctx.GetStop().GetColumn() + len([]rune(ctx.GetStop().GetText()))
+	}
+
+end:
 	v.Errs = append(v.Errs, e)
 }
 
 func (v *AntlrVisitor) VisitProgram(ctx *parser.ProgramContext) any {
 	var block []node.Node
 	for _, t := range ctx.GetChildren() {
+		var n node.Node
 		switch t.(type) {
 		case *parser.StructBlockContext:
-			if sx := v.visitStructBlock(t.(*parser.StructBlockContext)); sx != nil {
-				block = append(block, sx)
-			}
+			n = v.visitStructBlock(t.(*parser.StructBlockContext))
 		case *parser.FuncBlockContext:
-			if fx := v.visitFuncBlock(t.(*parser.FuncBlockContext)); fx != nil {
-				block = append(block, fx)
-			}
+			n = v.visitFuncBlock(t.(*parser.FuncBlockContext))
 		case *parser.StmtContext:
-			if stmt := v.visitStmt(t.(*parser.StmtContext)); stmt != nil {
-				block = append(block, stmt)
-			}
+			n = v.visitStmt(t.(*parser.StmtContext))
 		case *parser.ExprContext:
-			if expr := v.visitExpr(t.(*parser.ExprContext)); expr != nil {
-				block = append(block, expr)
-			}
+			n = v.visitExpr(t.(*parser.ExprContext))
 		case *parser.CommaExprContext:
-			if expr := v.visitCommaExpr(t.(*parser.CommaExprContext)); expr != nil {
-				block = append(block, expr)
-			}
-		case *antlr.TerminalNodeImpl:
-			continue
+			n = v.visitCommaExpr(t.(*parser.CommaExprContext))
+		}
+		if n != nil {
+			block = append(block, n)
 		}
 
 	}
