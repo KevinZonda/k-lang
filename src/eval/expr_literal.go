@@ -98,15 +98,15 @@ func (e *Eval) getZeroValue(t *node.Type) any {
 		return nil
 	}
 	switch t.Name {
-	case "int":
+	case node.TypeInt:
 		return 0
-	case "number", "float", "num":
+	case node.TypeNum:
 		return 0.0
-	case "string", "str":
+	case node.TypeString:
 		return ""
-	case "bool":
+	case node.TypeBool:
 		return false
-	case "any":
+	case node.TypeAny:
 		return nil
 	default:
 		baseEval := e.GetPackage(t.Package)

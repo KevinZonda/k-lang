@@ -33,7 +33,7 @@ print(M{}.x)
 
 func TestZeroValueFloat(t *testing.T) {
 	code := `
-struct M{ float x }
+struct M{ num x }
 print(M{}.x)
 `
 	expected := `0`

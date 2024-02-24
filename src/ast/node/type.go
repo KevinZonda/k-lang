@@ -12,6 +12,29 @@ type Type struct {
 	Nullable bool
 }
 
+func (t *Type) plainType() bool {
+	if t.Package != "" || t.Array || t.Map || t.Func {
+		return false
+	}
+	return true
+}
+
+func (t *Type) IsPlanType(typeName string) bool {
+	if !t.plainType() {
+		return false
+	}
+	return t.Name == typeName
+}
+
+const (
+	TypeInt    string = "int"
+	TypeNum    string = "num"
+	TypeString string = "string"
+	TypeBool   string = "bool"
+	TypeVoid   string = "void"
+	TypeAny    string = "any"
+)
+
 func (t *Type) CodeName() string {
 	tail := ""
 	if t.Nullable {

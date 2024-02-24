@@ -24,11 +24,11 @@ func (e *Eval) TypeCheck(t *node.Type, v any) bool {
 	case map[any]any:
 		return t.Package == "" && t.Map
 	case int:
-		return t.Package == "" && (t.Name == "int" || t.Name == "num")
+		return t.IsPlanType(node.TypeInt) || t.IsPlanType(node.TypeNum)
 	case float64:
-		return t.Package == "" && t.Name == "num"
+		return t.IsPlanType(node.TypeNum)
 	case string:
-		return t.Package == "" && (t.Name == "string" || t.Name == "str")
+		return t.IsPlanType(node.TypeString)
 	case *node.LambdaExpr, *node.FuncBlock:
 		return t.Func
 	case *obj.StructField:
@@ -127,7 +127,7 @@ func (e *Eval) NormaliseWithType(t *node.Type, v any) any {
 			ParentEval: vT.ParentEval,
 		}
 	}
-	if t.Name == "num" && t.Package == "" {
+	if t.Name == node.TypeNum && t.Package == "" {
 		switch vT := v.(type) {
 		case float64:
 			return vT
@@ -164,15 +164,15 @@ func (e *Eval) AutoType(v any) *node.Type {
 		}
 	case int:
 		return &node.Type{
-			Name: "int",
+			Name: node.TypeInt,
 		}
 	case float64:
 		return &node.Type{
-			Name: "num",
+			Name: node.TypeNum,
 		}
 	case string:
 		return &node.Type{
-			Name: "string",
+			Name: node.TypeString,
 		}
 	case *obj.StructField:
 		vT := v.(*obj.StructField)
