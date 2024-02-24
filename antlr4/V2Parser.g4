@@ -15,7 +15,7 @@ funcBlock
 
 codeBlock : LBrack ((stmt | expr) sep*)* RBrack;
 declareBlock : LBrack declareStmt* RBrack;
-funcSig : Identifier LParen funcSignArgs RParen type?;
+funcSig : Identifier LParen funcSignArgs RParen ((To|Col)? type)?;
 funcSignArgs : funcSignArgItem? (Comma funcSignArgItem)*;
 funcSignArgItem : type? Ref? Identifier | Ref? Identifier (Col type)?;
 
@@ -89,6 +89,7 @@ stmt
     ;
 assignStmt
     : type? var Assign Ref? exprWithLambda
+    | var Col type Assign Ref? exprWithLambda
     | vars Assign commaExpr
     ;
 

@@ -109,3 +109,15 @@ print(x.x)
 `
 	tester.GeneralTest(false, t, code, "19")
 }
+
+func TestAssignTypeFunc3(t *testing.T) {
+	code := `
+fn f() -> int {
+    return ""
+}
+f()
+`
+	tester.ExpectPanic(t, code, func(exp string) bool {
+		return strings.HasPrefix(exp, "TypeCheck Failed")
+	})
+}

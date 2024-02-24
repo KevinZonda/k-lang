@@ -76,6 +76,15 @@ func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, onNewFrame fu
 	//_ = fe.run()
 	// retV, retOk := fe.memory.GetAtTop("0")
 	e.frameEnd()
+	if fn.RetType != nil {
+		if fn.RetType.Name == "void" && result.HasReturn {
+			panic("A void func cannot have return value.")
+		}
+		if !result.HasReturn {
+			panic("A non-void func cannot have no return value.")
+		}
+		e.TypeCheckOrPanic(fn.RetType, result.ReturnValue)
+	}
 	return ExprResult{HasValue: result.HasReturn, Value: result.ReturnValue}
 }
 
