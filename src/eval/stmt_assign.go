@@ -118,7 +118,9 @@ func (e *Eval) EvalAssignStmtX(n *node.AssignStmt, assignee *node.Assignee, valu
 					panic("cannot assign to " + lastVar.Name.Value)
 				}
 
-				if ok && n.Token.Value != ":=" {
+				shadow := n.Token.Value == ":=" || n.Assignee[0].Type != nil
+
+				if ok && !shadow {
 					// following is not possible because ref syntax
 					// foo(&x) will let set val not possible
 					// e.memory.Set(lastVar.Name.Value, Construct(v))
