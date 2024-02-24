@@ -1,4 +1,4 @@
-// Code generated from ./antlr4/V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
+// Code generated from .//antlr4//V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
 
 package parser // V2Parser
 
@@ -100,6 +100,12 @@ type V2ParserListener interface {
 
 	// EnterVars is called when entering the vars production.
 	EnterVars(c *VarsContext)
+
+	// EnterTypedIdentifiers is called when entering the typedIdentifiers production.
+	EnterTypedIdentifiers(c *TypedIdentifiersContext)
+
+	// EnterTypedIdentifier is called when entering the typedIdentifier production.
+	EnterTypedIdentifier(c *TypedIdentifierContext)
 
 	// EnterDeclareStmt is called when entering the declareStmt production.
 	EnterDeclareStmt(c *DeclareStmtContext)
@@ -229,6 +235,12 @@ type V2ParserListener interface {
 
 	// ExitVars is called when exiting the vars production.
 	ExitVars(c *VarsContext)
+
+	// ExitTypedIdentifiers is called when exiting the typedIdentifiers production.
+	ExitTypedIdentifiers(c *TypedIdentifiersContext)
+
+	// ExitTypedIdentifier is called when exiting the typedIdentifier production.
+	ExitTypedIdentifier(c *TypedIdentifierContext)
 
 	// ExitDeclareStmt is called when exiting the declareStmt production.
 	ExitDeclareStmt(c *DeclareStmtContext)

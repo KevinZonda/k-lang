@@ -1,4 +1,4 @@
-// Code generated from ./antlr4/V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
+// Code generated from .//antlr4//V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
 
 package parser // V2Parser
 
@@ -129,6 +129,14 @@ func (v *BaseV2ParserVisitor) VisitAssignStmt(ctx *AssignStmtContext) interface{
 }
 
 func (v *BaseV2ParserVisitor) VisitVars(ctx *VarsContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseV2ParserVisitor) VisitTypedIdentifiers(ctx *TypedIdentifiersContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseV2ParserVisitor) VisitTypedIdentifier(ctx *TypedIdentifierContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

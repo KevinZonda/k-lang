@@ -4,6 +4,7 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parser"
+	"github.com/antlr4-go/antlr/v4"
 	orderedmap "github.com/wk8/go-ordered-map/v2"
 )
 
@@ -37,26 +38,37 @@ func (v *AntlrVisitor) visitDeclareStmt(ctx parser.IDeclareStmtContext) *node.De
 			Names: []string{block.Name.Value},
 			Declare: node.Declare{
 				Func: block,
-				Type: v.visitType(ctx.Type_()),
 			},
 		}
 	}
+	var _type parser.ITypeContext
+	var _names []antlr.TerminalNode
+	if ctx.TypedIdentifiers() != nil {
+		_type = ctx.TypedIdentifiers().Type_()
+		_names = ctx.TypedIdentifiers().AllIdentifier()
+	} else if ctx.TypedIdentifier() != nil {
+		_type = ctx.TypedIdentifier().Type_()
+		_names = []antlr.TerminalNode{ctx.TypedIdentifier().Identifier()}
+	} else {
+		v.appendErr(ctx, "Unknown declare", nil)
+		return nil
+	}
+
 	if ctx.ExprWithLambda() != nil {
 		return &node.DeclareStmt{
-			Names: []string{ctx.Identifier(0).GetText()},
+			Names: []string{_names[0].GetText()},
 			Declare: node.Declare{
-				Type:  v.visitType(ctx.Type_()),
+				Type:  v.visitType(_type),
 				Value: v.visitExprWithLambda(ctx.ExprWithLambda()),
 			},
 		}
 	}
 	stmt := &node.DeclareStmt{
 		Declare: node.Declare{
-			Type: v.visitType(ctx.Type_()),
+			Type: v.visitType(_type),
 		},
 	}
-	ids := ctx.AllIdentifier()
-	for _, id := range ids {
+	for _, id := range _names {
 		stmt.Names = append(stmt.Names, id.GetText())
 	}
 	return stmt

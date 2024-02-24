@@ -1,4 +1,4 @@
-// Code generated from ./antlr4/V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
+// Code generated from .//antlr4//V2Parser.g4 by ANTLR 4.13.1. DO NOT EDIT.
 
 package parser // V2Parser
 
@@ -206,6 +206,18 @@ func (s *BaseV2ParserListener) EnterVars(ctx *VarsContext) {}
 
 // ExitVars is called when production vars is exited.
 func (s *BaseV2ParserListener) ExitVars(ctx *VarsContext) {}
+
+// EnterTypedIdentifiers is called when production typedIdentifiers is entered.
+func (s *BaseV2ParserListener) EnterTypedIdentifiers(ctx *TypedIdentifiersContext) {}
+
+// ExitTypedIdentifiers is called when production typedIdentifiers is exited.
+func (s *BaseV2ParserListener) ExitTypedIdentifiers(ctx *TypedIdentifiersContext) {}
+
+// EnterTypedIdentifier is called when production typedIdentifier is entered.
+func (s *BaseV2ParserListener) EnterTypedIdentifier(ctx *TypedIdentifierContext) {}
+
+// ExitTypedIdentifier is called when production typedIdentifier is exited.
+func (s *BaseV2ParserListener) ExitTypedIdentifier(ctx *TypedIdentifierContext) {}
 
 // EnterDeclareStmt is called when production declareStmt is entered.
 func (s *BaseV2ParserListener) EnterDeclareStmt(ctx *DeclareStmtContext) {}

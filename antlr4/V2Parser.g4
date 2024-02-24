@@ -17,7 +17,7 @@ codeBlock : LBrack ((stmt | expr) sep*)* RBrack;
 declareBlock : LBrack declareStmt* RBrack;
 funcSig : Identifier LParen funcSignArgs RParen type?;
 funcSignArgs : funcSignArgItem? (Comma funcSignArgItem)*;
-funcSignArgItem : type? Ref? Identifier;
+funcSignArgItem : type? Ref? Identifier | Ref? Identifier (Col type)?;
 
 type: Map | Function | (PackageName=Identifier Dot)? TypeName=Identifier (LSquare RSquare)? Question?;
 var : baseVar (Dot baseVar)*; // x.y[X].z
@@ -94,10 +94,11 @@ assignStmt
 
 vars : var (Comma var)*;
 
+typedIdentifiers : type Identifier (Comma Identifier)* | Identifier (Comma Identifier)* Col type;
+typedIdentifier : type? Identifier | Identifier (Col type)?;
 declareStmt
-    : type Identifier (Comma Identifier)*
-    | type Identifier Assign exprWithLambda
-    | type? Identifier Assign exprWithLambda
+    : typedIdentifiers
+    | typedIdentifier Assign exprWithLambda
     | funcBlock
     ;
 
