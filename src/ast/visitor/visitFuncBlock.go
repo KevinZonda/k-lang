@@ -18,9 +18,28 @@ func (v *AntlrVisitor) visitLambda(ctx parser.ILambdaContext) *node.LambdaExpr {
 		Token:   token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		Body:    v.visitCodeBlock(ctx.CodeBlock()),
 		Args:    v.visitFuncSignArgs(ctx.FuncSignArgs()),
-		RetType: v.visitType(ctx.Type_()),
+		RetType: v.visitFuncReturnType(ctx.FuncReturnType()),
 	}
 	return fb
+}
+
+func (v *AntlrVisitor) visitFuncReturnType(ctx parser.IFuncReturnTypeContext) []*node.Type {
+	if ctx == nil {
+		return nil
+	}
+	var ret []*node.Type
+	ts := ctx.AllType_()
+	l := len(ts)
+	for _, t := range ts {
+		_t := v.visitType(t)
+		if _t.IsPlainType(node.TypeVoid) && l > 1 {
+			v.appendErr(ctx, "void function only allow void as return type", nil)
+			return nil
+		}
+		ret = append(ret, v.visitType(t))
+
+	}
+	return ret
 }
 
 func (v *AntlrVisitor) visitFuncSig(ctx parser.IFuncSigContext) *node.FuncBlock {
@@ -28,7 +47,7 @@ func (v *AntlrVisitor) visitFuncSig(ctx parser.IFuncSigContext) *node.FuncBlock 
 		// Token: token.FromAntlrToken(ctx.GetStart()),
 		Name:    v.visitIdentifier(ctx.Identifier()),
 		Args:    v.visitFuncSignArgs(ctx.FuncSignArgs()),
-		RetType: v.visitType(ctx.Type_()),
+		RetType: v.visitFuncReturnType(ctx.FuncReturnType()),
 	}
 	return fb
 }

@@ -23,12 +23,12 @@ func (e *Eval) TypeCheck(t *node.Type, v any) bool {
 		return t.Package == "" && t.Array
 	case map[any]any:
 		return t.Package == "" && t.Map
-	case int:
-		return t.IsPlanType(node.TypeInt) || t.IsPlanType(node.TypeNum)
-	case float64:
-		return t.IsPlanType(node.TypeNum)
+	case int, float64:
+		return t.IsPlainType(node.TypeInt) || t.IsPlainType(node.TypeNum)
+	//case float64:
+	//	return t.IsPlainType(node.TypeNum)
 	case string:
-		return t.IsPlanType(node.TypeString)
+		return t.IsPlainType(node.TypeString)
 	case *node.LambdaExpr, *node.FuncBlock:
 		return t.Func
 	case *obj.StructField:
@@ -102,6 +102,28 @@ func (e *Eval) NormaliseWithType(t *node.Type, v any) any {
 	if t == nil {
 		return v
 	}
+	if t.IsPlainType(node.TypeInt) {
+		switch vT := v.(type) {
+		case float64:
+			return int(vT)
+		case int:
+			return vT
+		default:
+			return v
+			//panic("Not Possible Type Transformation")
+		}
+	}
+	if t.IsPlainType(node.TypeNum) {
+		switch vT := v.(type) {
+		case float64:
+			return vT
+		case int:
+			return float64(vT)
+		default:
+			return v
+			//panic("Not Possible Type Transformation")
+		}
+	}
 	if vT, ok := v.(*obj.StructField); ok {
 		if vT.TypeAs != nil && vT.TypeAs.Name == t.Name {
 			return v
@@ -127,17 +149,7 @@ func (e *Eval) NormaliseWithType(t *node.Type, v any) any {
 			ParentEval: vT.ParentEval,
 		}
 	}
-	if t.Name == node.TypeNum && t.Package == "" {
-		switch vT := v.(type) {
-		case float64:
-			return vT
-		case int:
-			return float64(vT)
-		default:
-			return v
-			//panic("Not Possible Type Transformation")
-		}
-	}
+
 	return v
 }
 

@@ -121,3 +121,16 @@ f()
 		return strings.HasPrefix(exp, "TypeCheck Failed")
 	})
 }
+
+func TestAssignTypeFunc4(t *testing.T) {
+	code := `
+fn f() -> (int, string) {
+    return 12.0, 12
+}
+x, z := f()
+print(typeOf(x))
+`
+	tester.ExpectPanic(t, code, func(exp string) bool {
+		return strings.HasPrefix(exp, "TypeCheck Failed")
+	})
+}

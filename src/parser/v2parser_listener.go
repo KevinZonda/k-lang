@@ -26,6 +26,9 @@ type V2ParserListener interface {
 	// EnterFuncSig is called when entering the funcSig production.
 	EnterFuncSig(c *FuncSigContext)
 
+	// EnterFuncReturnType is called when entering the funcReturnType production.
+	EnterFuncReturnType(c *FuncReturnTypeContext)
+
 	// EnterFuncSignArgs is called when entering the funcSignArgs production.
 	EnterFuncSignArgs(c *FuncSignArgsContext)
 
@@ -160,6 +163,9 @@ type V2ParserListener interface {
 
 	// ExitFuncSig is called when exiting the funcSig production.
 	ExitFuncSig(c *FuncSigContext)
+
+	// ExitFuncReturnType is called when exiting the funcReturnType production.
+	ExitFuncReturnType(c *FuncReturnTypeContext)
 
 	// ExitFuncSignArgs is called when exiting the funcSignArgs production.
 	ExitFuncSignArgs(c *FuncSignArgsContext)

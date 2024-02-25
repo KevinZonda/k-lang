@@ -19,7 +19,7 @@ func (t *Type) plainType() bool {
 	return true
 }
 
-func (t *Type) IsPlanType(typeName string) bool {
+func (t *Type) IsPlainType(typeName string) bool {
 	if !t.plainType() {
 		return false
 	}

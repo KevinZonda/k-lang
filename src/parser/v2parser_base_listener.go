@@ -57,6 +57,12 @@ func (s *BaseV2ParserListener) EnterFuncSig(ctx *FuncSigContext) {}
 // ExitFuncSig is called when production funcSig is exited.
 func (s *BaseV2ParserListener) ExitFuncSig(ctx *FuncSigContext) {}
 
+// EnterFuncReturnType is called when production funcReturnType is entered.
+func (s *BaseV2ParserListener) EnterFuncReturnType(ctx *FuncReturnTypeContext) {}
+
+// ExitFuncReturnType is called when production funcReturnType is exited.
+func (s *BaseV2ParserListener) ExitFuncReturnType(ctx *FuncReturnTypeContext) {}
+
 // EnterFuncSignArgs is called when production funcSignArgs is entered.
 func (s *BaseV2ParserListener) EnterFuncSignArgs(ctx *FuncSignArgsContext) {}
 

@@ -78,7 +78,7 @@ func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, onNewFrame fu
 	// retV, retOk := fe.memory.GetAtTop("0")
 	e.frameEnd()
 	if fn.RetType != nil {
-		isVoid := fn.RetType.Name == node.TypeVoid
+		isVoid := fn.RetType[0].IsPlainType(node.TypeVoid)
 		if isVoid {
 			if result.HasReturn {
 				panic("A void func cannot have return value.")
@@ -89,7 +89,22 @@ func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, onNewFrame fu
 		if !isVoid && !result.HasReturn {
 			panic("A non-void func cannot have no return value.")
 		}
-		e.TypeCheckOrPanic(fn.RetType, result.ReturnValue)
+		switch len(fn.RetType) {
+		case 0:
+			goto end
+		case 1:
+			e.TypeCheckOrPanic(fn.RetType[0], result.ReturnValue)
+		default:
+			retV, ok := result.ReturnValue.([]any)
+			if !ok || len(retV) != len(fn.RetType) {
+				panic("return value should has the same length as return type")
+			}
+			for idx, retT := range fn.RetType {
+				e.TypeCheckOrPanic(retT, retV[idx])
+				retV[idx] = e.NormaliseWithType(retT, retV[idx])
+			}
+		}
+
 	}
 end:
 	return ExprResult{HasValue: result.HasReturn, Value: result.ReturnValue}

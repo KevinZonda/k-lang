@@ -9,7 +9,7 @@ type FuncBlock struct {
 	Token   token.Token
 	Name    *Identifier
 	Args    []*FuncArg
-	RetType *Type
+	RetType []*Type
 	Body    *CodeBlock
 }
 

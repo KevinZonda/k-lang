@@ -15,7 +15,8 @@ funcBlock
 
 codeBlock : LBrack ((stmt | expr) sep*)* RBrack;
 declareBlock : LBrack declareStmt* RBrack;
-funcSig : Identifier LParen funcSignArgs RParen ((To|Col)? type)?;
+funcSig : Identifier LParen funcSignArgs RParen funcReturnType?;
+funcReturnType :  (Flag=(To|Col)? (type|LParen type (Comma type)* RParen));
 funcSignArgs : funcSignArgItem? (Comma funcSignArgItem)*;
 funcSignArgItem : type? Ref? Identifier | Ref? Identifier (Col type)?;
 
@@ -26,7 +27,7 @@ baseVar : Identifier indexes?;
 index : LSquare expr RSquare;
 indexes : index+;
 
-lambda : Function LParen funcSignArgs RParen type? codeBlock;
+lambda : Function LParen funcSignArgs RParen funcReturnType? codeBlock;
 
 //boolExpr
 //    : expr (Equals | NotEq | Greater | Less | GreaterEq | LessEq) expr

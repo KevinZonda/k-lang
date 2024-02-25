@@ -32,6 +32,10 @@ func (v *BaseV2ParserVisitor) VisitFuncSig(ctx *FuncSigContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseV2ParserVisitor) VisitFuncReturnType(ctx *FuncReturnTypeContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseV2ParserVisitor) VisitFuncSignArgs(ctx *FuncSignArgsContext) interface{} {
 	return v.VisitChildren(ctx)
 }
