@@ -53,7 +53,11 @@ func TypeOf(v any) string {
 		}
 		return TypeOf(vT.Value())
 	case *obj.StructField:
-		return v.(*obj.StructField).TypeAs.Name
+		vT := v.(*obj.StructField)
+		if vT.TypeAs == nil {
+			return "struct"
+		}
+		return vT.TypeAs.Name
 	}
 	return reflect.TypeOf(v).String()
 }

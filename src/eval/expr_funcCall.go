@@ -22,8 +22,18 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) ExprResult {
 
 	// Find Func
 	funcName := fc.Caller.Value
+	// TODO: int() float()
 	fx, ok := e.memory.Get(funcName)
 	if !ok || !(fx.Is(obj.Func, obj.Lambda)) {
+		if fx.Is(obj.StructDef) {
+			t := &node.Type{
+				Name: funcName,
+			}
+			v := e.EvalExpr(fc.Args[0]).EnsureValue()
+			e.TypeCheckOrPanic(t, v)
+			retV := e.NormaliseWithType(t, v)
+			return exprVal(retV)
+		}
 		return e.EvalBuiltInCall(fc, e.evalExprs(fc.Args...))
 	}
 

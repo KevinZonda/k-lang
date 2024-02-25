@@ -134,3 +134,22 @@ print(typeOf(x))
 		return strings.HasPrefix(exp, "TypeCheck Failed")
 	})
 }
+
+func TestAssignTypeFunc5(t *testing.T) {
+	code := `
+struct color {
+	r: int
+	g: int
+	b: int
+}
+x := struct {
+    r: 18,
+	g: 18,
+	b: 1
+}
+println(typeOf(x))
+z := color(x)
+print(typeOf(z))
+`
+	tester.GeneralTest(true, t, code, "struct\ncolor")
+}
