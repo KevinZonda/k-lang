@@ -171,6 +171,11 @@ func NewEditorW() *EditorW {
 	w.Toolbar.RunBtn.Connect("clicked", w.RunCode)
 	w.Toolbar.RestartBtn.Connect("clicked", w.RerunCode)
 	w.Toolbar.FmtBtn.Connect("clicked", w.FormatCode)
+	w.Toolbar.CleanBtn.Connect("clicked", func() {
+		w.ReplE.SetText("")
+		w.ReplE.AppendEnd(buildconst.Msg() + "\n")
+		w.startPrompt()
+	})
 	w.ReplEnter.Connect("activate", w.InvokeUserRepl)
 
 	{
@@ -275,7 +280,7 @@ func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (rst eval.
 			w.ReplE.ScrollToEnd()
 		}
 	}
-	if beginMsg != "" {
+	if beginMsg != "" { // User Invoke Will Handle
 		w.startPrompt()
 	}
 	return
@@ -320,13 +325,14 @@ func (w *EditorW) InvokeUserRepl() {
 	} else if rst.IsLastExpr {
 		val = rst.LastExprVal
 	} else {
-		return
+		goto end
 	}
 	w.ReplE.SmartNewLine()
 	w.ReplE.AppendTag(w.ReplETags.Blue, "<<< ")
 	w.ReplE.AppendEnd(fmt.Sprintf("%v\n", val))
-	w.ReplE.ScrollToEnd()
+end:
 	w.startPrompt()
+	w.ReplE.ScrollToEnd()
 }
 
 type ToolBar struct {
@@ -334,6 +340,7 @@ type ToolBar struct {
 	StopBtn    *gtk.ToolButton
 	SaveBtn    *gtk.ToolButton
 	RestartBtn *gtk.ToolButton
+	CleanBtn   *gtk.ToolButton
 	RunBtn     *gtk.ToolButton
 	FmtBtn     *gtk.ToolButton
 }
@@ -353,6 +360,9 @@ func (w *EditorW) NewToolBar() *ToolBar {
 	bar.RestartBtn, _ = gtk.ToolButtonNew(nil, "Restart")
 	bar.RestartBtn.SetIconName("view-refresh")
 
+	bar.CleanBtn, _ = gtk.ToolButtonNew(nil, "Clean")
+	bar.CleanBtn.SetIconName("edit-clear")
+
 	bar.FmtBtn, _ = gtk.ToolButtonNew(nil, "Format")
 	bar.FmtBtn.SetIconName("format-indent-more") //"document-page-setup")
 	sep, _ := gtk.SeparatorToolItemNew()
@@ -361,12 +371,11 @@ func (w *EditorW) NewToolBar() *ToolBar {
 	bar.SaveBtn.SetIconName("document-save")
 	bar.SaveBtn.Connect("clicked", w.Save)
 
-	bar.Insert(bar.SaveBtn, 0)
-	bar.Insert(bar.FmtBtn, 1)
-	bar.Insert(sep, 2)
-	bar.Insert(bar.RestartBtn, 3)
-	bar.Insert(bar.StopBtn, 4)
-	bar.Insert(bar.RunBtn, 5)
+	items := []gtk.IToolItem{
+		bar.SaveBtn, bar.FmtBtn, sep, bar.CleanBtn, bar.RestartBtn, bar.StopBtn, bar.RunBtn}
+	for i, item := range items {
+		bar.Toolbar.Insert(item, i)
+	}
 	return &bar
 }
 
