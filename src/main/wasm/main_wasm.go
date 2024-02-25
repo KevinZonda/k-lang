@@ -52,7 +52,9 @@ type writer interface {
 
 func executeCode(stdout writer, code string) string {
 	ast, errs := parserHelper.Ast(code)
-	errs.PanicIfError()
+	if len(errs) > 0 {
+		return errs.String()
+	}
 	e := eval.New()
 	e.SetStdOut(stdout)
 	e.SetStdErr(stdout)
