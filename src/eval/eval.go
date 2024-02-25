@@ -5,7 +5,6 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/builtin"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/memory"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
@@ -18,7 +17,7 @@ type Eval struct {
 	basePath     string
 	loopLvl      int
 	currentToken token.Token
-	builtin      builtin.BuiltIn
+	std          IO
 
 	FeatStaticType bool
 	FeatVerbose    bool
@@ -44,8 +43,8 @@ func New() *Eval {
 	}
 
 	return &Eval{
-		memory:  memory.NewMemory(),
-		builtin: builtin.NewBuiltIn(),
+		memory: memory.NewMemory(),
+		std:    NewIO(),
 	}
 }
 

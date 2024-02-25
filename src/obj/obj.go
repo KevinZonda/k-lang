@@ -8,7 +8,7 @@ import (
 )
 
 type ILibrary interface {
-	FuncCall(b BuiltInInterface, name string, args []any) ILibraryCall
+	FuncCall(b StdIO, name string, args []any) ILibraryCall
 }
 
 type ILibraryCall interface {
@@ -16,7 +16,7 @@ type ILibraryCall interface {
 	Value() any
 }
 
-type BuiltInInterface interface {
+type StdIO interface {
 	GetStdin() io.Reader
 	GetStdout() io.Writer
 	GetStderr() io.Writer

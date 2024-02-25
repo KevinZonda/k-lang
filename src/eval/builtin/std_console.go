@@ -11,7 +11,7 @@ func NewStdConsoleLib() *StdConsoleLib {
 	return &StdConsoleLib{}
 }
 
-func (c *StdConsoleLib) FuncCall(b obj.BuiltInInterface, caller string, args []any) obj.ILibraryCall {
+func (c *StdConsoleLib) FuncCall(b obj.StdIO, caller string, args []any) obj.ILibraryCall {
 	switch caller {
 	case "readln":
 		ensureArgsLen(args, 0)
@@ -23,12 +23,10 @@ func (c *StdConsoleLib) FuncCall(b obj.BuiltInInterface, caller string, args []a
 		}
 		return resultVal(text)
 	case "write":
-		_b := b.(BuiltIn)
-		_b.Print(args...)
+		Print(b, args)
 		return resultNoVal()
 	case "writeln":
-		_b := b.(BuiltIn)
-		_b.Println(args...)
+		Println(b, args)
 		return resultNoVal()
 	}
 	panic("Unknown function: " + caller)

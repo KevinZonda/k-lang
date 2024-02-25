@@ -3,6 +3,7 @@ package eval
 import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/builtin"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 )
@@ -95,7 +96,7 @@ end:
 }
 
 func (e *Eval) Mem() {
-	e.memory.Println(e.builtin.StdOut, e.PtrAddr())
+	e.memory.Println(e.std.StdOut, e.PtrAddr())
 }
 
 func (e *Eval) MemStr() string {
@@ -108,21 +109,9 @@ func (e *Eval) EvalBuiltInCall(fc *node.FuncCall, args []any) ExprResult {
 		e.Mem()
 		return exprNoVal()
 	}
-	fn := e.builtin.Match(fc.Caller.Value)
-	if fn == nil {
-		panic("func not found")
-	}
-	var ret []any
-	xs := e.builtin.Call(fn, args)
-	for _, x := range xs {
-		ret = append(ret, x)
-	}
-	switch len(ret) {
-	case 1:
-		return exprVal(ret[0])
-	case 0:
+	v := builtin.Set.Call(e.std, fc.Caller.Value, args)
+	if v == nil {
 		return exprNoVal()
-	default:
-		return exprVal(ret)
 	}
+	return exprVal(v)
 }

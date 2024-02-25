@@ -12,7 +12,7 @@ type StdExecLib struct{}
 func NewStdExecLib() *StdExecLib {
 	return &StdExecLib{}
 }
-func (s *StdExecLib) FuncCall(b obj.BuiltInInterface, caller string, args []any) obj.ILibraryCall {
+func (s *StdExecLib) FuncCall(b obj.StdIO, caller string, args []any) obj.ILibraryCall {
 	switch caller {
 	case "cmd":
 		var _args []string

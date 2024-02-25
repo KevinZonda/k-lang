@@ -11,7 +11,7 @@ func NewStdTimeLib() *StdTimeLib {
 	return &StdTimeLib{}
 }
 
-func (s *StdTimeLib) FuncCall(b obj.BuiltInInterface, caller string, args []any) obj.ILibraryCall {
+func (s *StdTimeLib) FuncCall(b obj.StdIO, caller string, args []any) obj.ILibraryCall {
 	switch caller {
 	case "now":
 		ensureArgsLen(args, 0)

@@ -6,26 +6,25 @@ import (
 	"reflect"
 )
 
-func (b BuiltIn) Print(v ...any) {
+func Print(b obj.StdIO, v []any) any {
 	for _, arg := range v {
 		switch arg.(type) {
 		default:
-			fmt.Fprint(b.StdOut, arg)
+			fmt.Fprint(b.GetStdout(), arg)
 		}
 	}
+	return nil
 }
 
-func (b BuiltIn) Println(v ...any) {
+func Println(b obj.StdIO, v []any) any {
 	for _, arg := range v {
-		b.Print(arg)
+		Print(b, []any{arg})
 	}
-	fmt.Fprintln(b.StdOut)
+	fmt.Fprintln(b.GetStdout())
+	return nil
 }
 
 func TypeOf(v any) string {
-	if v == nil {
-		return "<nil>"
-	}
 	switch v.(type) {
 	case obj.ILibrary:
 		return "lib"
@@ -89,14 +88,10 @@ func Range(v any) []any {
 			vs[i] = i
 		}
 		return vs
-	case int32:
-		return Range(int(v.(int32)))
-	case int64:
-		return Range(int(v.(int64)))
 	}
 	return nil
 }
 
-func Panic(vs ...any) {
+func Panic(b obj.StdIO, vs []any) any {
 	panic(fmt.Sprint(vs...))
 }

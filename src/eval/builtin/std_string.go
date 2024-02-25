@@ -12,7 +12,7 @@ func NewStdStringLib() *StdStringLib {
 	return &StdStringLib{}
 }
 
-func (s *StdStringLib) FuncCall(b obj.BuiltInInterface, caller string, args []any) obj.ILibraryCall {
+func (s *StdStringLib) FuncCall(b obj.StdIO, caller string, args []any) obj.ILibraryCall {
 	switch caller {
 	case "len":
 		ensureArgsLen(args, 1)
