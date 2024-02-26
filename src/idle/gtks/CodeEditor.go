@@ -2,6 +2,7 @@ package gtks
 
 import (
 	"fmt"
+	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
 	sourceview "github.com/linuxerwang/sourceview3"
 	"log"
@@ -15,20 +16,37 @@ type CodeEditor struct {
 }
 
 func (ce *CodeEditor) ScrollToEnd() {
-	_, end := ce.Buf.GetBounds()
-	ce.ScrollToIter(end, 0, false, 0, 0)
+	glib.IdleAdd(func() {
+		_, end := ce.Buf.GetBounds()
+		ce.ScrollToIter(end, 0, false, 0, 0)
+	})
 }
 
 func (ce *CodeEditor) SmartNewLine() {
+	glib.IdleAdd(func() {
+		t := ce.Text()
+		if !strings.HasSuffix(t, "\n") && len(t) > 0 {
+			_, end := ce.Buf.GetBounds()
+			ce.Buf.Insert(end, "\n")
+		}
+	})
+
+}
+
+func (ce *CodeEditor) SmartNewLineUnsafe() {
 	t := ce.Text()
 	if !strings.HasSuffix(t, "\n") && len(t) > 0 {
-		ce.AppendEnd("\n")
+		_, end := ce.Buf.GetBounds()
+		ce.Buf.Insert(end, "\n")
 	}
+
 }
 
 func (ce *CodeEditor) AppendEnd(s string) {
-	_, end := ce.Buf.GetBounds()
-	ce.Buf.Insert(end, s)
+	glib.IdleAdd(func() {
+		_, end := ce.Buf.GetBounds()
+		ce.Buf.Insert(end, s)
+	})
 }
 func (ce *CodeEditor) Text() string {
 	start, end := ce.Buf.GetBounds()
@@ -44,7 +62,15 @@ func (ce *CodeEditor) SetText(s string) {
 }
 
 func (ce *CodeEditor) AppendTag(tag *gtk.TextTag, content string) {
-	ce.Buf.InsertWithTag(ce.Buf.GetEndIter(), content, tag)
+	glib.IdleAdd(func() {
+		ce.AppendTagUnsafe(tag, content)
+	})
+}
+
+func (ce *CodeEditor) AppendTagUnsafe(tag *gtk.TextTag, content string) {
+	glib.IdleAdd(func() {
+		ce.Buf.InsertWithTag(ce.Buf.GetEndIter(), content, tag)
+	})
 }
 
 func NewCodeEditor(lang string, fontSize int) *CodeEditor {

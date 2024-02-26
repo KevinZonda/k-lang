@@ -9,6 +9,7 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/buildconst"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"github.com/KevinZonda/GoX/pkg/iox"
+	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
 	"io"
 	"sync"
@@ -102,8 +103,10 @@ func (w *EditorW) syncRunningStat() {
 	if !w.isRunning {
 		w.cancelFunc = nil
 	}
-	w.Toolbar.RunBtn.SetSensitive(!w.isRunning)
-	w.Toolbar.StopBtn.SetSensitive(w.isRunning)
+	glib.IdleAdd(func() {
+		w.Toolbar.RunBtn.SetSensitive(!w.isRunning)
+		w.Toolbar.StopBtn.SetSensitive(w.isRunning)
+	})
 }
 
 func NewEditorW() *EditorW {
@@ -266,23 +269,24 @@ func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (rst eval.
 	w.setRunning(true)
 	rst = <-ch
 	close(ch)
-
-	w.ReplE.ScrollToEnd()
-	if rst.IsPanic {
-		if w.PanicWithDlg {
-			msg := "Code Panicked:\n" + rst.PanicMsg
-			dialog := gtk.MessageDialogNew(w, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, msg)
-			dialog.SetTitle("Result with Panic")
-			dialog.Run()
-			dialog.Destroy()
-		} else {
-			w.ReplE.AppendTag(w.ReplETags.Red, "[PANIC RECEIVED] "+rst.PanicMsg)
-			w.ReplE.ScrollToEnd()
+	glib.IdleAdd(func() {
+		w.ReplE.ScrollToEnd()
+		if rst.IsPanic {
+			if w.PanicWithDlg {
+				msg := "Code Panicked:\n" + rst.PanicMsg
+				dialog := gtk.MessageDialogNew(w, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, msg)
+				dialog.SetTitle("Result with Panic")
+				dialog.Run()
+				dialog.Destroy()
+			} else {
+				w.ReplE.AppendTagUnsafe(w.ReplETags.Red, "[PANIC RECEIVED] "+rst.PanicMsg+"\n")
+				w.ReplE.ScrollToEnd()
+			}
 		}
-	}
-	if beginMsg != "" { // User Invoke Will Handle
-		w.startPrompt()
-	}
+		if beginMsg != "" { // User Invoke Will Handle
+			w.startPrompt()
+		}
+	})
 	return
 }
 
