@@ -172,26 +172,23 @@ func (e *Eval) EvalAssignStmtX(n *node.AssignStmt, assignee *node.Assignee, valu
 }
 
 func (e *Eval) evalObjByField(from any, canFromLocalVar bool, field string) any {
-	switch from.(type) {
+	ok := false
+	switch fromT := from.(type) {
 	case *Eval:
 		if canFromLocalVar {
-			ok := false
-			from, ok = from.(*Eval).memory.Get(field)
-			if !ok {
-				panic(fmt.Sprintf("object %s not found", field))
+			if from, ok = fromT.memory.Get(field); ok {
+				return from
 			}
-		} else {
-			ok := false
-			from, ok = from.(*Eval).memory.Bottom().Get(field)
-			if !ok {
-				panic(fmt.Sprintf("object %s not found", field))
-			}
+			panic(fmt.Sprintf("object %s not found", field))
+		}
+		from, ok = fromT.memory.Bottom().Get(field)
+		if !ok {
+			panic(fmt.Sprintf("object %s not found", field))
 		}
 		return from
 	// TODO Support struct
 	case *obj.StructField:
-		ok := false
-		from, ok = from.(*obj.StructField).Fields.Get(field)
+		from, ok = fromT.Fields.Get(field)
 		if !ok {
 			panic(fmt.Sprintf("field %s not found", field))
 		}
@@ -207,9 +204,9 @@ func (e *Eval) unboxObj(from any) (any, bool) {
 	if from == nil {
 		return nil, false
 	}
-	switch from.(type) {
+	switch fromT := from.(type) {
 	case *obj.Object:
-		return from.(*obj.Object).Value(), true
+		return fromT.Value(), true
 	}
 	return from, false
 }
