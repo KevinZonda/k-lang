@@ -4,18 +4,16 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
-	orderedmap "github.com/wk8/go-ordered-map/v2"
 )
 
 func (e *Eval) evalIterArray(n *node.IterStyleFor, iters []any) {
 	e.currentToken = n.GetToken()
-	e.loopFrame()
+	loop := e.loopFrame()
 	defer e.frameEnd()
 
 	for _, iter := range iters {
-		isContinue, isBreak, isReturn := e.loopCentral(n.Body, func() {
-			e.memory.Top().SetValue(n.Variable.Value, iter)
-		})
+		loop.SetValue(n.Variable.Value, iter)
+		isContinue, isBreak, isReturn := e.loopDelegate(n.Body)
 		if isContinue {
 			continue
 		}
@@ -26,8 +24,8 @@ func (e *Eval) evalIterArray(n *node.IterStyleFor, iters []any) {
 	return
 }
 
-func (e *Eval) loopCentral(body *node.CodeBlock, onNewFrame func()) (isContinue, isBreak, isReturn bool) {
-	e.EvalLoopCodeBlockWithHook(body, onNewFrame)
+func (e *Eval) loopDelegate(body *node.CodeBlock) (isContinue, isBreak, isReturn bool) {
+	e.EvalCodeBlock(body)
 	top := e.memory.Top()
 	if top.Has(reserved.Continue) {
 		top.Remove(reserved.Continue)
@@ -48,18 +46,15 @@ func (e *Eval) loopCentral(body *node.CodeBlock, onNewFrame func()) (isContinue,
 
 func (e *Eval) evalIterMap(n *node.IterStyleFor, iters map[any]any) {
 	e.currentToken = n.GetToken()
-	e.loopFrame()
+	loop := e.loopFrame()
 	defer e.frameEnd()
 
 	for key, val := range iters {
-		isContinue, isBreak, isReturn := e.loopCentral(n.Body, func() {
-			field := orderedmap.New[string, any]()
-			field.Set("key", key)
-			field.Set("val", val)
-			e.memory.Top().SetValue(n.Variable.Value, &obj.StructField{
-				Fields: field,
-			})
-		})
+		loop.SetValue(n.Variable.Value,
+			obj.NewStruct(nil).
+				With("key", key).
+				With("val", val))
+		isContinue, isBreak, isReturn := e.loopDelegate(n.Body)
 		if isContinue {
 			continue
 		}
@@ -107,7 +102,7 @@ func (e *Eval) EvalWhileForStmt(n *node.WhileStyleFor) {
 				return
 			}
 		}
-		isContinue, isBreak, isReturn := e.loopCentral(n.Body, nil)
+		isContinue, isBreak, isReturn := e.loopDelegate(n.Body)
 		if isContinue {
 			continue
 		}
@@ -138,7 +133,7 @@ func (e *Eval) EvalCStyleFrStmt(n *node.CStyleFor) {
 				return
 			}
 		}
-		isContinue, isBreak, isReturn := e.loopCentral(n.Body, nil)
+		isContinue, isBreak, isReturn := e.loopDelegate(n.Body)
 		if isContinue {
 			e.EvalExpr(n.AfterIterExpr)
 		}
@@ -150,16 +145,4 @@ func (e *Eval) EvalCStyleFrStmt(n *node.CStyleFor) {
 		}
 		e.EvalExpr(n.AfterIterExpr)
 	}
-}
-
-func (e *Eval) EvalLoopCodeBlockWithHook(fc *node.CodeBlock, onNewFrame func()) {
-	e.currentToken = fc.GetToken()
-	e.frameStart(false)
-	defer e.frameEndWithAll()
-
-	if onNewFrame != nil {
-		onNewFrame()
-	}
-
-	_ = e.runAst(fc.Nodes, reserved.Return, reserved.Break, reserved.Continue)
 }

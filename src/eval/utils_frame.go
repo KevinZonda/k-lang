@@ -37,9 +37,10 @@ func (e *Eval) frameEndWithAll() any {
 	return retV
 }
 
-func (e *Eval) loopFrame() {
+func (e *Eval) loopFrame() *memory.Layer {
 	top := e.frameStart(false)
 	top.SetValue(reserved.Loop, true)
+	return top
 }
 
 func (e *Eval) IsLoopFrame() bool {

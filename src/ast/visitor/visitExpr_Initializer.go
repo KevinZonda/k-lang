@@ -54,8 +54,8 @@ func (v *AntlrVisitor) visitStructInitializer(ctx parser.IStructInitializerConte
 	pairs := ctx.AllIdentifierPair()
 	body := orderedmap.New[string, node.Expr]()
 	for _, e := range pairs {
-		if k, v, ok := v.visitIdentifierPair(e); ok {
-			body.Set(k, v)
+		if k, val, ok := v.visitIdentifierPair(e); ok {
+			body.Set(k, val)
 		}
 	}
 	return &node.StructLiteral{

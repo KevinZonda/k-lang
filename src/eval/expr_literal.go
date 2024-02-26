@@ -5,7 +5,6 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/stringProcess"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
-	orderedmap "github.com/wk8/go-ordered-map/v2"
 	"strings"
 )
 
@@ -111,17 +110,14 @@ func (e *Eval) getZeroValue(t *node.Type) any {
 	default:
 		baseEval := e.GetPackage(t.Package)
 		def := getStructDef(baseEval, t, true)
-		m := orderedmap.New[string, any]()
+		sf := obj.NewStruct(baseEval)
 		for pair := def.Body.Oldest(); pair != nil; pair = pair.Next() {
 			varName := pair.Key
 			varDeclare := pair.Value
-			m.Set(varName, baseEval.EvalVarDeclare(varDeclare))
+			sf.With(varName, baseEval.EvalVarDeclare(varDeclare))
 		}
-		return &obj.StructField{
-			TypeAs:     t,
-			Fields:     m,
-			ParentEval: baseEval,
-		}
+		sf.TypeAs = t
+		return sf
 	}
 }
 
@@ -156,10 +152,7 @@ func (e *Eval) EvalStructLiteral(n *node.StructLiteral) *obj.StructField {
 	if n.Type != nil {
 		sf = e.getZeroValue(n.Type).(*obj.StructField)
 	} else {
-		sf = &obj.StructField{
-			Fields:     orderedmap.New[string, any](),
-			ParentEval: e,
-		}
+		sf = obj.NewStruct(e)
 	}
 
 	for pair := n.Body.Oldest(); pair != nil; pair = pair.Next() {

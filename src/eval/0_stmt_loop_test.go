@@ -108,3 +108,16 @@ for (x : map{"x": 1, "y": 7, "z": 8}) {
 			"struct {key: z, val: 8}\n")
 	})
 }
+
+func TestIterLoopBreak(ts *testing.T) {
+	code := `
+for (x : [1, 7, 8]) {
+    if (x == 7) {
+        break
+	}
+    println(x)
+}`
+	expected := `1
+`
+	tester.GeneralTest(true, ts, code, expected)
+}

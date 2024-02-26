@@ -13,6 +13,18 @@ type StructField struct {
 	ParentEval any
 }
 
+func NewStruct(parent any) *StructField {
+	return &StructField{
+		Fields:     orderedmap.New[string, any](),
+		ParentEval: parent,
+	}
+}
+
+func (s *StructField) With(key string, value any) *StructField {
+	s.Fields.Set(key, value)
+	return s
+}
+
 func (s *StructField) String() string {
 	if s == nil {
 		return "<nil struct>"

@@ -6,7 +6,6 @@ import (
 
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
-	orderedmap "github.com/wk8/go-ordered-map/v2"
 )
 
 func clone(v any) any {
@@ -15,15 +14,12 @@ func clone(v any) any {
 	}
 	switch vT := v.(type) {
 	case *obj.StructField:
-		fields := orderedmap.New[string, any]()
+		sf := obj.NewStruct(vT.ParentEval)
+		sf.TypeAs = vT.TypeAs
 		for pair := vT.Fields.Oldest(); pair != nil; pair = pair.Next() {
-			fields.Set(pair.Key, clone(pair.Value))
+			sf.With(pair.Key, clone(pair.Value))
 		}
-		return &obj.StructField{
-			TypeAs:     vT.TypeAs,
-			Fields:     fields,
-			ParentEval: vT.ParentEval,
-		}
+		return sf
 	case []any:
 		a := make([]any, len(vT))
 		copy(a, v.([]any))
