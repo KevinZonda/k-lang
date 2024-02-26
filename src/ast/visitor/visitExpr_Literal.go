@@ -21,7 +21,7 @@ func (v *AntlrVisitor) visitLiteral(ctx parser.ILiteralContext) node.Expr {
 
 		if err != nil {
 			v.appendErr(ctx, "Expected an integer value, but got "+ctx.GetStart().GetText(), err)
-			// FIXME: return nil?
+			return nil
 		}
 		return &node.IntLiteral{
 			Token: token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),

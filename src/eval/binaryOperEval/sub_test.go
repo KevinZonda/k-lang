@@ -9,7 +9,7 @@ import (
 
 func TestSub(t *testing.T) {
 	tester.Assert(t, binaryOperEval.BinaryOper(token.Sub, 1, 2), -1)
-	// tester.Assert(t, binaryOperEval.Sub(1.1, 2), -0.9) //FIXME: Accuracy LOST!
+	tester.Assert(t, binaryOperEval.Sub(1.1, 2), float64(1.1)-float64(2))
 	tester.Assert(t, binaryOperEval.BinaryOper(token.Sub, 1, 2.1), -1.1)
 	tester.Assert(t, binaryOperEval.BinaryOper(token.Sub, 1.1, 2.1), -1.0)
 }

@@ -22,7 +22,6 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) ExprResult {
 
 	// Find Func
 	funcName := fc.Caller.Value
-	// TODO: int() float()
 	fx, ok := e.memory.Get(funcName)
 	if !ok || !(fx.Is(obj.Func, obj.Lambda)) {
 		if fx.Is(obj.StructDef) {
@@ -30,10 +29,19 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) ExprResult {
 				Name: funcName,
 			}
 			v := e.EvalExpr(fc.Args[0]).EnsureValue()
-			e.TypeCheckOrPanic(t, v)
-			retV := e.NormaliseWithType(t, v)
+			retV := e.TypeCast(t, v)
 			return exprVal(retV)
 		}
+
+		// Internal Type Casting
+		switch funcName {
+		case node.TypeInt, node.TypeNum, node.TypeString, node.TypeBool:
+			t := node.NewType(funcName)
+			v := e.EvalExpr(fc.Args[0]).EnsureValue()
+			retV := e.TypeCast(t, v)
+			return exprVal(retV)
+		}
+
 		return e.EvalBuiltInCall(fc, e.evalExprs(fc.Args...))
 	}
 
@@ -75,8 +83,7 @@ func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, onNewFrame fu
 		} else {
 			v = clone(e.EvalExpr(args[i]).EnsureValue())
 		}
-		e.TypeCheckOrPanic(funcArg.Type, v)
-		v = e.NormaliseWithType(funcArg.Type, v)
+		v = e.TypeCast(funcArg.Type, v)
 		e.memory.Top().SetValue(funcArg.Name.Value, v)
 	}
 
@@ -110,8 +117,7 @@ func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, onNewFrame fu
 				panic("return value should has the same length as return type")
 			}
 			for idx, retT := range fn.RetType {
-				e.TypeCheckOrPanic(retT, retV[idx])
-				retV[idx] = e.NormaliseWithType(retT, retV[idx])
+				retV[idx] = e.TypeCast(retT, retV[idx])
 			}
 		}
 

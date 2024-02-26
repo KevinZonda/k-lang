@@ -12,6 +12,12 @@ type Type struct {
 	Nullable bool
 }
 
+func NewType(n string) *Type {
+	return &Type{
+		Name: n,
+	}
+}
+
 func (t *Type) plainType() bool {
 	if t.Package != "" || t.Array || t.Map || t.Func {
 		return false

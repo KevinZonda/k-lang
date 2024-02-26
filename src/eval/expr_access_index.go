@@ -23,7 +23,9 @@ func (e *Eval) EvalIndexExpr(n *node.IndexExpr) any {
 	switch leftT := left.(type) {
 	case string:
 		arr := []rune(leftT)
+		lenOfArr := len(arr)
 		startIdx := asType[int](idx)
+		arrIdxLenCheck(lenOfArr, startIdx)
 		if n.EndIndex == nil {
 			if n.Col {
 				return string(arr[startIdx:])
@@ -31,27 +33,28 @@ func (e *Eval) EvalIndexExpr(n *node.IndexExpr) any {
 			return string(arr[startIdx])
 		}
 		endIdx := asType[int](e.EvalExpr(n.EndIndex).EnsureValue())
+		arrIdxLenCheck(lenOfArr, endIdx)
 		if endIdx == startIdx {
 			return string(arr[startIdx])
 		}
 		return string(accessArr[rune](arr, startIdx, endIdx))
 	case []any:
-		//if idx, ok := idx.(int); ok {
-		//	if idx < 0 || idx >= len(arr) {
-		//	}
-		//}
-		// FIXME: PANIC INFORMATION
+		lenOfArr := len(leftT)
 		startIdx := asType[int](idx)
+		arrIdxLenCheck(lenOfArr, startIdx)
 		if n.EndIndex == nil {
 			if n.Col {
 				return leftT[startIdx:]
 			}
 			return leftT[startIdx]
 		}
+
 		endIdx := asType[int](e.EvalExpr(n.EndIndex).EnsureValue())
+		arrIdxLenCheck(lenOfArr, endIdx)
 		if endIdx == startIdx {
 			return leftT[startIdx]
 		}
+
 		return accessArr[any](leftT, startIdx, endIdx)
 	case map[any]any:
 		if n.EndIndex != nil {
@@ -62,4 +65,10 @@ func (e *Eval) EvalIndexExpr(n *node.IndexExpr) any {
 	}
 	panic(fmt.Sprint("index expr not impl. -> ", left, reflect.TypeOf(left)))
 	return nil
+}
+
+func arrIdxLenCheck(arrLen int, idx int) {
+	if idx < 0 || idx >= arrLen {
+		panic(fmt.Sprint("index out of range -> ", idx, " in ", arrLen, " length array"))
+	}
 }

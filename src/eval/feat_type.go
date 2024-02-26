@@ -153,6 +153,14 @@ func (e *Eval) NormaliseWithType(t *node.Type, v any) any {
 	return v
 }
 
+func (e *Eval) TypeCast(t *node.Type, v any) any {
+	if t == nil {
+		return v
+	}
+	e.TypeCheckOrPanic(t, v)
+	return e.NormaliseWithType(t, v)
+}
+
 func (e *Eval) TypeCheckOrPanic(t *node.Type, v any) {
 	checked := e.TypeCheck(t, v)
 	if !checked {
@@ -188,6 +196,9 @@ func (e *Eval) AutoType(v any) *node.Type {
 		}
 	case *obj.StructField:
 		vT := v.(*obj.StructField)
+		if vT == nil {
+			return node.NewType("struct")
+		}
 		return vT.TypeAs
 	case *obj.Object:
 		vT := v.(*obj.Object)

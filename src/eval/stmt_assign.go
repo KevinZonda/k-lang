@@ -121,19 +121,19 @@ func (e *Eval) EvalAssignStmtX(n *node.AssignStmt, assignee *node.Assignee, valu
 					// foo(&x) will let set val not possible
 					// e.memory.Set(lastVar.Name.Value, Construct(v))
 					if e.FeatStaticType {
-						e.TypeCheckOrPanic(o.Type, v)
+						v = e.TypeCast(o.Type, v)
+						o.SetValue(v)
+					} else {
+						o.WithType(e.AutoType(v)).SetValue(v)
 					}
-					v = e.NormaliseWithType(o.Type, v)
 
 					//if o.Ref != nil {
 					//	o = o.NoRef()
 					//}
-					o.SetValue(v)
 				} else {
 					typeV := assignee.Type
 					if typeV != nil {
-						e.TypeCheckOrPanic(typeV, v)
-						v = e.NormaliseWithType(typeV, v)
+						v = e.TypeCast(typeV, v)
 					} else {
 						typeV = e.AutoType(v)
 					}
