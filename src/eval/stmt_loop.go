@@ -7,8 +7,11 @@ import (
 	orderedmap "github.com/wk8/go-ordered-map/v2"
 )
 
-func (e *Eval) _evalIterArray(n *node.IterStyleFor, iters []any) {
+func (e *Eval) evalIterArray(n *node.IterStyleFor, iters []any) {
 	e.currentToken = n.GetToken()
+	e.loopFrame()
+	defer e.frameEnd()
+
 	for _, iter := range iters {
 		isContinue, isBreak, isReturn := e.loopCentral(n.Body, func() {
 			e.memory.Top().SetValue(n.Variable.Value, iter)
@@ -32,12 +35,10 @@ func (e *Eval) loopCentral(body *node.CodeBlock, onNewFrame func()) (isContinue,
 		return
 	}
 	if top.Has(reserved.Return) {
-		e.loopLvl--
 		isReturn = true
 		return
 	}
 	if top.Has(reserved.Break) {
-		e.loopLvl--
 		top.Remove(reserved.Break)
 		isBreak = true
 		return
@@ -45,8 +46,11 @@ func (e *Eval) loopCentral(body *node.CodeBlock, onNewFrame func()) (isContinue,
 	return
 }
 
-func (e *Eval) _evalIterMap(n *node.IterStyleFor, iters map[any]any) {
+func (e *Eval) evalIterMap(n *node.IterStyleFor, iters map[any]any) {
 	e.currentToken = n.GetToken()
+	e.loopFrame()
+	defer e.frameEnd()
+
 	for key, val := range iters {
 		isContinue, isBreak, isReturn := e.loopCentral(n.Body, func() {
 			field := orderedmap.New[string, any]()
@@ -68,9 +72,6 @@ func (e *Eval) _evalIterMap(n *node.IterStyleFor, iters map[any]any) {
 
 func (e *Eval) EvalIterStyleForStmt(styleFor *node.IterStyleFor) {
 	e.currentToken = styleFor.GetToken()
-	e.loopLvl++
-	e.frameStart(false)
-	defer e.frameEnd()
 
 	iters := e.EvalExpr(styleFor.Iterator).EnsureValue()
 	switch itersT := iters.(type) {
@@ -81,29 +82,28 @@ func (e *Eval) EvalIterStyleForStmt(styleFor *node.IterStyleFor) {
 		for i, r := range rs {
 			as[i] = string(rune(r))
 		}
-		e._evalIterArray(styleFor, as)
+		e.evalIterArray(styleFor, as)
 		return
 	case []any:
-		e._evalIterArray(styleFor, itersT)
+		e.evalIterArray(styleFor, itersT)
 		return
 	case map[any]any:
-		e._evalIterMap(styleFor, itersT)
+		e.evalIterMap(styleFor, itersT)
 		return
 	}
 	panic("Not Supported Iteration Type")
 }
 
 func (e *Eval) EvalWhileForStmt(n *node.WhileStyleFor) {
-	e.frameStart(false)
+	e.currentToken = n.GetToken()
+
+	e.loopFrame()
 	defer e.frameEnd()
 
-	e.currentToken = n.GetToken()
-	e.loopLvl++
 	for {
 		if n.ConditionExpr != nil {
 			rst := e.EvalExpr(n.ConditionExpr).EnsureValue().(bool)
 			if !rst {
-				e.loopLvl--
 				return
 			}
 		}
@@ -119,8 +119,8 @@ func (e *Eval) EvalWhileForStmt(n *node.WhileStyleFor) {
 
 func (e *Eval) EvalCStyleFrStmt(n *node.CStyleFor) {
 	e.currentToken = n.GetToken()
-	e.loopLvl++
-	e.frameStart(false)
+
+	e.loopFrame()
 	defer e.frameEnd()
 
 	if n.InitialExpr != nil {
@@ -135,7 +135,6 @@ func (e *Eval) EvalCStyleFrStmt(n *node.CStyleFor) {
 		if n.ConditionExpr != nil {
 			rst := e.EvalExpr(n.ConditionExpr).EnsureValue().(bool)
 			if !rst {
-				e.loopLvl--
 				return
 			}
 		}
@@ -156,11 +155,11 @@ func (e *Eval) EvalCStyleFrStmt(n *node.CStyleFor) {
 func (e *Eval) EvalLoopCodeBlockWithHook(fc *node.CodeBlock, onNewFrame func()) {
 	e.currentToken = fc.GetToken()
 	e.frameStart(false)
+	defer e.frameEndWithAll()
+
 	if onNewFrame != nil {
 		onNewFrame()
 	}
 
 	_ = e.runAst(fc.Nodes, reserved.Return, reserved.Break, reserved.Continue)
-
-	e.frameEndWithAll()
 }

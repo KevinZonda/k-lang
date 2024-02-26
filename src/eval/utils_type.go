@@ -1,6 +1,8 @@
 package eval
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func asType[T any](v any) T {
 	if vT, ok := v.(T); ok {

@@ -15,7 +15,6 @@ import (
 type Eval struct {
 	memory       *memory.Memory
 	basePath     string
-	loopLvl      int
 	currentToken token.Token
 	std          IO
 

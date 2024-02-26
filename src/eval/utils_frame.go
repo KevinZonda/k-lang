@@ -36,3 +36,13 @@ func (e *Eval) frameEndWithAll() any {
 	retV, _ := e.memory.Top().Get(reserved.Return)
 	return retV
 }
+
+func (e *Eval) loopFrame() {
+	top := e.frameStart(false)
+	top.SetValue(reserved.Loop, true)
+}
+
+func (e *Eval) IsLoopFrame() bool {
+	_, ok := e.memory.Get(reserved.Loop)
+	return ok
+}

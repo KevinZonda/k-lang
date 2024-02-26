@@ -42,7 +42,7 @@ func (e *Eval) EvalStmt(n node.Stmt) {
 
 func (e *Eval) EvalBreakStmt(n *node.BreakStmt) {
 	e.currentToken = n.GetToken()
-	if e.loopLvl <= 0 {
+	if !e.IsLoopFrame() {
 		return
 	}
 	e.memory.Top().SetValue(reserved.Break, true)
@@ -51,7 +51,7 @@ func (e *Eval) EvalBreakStmt(n *node.BreakStmt) {
 
 func (e *Eval) EvalContinueStmt(n *node.ContinueStmt) {
 	e.currentToken = n.GetToken()
-	if e.loopLvl <= 0 {
+	if !e.IsLoopFrame() {
 		return
 	}
 	e.memory.Top().SetValue(reserved.Continue, true)

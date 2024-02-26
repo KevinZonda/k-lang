@@ -9,7 +9,11 @@ func (e *Eval) EvalCodeBlock(fc *node.CodeBlock) {
 	e.currentToken = fc.GetToken()
 	e.frameStart(false)
 
-	_ = e.runAst(fc.Nodes, reserved.Return) // FIXME: return?
+	if e.IsLoopFrame() {
+		_ = e.runAst(fc.Nodes, reserved.Return, reserved.Continue, reserved.Break)
+	} else {
+		_ = e.runAst(fc.Nodes, reserved.Return)
+	}
 	//fe := e.new((tree.Ast)(fc.Nodes))
 	//_ = fe.run()
 	e.frameEndWithAll()
