@@ -45,6 +45,7 @@ In different platform, GUI config may different.
 2. ```bash
    brew install gtk+3
    brew install gtksourceview3
+   brew install gtk-mac-integration
    brew install pkg-config
    brew install gcc
    ```
