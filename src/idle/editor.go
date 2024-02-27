@@ -44,6 +44,8 @@ type EditorW struct {
 	isRunning  bool
 	cancelFunc func()
 	gtkIO      *sync.Mutex
+
+	custom Customizer
 }
 
 func (w *EditorW) SetChanged(changed bool) {
@@ -113,6 +115,7 @@ func NewEditorW() *EditorW {
 	w := EditorW{
 		gtkIO: &sync.Mutex{},
 	}
+	w.onNewWindow()
 	lifecycle.IncrementCount()
 	w.Window, _ = gtk.WindowNew(gtk.WINDOW_TOPLEVEL)
 	w.syncTitle()
@@ -197,6 +200,9 @@ func NewEditorW() *EditorW {
 
 	w.ReplE.AppendEnd(buildconst.Msg() + "\n")
 	w.startPrompt()
+
+	w.onWindowCreated()
+
 	return &w
 }
 
