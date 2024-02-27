@@ -6,17 +6,6 @@ import (
 	"github.com/gotk3/gotk3/gtk"
 )
 
-type MainW struct {
-	*gtk.Window
-	CodeEditor *gtks.CodeEditor
-	MenuBar    *gtk.MenuBar
-}
-
-func (w *EditorW) shortcut(acc string, f func()) {
-	key, mod := gtk.AcceleratorParse(acc)
-	w.acc.Connect(key, mod, gtk.ACCEL_VISIBLE, f)
-}
-
 func (w *EditorW) NewMenuBar() *gtk.MenuBar {
 	mb, _ := gtk.MenuBarNew()
 
@@ -24,14 +13,11 @@ func (w *EditorW) NewMenuBar() *gtk.MenuBar {
 	{
 		_file, _ := gtk.MenuNew()
 		fileMenu.SetSubmenu(_file)
-		newFile, _ := gtk.MenuItemNewWithLabel("New")
-
-		newFile.Connect("activate", func() {
+		newFile := gtks.NewMenuItem("New", func() {
 			d := NewEditorW()
 			d.ShowAll()
 		})
-		openFile, _ := gtk.MenuItemNewWithLabel("Open")
-		openFile.Connect("activate", func() {
+		openFile := gtks.NewMenuItem("Open", func() {
 			fc, _ := gtk.FileChooserNativeDialogNew("Open file...", nil, gtk.FILE_CHOOSER_ACTION_OPEN, "_Open", "_Cancel")
 			resp := fc.NativeDialog.Run()
 			if gtk.ResponseType(resp) == gtk.RESPONSE_ACCEPT {
@@ -57,31 +43,26 @@ func (w *EditorW) NewMenuBar() *gtk.MenuBar {
 
 	editMenu, _ := gtk.MenuItemNewWithLabel("Edit")
 	{
-		copyI, _ := gtk.MenuItemNewWithLabel("Copy")
-		copyI.Connect("activate", func() {
+		copyI := gtks.NewMenuItem("Copy", func() {
 			clip, _ := gtk.ClipboardGet(gdk.SELECTION_CLIPBOARD)
 			w.CodeE.Buf.CopyClipboard(clip)
 		})
 
-		cutI, _ := gtk.MenuItemNewWithLabel("Cut")
-		cutI.Connect("activate", func() {
+		cutI := gtks.NewMenuItem("Cut", func() {
 			clip, _ := gtk.ClipboardGet(gdk.SELECTION_CLIPBOARD)
 			w.CodeE.Buf.CutClipboard(clip, false)
 		})
 
-		pasteI, _ := gtk.MenuItemNewWithLabel("Paste")
-		pasteI.Connect("activate", func() {
+		pasteI := gtks.NewMenuItem("Paste", func() {
 			clip, _ := gtk.ClipboardGet(gdk.SELECTION_CLIPBOARD)
 			w.CodeE.Buf.PasteClipboard(clip, nil, true)
 		})
 
-		delI, _ := gtk.MenuItemNewWithLabel("Delete")
-		delI.Connect("activate", func() {
+		delI := gtks.NewMenuItem("Delete", func() {
 			w.CodeE.Buf.DeleteSelection(false, false)
 		})
 
-		clearI, _ := gtk.MenuItemNewWithLabel("Clear")
-		clearI.Connect("activate", func() {
+		clearI := gtks.NewMenuItem("Clear", func() {
 			w.CodeE.SetText("")
 		})
 
@@ -99,8 +80,7 @@ func (w *EditorW) NewMenuBar() *gtk.MenuBar {
 	helpItem, _ := gtk.MenuItemNewWithLabel("Help")
 	{
 		_help, _ := gtk.MenuNew()
-		about, _ := gtk.MenuItemNewWithLabel("About")
-		about.Connect("activate", func() {
+		about := gtks.NewMenuItem("About", func() {
 			d := HelpW()
 			d.Run()
 			d.Destroy()

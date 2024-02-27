@@ -13,6 +13,11 @@ type CodeEditor struct {
 	*sourceview.SourceView
 	LanguageManager *sourceview.SourceLanguageManager
 	Buf             *sourceview.SourceBuffer
+	Tags            map[string]*gtk.TextTag
+}
+
+func (ce *CodeEditor) OnChanged(f func()) {
+	ce.Buf.Connect("changed", f)
 }
 
 func (ce *CodeEditor) ScrollToEnd() {
@@ -82,6 +87,7 @@ func NewCodeEditor(lang string, fontSize int) *CodeEditor {
 	ce := CodeEditor{
 		SourceView:      sv,
 		LanguageManager: lm,
+		Tags:            make(map[string]*gtk.TextTag),
 	}
 
 	SetCss(ce, fmt.Sprintf(`
