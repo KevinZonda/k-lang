@@ -47,6 +47,8 @@ type EditorW struct {
 	gtkIO      *sync.Mutex
 
 	custom Customizer
+
+	acc *gtk.AccelGroup
 }
 
 func (w *EditorW) SetChanged(changed bool) {
@@ -121,6 +123,8 @@ func NewEditorW() *EditorW {
 	w.Window, _ = gtk.WindowNew(gtk.WINDOW_TOPLEVEL)
 	w.syncTitle()
 
+	w.acc, _ = gtk.AccelGroupNew()
+
 	fontSizeInt := 16
 
 	w.CodeE = gtks.NewCodeEditor("cpp", fontSizeInt)
@@ -193,14 +197,12 @@ func NewEditorW() *EditorW {
 	})
 	w.ReplEnter.Connect("activate", w.InvokeUserRepl)
 
-	{
-		accel, _ := gtk.AccelGroupNew()
-		key, mod := gtk.AcceleratorParse("<Control>s")
-		accel.Connect(key, mod, gtk.ACCEL_VISIBLE, w.Save)
-		key, mod = gtk.AcceleratorParse("<Control>o")
-		accel.Connect(key, mod, gtk.ACCEL_VISIBLE, w.OpenFile)
-		w.AddAccelGroup(accel)
-	}
+	w.shortcut(ctrl()+"r", w.RerunCode)
+	w.shortcut(ctrl()+"s", w.Save)
+	w.shortcut(ctrl()+"o", w.OpenFile)
+	w.shortcut(ctrl()+"w", w.Close)
+
+	w.AddAccelGroup(w.acc)
 
 	w.Connect("destroy", func() {
 		lifecycle.Decrease()
@@ -234,6 +236,13 @@ func (w *EditorW) Stop() {
 		w.setRunning(false)
 		w.evalIn = nil
 	}
+}
+
+func ctrl() string {
+	if runtime.GOOS == "darwin" {
+		return "<Primary>"
+	}
+	return "<Control>"
 }
 
 func (w *EditorW) setRunning(v bool) {

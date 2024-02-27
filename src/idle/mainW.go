@@ -12,6 +12,11 @@ type MainW struct {
 	MenuBar    *gtk.MenuBar
 }
 
+func (w *EditorW) shortcut(acc string, f func()) {
+	key, mod := gtk.AcceleratorParse(acc)
+	w.acc.Connect(key, mod, gtk.ACCEL_VISIBLE, f)
+}
+
 func (w *EditorW) NewMenuBar() *gtk.MenuBar {
 	mb, _ := gtk.MenuBarNew()
 
