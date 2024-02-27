@@ -135,6 +135,7 @@ func NewEditorW() *EditorW {
 	w.ReplE = gtks.NewCodeEditor("", fontSizeInt)
 	w.ReplE.SetEditable(false)
 	w.ReplE.SetShowLineNumbers(false)
+	w.ReplE.SetWrapMode(gtk.WRAP_CHAR)
 	w.ReplETags = &ReplETags{}
 	w.ReplETags.Red = w.ReplE.NewTextTag("red", "#ff0000")
 	w.ReplETags.Blue = w.ReplE.NewTextTag("blue", "#0000ff")
