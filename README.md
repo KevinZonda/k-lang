@@ -5,6 +5,7 @@
 ```tree
 ├───antlr4          # Language's Antlr4 definition is here
 ├───scripts         # All scripts stores here
+├───res             # Resource files
 ├───src             # Source code of the language
 │   ├───ast         # AST Constractor
 │   │   ├───node
@@ -12,13 +13,26 @@
 │   │   └───visitor
 │   ├───eval        # Evaluator
 │   ├───main
-│   ├───out         # Ignored, but is for compiled binary
+│   ├───out         # Ignored, compiled binary
 │   ├───parser      # Antlr4 generated codes
 │   ├───...
 │   └───utils
+├───playground      # Playground: K-Language Web Demo
+│   ├───index.html  # Entry Point
+│   ├───syntax.js   # Syntax Highlighter
+│   └───core.wasm   # K-Language Wasm Core
+├───web             # Landing Pages & others
 └───vscode-plugin   # VSCode Plugin for this Language
     ├───klang-highlighter
     └───out         # Ignored, but is for generated VSCode plugin file (.VSIX)
+```
+
+## Landing Page (Web)
+
+```
+cd web
+pnpm i
+pnpm dev
 ```
 
 ## Compile IDLE
