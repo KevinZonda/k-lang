@@ -12,6 +12,7 @@ import (
 	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
 	"io"
+	"runtime"
 	"sync"
 )
 
@@ -115,7 +116,7 @@ func NewEditorW() *EditorW {
 	w := EditorW{
 		gtkIO: &sync.Mutex{},
 	}
-	w.onNewWindow()
+	customizeOk := w.onNewWindow()
 	lifecycle.IncrementCount()
 	w.Window, _ = gtk.WindowNew(gtk.WINDOW_TOPLEVEL)
 	w.syncTitle()
@@ -162,7 +163,14 @@ func NewEditorW() *EditorW {
 	contentPane.Pack2(w.ReplVBox, true, true)
 
 	w.VBox, _ = gtk.BoxNew(gtk.ORIENTATION_VERTICAL, 0)
-	w.VBox.Add(w.MenuBar)
+	if runtime.GOOS != "darwin" || !customizeOk {
+		w.VBox.Add(w.MenuBar)
+	} else {
+		// darwin && customizeOk
+		// MenuBar in macOS is handled by gtk_osxapplication
+		// but not show will also cause the menu to be hidden
+		w.MenuBar.ShowAll()
+	}
 	w.VBox.Add(w.Toolbar)
 	w.VBox.PackStart(contentPane, true, true, 0)
 	w.VBox.Add(w.StatusBar)

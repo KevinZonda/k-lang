@@ -6,12 +6,13 @@ type Customizer struct {
 	osx *gotk3osx.GtkosxApplication
 }
 
-func (w *EditorW) onNewWindow() {
+func (w *EditorW) onNewWindow() (ok bool) {
 	osx, err := gotk3osx.GetGtkosxApplication()
 	if err != nil {
 		osx = nil
 	}
 	w.custom = Customizer{osx: osx}
+	return w.custom.osx != nil
 }
 
 func (w *EditorW) onWindowCreated() {
