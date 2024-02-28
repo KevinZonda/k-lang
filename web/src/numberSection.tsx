@@ -1,7 +1,7 @@
 import {Box, Container, Heading, SimpleGrid, Text} from "@chakra-ui/react";
 import {highlightColor} from "./Head.tsx";
 
-export  interface SimpleBlockProps {
+export interface SimpleBlockProps {
   title: string
   content: string
 }
@@ -16,7 +16,7 @@ export function NumberBlock({title, content}: SimpleBlockProps) {
   </Box>
 }
 
-export  function NumberSection() {
+export function NumberSection() {
   return <div style={{paddingTop: '100px', paddingBottom: '100px', backgroundColor: highlightColor, color: 'white'}}>
     <Heading textAlign={'center'} paddingBottom={'50px'}>Simple</Heading>
     <Container maxW='container.sm'>

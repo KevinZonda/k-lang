@@ -12,7 +12,7 @@ import {Icon} from "@chakra-ui/icons";
 import {ReactElement} from "react";
 import {highlightColor} from "./Head.tsx";
 import {SiJupyter, SiGtk, SiVisualstudiocode} from "react-icons/si";
-import { GiPlatform} from "react-icons/gi";
+import {GiPlatform} from "react-icons/gi";
 import {HiMiniCpuChip} from "react-icons/hi2";
 import {PiCompassBold} from "react-icons/pi";
 
@@ -77,7 +77,7 @@ export function FeatureSection() {
           iconColor={highlightColor}
           title={'Jupyter Notebook'}
           content={'K Language as a Jupyter Kernel. Lecturing with interaction.'}
-          icon={<Icon as={SiJupyter} />}/>
+          icon={<Icon as={SiJupyter}/>}/>
       </SimpleGrid>
     </Container>
   </div>

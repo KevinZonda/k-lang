@@ -7,7 +7,6 @@ import {NumberSection} from "./numberSection.tsx";
 import {FeatureSection} from "./Feature.tsx";
 
 
-
 function App() {
   return <div style={{width: '100vw', minHeight: '100vh'}}>
     <VStack
@@ -36,7 +35,6 @@ function Footer() {
     </Text>
   </div>
 }
-
 
 
 export default App
