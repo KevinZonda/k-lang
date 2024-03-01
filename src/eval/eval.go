@@ -22,7 +22,7 @@ type Eval struct {
 	FeatVerbose    bool
 
 	FeatUnknownVarNil bool
-	FeatRefAll        bool // fixme: ref all will cause loop ref
+	FeatRefAll        bool
 }
 
 func (e *Eval) SetPath(path string) {
