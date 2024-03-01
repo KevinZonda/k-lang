@@ -237,6 +237,7 @@ func (w *EditorW) InvokeUserRepl() {
 	w.ReplE.SmartNewLine()
 	w.ReplE.AppendTag(w.ReplE.Tags["blue"], "<<< ")
 	w.ReplE.AppendEnd(fmt.Sprintf("%v\n", val))
+	w.ReplE.SmartNewLine()
 end:
 	w.startPrompt()
 	w.ReplE.ScrollToEnd()
