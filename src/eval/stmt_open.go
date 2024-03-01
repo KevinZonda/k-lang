@@ -40,16 +40,29 @@ func (e *Eval) findFile(s string) (abs string, ok bool) {
 }
 
 func (e *Eval) loadBuiltInFeature(name string) bool {
+	if !strings.HasPrefix(name, "feat/") {
+		return false
+	}
+	val := true
+	if strings.HasSuffix(name, ":on") || strings.HasSuffix(name, ":true") {
+		name = name[:strings.LastIndex(name, ":")]
+	} else if strings.HasSuffix(name, ":off") || strings.HasSuffix(name, ":false") {
+		name = name[:strings.LastIndex(name, ":")]
+		val = false
+	}
 	switch name {
 	case "feat/staticType":
-		e.FeatStaticType = true
-		return true
+		e.FeatStaticType = val
 	case "feat/verbose":
-		e.FeatVerbose = true
-		return true
+		e.FeatVerbose = val
+	case "feat/unknownVarNil":
+		e.FeatUnknownVarNil = val
+	case "feat/refAll":
+		e.FeatRefAll = val
 	default:
 		return false
 	}
+	return true
 }
 
 func (e *Eval) loadBuiltInLibrary(name, as string) (ok bool) {

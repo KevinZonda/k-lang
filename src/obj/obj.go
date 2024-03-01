@@ -24,7 +24,7 @@ type StdIO interface {
 
 type Object struct {
 	Kind Kind
-	Val  any
+	val  any
 	// TODO: Type
 	Ref  *Object
 	Type *node.Type
@@ -50,15 +50,20 @@ func (o *Object) Value() any {
 	if o.Ref != nil {
 		return o.Ref.Value()
 	}
-	return o.Val
+	return o.val
 }
 
 func (o *Object) SetValue(v any) {
+	if vT, ok := v.(*Object); ok { // prevent ref loop
+		if vT == o {
+			return
+		}
+	}
 	if o.Ref != nil {
-		o.Ref.Val = v
+		o.Ref.val = v
 		return
 	}
-	o.Val = v
+	o.val = v
 }
 
 func (o *Object) NoRef() *Object {
@@ -107,7 +112,7 @@ func (o *Object) String() string {
 }
 
 func NewObj(k Kind, val any) *Object {
-	return &Object{Kind: k, Val: val}
+	return &Object{Kind: k, val: val}
 }
 
 func (o *Object) ToStruct() *StructField {
@@ -119,7 +124,7 @@ func (o *Object) ToLambda() *node.LambdaExpr {
 }
 
 func (o *Object) ToFunc() *node.FuncBlock {
-	return o.Val.(*node.FuncBlock)
+	return o.Value().(*node.FuncBlock)
 }
 
 func (o *Object) ToLib() ILibrary {

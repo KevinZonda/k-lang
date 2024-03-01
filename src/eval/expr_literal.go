@@ -77,6 +77,9 @@ func (e *Eval) EvalIdentifier(n *node.Identifier, keepRef bool) any {
 		}
 		return v.Value()
 	}
+	if e.FeatUnknownVarNil {
+		return nil
+	}
 	panic("No Var Found: " + n.Value)
 }
 

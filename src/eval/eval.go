@@ -20,6 +20,9 @@ type Eval struct {
 
 	FeatStaticType bool
 	FeatVerbose    bool
+
+	FeatUnknownVarNil bool
+	FeatRefAll        bool // fixme: ref all will cause loop ref
 }
 
 func (e *Eval) SetPath(path string) {

@@ -42,17 +42,25 @@ func clone(v any) any {
 	}
 }
 
+func (e *Eval) evalExprOrRef(n node.Expr, ref bool) any {
+	var v any
+	if e.FeatRefAll {
+		return e.evalExpr(n, true).EnsureValue()
+	}
+	if ref {
+		v = e.evalExpr(n, true).EnsureValue()
+		if vT, ok := v.(*obj.Object); ok {
+			v = vT.CreateRef()
+		}
+		return v
+	}
+
+	return clone(e.EvalExpr(n).EnsureValue())
+}
+
 func (e *Eval) EvalAssignStmt(n *node.AssignStmt) {
 	if len(n.Assignee) == 1 {
-		var v any
-		if n.Assignee[0].Ref {
-			v = e.evalExpr(n.Value, true).EnsureValue()
-			if vT, ok := v.(*obj.Object); ok {
-				v = vT.CreateRef()
-			}
-		} else {
-			v = clone(e.EvalExpr(n.Value).EnsureValue())
-		}
+		v := e.evalExprOrRef(n.Value, n.Assignee[0].Ref)
 		e.EvalAssignStmtX(n, n.Assignee[0], v)
 		return
 	}
@@ -63,7 +71,10 @@ func (e *Eval) EvalAssignStmt(n *node.AssignStmt) {
 	if len(vals) != len(n.Assignee) {
 		panic("assign cannot happened if have different numbers of receivers and senders have: " + fmt.Sprint(len(n.Assignee)) + " receivers, but have: " + fmt.Sprint(len(vals)) + " senders")
 	}
-	vals = clone(vals).([]any)
+
+	if !e.FeatRefAll {
+		vals = clone(vals).([]any)
+	}
 	for i, assignee := range n.Assignee {
 		e.EvalAssignStmtX(n, assignee, vals[i])
 	}

@@ -12,10 +12,13 @@ type Type struct {
 	Nullable bool
 }
 
-func NewType(n string) *Type {
-	return &Type{
-		Name: n,
-	}
+func NewType() *Type {
+	return &Type{}
+}
+
+func (t *Type) WithName(n string) *Type {
+	t.Name = n
+	return t
 }
 
 func (t *Type) plainType() bool {

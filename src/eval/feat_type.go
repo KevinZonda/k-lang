@@ -197,7 +197,7 @@ func (e *Eval) AutoType(v any) *node.Type {
 	case *obj.StructField:
 		vT := v.(*obj.StructField)
 		if vT == nil {
-			return node.NewType("struct")
+			return node.NewType()
 		}
 		return vT.TypeAs
 	case *obj.Object:

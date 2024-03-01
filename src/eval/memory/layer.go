@@ -67,7 +67,7 @@ func (t *Layer) HasAny(key ...string) bool {
 func (t *Layer) GetValue(key string) (any, bool) {
 	o, ok := t.Get(key)
 	if ok && o != nil {
-		return o.Val, ok
+		return o.Value(), ok
 	}
 	return nil, ok
 }

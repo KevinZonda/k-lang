@@ -36,7 +36,7 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) ExprResult {
 		// Internal Type Casting
 		switch funcName {
 		case node.TypeInt, node.TypeNum, node.TypeString, node.TypeBool:
-			t := node.NewType(funcName)
+			t := node.NewType().WithName(funcName)
 			v := e.EvalExpr(fc.Args[0]).EnsureValue()
 			retV := e.TypeCast(t, v)
 			return exprVal(retV)
@@ -74,15 +74,7 @@ func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, onNewFrame fu
 		onNewFrame()
 	}
 	for i, funcArg := range fn.Args {
-		var v any = nil
-		if funcArg.Ref {
-			v = e.evalExpr(args[i], true).EnsureValue()
-			if vT, ok := v.(*obj.Object); ok {
-				v = vT.CreateRef()
-			}
-		} else {
-			v = clone(e.EvalExpr(args[i]).EnsureValue())
-		}
+		v := e.evalExprOrRef(args[i], funcArg.Ref)
 		v = e.TypeCast(funcArg.Type, v)
 		e.memory.Top().SetValue(funcArg.Name.Value, v)
 	}
