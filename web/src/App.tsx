@@ -1,5 +1,4 @@
 import {
-  Box, Center,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -48,8 +47,14 @@ function Footer() {
 }
 
 function SampleCode() {
-  return <Box backgroundColor={'rgb(40, 42, 54)'} paddingTop={'50px'} paddingBottom={'50px'}>
-    <Center maxW='container.md'>
+  return <div style={{
+    backgroundColor: 'rgb(40, 42, 54)',
+    paddingTop:'50px',
+    paddingBottom: '50px',
+    display: 'flex',
+    justifyContent: 'center'
+  }} >
+
       <SyntaxHighlighter language="klang" style={dracula}>
         {'# Simple function\n' +
           'fn helloWorld(){\n' +
@@ -57,8 +62,7 @@ function SampleCode() {
           '}\n' +
           'println(helloWorld())'}
       </SyntaxHighlighter>
-    </Center>
-  </Box>
+  </div>
 }
 
 

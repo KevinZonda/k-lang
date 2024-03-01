@@ -43,7 +43,7 @@ function FeatureCard({title, content, icon, iconColor}: FeatureProp) {
 }
 
 export function FeatureSection() {
-  return <div style={{paddingTop: '100px', paddingBottom: '100px', backgroundColor: '#EDF2F7'}}>
+  return <div style={{paddingTop: '50px', paddingBottom: '100px', backgroundColor: '#EDF2F7'}}>
     <Heading textAlign={'center'} paddingBottom={'50px'}>Features</Heading>
     <Container maxW='container.md'>
       <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(200px, 1fr))'>
@@ -71,7 +71,7 @@ export function FeatureSection() {
         <FeatureCard
           iconColor={highlightColor}
           title={'Built-in IDLE'}
-          content={'Don\'t fancy a programming IDE? Use K Language as a built-in IDLE.'}
+          content={'Don\'t fancy an IDE? Start learning K Language with built-in IDLE.'}
           icon={<Icon as={SiGtk}/>}/>
         <FeatureCard
           iconColor={highlightColor}

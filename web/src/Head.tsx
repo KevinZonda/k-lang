@@ -1,11 +1,13 @@
 import {Button, Center, Container, Heading, Image, Text, VStack, Wrap, WrapItem} from "@chakra-ui/react";
 import {ArrowForwardIcon, DownloadIcon} from "@chakra-ui/icons";
 import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 export const highlightColor = '#3182ce';
 
 export function Header() {
   const [count, setCount] = useState(0)
+  const nav = useNavigate()
   return (
     <VStack paddingTop={'100px'} paddingBottom={'100px'}>
       <Center>
@@ -22,7 +24,7 @@ export function Header() {
       </Container>
       <Container maxW='container.lg'>
         <Center>
-          <Text fontSize='xl' textAlign={'center'}>
+          <Text fontSize='xl' textAlign={'center'} color={'rgba(0, 0, 0, 0.65)'}>
             K Language is designed for beginner, aims to remove the barrier of learning programming.
           </Text>
         </Center>
@@ -30,12 +32,12 @@ export function Header() {
       <Container>
         <Wrap spacing='30px' justify='center'>
           <WrapItem>
-            <Button size='lg' colorScheme='blue' mt='24px' rightIcon={<ArrowForwardIcon/>}>
+            <Button border={0} size='lg' colorScheme='blue' mt='24px' rightIcon={<ArrowForwardIcon/>}  onClick={() => window.open('https://playground.kevinzonda.com', "_blank")}>
               Try it now
             </Button>
           </WrapItem>
           <WrapItem>
-            <Button size='lg' colorScheme='gray' mt='24px' rightIcon={<DownloadIcon/>}>
+            <Button border={0} size='lg' colorScheme='gray' mt='24px' onClick={() => nav('/download')} rightIcon={<DownloadIcon/>}>
               Download
             </Button>
           </WrapItem>
