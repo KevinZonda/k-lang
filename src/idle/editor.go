@@ -174,8 +174,8 @@ func NewEditorW() *EditorW {
 	})
 	w.syncRunningStat()
 
-	w.ReplE.AppendEnd(buildconst.Msg() + "\n")
-	w.startPrompt()
+	w.ReplE.AppendEndUnsafe(buildconst.Msg() + "\n")
+	w.startPromptUnsafe()
 
 	w.onWindowCreated()
 
@@ -202,9 +202,9 @@ func (w *EditorW) FormatCode() {
 	code := w.CodeE.Text()
 	code, err := fmtr.Fmt(code)
 	if len(err) > 0 {
-		w.ReplE.SmartNewLine()
-		w.ReplE.AppendTag(w.ReplE.Tags["red"], err.String())
-		w.ReplE.ScrollToEnd()
+		w.ReplE.SmartNewLineUnsafe()
+		w.ReplE.AppendTagUnsafe(w.ReplE.Tags["red"], err.String())
+		w.ReplE.ScrollToEndUnsafe()
 		return
 	}
 	w.CodeE.SetText(code)
@@ -218,12 +218,12 @@ func (w *EditorW) InvokeUserRepl() {
 		if w.evalIn != nil {
 			cmd = cmd + "\n"
 			io.WriteString(w.evalIn, cmd)
-			w.ReplE.AppendEnd(cmd)
+			w.ReplE.AppendEndUnsafe(cmd)
 		}
 		return
 	}
 
-	w.ReplE.AppendEnd(cmd + "\n")
+	w.ReplE.AppendEndUnsafe(cmd + "\n")
 
 	rst := w.runCode(cmd, true, "")
 	var val any
@@ -234,13 +234,12 @@ func (w *EditorW) InvokeUserRepl() {
 	} else {
 		goto end
 	}
-	w.ReplE.SmartNewLine()
-	w.ReplE.AppendTag(w.ReplE.Tags["blue"], "<<< ")
-	w.ReplE.AppendEnd(fmt.Sprintf("%v\n", val))
-	w.ReplE.SmartNewLine()
+	w.ReplE.SmartNewLineUnsafe()
+	w.ReplE.AppendTagUnsafe(w.ReplE.Tags["blue"], "<<< ")
+	w.ReplE.AppendEndUnsafe(fmt.Sprintf("%v\n", val))
 end:
 	w.startPrompt()
-	w.ReplE.ScrollToEnd()
+	w.ReplE.ScrollToEndUnsafe()
 }
 
 type ToolBar struct {
@@ -263,8 +262,8 @@ func (w *EditorW) NewToolBar() *ToolBar {
 	bar.RestartBtn = gtks.ToolBtnWithIcon("Restart", "view-refresh", w.RerunCode)
 	bar.CleanBtn = gtks.ToolBtnWithIcon("Clean", "edit-clear", func() {
 		w.ReplE.SetText("")
-		w.ReplE.AppendEnd(buildconst.Msg() + "\n")
-		w.startPrompt()
+		w.ReplE.AppendEndUnsafe(buildconst.Msg() + "\n")
+		w.startPromptUnsafe()
 	})
 	bar.FmtBtn = gtks.ToolBtnWithIcon("Format", "format-indent-more", w.FormatCode)
 	sep, _ := gtk.SeparatorToolItemNew()

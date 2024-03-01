@@ -53,11 +53,23 @@ func (o *Object) Value() any {
 	return o.val
 }
 
+func (o *Object) isLoopRef(v any) bool {
+	vT, ok := v.(*Object)
+	if !ok {
+		return false
+	}
+	if vT == o {
+		return true
+	}
+	if vT.Ref != nil {
+		return o.isLoopRef(vT.Ref)
+	}
+	return false
+}
+
 func (o *Object) SetValue(v any) {
-	if vT, ok := v.(*Object); ok { // prevent ref loop
-		if vT == o {
-			return
-		}
+	if o.isLoopRef(v) { // prevent ref loop
+		return
 	}
 	if o.Ref != nil {
 		o.Ref.val = v

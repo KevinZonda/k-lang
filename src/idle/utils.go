@@ -19,9 +19,14 @@ func ctrl() string {
 	return "<Control>"
 }
 
+func (w *EditorW) startPromptUnsafe() {
+	w.ReplE.SmartNewLineUnsafe()
+	w.ReplE.AppendTagUnsafe(w.ReplE.Tags["blue"], ">>> ")
+	w.ReplE.ScrollToEndUnsafe()
+}
+
 func (w *EditorW) startPrompt() {
-	w.ReplE.SmartNewLine()
-	w.ReplE.AppendTag(w.ReplE.Tags["blue"], ">>> ")
+	glib.IdleAdd(w.startPromptUnsafe)
 }
 
 func (w *EditorW) syncCursorPos() {

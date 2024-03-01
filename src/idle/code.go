@@ -61,7 +61,7 @@ func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (rst eval.
 	rst = <-ch
 	close(ch)
 	glib.IdleAdd(func() {
-		w.ReplE.ScrollToEnd()
+		w.ReplE.ScrollToEndUnsafe()
 		if rst.IsPanic {
 			if w.PanicWithDlg {
 				msg := "Code Panicked:\n" + rst.PanicMsg
@@ -71,11 +71,11 @@ func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (rst eval.
 				dialog.Destroy()
 			} else {
 				w.ReplE.AppendTagUnsafe(w.ReplE.Tags["red"], "[PANIC RECEIVED] "+rst.PanicMsg+"\n")
-				w.ReplE.ScrollToEnd()
+				w.ReplE.ScrollToEndUnsafe()
 			}
 		}
 		if beginMsg != "" { // User Invoke Will Handle
-			w.startPrompt()
+			w.startPromptUnsafe()
 		}
 	})
 	return
