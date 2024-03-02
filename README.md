@@ -80,5 +80,5 @@ sudo dnf install gtksourceview3-devel
 sudo dnf install gtk3-devel
 sudo dnf install pkgconf
 sudo dnf install gcc
-
+sudo ln -s /usr/lib64/pkgconfig/gtksourceview-3.0.pc /usr/lib64/pkgconfig/gtksourceview-3.pc # other distros use 3 instead of 3.0
 ```
