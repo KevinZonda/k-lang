@@ -66,10 +66,19 @@ In different platform, GUI config may different.
    
 ### Debian-based Linux (Ubuntu, etc.)
 
-1. Install GTK3 & GTKSourceView3
-2. ```bash
-   sudo apt-get install libgtk-3-dev
-   sudo apt-get install libgtksourceview-3.0-dev
-   sudo apt-get install pkg-config
-   sudo apt-get install gcc
-   ```
+```bash
+sudo apt-get install libgtk-3-dev
+sudo apt-get install libgtksourceview-3.0-dev
+sudo apt-get install pkg-config
+sudo apt-get install gcc
+```
+
+### Fedora
+
+```bash
+sudo dnf install gtksourceview3-devel
+sudo dnf install gtk3-devel
+sudo dnf install pkgconf
+sudo dnf install gcc
+
+```
