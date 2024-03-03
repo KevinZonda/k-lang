@@ -2,6 +2,7 @@ package visualizer
 
 import (
 	"fmt"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	"github.com/xlab/treeprint"
 	"reflect"
@@ -48,10 +49,9 @@ func TreeAny(t treeprint.Tree, name string, o any) treeprint.Tree {
 
 func treeAny(ctx *context, t treeprint.Tree, name string, o any) treeprint.Tree {
 	if o == nil {
-		t.SetValue(name + ": nil")
+		t.SetValue(name + ": <nil>")
 		return t
 	}
-
 	switch vT := o.(type) {
 	case int, float64, string, bool:
 		t.SetValue(fmt.Sprintf("%s: %v", name, vT))
@@ -61,6 +61,9 @@ func treeAny(ctx *context, t treeprint.Tree, name string, o any) treeprint.Tree 
 		for idx, k := range vT {
 			treeAny(ctx, t.AddBranch(""), fmt.Sprint(idx), k)
 		}
+		return t
+	case *node.FuncBlock:
+		t.SetValue(name + ": " + vT.String())
 		return t
 	case *obj.Object:
 		return Tree(ctx, t, name, vT)
@@ -102,7 +105,7 @@ func Tree(ctx *context, t treeprint.Tree, name string, o *obj.Object) treeprint.
 	ctx.addAddr(o.Ref)
 
 	if o == nil {
-		t.SetValue("nil")
+		t.SetValue("<nil>")
 		return t
 	}
 
@@ -110,15 +113,15 @@ func Tree(ctx *context, t treeprint.Tree, name string, o *obj.Object) treeprint.
 
 	switch o.Kind {
 	case obj.EvalObj:
-		t.SetValue("Eval")
+		t.SetValue(name + ": Eval")
 	case obj.Func:
-		t.SetValue("Func")
+		t.SetValue(name + ": Func")
 	case obj.Lambda:
-		t.SetValue("Lambda")
+		t.SetValue(name + ":Lambda")
 	case obj.Library:
-		t.SetValue("Library")
+		t.SetValue(name + ":Library")
 	case obj.StructDef:
-		t.SetValue("StructDef")
+		t.SetValue(name + ": StructDef")
 	case obj.Struct:
 		treeAny(ctx, t, name, o.Value())
 	case obj.Value:

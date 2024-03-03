@@ -11,7 +11,9 @@ import (
 
 func TestV(t *testing.T) {
 	code := `
-
+struct color {
+  fn foo() {}
+}
 struct ll {
 	next: ll?
     val: int
@@ -23,6 +25,7 @@ x.next.next = &y
 y.val = struct {
    a: 18
    b : "Hi"
+   v : color{}
 }
 `
 	e := eval.New()
