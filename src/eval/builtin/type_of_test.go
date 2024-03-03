@@ -8,7 +8,17 @@ import (
 
 func TestTypeOf(t *testing.T) {
 	code := `
+open "console"
 println(typeOf(1))
+println(typeOf([1, 2, 3]))
+println(typeOf(true))
+console.writeln(typeOf(1.2))
+console.write(typeOf(""))
+println(len("18"))
+println(len([]))
+println(len({}))
+# FIXME: println(len(map{}))
+println(typeOf(map{"11": 11}))
 `
 	p, _ := parserHelper.Ast(code)
 	e := eval.New()

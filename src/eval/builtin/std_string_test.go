@@ -19,6 +19,11 @@ z := s.trimLeft("  128.0    ")
 println(z)
 z := s.trimRight("  128.0    ")
 println(z)
+z := s.trim("  128.0    ")
+println(z)
+println(s.split("1 2",' '))
+println(s.fromAscii(67))
+println(s.len("Hi"))
 `
 	expected := `int
 128
@@ -26,6 +31,10 @@ num
 128
 128.0    
   128.0
+128.0
+[1 2]
+C
+2
 `
 
 	tester.GeneralTest(false, t, code, expected)

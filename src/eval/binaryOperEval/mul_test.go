@@ -11,4 +11,6 @@ func TestMul(t *testing.T) {
 	tester.Assert(t, binaryOperEval.BinaryOper(token.Mul, 1, 2), 2)
 	tester.Assert(t, binaryOperEval.BinaryOper(token.Mul, 1.1, 2), 2.2)
 	tester.Assert(t, binaryOperEval.BinaryOper(token.Mul, 1, 2.1), 2.1)
+	tester.Assert(t, binaryOperEval.BinaryOper(token.Mul, 1.1, 2.1), float64(1.1)*float64(2.1))
+
 }

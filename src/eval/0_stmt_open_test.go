@@ -42,3 +42,17 @@ typeOf(x)
 	expected := ""
 	tester.GeneralTest(true, t, code, expected)
 }
+
+func TestAllOpenFeat(t *testing.T) {
+	eval.ResetGlobal()
+	fmt.Println(filepath.Abs("."))
+	code := `
+open "feat/verbose:on"
+open "feat/visualize:off"
+open "feat/staticType"
+open "feat/unknownVarNil"
+x
+
+`
+	tester.NoPanic(t, code)
+}

@@ -70,19 +70,3 @@ func (e *Eval) EvalReturnStmt(n *node.ReturnStmt) {
 	}
 	e.memory.Top().SetValue(reserved.Return, e.evalExprs(n.Value...))
 }
-
-func (e *Eval) evalReturnVal() (vals []any, hasRet bool) {
-	v, hasRet := e.memory.Top().GetValue(reserved.Return)
-	if !hasRet {
-		return nil, false
-	}
-	if v == nil {
-		return nil, true
-	}
-	switch t := v.(type) {
-	case []any:
-		return t, true
-	default:
-		return []any{t}, true
-	}
-}

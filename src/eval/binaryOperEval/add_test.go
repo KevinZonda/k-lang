@@ -11,6 +11,7 @@ func TestAdd(t *testing.T) {
 	tester.Assert(t, binaryOperEval.BinaryOper(token.Add, 1, 2), 3)
 	tester.Assert(t, binaryOperEval.BinaryOper(token.Add, 1.1, 2), 3.1)
 	tester.Assert(t, binaryOperEval.BinaryOper(token.Add, 1, 2.1), 3.1)
+	tester.Assert(t, binaryOperEval.BinaryOper(token.Add, 1.1, 2), 3.1)
 	tester.Assert(t, binaryOperEval.BinaryOper(token.Add, 1.1, 2.1), 3.2)
 	tester.Assert(t, binaryOperEval.BinaryOper(token.Add, "1", "2"), "12")
 	tester.Assert(t, binaryOperEval.BinaryOper(token.Add, "1", 2), "12")

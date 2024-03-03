@@ -17,7 +17,6 @@ func (c *StdConsoleLib) FuncCall(b obj.StdIO, caller string, args []any) obj.ILi
 		ensureArgsLen(args, 0)
 		reader := bufio.NewReader(b.GetStdin())
 		text, err := reader.ReadString('\n')
-
 		if err != nil {
 			panic(err)
 		}

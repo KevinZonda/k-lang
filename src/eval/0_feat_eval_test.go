@@ -22,3 +22,26 @@ fn main() {
 `
 	tester.GeneralTest(true, t, code, "Hello\n")
 }
+
+func TestPanic(t *testing.T) {
+	code := `
+fn main() {
+    panic("Hello")
+}
+`
+	tester.ExpectPanic(t, code, func(e string) bool {
+		return e == "Hello"
+	})
+}
+
+func TestEvalVisualize(t *testing.T) {
+	code := `
+open "feat/visualize"
+x = struct {
+x: 18
+z: 9
+}
+println(visualize(x))
+`
+	tester.NoPanic(t, code)
+}

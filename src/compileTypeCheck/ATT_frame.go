@@ -1,7 +1,7 @@
 package compileTypeCheck
 
 import (
-	TMem "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/compileTypeCheck/tmem"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/compileTypeCheck/tmem"
 )
 
 func (e *ATT) frameStart(protect bool) *TMem.Layer {

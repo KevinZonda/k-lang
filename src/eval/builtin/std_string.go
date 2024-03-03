@@ -19,7 +19,7 @@ func (s *StdStringLib) FuncCall(b obj.StdIO, caller string, args []any) obj.ILib
 		return resultVal(len([]rune(args[0].(string))))
 	case "fromAscii":
 		ensureArgsLen(args, 1)
-		return resultVal(string(args[0].(rune)))
+		return resultVal(string(rune(args[0].(int))))
 	case "trim":
 		ensureArgsLen(args, 1)
 		return resultVal(strings.TrimSpace(args[0].(string)))

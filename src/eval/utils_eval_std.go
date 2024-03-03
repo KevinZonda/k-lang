@@ -37,6 +37,10 @@ func (e *Eval) GetStdErr() io.Writer {
 	return e.std.StdErr
 }
 
+func (e *Eval) GetIO() IO {
+	return e.std
+}
+
 func (e *Eval) ResetStd() {
 	e.std.StdOut = os.Stdout
 	e.std.StdIn = os.Stdin

@@ -25,7 +25,8 @@ x.next.next = &y
 y.val = struct {
    a: 18
    b : "Hi"
-   v : color{}
+   c : color{}
+   d : [1, 2, 3]
 }
 `
 	e := eval.New()
@@ -38,6 +39,9 @@ y.val = struct {
 	// jout(j)
 
 	fmt.Println(j.String())
+
+	k := visualizer.Visualize("x", obj)
+	fmt.Println(k.StringIdent(0))
 
 }
 
