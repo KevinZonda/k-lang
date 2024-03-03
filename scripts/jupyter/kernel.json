@@ -1,0 +1,10 @@
+{
+    "argv": [
+        "~/xxs166/src/out/interpreter",
+        "jupyter",
+        "{connection_file}"
+    ],
+    "display_name": "K Kernel",
+    "language": "k",
+    "name": "k"
+}
