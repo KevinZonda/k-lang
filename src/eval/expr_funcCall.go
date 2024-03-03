@@ -40,12 +40,13 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) ExprResult {
 			case 0:
 				return exprVal("")
 			case 1:
-				return exprVal(visualizer.TreeAny(nil, "visualize", args[0]).String())
+				return exprVal(visualizer.TreeAny(nil, "", args[0]).String())
 			default:
 				rst := ""
 				for i, arg := range args {
-					rst += fmt.Sprintf("arg%d: %v\n", i, visualizer.TreeAny(nil, "visualize", arg).String())
+					rst += fmt.Sprintf("arg %d: %v\n", i, visualizer.TreeAny(nil, "", arg).String())
 				}
+				return exprVal(rst)
 			}
 		}
 

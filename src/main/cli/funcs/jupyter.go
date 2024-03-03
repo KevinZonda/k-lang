@@ -41,8 +41,7 @@ func JupyterKernel(file string) {
 }
 
 type replBasedInterpreter struct {
-	e       *eval.Eval
-	context *eval.Eval
+	e *eval.Eval
 }
 
 func (i *replBasedInterpreter) CompleteWords(code string, cursorPos int) (prefix string, completions []string, tail string) {
@@ -63,11 +62,11 @@ func (i *replBasedInterpreter) Eval(code string) (values []any, err error) {
 		return nil, fmt.Errorf(strings.TrimSpace(sb.String()))
 	}
 
-	if i.context == nil {
-		i.context = eval.New()
+	if i.e == nil {
+		i.e = eval.New().WithVisualize()
 	}
+	e := i.e
 
-	e := i.context
 	e.LoadStdFromOS()
 
 	rst := e.DoSafely(ast)
@@ -77,7 +76,6 @@ func (i *replBasedInterpreter) Eval(code string) (values []any, err error) {
 	if rst.IsLastExpr && rst.LastExprVal != nil {
 		values = append(values, rst.LastExprVal)
 	}
-	i.context = e
 	return values, nil
 }
 

@@ -38,7 +38,15 @@ func VisualizeAny(name string, o any) *VNode {
 	}
 }
 
+type context struct {
+	addrs map[string]bool
+}
+
 func TreeAny(t treeprint.Tree, name string, o any) treeprint.Tree {
+	return treeAny(&context{addrs: map[string]bool{}}, t, name, o)
+}
+
+func treeAny(ctx *context, t treeprint.Tree, name string, o any) treeprint.Tree {
 	if o == nil {
 		t.SetValue(name + ": nil")
 		return t
@@ -51,15 +59,15 @@ func TreeAny(t treeprint.Tree, name string, o any) treeprint.Tree {
 	case []any:
 		t.SetValue(name + ": []")
 		for idx, k := range vT {
-			TreeAny(t.AddBranch(""), fmt.Sprint(idx), k)
+			treeAny(ctx, t.AddBranch(""), fmt.Sprint(idx), k)
 		}
 		return t
 	case *obj.Object:
-		return Tree(t, name, vT)
+		return Tree(ctx, t, name, vT)
 	case *obj.StructField:
 		f := vT.Fields
 		for kvp := f.Oldest(); kvp != nil; kvp = kvp.Next() {
-			TreeAny(t.AddBranch(kvp.Key), kvp.Key, kvp.Value)
+			treeAny(ctx, t.AddBranch(kvp.Key), kvp.Key, kvp.Value)
 		}
 		return t
 	default:
@@ -67,10 +75,32 @@ func TreeAny(t treeprint.Tree, name string, o any) treeprint.Tree {
 	}
 }
 
-func Tree(t treeprint.Tree, name string, o *obj.Object) treeprint.Tree {
+func (c *context) addAddr(addr any) {
+	if addr == nil {
+		return
+	}
+	c.addrs[fmt.Sprintf("%p", addr)] = true
+}
+
+func (c *context) hasAddr(addr any) bool {
+	if addr == nil {
+		return false
+	}
+	_, ok := c.addrs[fmt.Sprintf("%p", addr)]
+	return ok
+}
+
+func Tree(ctx *context, t treeprint.Tree, name string, o *obj.Object) treeprint.Tree {
 	if t == nil {
 		t = treeprint.New()
 	}
+	if ctx.hasAddr(o) || ctx.hasAddr(o.Ref) {
+		t.SetValue(fmt.Sprintf("%s: %s", name, "Possible Loop Object"))
+		return t
+	}
+	ctx.addAddr(o)
+	ctx.addAddr(o.Ref)
+
 	if o == nil {
 		t.SetValue("nil")
 		return t
@@ -90,9 +120,9 @@ func Tree(t treeprint.Tree, name string, o *obj.Object) treeprint.Tree {
 	case obj.StructDef:
 		t.SetValue("StructDef")
 	case obj.Struct:
-		TreeAny(t, name, o.Value())
+		treeAny(ctx, t, name, o.Value())
 	case obj.Value:
-		t.AddNode(fmt.Sprintf("%v", o.Value()))
+		treeAny(ctx, t, name, o.Value())
 	}
 
 	return t
@@ -139,29 +169,29 @@ type VNode struct {
 
 func (v *VNode) StringIdent(i int) string {
 	sb := &strings.Builder{}
-	fmt.Fprint(sb, ident(i))
-	fmt.Fprint(sb, "name:", v.Name)
-	fmt.Fprint(sb, ident(i))
+	_, _ = fmt.Fprint(sb, ident(i))
+	_, _ = fmt.Fprint(sb, "name:", v.Name)
+	_, _ = fmt.Fprint(sb, ident(i))
 	if v.Val == nil {
-		fmt.Fprint(sb, "val : nil")
+		_, _ = fmt.Fprint(sb, "val : nil")
 		return sb.String()
 	}
 	switch vT := v.Val.(type) {
 	case int, float64, string, bool:
-		fmt.Fprint(sb, "val :", vT)
+		_, _ = fmt.Fprint(sb, "val :", vT)
 	case []*VNode:
-		fmt.Fprint(sb, "val :")
+		_, _ = fmt.Fprint(sb, "val :")
 		for _, k := range vT {
-			fmt.Fprint(sb, k.StringIdent(i+1))
+			_, _ = fmt.Fprint(sb, k.StringIdent(i+1))
 		}
 	case map[string]*VNode:
-		fmt.Fprint(sb, "val :")
+		_, _ = fmt.Fprint(sb, "val :")
 		for _, val := range vT {
-			fmt.Fprint(sb, val.StringIdent(i+1))
+			_, _ = fmt.Fprint(sb, val.StringIdent(i+1))
 		}
 	case *VNode:
-		fmt.Fprint(sb, "val :")
-		fmt.Fprint(sb, vT.StringIdent(i+1))
+		_, _ = fmt.Fprint(sb, "val :")
+		_, _ = fmt.Fprint(sb, vT.StringIdent(i+1))
 	}
 
 	return sb.String()
