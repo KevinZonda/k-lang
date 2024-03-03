@@ -13,6 +13,7 @@ require (
 	github.com/tliron/commonlog v0.2.12
 	github.com/tliron/glsp v0.2.1
 	github.com/wk8/go-ordered-map/v2 v2.1.8
+	github.com/xlab/treeprint v1.2.0
 )
 
 require (

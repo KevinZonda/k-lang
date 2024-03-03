@@ -29,7 +29,7 @@ func JupyterKernel(file string) {
 		ProtocolVersion:       jupyter.ProtocolVersion,
 		Implementation:        "minikernel",
 		ImplementationVersion: "0.0.1",
-		Banner:                fmt.Sprintf("Mini Language kernel - v%s", "0.0.1"),
+		Banner:                fmt.Sprintf("K Language kernel - v%s", "0.0.1"),
 		LanguageInfo: jupyter.KernelLanguageInfo{
 			Name:           "K",
 			Version:        runtime.Version(),
@@ -83,7 +83,7 @@ func (i *replBasedInterpreter) Eval(code string) (values []any, err error) {
 
 func newReplInterpreter() *replBasedInterpreter {
 	return &replBasedInterpreter{
-		e: eval.New(),
+		e: eval.New().WithVisualize(),
 	}
 }
 

@@ -143,6 +143,10 @@ func (o *Object) ToLib() ILibrary {
 	return o.Value().(ILibrary)
 }
 
+func (o *Object) ToStructDef() *node.StructBlock {
+	return o.Value().(*node.StructBlock)
+}
+
 func (o *Object) ToValue() any {
 	return o.Value()
 }

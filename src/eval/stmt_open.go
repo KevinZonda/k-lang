@@ -59,6 +59,8 @@ func (e *Eval) loadBuiltInFeature(name string) bool {
 		e.FeatUnknownVarNil = val
 	case "feat/refAll":
 		e.FeatRefAll = val
+	case "feat/visualise", "feat/visualize":
+		e.visualise = val
 	default:
 		return false
 	}

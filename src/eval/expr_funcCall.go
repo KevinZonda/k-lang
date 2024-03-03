@@ -1,17 +1,27 @@
 package eval
 
 import (
+	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/builtin"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/visualizer"
 )
 
 func (e *Eval) evalExprs(exprs ...node.Expr) []any {
 	var ret []any
 	for _, expr := range exprs {
 		ret = append(ret, e.EvalExpr(expr).EnsureValue())
+	}
+	return ret
+}
+
+func (e *Eval) evalExprsRef(exprs ...node.Expr) []any {
+	var ret []any
+	for _, expr := range exprs {
+		ret = append(ret, e.evalExpr(expr, true).EnsureValue())
 	}
 	return ret
 }
@@ -24,6 +34,21 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) ExprResult {
 	funcName := fc.Caller.Value
 	fx, ok := e.memory.Get(funcName)
 	if !ok || !(fx.Is(obj.Func, obj.Lambda)) {
+		if (funcName == "visualize" || funcName == "visualise") && e.visualise {
+			args := e.evalExprsRef(fc.Args...)
+			switch len(args) {
+			case 0:
+				return exprVal("")
+			case 1:
+				return exprVal(visualizer.TreeAny(nil, "visualize", args[0]).String())
+			default:
+				rst := ""
+				for i, arg := range args {
+					rst += fmt.Sprintf("arg%d: %v\n", i, visualizer.TreeAny(nil, "visualize", arg).String())
+				}
+			}
+		}
+
 		if fx.Is(obj.StructDef) {
 			t := &node.Type{
 				Name: funcName,

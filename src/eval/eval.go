@@ -23,6 +23,8 @@ type Eval struct {
 
 	FeatUnknownVarNil bool
 	FeatRefAll        bool
+
+	visualise bool
 }
 
 func (e *Eval) SetPath(path string) {
@@ -48,6 +50,11 @@ func New() *Eval {
 		memory: memory.NewMemory(),
 		std:    NewIO(),
 	}
+}
+
+func (e *Eval) WithVisualize() *Eval {
+	e.visualise = true
+	return e
 }
 
 func (e *Eval) WithBasePath(path string) *Eval {
@@ -147,4 +154,8 @@ func (e *Eval) EvalMain() any {
 	e.frameEnd()
 
 	return result.ReturnValue
+}
+
+func (e *Eval) GetMemory() *memory.Memory {
+	return e.memory
 }
