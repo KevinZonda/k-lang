@@ -9,6 +9,7 @@ require (
 	github.com/antlr4-go/antlr/v4 v4.13.0
 	github.com/brimdata/zed v1.14.0
 	github.com/gotk3/gotk3 v0.6.3
+	github.com/hjson/hjson-go/v4 v4.4.0
 	github.com/linuxerwang/sourceview3 v0.1.1
 	github.com/tliron/commonlog v0.2.12
 	github.com/tliron/glsp v0.2.1
@@ -38,12 +39,12 @@ require (
 	github.com/tliron/kutil v0.3.17 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
-	golang.org/x/crypto v0.20.0 // indirect
+	golang.org/x/crypto v0.21.0 // indirect
 	golang.org/x/exp v0.0.0-20240222234643-814bf88cf225 // indirect
 	golang.org/x/net v0.21.0 // indirect
 	golang.org/x/sync v0.6.0 // indirect
-	golang.org/x/sys v0.17.0 // indirect
-	golang.org/x/term v0.17.0 // indirect
+	golang.org/x/sys v0.18.0 // indirect
+	golang.org/x/term v0.18.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

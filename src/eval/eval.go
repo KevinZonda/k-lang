@@ -123,6 +123,10 @@ func (e *Eval) Do(ast tree.Ast) DetailedRunResult {
 }
 
 func (e *Eval) DoSafely(ast tree.Ast) (rst DetailedRunResult) {
+	if len(ast) == 0 {
+		rst.stderr = e.GetStdErr()
+		return
+	}
 	defer func() {
 		rst.CurrentToken = e.CurrentToken()
 		r := recover()
@@ -136,7 +140,6 @@ func (e *Eval) DoSafely(ast tree.Ast) (rst DetailedRunResult) {
 			rst.PanicMsg += e.MemStr()
 		}
 	}()
-	rst.stderr = e.GetStdErr()
 	rst = e.Do(ast)
 	return
 }

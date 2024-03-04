@@ -52,15 +52,16 @@ func (r *Repl) internalCmd(line string) bool {
 }
 
 func (r *Repl) Repl(input string) {
+	r.context = eval.New().WithBasePath(input)
+
 	if input != "" {
 		str, e := iox.ReadAllText(input)
 		panicx.PanicIfNotNil(e, e)
 
-		ast, _ := parserHelper.Ast(str)
-		// TODO;
-		r.context = eval.New().WithBasePath(input)
-		rst := r.context.DoSafely(ast)
-		if rst.PrintPanic().IsPanic {
+		ast, errs := parserHelper.Ast(str)
+		if len(errs) > 0 {
+			fmt.Fprintln(os.Stderr, errs.String())
+		} else if r.context.DoSafely(ast).PrintPanic().IsPanic {
 			os.Exit(1)
 		}
 	}
@@ -80,25 +81,17 @@ func (r *Repl) Repl(input string) {
 		}
 		buffer, err := consoleReader.MultipleLine(rl, line, "> ", "| ")
 
-		parser := parserHelper.FromString(buffer)
-
-		if len(parser.Errors()) > 0 {
-			for _, e := range parser.Errors() {
-				fmt.Fprintln(os.Stderr, "[Error]", e.Error())
-			}
+		ast, errs := parserHelper.Ast(buffer)
+		if len(errs) > 0 {
+			fmt.Fprintln(os.Stderr, errs.String())
 			continue
 		}
-
 		r.history = append(r.history, buffer)
-		ast := parser.Ast()
 		if r.debug {
 			for idx, node := range ast {
 				fmt.Print("[", idx, "] -> ")
 				jout.Println(node)
 			}
-		}
-		if r.context == nil {
-			r.context = eval.New()
 		}
 		rst := r.context.DoSafely(ast)
 		if rst.IsPanic {
