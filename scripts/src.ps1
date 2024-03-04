@@ -10,6 +10,7 @@ $flag = "-X git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/buildconst.Commit
 $flag = "$flag -X git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/buildconst.BuildDate=$date"
 $flag = "$flag -X git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/buildconst.BuildTime=$time"
 $flag = "$flag -X git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/buildconst.BuildBranch=$branch"
+$flag = "-ldflags=`"$flag`""
 
 echo $flag
 go build -v $flag -o out/interpreter.exe main/cli/main.go
