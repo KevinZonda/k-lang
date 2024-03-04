@@ -11,3 +11,4 @@ gen/
 *_priv.go
 
 desktop.ini
+.ipynb_checkpoints

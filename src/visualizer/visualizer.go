@@ -29,6 +29,10 @@ func VisualizeAny(name string, o any) *VNode {
 		f := vT.Fields
 		children := map[string]*VNode{}
 		for kvp := f.Oldest(); kvp != nil; kvp = kvp.Next() {
+			// ignore visualize func
+			if _, ok := kvp.Value.(*node.FuncBlock); ok {
+				continue
+			}
 			vN := VisualizeAny(kvp.Key, kvp.Value)
 			vN.Name = kvp.Key
 			children[kvp.Key] = vN
@@ -70,6 +74,9 @@ func treeAny(ctx *context, t treeprint.Tree, name string, o any) treeprint.Tree 
 	case *obj.StructField:
 		f := vT.Fields
 		for kvp := f.Oldest(); kvp != nil; kvp = kvp.Next() {
+			if _, ok := kvp.Value.(*node.FuncBlock); ok {
+				continue
+			}
 			treeAny(ctx, t.AddBranch(kvp.Key), kvp.Key, kvp.Value)
 		}
 		return t
