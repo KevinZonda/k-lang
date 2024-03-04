@@ -3,8 +3,8 @@ package eval_test
 import (
 	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/lib/tester"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/tester"
 	"testing"
 )
 

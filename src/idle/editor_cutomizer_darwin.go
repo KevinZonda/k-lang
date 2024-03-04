@@ -1,6 +1,8 @@
 package idle
 
-import "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/gotk3osx"
+import (
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/lib/gotk3osx"
+)
 
 type Customizer struct {
 	osx *gotk3osx.GtkosxApplication
