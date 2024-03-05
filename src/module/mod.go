@@ -16,7 +16,9 @@ type Mod struct {
 }
 
 func (m Mod) String() string {
-	bs, _ := hjson.MarshalWithOptions(m, hjson.DefaultOptions())
+	opt := hjson.DefaultOptions()
+	opt.EmitRootBraces = true
+	bs, _ := hjson.MarshalWithOptions(m, opt)
 	return string(bs)
 }
 

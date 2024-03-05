@@ -16,6 +16,8 @@ func Mod(arg string, args []string) {
 		switch args[0] {
 		case "console":
 			m = module.NewConsoleMod()
+			iox.WriteAllText("main.k",
+				`println('Hello World!'`)
 		case "lib":
 			m = module.NewMod()
 		default:
