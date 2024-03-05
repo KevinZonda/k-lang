@@ -38,6 +38,8 @@ func main() {
 		funcs.JupyterKernel(args.GetStrOr(0, nil))
 	case "version", "info":
 		fmt.Println(buildconst.Msg())
+	case "mod":
+		minimalfunc.Mod(args.GetStrOr(0, nil), args[1:])
 	default:
 		if len(args) == 0 {
 			minimalfunc.Run(os.Args[1])

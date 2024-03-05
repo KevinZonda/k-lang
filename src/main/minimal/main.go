@@ -18,6 +18,8 @@ func main() {
 		fmt.Println(buildconst.Msg())
 	case "run":
 		minimalfunc.Run(args[1])
+	case "mod":
+		minimalfunc.Mod(args[1], args[2:])
 	default:
 		minimalfunc.Run(args[0])
 	}
