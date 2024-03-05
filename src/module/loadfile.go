@@ -10,3 +10,9 @@ func LoadFromText(text string) Mod {
 	}
 	return m
 }
+
+func LoadAsMod(text string) (mod Mod, ok bool) {
+	err := hjson.Unmarshal([]byte(text), &mod)
+	ok = err == nil
+	return
+}

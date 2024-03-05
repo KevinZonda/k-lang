@@ -4,12 +4,23 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/compressor"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/module"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"github.com/KevinZonda/GoX/pkg/iox"
 	"github.com/KevinZonda/GoX/pkg/panicx"
+	"strings"
 )
 
 func Run(input string) {
+	if input == "" || input == "." || strings.HasSuffix(input, ".mod") {
+		bs, e := iox.ReadAllText(module.DEFAULT_K_MOD)
+		panicx.PanicIfNotNil(e, e)
+		mod := module.LoadFromText(string(bs))
+		input = mod.Entry
+		if input == "" {
+			input = module.DEFAULT_ENTRY
+		}
+	}
 	bs, e := iox.ReadAllByte(input)
 
 	panicx.PanicIfNotNil(e, e)
