@@ -2,7 +2,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import {Header} from "./Head.tsx";
+import {Header, NavBar} from "./Head.tsx";
 import {NumberSection} from "./numberSection.tsx";
 import {FeatureSection} from "./Feature.tsx";
 import SyntaxHighlighter from 'react-syntax-highlighter';
@@ -21,6 +21,8 @@ function App() {
       align='stretch'
       spacing={0}
     >
+      <NavBar/>
+
       <Header/>
 
       <SampleCode/>

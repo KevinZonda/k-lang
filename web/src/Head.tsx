@@ -1,9 +1,15 @@
-import {Button, Center, Container, Heading, Image, Text, VStack, Wrap, WrapItem} from "@chakra-ui/react";
+import {Button, Center, Container, Flex, Heading, Image, Link, Text, VStack, Wrap, WrapItem} from "@chakra-ui/react";
 import {ArrowForwardIcon, DownloadIcon} from "@chakra-ui/icons";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 
 export const highlightColor = '#3182ce';
+
+export function NavBar() {
+    return <Flex padding={'50px'} flexDirection={'row-reverse'} paddingBottom={0}>
+        <Link color='black' href='https://docs.k-lang.org' _hover={{color: highlightColor, textDecoration: 'underline'}}>Docs</Link>
+    </Flex>
+}
 
 export function Header() {
   const [count, setCount] = useState(0)
@@ -32,7 +38,7 @@ export function Header() {
       <Container>
         <Wrap spacing='30px' justify='center'>
           <WrapItem>
-            <Button border={0} size='lg' colorScheme='blue' mt='24px' rightIcon={<ArrowForwardIcon/>}  onClick={() => window.open('https://playground.kevinzonda.com', "_blank")}>
+            <Button border={0} size='lg' colorScheme='blue' mt='24px' rightIcon={<ArrowForwardIcon/>}  onClick={() => window.open('https://playground.k-lang.org', "_blank")}>
               Try it now
             </Button>
           </WrapItem>
