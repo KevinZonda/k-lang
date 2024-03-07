@@ -7,5 +7,6 @@
     - *obj.StructField
     - *Eval       // Evaluator from other file
     - ILibrary    // Built in library
+    - any         // Any Value
 - *node.FuncBlock
 - *node.LambdaExpr
