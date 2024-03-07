@@ -1,4 +1,17 @@
-import {Button, Center, Container, Flex, Heading, Image, Link, Text, VStack, Wrap, WrapItem} from "@chakra-ui/react";
+import {
+    Button,
+    Center,
+    Container,
+    Flex,
+    Heading,
+    Image,
+    Link,
+    Spacer,
+    Text,
+    VStack,
+    Wrap,
+    WrapItem
+} from "@chakra-ui/react";
 import {ArrowForwardIcon, DownloadIcon} from "@chakra-ui/icons";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
@@ -6,7 +19,8 @@ import {useNavigate} from "react-router-dom";
 export const highlightColor = '#3182ce';
 
 export function NavBar() {
-    return <Flex padding={'50px'} flexDirection={'row-reverse'} paddingBottom={0}>
+    return <Flex padding={'50px'}  paddingBottom={0}>
+        <Spacer></Spacer>
         <Link color='black' href='https://docs.k-lang.org' _hover={{color: highlightColor, textDecoration: 'underline'}}>Docs</Link>
     </Flex>
 }

@@ -16,7 +16,7 @@ SyntaxHighlighterL.registerLanguage('klang', klang);
 
 function App() {
 
-  return <div style={{width: '100vw', minHeight: '100vh'}}>
+  return <div style={{width: '100%', minHeight: '100vh'}}>
     <VStack
       align='stretch'
       spacing={0}
