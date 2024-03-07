@@ -67,11 +67,5 @@ func (a cmdArgs) GetStrOr(i int, ss *string) string {
 			return a[i]
 		}
 	}
-	if ss == nil {
-		return ""
-	}
-	if *ss == "" {
-		return ""
-	}
-	return *ss
+	return shared.GetStr(ss)
 }

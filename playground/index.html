@@ -6,37 +6,45 @@
 		<meta charset='utf-8'>
 		<title>K Language Playground - The K Programming Language</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
         <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
         <script language="javascript" type="text/javascript" src="syntax.js"></script>
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css">
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css">
 	</head>
 
-	<body onload="init()" style="margin-top: 0;">
+	<body onload="init()" style="width: 100vw; max-width: 100%; margin: 0;">
+		<div style="width: 100%; background: rgb(49, 130, 206); color: white; padding-top: 8px; padding-bottom: 8px; padding-left:16px;display: flex;
+    align-items: center;">
+			<a style="line-height: 1.5; margin-block: 0; font-size: 32px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'">
+				K Language Playground
+			</a>
+		</div>
+		<div style="margin-left: 4px; margin-right: 4px;">
 		<div style="display: flex; gap:12px; align-items: center; flex-wrap: wrap; margin-top: 1em;">
-			<h1 style="margin-block: 0;">The <font style="font-style: italic;">K Language</font> Playground</h1>
-			<p style="margin-block: 0;;" id="loadStatusLbl">Unknwon</p>
-			<button id="runCodeBtn" onclick="runCodeEvent()">Run</button>
-			<button id="fmtBtn" onclick="fmt()">Format</button>
-            <button id="reloadCoreBtn" onclick="reloadCore()">Reload Core</button>
-			<select id="sampleCodeSelect">
-				<option value="helloworld">HelloWorld</option>
+			<button type="button" class="btn btn-success" id="runCodeBtn" onclick="runCodeEvent()">Run</button>
+			<button type="button" class="btn btn-light"   id="fmtBtn" onclick="fmt()">Format</button>
+            <button type="button" class="btn btn-light"   id="reloadCoreBtn" onclick="reloadCore()">Reload Core</button>
+			<select class="form-select" id="sampleCodeSelect" style="width: initial;">
+				<option value="helloworld" selected>HelloWorld</option>
 				<option value="loop">Loop</option>
 				<option value="fib">Fib</option>
 			</select>
+			<p style="margin-block: 0;;" id="loadStatusLbl">Unknwon</p>
 			<pre style="margin: 0; text-wrap: wrap;" id="infoTxt"></pre>
 		</div>
         <div style="border:1px solid black; margin-top: 1em;">
-		    <textarea id="codeTxt" style="width: 100%; height: 50vh; font-family: monospace;"></textarea>
+			<textarea id="codeTxt" style="width: 100%; height: 50vh; font-family: monospace;"></textarea>
         </div>
 		
 
-		<pre id="codeResult"></pre>
+
+		<pre id="codeResult" style="margin-top: 1rem;"></pre>
 
 		<hr style="width: 100%;">
 		<div style="display: flex; align-items:bas; gap: 10px; flex-wrap: wrap;">
 			<span>Final Year Project<br>xxs166#student.bham.ac.uk<br>B.Sc. Computer Science</span>
 			<span>Built on Go, Antlr4, WebAssembly<br>Copyright &copy; 2024 xxs#student.bham.ac.uk</span>
+		</div>
 		</div>
 
 		<script>
@@ -49,7 +57,7 @@
                 theme: 'default',
                 indentUnit: 4,
             });
-			
+
 			function status(v) {
 				document.getElementById("loadStatusLbl").innerHTML = v
 			}
@@ -62,7 +70,7 @@
 			function reloadCore() {
 				loadCore(true)
 			}
-            
+
             function loadCore(rand) {
 				document.getElementById('infoTxt').innerHTML = ''
                 status('Loading')
@@ -87,11 +95,11 @@
 				document.getElementById('codeResult').innerHTML = v
 				await delay(1)
 			}
-			
+
 			function setResultSync(v) {
 				document.getElementById('codeResult').innerHTML = v
 			}
-			
+
 
 			function fmt() {
                 const code = editor.getValue()
