@@ -7,6 +7,9 @@ import (
 )
 
 func main() {
+	//if runtime.GOOS == "linux" {
+	//	CreateDesktopIcon()
+	//}
 	gtk.Init(nil)
 
 	//if runtime.GOOS == "windows" {
