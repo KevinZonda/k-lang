@@ -5,6 +5,7 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/builtin"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/memory"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/visualizer"
@@ -95,17 +96,17 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) ExprResult {
 
 func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, onNewFrame func()) ExprResult {
 	e.currentToken = fn.GetToken()
-	topFrame := e.frameStart(false)
+	topFrame := memory.NewLayer(true)
 	if onNewFrame != nil {
 		onNewFrame()
 	}
 	for i, funcArg := range fn.Args {
 		v := e.evalExprOrRef(args[i], funcArg.Ref)
 		v = e.TypeCast(funcArg.Type, v)
-		e.memory.Top().SetValue(funcArg.Name.Value, v)
+		topFrame.SetValue(funcArg.Name.Value, v)
 	}
+	e.memory.Push(topFrame)
 
-	topFrame.Protect = true
 	result := e.runAst((tree.Ast)(fn.Body.Nodes), reserved.Return)
 
 	//fe := e.new((tree.Ast)(fn.Body.Nodes))

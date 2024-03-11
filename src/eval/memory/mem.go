@@ -26,7 +26,7 @@ func (t *Memory) Push(n *Layer) {
 }
 
 func (t *Memory) PushEmpty(protect bool) *Layer {
-	tbl := newLayer(protect)
+	tbl := NewLayer(protect)
 	t.Push(tbl)
 	return tbl
 }
@@ -93,7 +93,7 @@ func (t *Memory) Get(key string) (*obj.Object, bool) {
 func (t *Memory) Set(key string, val any) {
 	o := obj.Construct(val)
 	if t.Empty() {
-		t.q = append(t.q, newLayer(true).WithObj(key, o))
+		t.q = append(t.q, NewLayer(true).WithObj(key, o))
 		return
 	}
 

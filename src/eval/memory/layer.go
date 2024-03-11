@@ -30,12 +30,12 @@ func (t *Layer) SetValue(key string, val any) {
 	t.m[key] = obj.Construct(val)
 }
 
-func newLayer(protect bool) *Layer {
+func NewLayer(protect bool) *Layer {
 	return &Layer{m: make(map[string]*obj.Object), Protect: protect}
 }
 
 func NewMemory() *Memory {
-	return &Memory{q: []*Layer{newLayer(true)}}
+	return &Memory{q: []*Layer{NewLayer(true)}}
 }
 
 func (t *Layer) WithObj(key string, val *obj.Object) *Layer {
