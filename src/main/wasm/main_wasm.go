@@ -62,7 +62,9 @@ func executeCode(stdout writer, code string) string {
 	e.SetStdErr(stdout)
 	rst := e.DoSafely(ast)
 	if rst.IsPanic {
-		rst.PrintPanic()
+		if stdout != nil {
+			stdout.Write([]byte(rst.PanicString()))
+		}
 	}
 	return stdout.String()
 }

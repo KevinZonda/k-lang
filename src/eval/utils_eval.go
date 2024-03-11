@@ -32,11 +32,18 @@ func (rst DetailedRunResult) PrintPanic() DetailedRunResult {
 	if !rst.IsPanic {
 		return rst
 	}
-	tk := rst.CurrentToken
 	stde := rst.stderr
 	if stde == nil {
 		stde = os.Stderr
 	}
-	fmt.Fprintf(stde, "%s at position L%d,%d-L%d,%d\n", rst.PanicMsg, tk.BeginLine, tk.BeginColumn, tk.EndLine, tk.EndColumn)
+	fmt.Fprintln(stde, rst.PanicString())
 	return rst
+}
+
+func (rst DetailedRunResult) PanicString() string {
+	if !rst.IsPanic {
+		return ""
+	}
+	tk := rst.CurrentToken
+	return fmt.Sprintf("%s at position L%d,%d-L%d,%d\n", rst.PanicMsg, tk.BeginLine, tk.BeginColumn, tk.EndLine, tk.EndColumn)
 }
