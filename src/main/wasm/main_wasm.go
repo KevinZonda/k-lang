@@ -53,7 +53,9 @@ type writer interface {
 func executeCode(stdout writer, code string) string {
 	ast, errs := parserHelper.Ast(code)
 	if len(errs) > 0 {
-		return errs.String()
+		str := errs.String()
+		stdout.Write([]byte(str))
+		return str
 	}
 	e := eval.New()
 	e.SetStdOut(stdout)
