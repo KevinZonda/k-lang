@@ -38,6 +38,18 @@ func (v *AntlrVisitor) visitIndexExpr(ctx parser.IExprContext) *node.IndexExpr {
 	}
 }
 
+func (v *AntlrVisitor) visitExprs(ctxs []parser.IExprContext) []node.Expr {
+	var exprs []node.Expr
+	for _, ctx := range ctxs {
+		e := v.visitExpr(ctx)
+		if e != nil {
+			exprs = append(exprs, e)
+		}
+	}
+	return exprs
+
+}
+
 func (v *AntlrVisitor) visitExpr(ctx parser.IExprContext) node.Expr {
 	if ctx == nil {
 		return nil

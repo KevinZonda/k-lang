@@ -132,7 +132,7 @@ matchStmt
     ;
 
 matchCase
-    : Case Condition=expr caseBlock
+    : Case expr (Comma expr)* caseBlock
     | Default caseBlock
     ;
 

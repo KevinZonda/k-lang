@@ -23,8 +23,9 @@ func (v *AntlrVisitor) visitMathStmt(ctx parser.IMatchStmtContext) *node.MatchSt
 }
 
 func (v *AntlrVisitor) visitMatchCase(ctx parser.IMatchCaseContext) *node.MatchCase {
+
 	return &node.MatchCase{
-		Expr: v.visitExpr(ctx.GetCondition()),
+		Expr: v.visitExprs(ctx.AllExpr()),
 		Body: v.visitCaseBody(ctx.CaseBlock()),
 	}
 }

@@ -19,6 +19,6 @@ func (m *MatchStmt) GetToken() token.Token {
 }
 
 type MatchCase struct {
-	Expr Expr
+	Expr []Expr
 	Body *CodeBlock
 }

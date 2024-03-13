@@ -8,9 +8,11 @@ func (e *Eval) EvalMatchStmt(m *node.MatchStmt) {
 	e.currentToken = m.GetToken()
 	match := e.EvalExpr(m.Match).EnsureValue()
 	for _, c := range m.Cases {
-		if e.EvalExpr(c.Expr).EnsureValue() == match {
-			e.EvalCodeBlock(c.Body)
-			return
+		for _, expr := range c.Expr {
+			if e.EvalExpr(expr).EnsureValue() == match {
+				e.EvalCodeBlock(c.Body)
+				return
+			}
 		}
 	}
 	if m.Default != nil {
