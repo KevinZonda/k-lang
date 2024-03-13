@@ -128,7 +128,7 @@ iterFor : For LParen type? Identifier Col expr RParen codeBlock;
 whileStyleFor : For expr? codeBlock;
 
 matchStmt
-    : Match LParen expr RParen LBrack matchCase* RBrack
+    : Match expr LBrack matchCase* RBrack
     ;
 
 matchCase
