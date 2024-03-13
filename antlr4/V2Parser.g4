@@ -27,7 +27,8 @@ baseVar : Identifier indexes?;
 index : LSquare expr RSquare;
 indexes : index+;
 
-lambda : Function LParen funcSignArgs RParen funcReturnType? codeBlock;
+lambda : Function LParen funcSignArgs RParen funcReturnType? codeBlock
+       | LParen funcSignArgs RParen funcReturnType? To codeBlock;
 
 //boolExpr
 //    : expr (Equals | NotEq | Greater | Less | GreaterEq | LessEq) expr

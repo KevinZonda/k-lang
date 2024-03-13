@@ -27,7 +27,7 @@ Mod       : '%' | 'mod';
 Dot       : '.';
 Question  : '?';
 
-To : '->';
+To : '->' | '=>';
 
 Struct   : 'struct';
 Map      : 'map';

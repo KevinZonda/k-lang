@@ -115,3 +115,6 @@ ifeq ($(OS),Windows_NT)
 else
 	./scripts/macapp.sh
 endif
+
+install:
+	cp ./src/out/interpreter ~/.local/bin/k
