@@ -24,6 +24,22 @@ match (x) {
 	tester.GeneralTest(false, t, code, expected)
 }
 
+func TestMatchStmtCol(t *testing.T) {
+	code := `
+x := 11
+match (x) {
+    case 7:
+        println("seven")
+	case 11:
+	    println("eleven")
+	default:
+	    println("default")
+}
+`
+	expected := "eleven\n"
+	tester.GeneralTest(false, t, code, expected)
+}
+
 func TestMatchStmtWithoutDefault(t *testing.T) {
 	code := `
 x := 18
@@ -53,6 +69,22 @@ match (x) {
 	default {
         println("default")
 	}
+}
+`
+	expected := "default\n"
+	tester.GeneralTest(false, t, code, expected)
+}
+
+func TestMatchStmtDefaultCol(t *testing.T) {
+	code := `
+x := 19
+match (x) {
+    case 7:
+        println("seven")
+	case 11:
+        println("eleven")
+	default:
+        println("default")
 }
 `
 	expected := "default\n"

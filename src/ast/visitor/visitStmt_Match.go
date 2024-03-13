@@ -16,7 +16,7 @@ func (v *AntlrVisitor) visitMathStmt(ctx parser.IMatchStmtContext) *node.MatchSt
 		if m.Default() == nil {
 			match.Cases = append(match.Cases, v.visitMatchCase(m))
 		} else {
-			match.Default = v.visitCodeBlock(m.CodeBlock())
+			match.Default = v.visitCaseBody(m.CaseBlock())
 		}
 	}
 	return match
@@ -24,7 +24,31 @@ func (v *AntlrVisitor) visitMathStmt(ctx parser.IMatchStmtContext) *node.MatchSt
 
 func (v *AntlrVisitor) visitMatchCase(ctx parser.IMatchCaseContext) *node.MatchCase {
 	return &node.MatchCase{
-		Expr: v.visitExpr(ctx.Expr()),
-		Body: v.visitCodeBlock(ctx.CodeBlock()),
+		Expr: v.visitExpr(ctx.GetCondition()),
+		Body: v.visitCaseBody(ctx.CaseBlock()),
 	}
+}
+
+func (v *AntlrVisitor) visitCaseBody(caseBlock parser.ICaseBlockContext) *node.CodeBlock {
+	if caseBlock == nil {
+		return nil
+	}
+	if caseBlock.CodeBlock() != nil {
+		return v.visitCodeBlock(caseBlock.CodeBlock())
+	}
+	var body []node.Node
+	for _, m := range caseBlock.GetChildren() {
+		switch m.(type) {
+		case *parser.StmtContext:
+			body = append(body, v.visitStmt(m.(*parser.StmtContext)))
+		case *parser.ExprContext:
+			body = append(body, v.visitExpr(m.(*parser.ExprContext)))
+		}
+	}
+	return &node.CodeBlock{
+		Nodes: body,
+		Token: token.FromAntlrToken(caseBlock.GetStart()).WithEnd(caseBlock.GetStop()),
+	}
+	return nil
+
 }

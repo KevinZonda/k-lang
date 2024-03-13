@@ -140,6 +140,9 @@ type V2ParserListener interface {
 	// EnterMatchCase is called when entering the matchCase production.
 	EnterMatchCase(c *MatchCaseContext)
 
+	// EnterCaseBlock is called when entering the caseBlock production.
+	EnterCaseBlock(c *CaseBlockContext)
+
 	// EnterJumpStmt is called when entering the jumpStmt production.
 	EnterJumpStmt(c *JumpStmtContext)
 
@@ -277,6 +280,9 @@ type V2ParserListener interface {
 
 	// ExitMatchCase is called when exiting the matchCase production.
 	ExitMatchCase(c *MatchCaseContext)
+
+	// ExitCaseBlock is called when exiting the caseBlock production.
+	ExitCaseBlock(c *CaseBlockContext)
 
 	// ExitJumpStmt is called when exiting the jumpStmt production.
 	ExitJumpStmt(c *JumpStmtContext)

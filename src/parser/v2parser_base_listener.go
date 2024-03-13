@@ -285,6 +285,12 @@ func (s *BaseV2ParserListener) EnterMatchCase(ctx *MatchCaseContext) {}
 // ExitMatchCase is called when production matchCase is exited.
 func (s *BaseV2ParserListener) ExitMatchCase(ctx *MatchCaseContext) {}
 
+// EnterCaseBlock is called when production caseBlock is entered.
+func (s *BaseV2ParserListener) EnterCaseBlock(ctx *CaseBlockContext) {}
+
+// ExitCaseBlock is called when production caseBlock is exited.
+func (s *BaseV2ParserListener) ExitCaseBlock(ctx *CaseBlockContext) {}
+
 // EnterJumpStmt is called when production jumpStmt is entered.
 func (s *BaseV2ParserListener) EnterJumpStmt(ctx *JumpStmtContext) {}
 

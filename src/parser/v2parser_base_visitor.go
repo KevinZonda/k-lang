@@ -184,6 +184,10 @@ func (v *BaseV2ParserVisitor) VisitMatchCase(ctx *MatchCaseContext) interface{} 
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseV2ParserVisitor) VisitCaseBlock(ctx *CaseBlockContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseV2ParserVisitor) VisitJumpStmt(ctx *JumpStmtContext) interface{} {
 	return v.VisitChildren(ctx)
 }

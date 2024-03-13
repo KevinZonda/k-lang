@@ -107,7 +107,7 @@ declareStmt
 
 
 ifStmt
-    : If LParen expr RParen codeBlock (Else (codeBlock|ifStmt))?
+    : If expr codeBlock (Else (codeBlock|ifStmt))?
     ;
 
 tryCatchSmt
@@ -125,16 +125,18 @@ loopStmt
 
 cStyleFor : For LParen onInit=expr? Semi onCondition=expr? Semi onEnd=expr? RParen codeBlock;
 iterFor : For LParen type? Identifier Col expr RParen codeBlock;
-whileStyleFor : For (LParen expr? RParen)? codeBlock;
+whileStyleFor : For expr? codeBlock;
 
 matchStmt
     : Match LParen expr RParen LBrack matchCase* RBrack
     ;
 
 matchCase
-    : Case expr codeBlock
-    | Default codeBlock
+    : Case Condition=expr caseBlock
+    | Default caseBlock
     ;
+
+caseBlock : codeBlock |  Col ((stmt | expr) sep*)*;
 
 
 jumpStmt

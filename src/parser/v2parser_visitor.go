@@ -140,6 +140,9 @@ type V2ParserVisitor interface {
 	// Visit a parse tree produced by V2Parser#matchCase.
 	VisitMatchCase(ctx *MatchCaseContext) interface{}
 
+	// Visit a parse tree produced by V2Parser#caseBlock.
+	VisitCaseBlock(ctx *CaseBlockContext) interface{}
+
 	// Visit a parse tree produced by V2Parser#jumpStmt.
 	VisitJumpStmt(ctx *JumpStmtContext) interface{}
 
