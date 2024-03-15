@@ -4,14 +4,14 @@ go 1.22.0
 
 require (
 	github.com/KevinZonda/GoX v0.0.15
-	github.com/KevinZonda/go-jupyter v1.0.11
+	github.com/KevinZonda/go-jupyter v1.0.12
 	github.com/andybalholm/brotli v1.1.0
 	github.com/antlr4-go/antlr/v4 v4.13.0
 	github.com/brimdata/zed v1.14.0
 	github.com/gotk3/gotk3 v0.6.3
 	github.com/hjson/hjson-go/v4 v4.4.0
 	github.com/linuxerwang/sourceview3 v0.1.1
-	github.com/tliron/commonlog v0.2.12
+	github.com/tliron/commonlog v0.2.15
 	github.com/tliron/glsp v0.2.1
 	github.com/wk8/go-ordered-map/v2 v2.1.8
 	github.com/xlab/treeprint v1.2.0
@@ -35,13 +35,14 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/sasha-s/go-deadlock v0.3.1 // indirect
+	github.com/segmentio/ksuid v1.0.4 // indirect
 	github.com/sourcegraph/jsonrpc2 v0.2.0 // indirect
-	github.com/tliron/kutil v0.3.17 // indirect
+	github.com/tliron/kutil v0.3.19 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	golang.org/x/crypto v0.21.0 // indirect
-	golang.org/x/exp v0.0.0-20240222234643-814bf88cf225 // indirect
-	golang.org/x/net v0.21.0 // indirect
+	golang.org/x/exp v0.0.0-20240314144324-c7f7c6466f7f // indirect
+	golang.org/x/net v0.22.0 // indirect
 	golang.org/x/sync v0.6.0 // indirect
 	golang.org/x/sys v0.18.0 // indirect
 	golang.org/x/term v0.18.0 // indirect
