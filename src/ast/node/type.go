@@ -38,7 +38,7 @@ func (t *Type) IsPlainType(typeName string) bool {
 const (
 	TypeInt    string = "int"
 	TypeNum    string = "num"
-	TypeString string = "string"
+	TypeString string = "str"
 	TypeBool   string = "bool"
 	TypeVoid   string = "void"
 	TypeAny    string = "any"

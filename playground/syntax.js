@@ -26,7 +26,7 @@
                 bool: !0,
                 num: !0,
                 int: !0,
-                string: !0,
+                str: !0,
                 try: !0,
                 catch : !0
             },

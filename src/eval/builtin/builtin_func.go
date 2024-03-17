@@ -33,7 +33,7 @@ func TypeOf(v any) string {
 	case float64:
 		return "num"
 	case string:
-		return "string"
+		return "str"
 	case bool:
 		return "bool"
 	case []any:
