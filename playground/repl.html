@@ -25,6 +25,7 @@
 </div>
 <div style="margin-left: 4px; margin-right: 4px;">
     <div style="display: flex; gap:12px; align-items: center; flex-wrap: wrap; margin-top: 1em;">
+        <button type="button" class="btn btn-light" id="reloadCoreBtn" onclick="reset()">Restart Session</button>
         <button type="button" class="btn btn-light" id="reloadCoreBtn" onclick="reloadCore()">Reload Core</button>
         <p style="margin-block: 0;;" id="loadStatusLbl">Unknwon</p>
         <pre style="margin: 0; text-wrap: wrap;" id="infoTxt"></pre>
@@ -32,9 +33,9 @@
     <div style="border:1px solid black; margin-top: 1em;">
         <textarea id="codeTxt" style="width: 100%; height: 50vh; font-family: monospace;"></textarea>
     </div>
-    <div style="width: 100%">
-        <input id="codeInput"/>
-        <button class="btn btn-success" onclick="runCodeEvent()">Enter</button>
+    <div class="input-group" style="padding-top: 8px">
+        <input id="codeInput" type="text" class="form-control" onkeydown="onEnter(this)" placeholder="Code here...">
+        <button class="btn btn-success" type="button" onclick="runCodeEvent()">Enter</button>
     </div>
 
     <hr style="width: 100%;">
@@ -53,9 +54,15 @@
         mode: 'text/x-k',
         theme: 'default',
         indentUnit: 4,
-        readOnly: 'nocursor'
+        readOnly: 'nocursor',
+        // scrollIntoView: true
         
     });
+
+    function reset() {
+        initReplX()
+        editor.setValue('')
+    }
 
     function status(v) {
         document.getElementById("loadStatusLbl").innerHTML = v
@@ -103,14 +110,21 @@
         await new Promise(r => setTimeout(r, ms));
     }
 
+    function onEnter(ele) {
+        if(event.key === 'Enter') {
+            runCodeEvent()   
+        }
+    }
+
     async function runCodeEvent() {
         if (!loaded) {
-            document.getElementById('codeResult').innerHTML = 'Core Language Not Loaded'
+            alert('Core Language Not Loaded') 
             return
         }
         const codeTxt = document.getElementById('codeInput').value
+        if (codeTxt === '') return
         document.getElementById('codeInput').value = ''
-        editor.setValue(editor.getValue() + '>>>' + codeTxt + '\n')
+        editor.setValue(editor.getValue() + '>>> ' + codeTxt + '\n')
         status('Running')
         await setResult('')
         const rst = replX(codeTxt);
@@ -122,8 +136,10 @@
         }
         const retV = rst[1]
         if (retV !== null) {
-            editor.setValue(editor.getValue() + '<<<' + retV) + '\n'
+            editor.setValue(editor.getValue() + '<<< ' + retV + '\n')
         }
+        // editor.setCursor(editor.lineCount())
+        
         status('Ready')
     }
 </script>
