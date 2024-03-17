@@ -89,6 +89,9 @@ func initRepl() {
 }
 
 func runRepl(stdout writer, code string) any {
+	if repl == nil {
+		initRepl()
+	}
 	ast, errs := parserHelper.Ast(code)
 	if len(errs) > 0 {
 		str := errs.String()
