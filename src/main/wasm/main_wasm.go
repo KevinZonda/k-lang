@@ -17,6 +17,8 @@ func main() {
 	js.Global().Set("runCodeStreamX", js.FuncOf(RunCodeStream))
 	js.Global().Set("fmtCodeX", js.FuncOf(FmtCode))
 	js.Global().Set("infoX", js.FuncOf(InfoX))
+	js.Global().Set("replX", js.FuncOf(RunReplX))
+	js.Global().Set("initReplX", js.FuncOf(InitRepl))
 	<-c
 }
 
@@ -31,6 +33,17 @@ func RunCodeX(this js.Value, args []js.Value) any {
 	return js.ValueOf(result)
 }
 
+func RunReplX(this js.Value, args []js.Value) any {
+	s := args[0].String()
+	stdout := &bytes.Buffer{}
+	result := runRepl(stdout, s)
+	return js.ValueOf([]any{stdout.String(), result})
+}
+
+func InitRepl(this js.Value, args []js.Value) any {
+	initRepl()
+	return js.Undefined()
+}
 func FmtCode(this js.Value, args []js.Value) any {
 	s := args[0].String()
 	result := fmtCode(s)
@@ -67,6 +80,35 @@ func executeCode(stdout writer, code string) string {
 		}
 	}
 	return stdout.String()
+}
+
+var repl *eval.Eval
+
+func initRepl() {
+	repl = eval.New()
+}
+
+func runRepl(stdout writer, code string) any {
+	ast, errs := parserHelper.Ast(code)
+	if len(errs) > 0 {
+		str := errs.String()
+		stdout.Write([]byte(str))
+		return str
+	}
+	e := repl
+	e.SetStdOut(stdout)
+	e.SetStdErr(stdout)
+	rst := e.DoSafely(ast)
+	if rst.IsPanic {
+		if stdout != nil {
+			stdout.Write([]byte(rst.PanicString()))
+		}
+		return nil
+	}
+	if rst.HasReturn {
+		return rst.ReturnValue
+	}
+	return rst.LastExprVal
 }
 
 func RunCodeStream(this js.Value, args []js.Value) any {
