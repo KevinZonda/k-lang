@@ -1,6 +1,6 @@
 module git.cs.bham.ac.uk/projects-2023-24/xxs166/src
 
-go 1.22.0
+go 1.22.1
 
 require (
 	github.com/KevinZonda/GoX v0.0.15

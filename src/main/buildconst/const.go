@@ -6,7 +6,8 @@ import (
 	"strings"
 )
 
-const LanguageVersion = "0.2.24 Pisces"
+const LanguageVersion = "0.3.17"
+const LanguageCodeName = "Pisces"
 
 var (
 	BuildTime   string = "00:00"
@@ -25,7 +26,7 @@ func init() {
 }
 
 func Msg() string {
-	return fmt.Sprintf("K Language %s (%s|%s, %s %s) [%s %s (%s)] on %s",
-		LanguageVersion, CommitHash, BuildBranch, BuildDate, BuildTime,
+	return fmt.Sprintf("K Language %s %s (%s|%s, %s %s) [%s %s (%s)] on %s",
+		LanguageVersion, LanguageCodeName, CommitHash, BuildBranch, BuildDate, BuildTime,
 		runtime.Version(), runtime.Compiler, strings.ToUpper(runtime.GOARCH), runtime.GOOS)
 }
