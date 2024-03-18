@@ -90,9 +90,13 @@ func (e *Eval) runAst(ast tree.Ast, breaks ...string) DetailedRunResult {
 		case node.Stmt:
 			e.EvalStmt(nT)
 		case *node.FuncBlock:
-			e.memory.Set(nT.Name.Value, nT)
+			o := obj.Construct(nT)
+			o.Immutable = true
+			e.memory.Set(nT.Name.Value, o)
 		case *node.StructBlock:
-			e.memory.Set(nT.Name, nT)
+			o := obj.Construct(nT)
+			o.Immutable = true
+			e.memory.Set(nT.Name, o)
 		default:
 			panic("not implemented")
 		}

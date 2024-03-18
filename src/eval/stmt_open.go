@@ -119,7 +119,7 @@ func (e *Eval) EvalOpenStmt(n *node.OpenStmt) {
 	} else {
 		name = normaliseName(filepath.Base(abs))
 	}
-	e.memory.Top().Set(name, obj.NewObj(obj.EvalObj, openedEval))
+	e.memory.Top().Set(name, obj.NewImmutableObj(obj.EvalObj, openedEval))
 }
 
 func normaliseName(n string) string {

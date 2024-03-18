@@ -4,10 +4,10 @@ import "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 
 func Construct(a any) *Object {
 	switch aT := a.(type) {
-	case ILibrary:
-		return NewObj(Library, a)
 	case *Object:
 		return aT
+	case ILibrary:
+		return NewObj(Library, a)
 	case *node.LambdaExpr:
 		t := node.NewType()
 		t.Func = true

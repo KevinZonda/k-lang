@@ -42,7 +42,7 @@ print(M{}.x)
 
 func TestZeroValueString(t *testing.T) {
 	code := `
-struct M{ string x }
+struct M{ str x }
 print(M{}.x)
 `
 	expected := ``

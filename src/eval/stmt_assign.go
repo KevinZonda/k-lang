@@ -121,13 +121,14 @@ func (e *Eval) EvalAssignStmtX(n *node.AssignStmt, assignee *node.Assignee, valu
 		case *Eval:
 			if e == fromT {
 				o, ok := e.memory.Get(lastVar.Name.Value)
-				if o.Is(obj.EvalObj, obj.Func, obj.StructDef) {
-					panic("cannot assign to " + lastVar.Name.Value)
-				}
 
 				shadow := n.Token.Value == ":=" || assignee.Type != nil
 
 				if ok && !shadow {
+					if o.Immutable {
+						panic("cannot assign to " + lastVar.Name.Value)
+					}
+
 					// following is not possible because ref syntax
 					// foo(&x) will let set val not possible
 					// e.memory.Set(lastVar.Name.Value, Construct(v))
@@ -152,11 +153,12 @@ func (e *Eval) EvalAssignStmtX(n *node.AssignStmt, assignee *node.Assignee, valu
 				}
 			} else {
 				o, ok := fromT.memory.Bottom().Get(lastVar.Name.Value)
-				if o.Is(obj.EvalObj, obj.Func, obj.StructDef) {
-					panic("cannot assign to " + lastVar.Name.Value)
-				}
 
 				if ok {
+					if o.Immutable {
+						panic("cannot assign to " + lastVar.Name.Value)
+					}
+
 					if e.FeatStaticType {
 						e.TypeCheckOrPanic(o.Type, v)
 					}

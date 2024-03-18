@@ -26,8 +26,9 @@ type Object struct {
 	Kind Kind
 	val  any
 	// TODO: Type
-	Ref  *Object
-	Type *node.Type
+	Ref       *Object
+	Type      *node.Type
+	Immutable bool
 }
 
 func (o *Object) WithType(t *node.Type) *Object {
@@ -125,6 +126,10 @@ func (o *Object) String() string {
 
 func NewObj(k Kind, val any) *Object {
 	return &Object{Kind: k, val: val}
+}
+
+func NewImmutableObj(k Kind, val any) *Object {
+	return &Object{Kind: k, val: val, Immutable: true}
 }
 
 func (o *Object) ToStruct() *StructField {
