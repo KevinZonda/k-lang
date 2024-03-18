@@ -75,3 +75,7 @@ func (t *Layer) GetValue(key string) (any, bool) {
 func (t *Layer) Remove(key string) {
 	delete(t.m, key)
 }
+
+func (t *Layer) Raw() map[string]*obj.Object {
+	return t.m
+}

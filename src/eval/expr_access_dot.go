@@ -3,6 +3,7 @@ package eval
 import (
 	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/memory"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	"reflect"
 	"strings"
@@ -102,13 +103,18 @@ func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) ExprRe
 		}
 		if scopeT.ParentEval != nil {
 			scopeE := scopeT.ParentEval.(*Eval)
-			return scopeE.EvalFuncBlock(funcB, _fc.Args, func() {
-				scopeE.memory.Top().SetValue("self", scopeT)
-			})
+			return scopeE.EvalFuncBlock(funcB, _fc.Args,
+				&EvalFuncBlockEvent{
+					OnNewFrameCreated: func(topF *memory.Layer) {
+						topF.SetValue("self", scopeT)
+					},
+				})
 		}
 
-		return e.EvalFuncBlock(funcB, _fc.Args, func() {
-			e.memory.Top().SetValue("self", scopeT)
+		return e.EvalFuncBlock(funcB, _fc.Args, &EvalFuncBlockEvent{
+			OnNewFrameCreated: func(topF *memory.Layer) {
+				topF.SetValue("self", scopeT)
+			},
 		})
 	// TODO: More situation!
 	case string:

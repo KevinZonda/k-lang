@@ -73,13 +73,23 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) ExprResult {
 	}
 
 	var fn *node.FuncBlock
+	var evt *EvalFuncBlockEvent
 	if fx.Is(obj.Lambda) {
-		fn = fx.ToLambda().ToFunc(funcName)
+		lambda := fx.ToLambda()
+		fn = lambda.ToFunc(funcName)
+		if lambda.Mem != nil {
+			evt = &EvalFuncBlockEvent{
+				OnNewFramePushed: func() {
+					e.memory.Push(lambda.Mem.(*memory.Layer))
+				},
+			}
+
+		}
 	} else {
 		fn = fx.ToFunc()
 	}
 
-	return e.EvalFuncBlock(fn, fc.Args, nil)
+	return e.EvalFuncBlock(fn, fc.Args, evt)
 	//e.frameStart()
 	//for i, funcArg := range fn.Args {
 	//	e.memory.Set(funcArg.Name.Value, args[i])
@@ -94,11 +104,16 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) ExprResult {
 	//return nil
 }
 
-func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, onNewFrame func()) ExprResult {
+type EvalFuncBlockEvent struct {
+	OnNewFrameCreated func(top *memory.Layer)
+	OnNewFramePushed  func()
+}
+
+func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, evt *EvalFuncBlockEvent) ExprResult {
 	e.currentToken = fn.GetToken()
 	topFrame := memory.NewLayer(true)
-	if onNewFrame != nil {
-		onNewFrame()
+	if evt != nil && evt.OnNewFrameCreated != nil {
+		evt.OnNewFrameCreated(topFrame)
 	}
 	for i, funcArg := range fn.Args {
 		v := e.evalExprOrRef(args[i], funcArg.Ref)
@@ -106,6 +121,9 @@ func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, onNewFrame fu
 		topFrame.SetValue(funcArg.Name.Value, v)
 	}
 	e.memory.Push(topFrame)
+	if evt != nil && evt.OnNewFramePushed != nil {
+		evt.OnNewFramePushed()
+	}
 
 	result := e.runAst((tree.Ast)(fn.Body.Nodes), reserved.Return)
 

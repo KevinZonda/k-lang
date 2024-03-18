@@ -30,3 +30,20 @@ k := m(17)
 	expected := "28\n"
 	tester.GeneralTest(false, t, code, expected)
 }
+
+func TestReturnClosure(t *testing.T) {
+	code := `
+foo := () => {
+    count = 0
+    return () => {
+        println(count)
+        count = count + 1
+    }
+}
+m := foo()
+m()
+m()
+`
+	expected := "0\n1\n"
+	tester.GeneralTest(false, t, code, expected)
+}

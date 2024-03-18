@@ -26,19 +26,19 @@ func Stdout(allowPanic bool, f func()) (output string) {
 				if IsCapturing() {
 					StopCaptureStdout()
 				}
-				fmt.Println("Content Captured:\n", lastCall)
+				fmt.Println("Content Captured:\n" + lastCall)
 				output = lastCall
 			}
 		}
 		if IsCapturing() {
 			output = StopCaptureStdout()
-			fmt.Println("Content Captured:\n", output)
+			fmt.Println("Content Captured:\n" + output)
 		}
 
 	}()
 	f()
 	output = StopCaptureStdout()
-	fmt.Println("Content Captured:\n", output)
+	fmt.Println("Content Captured:\n" + output)
 
 	return output
 }
