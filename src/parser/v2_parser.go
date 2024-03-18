@@ -132,8 +132,8 @@ func v2parserParserInit() {
 		8, 45, 1, 46, 1, 46, 1, 46, 0, 1, 32, 47, 0, 2, 4, 6, 8, 10, 12, 14, 16,
 		18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52,
 		54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 82, 84, 86, 88,
-		90, 92, 0, 8, 2, 0, 8, 8, 26, 26, 2, 0, 21, 22, 49, 49, 1, 0, 10, 15, 1,
-		0, 16, 17, 2, 0, 19, 20, 23, 23, 1, 0, 21, 22, 1, 0, 43, 48, 2, 0, 9, 9,
+		90, 92, 0, 8, 2, 0, 8, 8, 26, 26, 2, 0, 21, 22, 49, 49, 2, 0, 19, 20, 23,
+		23, 1, 0, 21, 22, 1, 0, 10, 15, 1, 0, 16, 17, 1, 0, 43, 48, 2, 0, 9, 9,
 		55, 55, 686, 0, 108, 1, 0, 0, 0, 2, 113, 1, 0, 0, 0, 4, 117, 1, 0, 0, 0,
 		6, 121, 1, 0, 0, 0, 8, 139, 1, 0, 0, 0, 10, 148, 1, 0, 0, 0, 12, 156, 1,
 		0, 0, 0, 14, 173, 1, 0, 0, 0, 16, 197, 1, 0, 0, 0, 18, 213, 1, 0, 0, 0,
@@ -216,13 +216,13 @@ func v2parserParserInit() {
 		1, 0, 0, 0, 272, 268, 1, 0, 0, 0, 272, 269, 1, 0, 0, 0, 272, 270, 1, 0,
 		0, 0, 272, 271, 1, 0, 0, 0, 273, 307, 1, 0, 0, 0, 274, 275, 10, 16, 0,
 		0, 275, 276, 5, 24, 0, 0, 276, 306, 3, 32, 16, 17, 277, 278, 10, 11, 0,
-		0, 278, 279, 7, 2, 0, 0, 279, 306, 3, 32, 16, 12, 280, 281, 10, 10, 0,
-		0, 281, 282, 7, 3, 0, 0, 282, 306, 3, 32, 16, 11, 283, 284, 10, 9, 0, 0,
-		284, 285, 5, 18, 0, 0, 285, 306, 3, 32, 16, 10, 286, 287, 10, 8, 0, 0,
-		287, 288, 7, 4, 0, 0, 288, 306, 3, 32, 16, 9, 289, 290, 10, 7, 0, 0, 290,
-		291, 7, 5, 0, 0, 291, 306, 3, 32, 16, 8, 292, 293, 10, 15, 0, 0, 293, 294,
-		5, 5, 0, 0, 294, 296, 3, 32, 16, 0, 295, 297, 5, 8, 0, 0, 296, 295, 1,
-		0, 0, 0, 296, 297, 1, 0, 0, 0, 297, 299, 1, 0, 0, 0, 298, 300, 3, 32, 16,
+		0, 278, 279, 5, 18, 0, 0, 279, 306, 3, 32, 16, 12, 280, 281, 10, 10, 0,
+		0, 281, 282, 7, 2, 0, 0, 282, 306, 3, 32, 16, 11, 283, 284, 10, 9, 0, 0,
+		284, 285, 7, 3, 0, 0, 285, 306, 3, 32, 16, 10, 286, 287, 10, 8, 0, 0, 287,
+		288, 7, 4, 0, 0, 288, 306, 3, 32, 16, 9, 289, 290, 10, 7, 0, 0, 290, 291,
+		7, 5, 0, 0, 291, 306, 3, 32, 16, 8, 292, 293, 10, 15, 0, 0, 293, 294, 5,
+		5, 0, 0, 294, 296, 3, 32, 16, 0, 295, 297, 5, 8, 0, 0, 296, 295, 1, 0,
+		0, 0, 296, 297, 1, 0, 0, 0, 297, 299, 1, 0, 0, 0, 298, 300, 3, 32, 16,
 		0, 299, 298, 1, 0, 0, 0, 299, 300, 1, 0, 0, 0, 300, 301, 1, 0, 0, 0, 301,
 		302, 5, 6, 0, 0, 302, 306, 1, 0, 0, 0, 303, 304, 10, 2, 0, 0, 304, 306,
 		3, 26, 13, 0, 305, 274, 1, 0, 0, 0, 305, 277, 1, 0, 0, 0, 305, 280, 1,
@@ -233,8 +233,8 @@ func v2parserParserInit() {
 		0, 0, 312, 311, 1, 0, 0, 0, 313, 35, 1, 0, 0, 0, 314, 315, 5, 52, 0, 0,
 		315, 317, 5, 3, 0, 0, 316, 318, 3, 38, 19, 0, 317, 316, 1, 0, 0, 0, 317,
 		318, 1, 0, 0, 0, 318, 319, 1, 0, 0, 0, 319, 320, 5, 4, 0, 0, 320, 37, 1,
-		0, 0, 0, 321, 326, 3, 32, 16, 0, 322, 323, 5, 7, 0, 0, 323, 325, 3, 32,
-		16, 0, 324, 322, 1, 0, 0, 0, 325, 328, 1, 0, 0, 0, 326, 324, 1, 0, 0, 0,
+		0, 0, 0, 321, 326, 3, 34, 17, 0, 322, 323, 5, 7, 0, 0, 323, 325, 3, 34,
+		17, 0, 324, 322, 1, 0, 0, 0, 325, 328, 1, 0, 0, 0, 326, 324, 1, 0, 0, 0,
 		326, 327, 1, 0, 0, 0, 327, 39, 1, 0, 0, 0, 328, 326, 1, 0, 0, 0, 329, 330,
 		5, 33, 0, 0, 330, 333, 5, 48, 0, 0, 331, 332, 5, 34, 0, 0, 332, 334, 5,
 		52, 0, 0, 333, 331, 1, 0, 0, 0, 333, 334, 1, 0, 0, 0, 334, 41, 1, 0, 0,
@@ -263,8 +263,8 @@ func v2parserParserInit() {
 		396, 1, 0, 0, 0, 396, 399, 1, 0, 0, 0, 397, 395, 1, 0, 0, 0, 398, 391,
 		1, 0, 0, 0, 399, 402, 1, 0, 0, 0, 400, 398, 1, 0, 0, 0, 400, 401, 1, 0,
 		0, 0, 401, 403, 1, 0, 0, 0, 402, 400, 1, 0, 0, 0, 403, 404, 5, 2, 0, 0,
-		404, 55, 1, 0, 0, 0, 405, 410, 3, 32, 16, 0, 406, 407, 5, 7, 0, 0, 407,
-		409, 3, 32, 16, 0, 408, 406, 1, 0, 0, 0, 409, 412, 1, 0, 0, 0, 410, 408,
+		404, 55, 1, 0, 0, 0, 405, 410, 3, 34, 17, 0, 406, 407, 5, 7, 0, 0, 407,
+		409, 3, 34, 17, 0, 408, 406, 1, 0, 0, 0, 409, 412, 1, 0, 0, 0, 410, 408,
 		1, 0, 0, 0, 410, 411, 1, 0, 0, 0, 411, 57, 1, 0, 0, 0, 412, 410, 1, 0,
 		0, 0, 413, 424, 3, 60, 30, 0, 414, 424, 3, 68, 34, 0, 415, 424, 3, 90,
 		45, 0, 416, 424, 3, 70, 35, 0, 417, 424, 3, 76, 38, 0, 418, 424, 3, 84,
@@ -3887,6 +3887,12 @@ type IExprContext interface {
 	Initializer() IInitializerContext
 	AssignStmt() IAssignStmtContext
 	Dot() antlr.TerminalNode
+	Pow() antlr.TerminalNode
+	Mul() antlr.TerminalNode
+	Div() antlr.TerminalNode
+	Mod() antlr.TerminalNode
+	Add() antlr.TerminalNode
+	Sub() antlr.TerminalNode
 	Equals() antlr.TerminalNode
 	NotEq() antlr.TerminalNode
 	Greater() antlr.TerminalNode
@@ -3895,12 +3901,6 @@ type IExprContext interface {
 	LessEq() antlr.TerminalNode
 	Or() antlr.TerminalNode
 	And() antlr.TerminalNode
-	Pow() antlr.TerminalNode
-	Mul() antlr.TerminalNode
-	Div() antlr.TerminalNode
-	Mod() antlr.TerminalNode
-	Add() antlr.TerminalNode
-	Sub() antlr.TerminalNode
 	LSquare() antlr.TerminalNode
 	RSquare() antlr.TerminalNode
 	Col() antlr.TerminalNode
@@ -4120,6 +4120,30 @@ func (s *ExprContext) Dot() antlr.TerminalNode {
 	return s.GetToken(V2ParserDot, 0)
 }
 
+func (s *ExprContext) Pow() antlr.TerminalNode {
+	return s.GetToken(V2ParserPow, 0)
+}
+
+func (s *ExprContext) Mul() antlr.TerminalNode {
+	return s.GetToken(V2ParserMul, 0)
+}
+
+func (s *ExprContext) Div() antlr.TerminalNode {
+	return s.GetToken(V2ParserDiv, 0)
+}
+
+func (s *ExprContext) Mod() antlr.TerminalNode {
+	return s.GetToken(V2ParserMod, 0)
+}
+
+func (s *ExprContext) Add() antlr.TerminalNode {
+	return s.GetToken(V2ParserAdd, 0)
+}
+
+func (s *ExprContext) Sub() antlr.TerminalNode {
+	return s.GetToken(V2ParserSub, 0)
+}
+
 func (s *ExprContext) Equals() antlr.TerminalNode {
 	return s.GetToken(V2ParserEquals, 0)
 }
@@ -4150,30 +4174,6 @@ func (s *ExprContext) Or() antlr.TerminalNode {
 
 func (s *ExprContext) And() antlr.TerminalNode {
 	return s.GetToken(V2ParserAnd, 0)
-}
-
-func (s *ExprContext) Pow() antlr.TerminalNode {
-	return s.GetToken(V2ParserPow, 0)
-}
-
-func (s *ExprContext) Mul() antlr.TerminalNode {
-	return s.GetToken(V2ParserMul, 0)
-}
-
-func (s *ExprContext) Div() antlr.TerminalNode {
-	return s.GetToken(V2ParserDiv, 0)
-}
-
-func (s *ExprContext) Mod() antlr.TerminalNode {
-	return s.GetToken(V2ParserMod, 0)
-}
-
-func (s *ExprContext) Add() antlr.TerminalNode {
-	return s.GetToken(V2ParserAdd, 0)
-}
-
-func (s *ExprContext) Sub() antlr.TerminalNode {
-	return s.GetToken(V2ParserSub, 0)
 }
 
 func (s *ExprContext) LSquare() antlr.TerminalNode {
@@ -4396,19 +4396,12 @@ func (p *V2Parser) expr(_p int) (localctx IExprContext) {
 				{
 					p.SetState(278)
 
-					var _lt = p.GetTokenStream().LT(1)
+					var _m = p.Match(V2ParserPow)
 
-					localctx.(*ExprContext).OP = _lt
-
-					_la = p.GetTokenStream().LA(1)
-
-					if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&64512) != 0) {
-						var _ri = p.GetErrorHandler().RecoverInline(p)
-
-						localctx.(*ExprContext).OP = _ri
-					} else {
-						p.GetErrorHandler().ReportMatch(p)
-						p.Consume()
+					localctx.(*ExprContext).OP = _m
+					if p.HasError() {
+						// Recognition error - abort rule
+						goto errorExit
 					}
 				}
 				{
@@ -4438,7 +4431,7 @@ func (p *V2Parser) expr(_p int) (localctx IExprContext) {
 
 					_la = p.GetTokenStream().LA(1)
 
-					if !(_la == V2ParserOr || _la == V2ParserAnd) {
+					if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&9961472) != 0) {
 						var _ri = p.GetErrorHandler().RecoverInline(p)
 
 						localctx.(*ExprContext).OP = _ri
@@ -4468,12 +4461,19 @@ func (p *V2Parser) expr(_p int) (localctx IExprContext) {
 				{
 					p.SetState(284)
 
-					var _m = p.Match(V2ParserPow)
+					var _lt = p.GetTokenStream().LT(1)
 
-					localctx.(*ExprContext).OP = _m
-					if p.HasError() {
-						// Recognition error - abort rule
-						goto errorExit
+					localctx.(*ExprContext).OP = _lt
+
+					_la = p.GetTokenStream().LA(1)
+
+					if !(_la == V2ParserAdd || _la == V2ParserSub) {
+						var _ri = p.GetErrorHandler().RecoverInline(p)
+
+						localctx.(*ExprContext).OP = _ri
+					} else {
+						p.GetErrorHandler().ReportMatch(p)
+						p.Consume()
 					}
 				}
 				{
@@ -4503,7 +4503,7 @@ func (p *V2Parser) expr(_p int) (localctx IExprContext) {
 
 					_la = p.GetTokenStream().LA(1)
 
-					if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&9961472) != 0) {
+					if !((int64(_la) & ^0x3f) == 0 && ((int64(1)<<_la)&64512) != 0) {
 						var _ri = p.GetErrorHandler().RecoverInline(p)
 
 						localctx.(*ExprContext).OP = _ri
@@ -4539,7 +4539,7 @@ func (p *V2Parser) expr(_p int) (localctx IExprContext) {
 
 					_la = p.GetTokenStream().LA(1)
 
-					if !(_la == V2ParserAdd || _la == V2ParserSub) {
+					if !(_la == V2ParserOr || _la == V2ParserAnd) {
 						var _ri = p.GetErrorHandler().RecoverInline(p)
 
 						localctx.(*ExprContext).OP = _ri
@@ -4991,8 +4991,8 @@ type IFuncCallArgsContext interface {
 	GetParser() antlr.Parser
 
 	// Getter signatures
-	AllExpr() []IExprContext
-	Expr(i int) IExprContext
+	AllExprWithLambda() []IExprWithLambdaContext
+	ExprWithLambda(i int) IExprWithLambdaContext
 	AllComma() []antlr.TerminalNode
 	Comma(i int) antlr.TerminalNode
 
@@ -5032,20 +5032,20 @@ func NewFuncCallArgsContext(parser antlr.Parser, parent antlr.ParserRuleContext,
 
 func (s *FuncCallArgsContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *FuncCallArgsContext) AllExpr() []IExprContext {
+func (s *FuncCallArgsContext) AllExprWithLambda() []IExprWithLambdaContext {
 	children := s.GetChildren()
 	len := 0
 	for _, ctx := range children {
-		if _, ok := ctx.(IExprContext); ok {
+		if _, ok := ctx.(IExprWithLambdaContext); ok {
 			len++
 		}
 	}
 
-	tst := make([]IExprContext, len)
+	tst := make([]IExprWithLambdaContext, len)
 	i := 0
 	for _, ctx := range children {
-		if t, ok := ctx.(IExprContext); ok {
-			tst[i] = t.(IExprContext)
+		if t, ok := ctx.(IExprWithLambdaContext); ok {
+			tst[i] = t.(IExprWithLambdaContext)
 			i++
 		}
 	}
@@ -5053,11 +5053,11 @@ func (s *FuncCallArgsContext) AllExpr() []IExprContext {
 	return tst
 }
 
-func (s *FuncCallArgsContext) Expr(i int) IExprContext {
+func (s *FuncCallArgsContext) ExprWithLambda(i int) IExprWithLambdaContext {
 	var t antlr.RuleContext
 	j := 0
 	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IExprContext); ok {
+		if _, ok := ctx.(IExprWithLambdaContext); ok {
 			if j == i {
 				t = ctx.(antlr.RuleContext)
 				break
@@ -5070,7 +5070,7 @@ func (s *FuncCallArgsContext) Expr(i int) IExprContext {
 		return nil
 	}
 
-	return t.(IExprContext)
+	return t.(IExprWithLambdaContext)
 }
 
 func (s *FuncCallArgsContext) AllComma() []antlr.TerminalNode {
@@ -5119,7 +5119,7 @@ func (p *V2Parser) FuncCallArgs() (localctx IFuncCallArgsContext) {
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(321)
-		p.expr(0)
+		p.ExprWithLambda()
 	}
 	p.SetState(326)
 	p.GetErrorHandler().Sync(p)
@@ -5139,7 +5139,7 @@ func (p *V2Parser) FuncCallArgs() (localctx IFuncCallArgsContext) {
 		}
 		{
 			p.SetState(323)
-			p.expr(0)
+			p.ExprWithLambda()
 		}
 
 		p.SetState(328)
@@ -6810,8 +6810,8 @@ type ICommaExprContext interface {
 	GetParser() antlr.Parser
 
 	// Getter signatures
-	AllExpr() []IExprContext
-	Expr(i int) IExprContext
+	AllExprWithLambda() []IExprWithLambdaContext
+	ExprWithLambda(i int) IExprWithLambdaContext
 	AllComma() []antlr.TerminalNode
 	Comma(i int) antlr.TerminalNode
 
@@ -6851,20 +6851,20 @@ func NewCommaExprContext(parser antlr.Parser, parent antlr.ParserRuleContext, in
 
 func (s *CommaExprContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *CommaExprContext) AllExpr() []IExprContext {
+func (s *CommaExprContext) AllExprWithLambda() []IExprWithLambdaContext {
 	children := s.GetChildren()
 	len := 0
 	for _, ctx := range children {
-		if _, ok := ctx.(IExprContext); ok {
+		if _, ok := ctx.(IExprWithLambdaContext); ok {
 			len++
 		}
 	}
 
-	tst := make([]IExprContext, len)
+	tst := make([]IExprWithLambdaContext, len)
 	i := 0
 	for _, ctx := range children {
-		if t, ok := ctx.(IExprContext); ok {
-			tst[i] = t.(IExprContext)
+		if t, ok := ctx.(IExprWithLambdaContext); ok {
+			tst[i] = t.(IExprWithLambdaContext)
 			i++
 		}
 	}
@@ -6872,11 +6872,11 @@ func (s *CommaExprContext) AllExpr() []IExprContext {
 	return tst
 }
 
-func (s *CommaExprContext) Expr(i int) IExprContext {
+func (s *CommaExprContext) ExprWithLambda(i int) IExprWithLambdaContext {
 	var t antlr.RuleContext
 	j := 0
 	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IExprContext); ok {
+		if _, ok := ctx.(IExprWithLambdaContext); ok {
 			if j == i {
 				t = ctx.(antlr.RuleContext)
 				break
@@ -6889,7 +6889,7 @@ func (s *CommaExprContext) Expr(i int) IExprContext {
 		return nil
 	}
 
-	return t.(IExprContext)
+	return t.(IExprWithLambdaContext)
 }
 
 func (s *CommaExprContext) AllComma() []antlr.TerminalNode {
@@ -6938,7 +6938,7 @@ func (p *V2Parser) CommaExpr() (localctx ICommaExprContext) {
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(405)
-		p.expr(0)
+		p.ExprWithLambda()
 	}
 	p.SetState(410)
 	p.GetErrorHandler().Sync(p)
@@ -6961,7 +6961,7 @@ func (p *V2Parser) CommaExpr() (localctx ICommaExprContext) {
 			}
 			{
 				p.SetState(407)
-				p.expr(0)
+				p.ExprWithLambda()
 			}
 
 		}

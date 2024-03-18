@@ -20,8 +20,8 @@ func (v *AntlrVisitor) visitFuncCallArgs(ctx parser.IFuncCallArgsContext) []node
 		return nil
 	}
 	var args []node.Expr
-	for _, expr := range ctx.AllExpr() {
-		args = append(args, v.visitExpr(expr))
+	for _, expr := range ctx.AllExprWithLambda() {
+		args = append(args, v.visitExprWithLambda(expr))
 	}
 	return args
 }

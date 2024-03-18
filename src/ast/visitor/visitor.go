@@ -77,14 +77,14 @@ func (v *AntlrVisitor) visitCommaExpr(ctx parser.ICommaExprContext) node.Expr {
 		return nil
 	}
 
-	exprs := ctx.AllExpr()
+	exprs := ctx.AllExprWithLambda()
 	commas := ctx.AllComma()
 	if len(exprs) == 1 && len(commas) == 0 {
-		return v.visitExpr(exprs[0])
+		return v.visitExprWithLambda(exprs[0])
 	}
 	exprList := make([]node.Expr, 0, len(exprs))
 	for _, expr := range exprs {
-		exprList = append(exprList, v.visitExpr(expr))
+		exprList = append(exprList, v.visitExprWithLambda(expr))
 	}
 	return &node.CommaExpr{
 		Token: token.FromAntlrToken(ctx.GetStart()).WithBegin(ctx.GetStart()).WithEnd(ctx.GetStop()),

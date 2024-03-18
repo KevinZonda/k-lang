@@ -46,11 +46,11 @@ expr
     | funcCall
     | unaryOper expr
     | LParen expr RParen
-    | LHS=expr OP=(Equals | NotEq | Greater | Less | GreaterEq | LessEq) RHS=expr
-    | LHS=expr OP=(Or | And)        RHS=expr
     | LHS=expr OP=Pow               RHS=expr
     | LHS=expr OP=(Mul | Div | Mod) RHS=expr
     | LHS=expr OP=(Add | Sub)       RHS=expr
+    | LHS=expr OP=(Equals | NotEq | Greater | Less | GreaterEq | LessEq) RHS=expr
+    | LHS=expr OP=(Or | And)        RHS=expr
     | structInitializer
     | Identifier
     | literal
@@ -62,7 +62,7 @@ expr
 exprWithLambda : lambda | expr;
 
 funcCall : Identifier LParen funcCallArgs? RParen ;
-funcCallArgs : expr (Comma expr)*;
+funcCallArgs : exprWithLambda (Comma exprWithLambda)*;
 
 openStmt : Open StringLiteral (As Identifier)?;
 
@@ -75,7 +75,7 @@ mapPair : LHS=expr (Col | To) RHS=exprWithLambda | LParen mapPair RParen | ident
 structInitializer : (type | Struct) LBrack (identifierPair Comma?)* RBrack;
 // structElementInitializer : Identifier Comma expr;
 mapInitializer : Map? LBrack (mapPair (Comma*))* RBrack;
-commaExpr : expr (Comma expr)*;
+commaExpr : exprWithLambda (Comma exprWithLambda)*;
 
 stmt
     : assignStmt
