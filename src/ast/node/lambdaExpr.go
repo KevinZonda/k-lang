@@ -1,6 +1,7 @@
 package node
 
 import (
+	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
 )
 
@@ -28,4 +29,8 @@ func (f *LambdaExpr) ToFunc(name string) *FuncBlock {
 		RetType: f.RetType,
 		Body:    f.Body,
 	}
+}
+
+func (f *LambdaExpr) String() string {
+	return fmt.Sprintf("<Lambda@%p>", f)
 }
