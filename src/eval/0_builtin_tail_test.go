@@ -27,23 +27,23 @@ x.upper()
 x.lower()
 x.split("")
 x.contains("18")
-x.starts_with("22")
-x.ends_with("22")
+x.startsWith("22")
+x.endsWith("22")
 x.len()
 `
 	tester.NoPanic(t, code)
 	code = `
 x = 'true'
-x.to_bool()`
+x.toBool()`
 	tester.NoPanic(t, code)
 
 	code = `
 x = '11'
-x.to_int()`
+x.toInt()`
 	tester.NoPanic(t, code)
 
 	code = `
 x = '11'
-x.to_num()`
+x.toNum()`
 	tester.NoPanic(t, code)
 }

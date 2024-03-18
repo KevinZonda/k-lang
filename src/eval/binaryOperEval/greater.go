@@ -18,6 +18,8 @@ func Greater(left any, right any) bool {
 		case int:
 			return leftT > rightT
 		}
+	case string:
+		return leftT > fmt.Sprint(right)
 	}
 	panic(fmt.Sprintf("cannot greater %T and %T", left, right))
 }
@@ -38,6 +40,8 @@ func GreaterEq(left any, right any) bool {
 		case int:
 			return leftT >= rightT
 		}
+	case string:
+		return leftT >= fmt.Sprint(right)
 	}
 	panic(fmt.Sprintf("cannot greater %T and %T", left, right))
 }

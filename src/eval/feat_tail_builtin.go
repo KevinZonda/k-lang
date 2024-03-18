@@ -22,24 +22,24 @@ func (e *Eval) builtInString(recv string, fc node.FuncCall) any {
 		return strings.Split(recv, args[0].(string))
 	case "contains":
 		return strings.Contains(recv, args[0].(string))
-	case "starts_with":
+	case "startsWith":
 		return strings.HasPrefix(recv, args[0].(string))
-	case "ends_with":
+	case "endsWith":
 		return strings.HasSuffix(recv, args[0].(string))
-	case "to_int":
+	case "toInt":
 		i, err := strconv.Atoi(recv)
 		if err != nil {
 			panic("not valid int")
 		} else {
 			return i
 		}
-	case "to_num":
+	case "toNum":
 		f, err := strconv.ParseFloat(recv, 64)
 		if err != nil {
 			panic("not valid number")
 		}
 		return f
-	case "to_bool":
+	case "toBool":
 		b, err := strconv.ParseBool(recv)
 		if err != nil {
 			panic("not valid bool")
