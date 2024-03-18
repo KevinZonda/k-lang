@@ -5,6 +5,13 @@ import (
 	"testing"
 )
 
+func TestNum(t *testing.T) {
+	code := `x := .2
+print(x)`
+	expected := `0.2`
+	tester.GeneralTest(false, t, code, expected)
+}
+
 func TestArrayInitializer(t *testing.T) {
 	code := `x := [1, 2, 3, 4, 5]
 print(x)`
