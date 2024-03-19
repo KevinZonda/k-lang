@@ -3,10 +3,12 @@ package module_test
 import (
 	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/module"
+	"os"
 	"testing"
 )
 
 func TestMod(t *testing.T) {
+	initEnvironment()
 	// t.Skip("skipping test")
 	m := module.LoadFromText(`
 k: 0.2.26
@@ -16,4 +18,8 @@ deps: [
 `)
 	fmt.Println(m)
 	m.Restore()
+}
+
+func initEnvironment() {
+	os.RemoveAll("vendor")
 }
