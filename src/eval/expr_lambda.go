@@ -11,11 +11,17 @@ func (e *Eval) EvalLambdaExpr(n *node.LambdaExpr) *node.LambdaExpr {
 	if e.memory.Len() <= 1 {
 		n.Mem = nil // It's at button, no need to create mem sec
 	} else {
-		layer := memory.NewLayer(false)
-		for k, v := range e.memory.Top().Raw() {
-			layer.SetValue(k, v)
+		mem := memory.NewMemory()
+		for l := e.memory.Len() - 1; l > 0; l-- {
+			m := e.memory.Raw()[l]
+			_l := m.Copy()
+			_l.Protect = false
+			mem.Push(_l)
+			if m.Protect {
+				break
+			}
 		}
-		n.Mem = layer // TODO: Squeeze memory
+		n.Mem = mem
 	}
 	return n
 }

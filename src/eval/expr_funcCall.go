@@ -78,9 +78,15 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) ExprResult {
 		lambda := fx.ToLambda()
 		fn = lambda.ToFunc(funcName)
 		if lambda.Mem != nil {
+			mem := lambda.Mem.(*memory.Memory)
 			evt = &EvalFuncBlockEvent{
 				OnNewFramePushed: func() {
-					e.memory.Push(lambda.Mem.(*memory.Layer))
+					e.memory.PushMem(mem)
+				},
+				OnRelease: func() {
+					for i := 0; i < mem.Len(); i++ {
+						e.memory.Pop()
+					}
 				},
 			}
 
@@ -107,11 +113,12 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) ExprResult {
 type EvalFuncBlockEvent struct {
 	OnNewFrameCreated func(top *memory.Layer)
 	OnNewFramePushed  func()
+	OnRelease         func()
 }
 
 func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, evt *EvalFuncBlockEvent) ExprResult {
 	e.currentToken = fn.GetToken()
-	topFrame := memory.NewLayer(true)
+	topFrame := memory.NewLayer(false)
 	if evt != nil && evt.OnNewFrameCreated != nil {
 		evt.OnNewFrameCreated(topFrame)
 	}
@@ -120,17 +127,23 @@ func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, evt *EvalFunc
 		v = e.TypeCast(funcArg.Type, v)
 		topFrame.SetValue(funcArg.Name.Value, v)
 	}
-	e.memory.Push(topFrame)
+	e.frameStart(true)
+	defer e.frameEnd()
 	if evt != nil && evt.OnNewFramePushed != nil {
 		evt.OnNewFramePushed()
 	}
+	e.memory.Push(topFrame)
+	defer e.frameEnd()
 
 	result := e.runAst((tree.Ast)(fn.Body.Nodes), reserved.Return)
 
 	//fe := e.new((tree.Ast)(fn.Body.Nodes))
 	//_ = fe.run()
 	// retV, retOk := fe.memory.GetAtTop("0")
-	e.frameEnd()
+	if evt != nil && evt.OnRelease != nil {
+		evt.OnRelease()
+	}
+
 	if fn.RetType != nil {
 		isVoid := fn.RetType[0].IsPlainType(node.TypeVoid)
 		if isVoid {

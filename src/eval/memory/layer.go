@@ -34,6 +34,14 @@ func NewLayer(protect bool) *Layer {
 	return &Layer{m: make(map[string]*obj.Object), Protect: protect}
 }
 
+func (t *Layer) Copy() *Layer {
+	n := NewLayer(t.Protect)
+	for k, v := range t.m {
+		n.Set(k, v)
+	}
+	return n
+}
+
 func NewMemory() *Memory {
 	return &Memory{q: []*Layer{NewLayer(true)}}
 }

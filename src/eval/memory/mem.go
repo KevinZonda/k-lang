@@ -25,6 +25,13 @@ func (t *Memory) Push(n *Layer) {
 	t.q = append(t.q, n)
 }
 
+func (t *Memory) PushMem(m *Memory) {
+	if m == nil || len(m.q) == 0 {
+		return
+	}
+	t.q = append(t.q, m.q...)
+}
+
 func (t *Memory) PushEmpty(protect bool) *Layer {
 	tbl := NewLayer(protect)
 	t.Push(tbl)
