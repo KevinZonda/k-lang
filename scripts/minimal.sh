@@ -13,5 +13,5 @@ flag=" $flag -X git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/buildconst.Bu
 flag=" $flag -X git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/buildconst.BuildBranch=$branch"
 
 flag=" $flag -s -w"
-go build -v -ldflags "$flag" -o ./out/minimal ./minimal/cli/*.go
+go build -v -ldflags "$flag" -o ./out/minimal ./main/minimal/*.go
 cd ..
