@@ -27,10 +27,46 @@ func (e *Eval) evalExprsRef(exprs ...node.Expr) []any {
 	return ret
 }
 
+func (e *Eval) funcCallFxPushMem(m any) *EvalFuncBlockEvent {
+	if m == nil {
+		return nil
+	}
+	mem := m.(*memory.Memory)
+	return &EvalFuncBlockEvent{
+		OnNewFramePushed: func() {
+			e.memory.PushMem(mem)
+		},
+		OnRelease: func() {
+			for i := 0; i < mem.Len(); i++ {
+				e.memory.Pop()
+			}
+		},
+	}
+}
+
 func (e *Eval) EvalFuncCall(fc *node.FuncCall) ExprResult {
 	e.currentToken = fc.GetToken()
 	// Eval Args
 
+	if fc.CallExpr != nil {
+		var fn *node.FuncBlock
+		v := e.EvalExpr(fc.CallExpr).EnsureValue()
+		var evt *EvalFuncBlockEvent
+		switch vT := v.(type) {
+		case *node.LambdaExpr:
+			fn = &node.FuncBlock{
+				Args:    vT.Args,
+				Body:    vT.Body,
+				RetType: vT.RetType,
+			}
+			evt = e.funcCallFxPushMem(vT.Mem)
+		case *node.FuncBlock:
+			fn = vT
+		default:
+			panic(fmt.Sprintf("Invalid CallExpr: %v", v))
+		}
+		return e.EvalFuncBlock(fn, fc.Args, evt)
+	}
 	// Find Func
 	funcName := fc.Caller.Value
 	fx, ok := e.memory.Get(funcName)
@@ -77,20 +113,7 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) ExprResult {
 	if fx.Is(obj.Lambda) {
 		lambda := fx.ToLambda()
 		fn = lambda.ToFunc(funcName)
-		if lambda.Mem != nil {
-			mem := lambda.Mem.(*memory.Memory)
-			evt = &EvalFuncBlockEvent{
-				OnNewFramePushed: func() {
-					e.memory.PushMem(mem)
-				},
-				OnRelease: func() {
-					for i := 0; i < mem.Len(); i++ {
-						e.memory.Pop()
-					}
-				},
-			}
-
-		}
+		evt = e.funcCallFxPushMem(lambda.Mem)
 	} else {
 		fn = fx.ToFunc()
 	}

@@ -44,6 +44,7 @@ expr
     : LHS=expr Dot RHS=expr
     | LHS=expr LSquare Index=expr Col? EndIndex=expr? RSquare
     | funcCall
+    | CallExpr=expr LParen funcCallArgs? RParen
     | unaryOper expr
     | LParen expr RParen
     | LHS=expr OP=Pow               RHS=expr
@@ -59,7 +60,7 @@ expr
     | assignStmt
     ;
 
-exprWithLambda : lambda | expr;
+exprWithLambda : lambda | expr | CallExpr=lambda LParen funcCallArgs? RParen;
 
 funcCall : Identifier LParen funcCallArgs? RParen ;
 funcCallArgs : exprWithLambda (Comma exprWithLambda)*;

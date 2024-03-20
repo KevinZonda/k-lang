@@ -11,6 +11,13 @@ func (v *AntlrVisitor) visitExprWithLambda(ctx parser.IExprWithLambdaContext) no
 	if ctx == nil {
 		return nil
 	}
+	if ctx.GetCallExpr() != nil {
+		return &node.FuncCall{
+			Token:    token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
+			CallExpr: v.visitLambda(ctx.GetCallExpr()),
+			Args:     v.visitFuncCallArgs(ctx.FuncCallArgs()),
+		}
+	}
 	if ctx.Lambda() != nil {
 		return v.visitLambda(ctx.Lambda())
 	}
@@ -55,6 +62,13 @@ func (v *AntlrVisitor) visitExpr(ctx parser.IExprContext) node.Expr {
 		return nil
 	}
 	// fmt.Println("VisitExpr")
+	if ctx.GetCallExpr() != nil {
+		return &node.FuncCall{
+			Token:    token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
+			CallExpr: v.visitExpr(ctx.GetCallExpr()),
+			Args:     v.visitFuncCallArgs(ctx.FuncCallArgs()),
+		}
+	}
 	if ctx.AssignStmt() != nil {
 		return v.visitAssignStmt(ctx.AssignStmt())
 	}

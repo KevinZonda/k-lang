@@ -66,3 +66,11 @@ m()
 	expected := "0\n1\n"
 	tester.GeneralTest(false, t, code, expected)
 }
+
+func TestReturnLambdaInLambda(t *testing.T) {
+	code := `
+x = () => { return () => { println('LAMBDA') } }
+x()()
+`
+	tester.NoPanic(t, code)
+}
