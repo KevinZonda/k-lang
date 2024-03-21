@@ -74,3 +74,25 @@ x()()
 `
 	tester.NoPanic(t, code)
 }
+
+func TestReturnLambdaInLambda2(t *testing.T) {
+	code := `
+x = nil
+{
+    a = 1
+    b = 2
+    c = 3
+    {
+        a := 4
+        b := 9
+        {
+            x = () => {
+                MEM()
+            }
+        }
+    }
+}
+x()
+`
+	tester.NoPanic(t, code)
+}

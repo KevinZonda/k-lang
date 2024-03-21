@@ -31,15 +31,13 @@ func (e *Eval) funcCallFxPushMem(m any) *EvalFuncBlockEvent {
 	if m == nil {
 		return nil
 	}
-	mem := m.(*memory.Memory)
+	mem := m.(*memory.Layer)
 	return &EvalFuncBlockEvent{
 		OnNewFramePushed: func() {
-			e.memory.PushMem(mem)
+			e.memory.Push(mem)
 		},
 		OnRelease: func() {
-			for i := 0; i < mem.Len(); i++ {
-				e.memory.Pop()
-			}
+			e.memory.Pop()
 		},
 	}
 }

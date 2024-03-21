@@ -1,6 +1,7 @@
 package memory
 
 import (
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 )
 
@@ -86,4 +87,15 @@ func (t *Layer) Remove(key string) {
 
 func (t *Layer) Raw() map[string]*obj.Object {
 	return t.m
+}
+
+func (t *Layer) NoReserved() {
+	if t == nil {
+		return
+	}
+	t.Protect = false
+	delete(t.m, reserved.Break)
+	delete(t.m, reserved.Continue)
+	delete(t.m, reserved.Return)
+	delete(t.m, reserved.Loop)
 }

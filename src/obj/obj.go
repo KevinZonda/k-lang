@@ -74,9 +74,23 @@ func (o *Object) SetValue(v any) {
 	}
 	if o.Ref != nil {
 		o.Ref.val = v
+		o.Ref.autoKind()
 		return
 	}
 	o.val = v
+	o.autoKind()
+}
+
+func (o *Object) autoKind() {
+	switch o.val.(type) {
+	case *node.FuncBlock:
+		o.Kind = Func
+	case *node.LambdaExpr:
+		o.Kind = Lambda
+	case *StructField:
+		o.Kind = Struct
+	}
+	return
 }
 
 func (o *Object) NoRef() *Object {

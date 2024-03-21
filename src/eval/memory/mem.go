@@ -49,7 +49,7 @@ func (t *Memory) Len() int {
 }
 
 func (t *Memory) Empty() bool {
-	return len(t.q) == 0
+	return t == nil || len(t.q) == 0
 }
 
 func (t *Memory) Println(w io.Writer, addr string) {
@@ -130,4 +130,20 @@ func (t *Memory) Top() *Layer {
 		// t.PushEmpty(true)
 	}
 	return t.q[len(t.q)-1]
+}
+
+func (t *Memory) Squeeze() *Layer {
+	if t.Empty() {
+		return nil
+	}
+	if t.Len() == 1 {
+		return t.q[0].Copy()
+	}
+	l := NewLayer(false)
+	for i := t.Len() - 1; i > 0; i-- {
+		for k, v := range t.q[i].m {
+			l.Set(k, v)
+		}
+	}
+	return l
 }

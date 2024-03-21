@@ -14,6 +14,9 @@ func (e *Eval) EvalLambdaExpr(n *node.LambdaExpr) *node.LambdaExpr {
 		mem := memory.NewMemory()
 		for l := e.memory.Len() - 1; l > 0; l-- {
 			m := e.memory.Raw()[l]
+			if m.Len() == 0 {
+				continue
+			}
 			_l := m.Copy()
 			_l.Protect = false
 			mem.Push(_l)
@@ -21,7 +24,10 @@ func (e *Eval) EvalLambdaExpr(n *node.LambdaExpr) *node.LambdaExpr {
 				break
 			}
 		}
-		n.Mem = mem
+
+		squeezeM := mem.Squeeze()
+		squeezeM.NoReserved()
+		n.Mem = squeezeM
 	}
 	return n
 }
