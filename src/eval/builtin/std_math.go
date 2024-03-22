@@ -3,24 +3,21 @@ package builtin
 import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	"math"
+	rand "math/rand"
+	"time"
 )
 
 type StdMathLib struct {
-	m map[string]*obj.Object
-}
-
-func constObj(v any) *obj.Object {
-	o := obj.NewObj(obj.Value, v)
-	o.Immutable = true
-	return o
+	m    map[string]*obj.Object
+	seed *int64
 }
 
 func NewStdMathLib() *StdMathLib {
 	o := map[string]*obj.Object{
-		"pi": constObj(math.Pi),
-		"e":  constObj(math.E),
+		"pi": obj.NewImmutableObj(obj.Value, math.Pi),
+		"e":  obj.NewImmutableObj(obj.Value, math.E),
 	}
-	return &StdMathLib{o}
+	return &StdMathLib{o, nil}
 }
 
 func (c *StdMathLib) GetObjList() map[string]*obj.Object {
@@ -110,7 +107,62 @@ func (c *StdMathLib) FuncCall(b obj.StdIO, caller string, args []any) obj.ILibra
 	case "gamma":
 		ensureArgsLen(args, 1)
 		return resultVal(math.Gamma(f64(args[0])))
+	case "randInt":
+		if c.seed == nil {
+			return resultVal(rand.Int())
+		}
+		r := rand.New(rand.NewSource(*c.seed))
+		return resultVal(r.Int())
+	case "randIntN":
+		ensureArgsLen(args, 1)
+		if c.seed == nil {
+			return resultVal(rand.Intn(i64(args[0])))
+		}
+		r := rand.New(rand.NewSource(*c.seed))
+		return resultVal(r.Intn(i64(args[0])))
+	case "randNum":
+		if c.seed == nil {
+			return resultVal(rand.Float64())
+		}
+		r := rand.New(rand.NewSource(*c.seed))
+		return resultVal(r.Float64())
+	case "randAlphabet":
+		if c.seed == nil {
+			return resultVal(string(rand.Intn(26) + 65))
+		}
+	case "shuffle":
+		ensureArgsLen(args, 1)
+		argT := args[0].([]any)
+		if c.seed == nil {
+			rand.Shuffle(len(argT), func(i, j int) {
+				argT[i], argT[j] = argT[j], argT[i]
+			})
+			return resultNoVal()
+		}
+		r := rand.New(rand.NewSource(*c.seed))
+		r.Shuffle(len(argT), func(i, j int) {
+			argT[i], argT[j] = argT[j], argT[i]
+		})
+		return resultNoVal()
+
+	case "setRandSeed", "randSeed":
+		ensureArgsLen(args, 1)
+		seed := int64(i64(args[0]))
+		c.seed = &seed
+		return resultNoVal()
+	case "getRandSeed":
+		if c.seed == nil {
+			return resultVal(nil)
+		}
+		return resultVal(*c.seed)
+	case "unsetRandSeed":
+		c.seed = nil
+		return resultNoVal()
+	case "randSeedTime":
+		x := time.Now().UnixNano()
+		c.seed = &x
 	}
+
 	panic("Unknown function: " + caller)
 }
 
