@@ -126,6 +126,19 @@ func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) ExprRe
 	case map[any]any:
 		v := e.builtInMap(scopeT, _fc)
 		return ExprResult{HasValue: v != nil, Value: v}
+	case *node.StructBlock:
+		fx, ok := scopeT.Body.Get(funcCall.Caller.Value)
+		if !ok {
+			panic("No Function Found From Struct: " + funcCall.Caller.Value)
+		}
+		if fx.Func == nil {
+			panic("Function Nil Found From Struct: " + funcCall.Caller.Value)
+		}
+		e.EvalFuncBlock(fx.Func, _fc.Args, &EvalFuncBlockEvent{
+			OnNewFrameCreated: func(topF *memory.Layer) {
+				topF.SetValue("self", nil)
+			},
+		})
 	default:
 		panic("EvalFuncCallAfterScope Not Implemented" + reflect.TypeOf(scope).String())
 	}

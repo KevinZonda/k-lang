@@ -21,3 +21,16 @@ println(tailFact(20))
 `
 	tester.GeneralTest(false, t, code, "1920\n1920\n12\n")
 }
+
+func TestFuncCallFromStructDef(t *testing.T) {
+	code := `
+struct color {
+    fn Hi() {
+        println("Hi")
+	}
+}
+
+color.Hi()
+`
+	tester.GeneralTest(false, t, code, "Hi\n")
+}
