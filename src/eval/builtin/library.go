@@ -24,6 +24,8 @@ func GetLibrary(name string) obj.ILibrary {
 		lib = NewStdExecLib()
 	case "time":
 		lib = NewStdTimeLib()
+	case "math":
+		lib = NewStdMathLib()
 	}
 	if lib != nil {
 		libMap[name] = lib

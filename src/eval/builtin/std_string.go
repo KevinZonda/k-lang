@@ -8,7 +8,11 @@ import (
 
 type StdStringLib struct{}
 
-func NewStdStringLib() *StdStringLib {
+func (s *StdStringLib) GetObjList() map[string]*obj.Object {
+	return nil
+}
+
+func NewStdStringLib() obj.ILibrary {
 	return &StdStringLib{}
 }
 

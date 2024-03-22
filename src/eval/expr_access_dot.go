@@ -35,7 +35,7 @@ func (e *Eval) EvalPropertyAfterScope(scope any, property node.Expr) ExprResult 
 	case *node.DotExpr:
 		actualPpt = asType[string](e.EvalDotExpr(properT).EnsureValue())
 	default:
-		panic("Not Implemented EvalPropertyAfterScope" + reflect.TypeOf(property).String())
+		panic("Not Implemented EvalPropertyAfterScope " + reflect.TypeOf(property).String())
 	}
 	scope, _ = e.unboxObj(scope)
 	switch leftT := scope.(type) {
@@ -56,6 +56,15 @@ func (e *Eval) EvalPropertyAfterScope(scope any, property node.Expr) ExprResult 
 			return exprVal(v)
 		}
 		panic("No Property Found: " + actualPpt)
+	case obj.ILibrary:
+		objs := leftT.GetObjList()
+		if len(objs) == 0 {
+			panic("No Object Found In Library")
+		}
+		if o, ok := objs[actualPpt]; ok {
+			return exprVal(o.Value())
+		}
+		panic("No Property Found In Library: " + actualPpt)
 	default:
 		panic("Not Implemented EvalPropertyAfterScope " + reflect.TypeOf(scope).String())
 	}

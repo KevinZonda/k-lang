@@ -12,6 +12,10 @@ type StdExecLib struct{}
 func NewStdExecLib() *StdExecLib {
 	return &StdExecLib{}
 }
+func (c *StdExecLib) GetObjList() map[string]*obj.Object {
+	return nil
+}
+
 func (s *StdExecLib) FuncCall(b obj.StdIO, caller string, args []any) obj.ILibraryCall {
 	switch caller {
 	case "cmd":

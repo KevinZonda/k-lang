@@ -11,6 +11,10 @@ func NewStdConsoleLib() *StdConsoleLib {
 	return &StdConsoleLib{}
 }
 
+func (c *StdConsoleLib) GetObjList() map[string]*obj.Object {
+	return nil
+}
+
 func (c *StdConsoleLib) FuncCall(b obj.StdIO, caller string, args []any) obj.ILibraryCall {
 	switch caller {
 	case "readln":

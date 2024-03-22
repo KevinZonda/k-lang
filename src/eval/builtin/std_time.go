@@ -11,6 +11,10 @@ func NewStdTimeLib() *StdTimeLib {
 	return &StdTimeLib{}
 }
 
+func (c *StdTimeLib) GetObjList() map[string]*obj.Object {
+	return nil
+}
+
 func (s *StdTimeLib) FuncCall(b obj.StdIO, caller string, args []any) obj.ILibraryCall {
 	switch caller {
 	case "now":
