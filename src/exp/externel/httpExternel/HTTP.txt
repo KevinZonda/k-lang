@@ -1,0 +1,9 @@
+SVR: $ENDPOINT
+[POST] /{pack}/{funcName}
+{
+    "funcName": $funcName
+    "args": [
+    ]
+}
+
+[GET] /{pack}/
