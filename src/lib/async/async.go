@@ -1,6 +1,9 @@
 package async
 
-import "context"
+import (
+	"context"
+	"time"
+)
 
 func AsyncFunc(f func()) func() {
 	ctx, cancel := context.WithCancel(context.Background())
@@ -17,4 +20,11 @@ func DoWork(ctx context.Context, f func()) {
 			f()
 		}
 	}
+}
+
+func CancelThenSpeep(sleepMs int, cancel ...func()) {
+	for _, c := range cancel {
+		c()
+	}
+	time.Sleep(time.Duration(sleepMs) * time.Millisecond)
 }
