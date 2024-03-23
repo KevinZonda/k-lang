@@ -5,6 +5,7 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/builtin"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/exp/external"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"github.com/KevinZonda/GoX/pkg/iox"
@@ -37,6 +38,22 @@ func (e *Eval) findFile(s string) (abs string, ok bool) {
 		}
 	}
 	return "", false
+}
+
+func (e *Eval) loadExternalLibrary(name, as string) bool {
+	if !strings.HasPrefix(name, "ext/") {
+		return false
+	}
+	name = name[4:]
+	lib := external.GetExternalLibrary(name)
+	if lib == nil {
+		panic("Library not found: " + name)
+	}
+	if as == "" {
+		as = normaliseName(name)
+	}
+	e.memory.Top().SetValue(as, lib)
+	return true
 }
 
 func (e *Eval) loadBuiltInFeature(name string) bool {
@@ -88,6 +105,10 @@ func (e *Eval) EvalOpenStmt(n *node.OpenStmt) {
 	}
 
 	if e.loadBuiltInLibrary(n.Path, n.As) {
+		return
+	}
+
+	if e.loadExternalLibrary(n.Path, n.As) {
 		return
 	}
 

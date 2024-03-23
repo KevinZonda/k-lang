@@ -1,4 +1,4 @@
-package httpExternel
+package httpExternal
 
 import (
 	"bytes"

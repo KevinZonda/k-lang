@@ -1,19 +1,19 @@
-package httpExternelServer
+package httpExternalServer
 
 import (
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/exp/externel"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/exp/external/common"
 	"reflect"
 	"runtime"
 	"strings"
 )
 
-func readFuncArg(fx any) externel.FuncArgs {
+func readFuncArg(fx any) common.FuncArgs {
 	f := reflect.TypeOf(fx)
-	var args externel.FuncArgs
+	var args common.FuncArgs
 	n := f.NumIn()
 	for i := 0; i < n; i++ {
 		inT := f.In(i)
-		args = append(args, externel.ArgType(inT.String()))
+		args = append(args, common.ArgType(inT.String()))
 	}
 	return args
 }

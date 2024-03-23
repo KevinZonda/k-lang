@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/exp/externel/httpExternelServer"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/exp/external/httpExternalServer"
 )
 
 func main() {
-	p := httpExternelServer.NewFuncPack("simple")
+	p := httpExternalServer.NewFuncPack("simple")
 	p.AppendFxWithName("add", func(x int, y int) int { return x + y })
 	p.AppendFx(Foo)
 	p.StartServer("localhost:11451")

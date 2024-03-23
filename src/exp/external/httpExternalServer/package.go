@@ -1,9 +1,9 @@
-package httpExternelServer
+package httpExternalServer
 
 import (
 	"encoding/json"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/exp/externel"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/exp/externel/httpExternel"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/exp/external/common"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/exp/external/httpExternal"
 	"github.com/KevinZonda/GoX/pkg/panicx"
 	"io"
 	"net/http"
@@ -16,7 +16,7 @@ func NewFuncPack(name string) *FuncPack {
 
 type FuncPack struct {
 	fxs      map[string]any
-	fxa      map[string]externel.FuncArgs
+	fxa      map[string]common.FuncArgs
 	packName string
 }
 
@@ -29,7 +29,7 @@ func (p *FuncPack) AppendFxWithName(name string, fx any) *FuncPack {
 		p.fxs = map[string]any{}
 	}
 	if p.fxa == nil {
-		p.fxa = map[string]externel.FuncArgs{}
+		p.fxa = map[string]common.FuncArgs{}
 	}
 	p.fxs[name] = fx
 	p.fxa[name] = readFuncArg(fx)
@@ -49,10 +49,10 @@ func (p *FuncPack) StartServer(listen string) {
 		h.HandleFunc("POST /"+p.packName+"/"+k, hdlr)
 	}
 	h.HandleFunc("GET /"+p.packName, func(w http.ResponseWriter, r *http.Request) {
-		rsp := map[string]externel.PackageInfoElement{}
+		rsp := map[string]common.PackageInfoElement{}
 		for name, _ := range p.fxs {
-			rsp[name] = externel.PackageInfoElement{
-				Type: externel.Function,
+			rsp[name] = common.PackageInfoElement{
+				Type: common.Function,
 				Args: p.fxa[name],
 			}
 		}
@@ -64,19 +64,19 @@ func (p *FuncPack) StartServer(listen string) {
 	http.ListenAndServe(listen, h)
 }
 
-func createFuncHandler(f reflect.Value, fxArg externel.FuncArgs) func(http.ResponseWriter, *http.Request) {
+func createFuncHandler(f reflect.Value, fxArg common.FuncArgs) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req httpExternel.FuncCallRequest
+		var req httpExternal.FuncCallRequest
 		err := deserialise(r.Body, &req)
 		panicx.PanicIfNotNil(err, err)
-		req.Args = externel.ConvertArg(req.Args, fxArg)
+		req.Args = common.ConvertArg(req.Args, fxArg)
 		var args []reflect.Value
 		for _, v := range req.Args {
 			args = append(args, reflect.ValueOf(v))
 		}
 
 		vals := f.Call(args)
-		resp := externel.InvokeResult{
+		resp := common.InvokeResult{
 			Success:   true,
 			HasResult: len(vals) != 0,
 		}

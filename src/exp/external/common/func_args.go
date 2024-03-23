@@ -1,4 +1,4 @@
-package externel
+package common
 
 type FuncArgs []ArgType
 
