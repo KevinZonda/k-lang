@@ -9,6 +9,7 @@ import (
 
 func TestMod(t *testing.T) {
 	initEnvironment()
+	defer initEnvironment()
 	// t.Skip("skipping test")
 	m := module.LoadFromText(`
 k: 0.2.26
