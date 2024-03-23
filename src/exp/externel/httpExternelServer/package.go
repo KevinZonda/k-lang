@@ -46,7 +46,7 @@ func (p *FuncPack) StartServer(listen string) {
 		if hdlr == nil {
 			continue
 		}
-		h.HandleFunc("POST /call/"+p.packName+"/"+k, hdlr)
+		h.HandleFunc("POST /"+p.packName+"/"+k, hdlr)
 	}
 	h.HandleFunc("GET /"+p.packName, func(w http.ResponseWriter, r *http.Request) {
 		rsp := map[string]externel.PackageInfoElement{}

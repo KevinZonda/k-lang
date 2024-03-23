@@ -3,6 +3,7 @@ package idle
 import (
 	"bytes"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/lib/async"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
@@ -49,7 +50,7 @@ func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (rst eval.
 
 	ch := make(chan eval.DetailedRunResult, 1)
 
-	cancel := AsyncFunc(func() {
+	cancel := async.AsyncFunc(func() {
 		ch <- ev.DoSafely(ast)
 	})
 	w.cancelFunc = func() {

@@ -8,7 +8,7 @@ import (
 type Server interface {
 	AvailablePackage() []string
 	PackageInfo() map[string]PackageInfoElement
-	InvokeFunc(pack string, method string, args ...interface{}) InvokeResult
+	InvokeFunc(method string, args ...interface{}) InvokeResult
 }
 
 type PackageInfoElement struct {
@@ -52,7 +52,7 @@ func NewExternelLibrary(l Server, pack string) *ExternelLibrary {
 }
 
 func (e ExternelLibrary) FuncCall(b obj.StdIO, name string, args []any) obj.ILibraryCall {
-	i := e.l.InvokeFunc(e.pack, name, args...)
+	i := e.l.InvokeFunc(name, args...)
 	if !i.Success {
 		panic("Failed to call function")
 	}

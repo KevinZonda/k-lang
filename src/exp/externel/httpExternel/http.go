@@ -11,7 +11,7 @@ import (
 
 type Library struct {
 	EndPoint string
-	hc       *http.Client
+	hc       http.Client
 }
 
 func (l *Library) AvailablePackage() []string {
@@ -24,10 +24,10 @@ func (l *Library) PackageInfo() map[string]externel.PackageInfoElement {
 	panic("implement me")
 }
 
-func (l *Library) InvokeFunc(pack string, method string, args ...interface{}) externel.InvokeResult {
-	ep, _ := url.JoinPath(l.EndPoint, "call", pack, method)
+func (l *Library) InvokeFunc(fxName string, args ...interface{}) externel.InvokeResult {
+	ep, _ := url.JoinPath(l.EndPoint, fxName)
 	req, _ := http.NewRequest(http.MethodPost, ep, FuncCallRequest{
-		FuncName: method,
+		FuncName: fxName,
 		Args:     args,
 	}.IO())
 	rsp, err := l.hc.Do(req)

@@ -1,16 +1,14 @@
-package idle
+package async
 
-import (
-	"context"
-)
+import "context"
 
 func AsyncFunc(f func()) func() {
 	ctx, cancel := context.WithCancel(context.Background())
-	go doWork(ctx, f)
+	go DoWork(ctx, f)
 	return cancel
 }
 
-func doWork(ctx context.Context, f func()) {
+func DoWork(ctx context.Context, f func()) {
 	select {
 	case <-ctx.Done():
 		return
