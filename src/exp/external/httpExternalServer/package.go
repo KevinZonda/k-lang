@@ -5,6 +5,7 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/exp/external/common"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/exp/external/httpExternal"
 	"github.com/KevinZonda/GoX/pkg/panicx"
+	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
 	"reflect"
@@ -37,7 +38,7 @@ func (p *FuncPack) AppendFxWithName(name string, fx any) *FuncPack {
 }
 
 func (p *FuncPack) StartServer(listen string) {
-	h := http.NewServeMux()
+	h := gin.New()
 	for k, fx := range p.fxs {
 		if fx == nil {
 			return
@@ -46,9 +47,9 @@ func (p *FuncPack) StartServer(listen string) {
 		if hdlr == nil {
 			continue
 		}
-		h.HandleFunc("POST /"+p.packName+"/"+k, hdlr)
+		h.POST("/"+p.packName+"/"+k, hdlr)
 	}
-	h.HandleFunc("GET /"+p.packName, func(w http.ResponseWriter, r *http.Request) {
+	h.GET("/"+p.packName, func(ctx *gin.Context) {
 		rsp := map[string]common.PackageInfoElement{}
 		for name, _ := range p.fxs {
 			rsp[name] = common.PackageInfoElement{
@@ -56,19 +57,18 @@ func (p *FuncPack) StartServer(listen string) {
 				Args: p.fxa[name],
 			}
 		}
+		ctx.JSON(200, rsp)
 
-		bs, _ := json.Marshal(rsp)
-		w.WriteHeader(200)
-		w.Write(bs)
 	})
-	http.ListenAndServe(listen, h)
+	h.Run(listen)
 }
 
-func createFuncHandler(f reflect.Value, fxArg common.FuncArgs) func(http.ResponseWriter, *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
+func createFuncHandler(f reflect.Value, fxArg common.FuncArgs) func(ctx *gin.Context) {
+	return func(ctx *gin.Context) {
 		var req httpExternal.FuncCallRequest
-		err := deserialise(r.Body, &req)
+		err := ctx.BindJSON(&req)
 		panicx.PanicIfNotNil(err, err)
+
 		req.Args = common.ConvertArg(req.Args, fxArg)
 		var args []reflect.Value
 		for _, v := range req.Args {
@@ -92,8 +92,7 @@ func createFuncHandler(f reflect.Value, fxArg common.FuncArgs) func(http.Respons
 				resp.Result = rspVal
 			}
 		}
-		w.WriteHeader(http.StatusOK)
-		w.Write(resp.BS())
+		ctx.JSON(http.StatusOK, resp)
 	}
 
 }
