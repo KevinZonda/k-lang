@@ -128,7 +128,7 @@ func (c *StdMathLib) FuncCall(b obj.StdIO, caller string, args []any) obj.ILibra
 		return resultVal(r.Float64())
 	case "randAlphabet":
 		if c.seed == nil {
-			return resultVal(string(rand.Intn(26) + 65))
+			return resultVal(string(rune(rand.Intn(26) + 65)))
 		}
 	case "shuffle":
 		ensureArgsLen(args, 1)

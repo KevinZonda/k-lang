@@ -2,7 +2,7 @@ package compileTypeCheck
 
 import "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/exp/compileTypeCheck/tmem"
 
-func (e *ATT) frameStart(protect bool) *TMem.TMem {
+func (e *ATT) frameStart(protect bool) *TMem.Layer {
 	return e.m.PushEmpty(protect)
 }
 
