@@ -3,11 +3,11 @@ package main
 import (
 	"bytes"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/buildconst"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/tools/fmtr"
 	"io"
 	"syscall/js"
 
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/fmtr"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 )
 

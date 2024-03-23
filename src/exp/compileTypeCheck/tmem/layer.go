@@ -1,7 +1,7 @@
 package TMem
 
 import (
-	. "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/compileTypeCheck/common"
+	. "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/exp/compileTypeCheck/common"
 )
 
 type Layer struct {

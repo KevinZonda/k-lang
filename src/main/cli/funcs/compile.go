@@ -1,8 +1,8 @@
 package funcs
 
 import (
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/compressor"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/tools/compressor"
 	"github.com/KevinZonda/GoX/pkg/iox"
 	"path/filepath"
 	"strings"

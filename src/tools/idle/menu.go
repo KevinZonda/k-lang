@@ -1,14 +1,14 @@
 package idle
 
 import (
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/idle/gtks"
+	gtks2 "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/tools/idle/gtks"
 	"github.com/gotk3/gotk3/gtk"
 )
 
 func (w *EditorW) NewMenuBar() *gtk.MenuBar {
 	mb, _ := gtk.MenuBarNew()
 
-	file := gtks.NewMenu().
+	file := gtks2.NewMenu().
 		AppendNewMenuItem("New", func() {
 			d := NewEditorW()
 			d.ShowAll()
@@ -21,15 +21,15 @@ func (w *EditorW) NewMenuBar() *gtk.MenuBar {
 	fileMenu, _ := gtk.MenuItemNewWithLabel("File")
 	fileMenu.SetSubmenu(file)
 
-	edit := gtks.NewMenu().
+	edit := gtks2.NewMenu().
 		AppendNewMenuItem("Copy", func() {
-			w.CodeE.Buf.CopyClipboard(gtks.Clipboard())
+			w.CodeE.Buf.CopyClipboard(gtks2.Clipboard())
 		}).
 		AppendNewMenuItem("Cut", func() {
-			w.CodeE.Buf.CutClipboard(gtks.Clipboard(), false)
+			w.CodeE.Buf.CutClipboard(gtks2.Clipboard(), false)
 		}).
 		AppendNewMenuItem("Paste", func() {
-			w.CodeE.Buf.PasteClipboard(gtks.Clipboard(), nil, true)
+			w.CodeE.Buf.PasteClipboard(gtks2.Clipboard(), nil, true)
 		}).
 		AppendNewMenuItem("Delete", func() {
 			w.CodeE.Buf.DeleteSelection(false, false)
@@ -39,7 +39,7 @@ func (w *EditorW) NewMenuBar() *gtk.MenuBar {
 	editMenu, _ := gtk.MenuItemNewWithLabel("Edit")
 	editMenu.SetSubmenu(edit)
 
-	help := gtks.NewMenu().
+	help := gtks2.NewMenu().
 		AppendNewMenuItem("About", func() {
 			d := HelpW()
 			d.Run()

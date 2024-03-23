@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/visualizer"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/tools/visualizer"
 	"testing"
 )
 

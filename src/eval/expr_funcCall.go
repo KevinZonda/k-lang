@@ -8,7 +8,7 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/memory"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/visualizer"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/tools/visualizer"
 )
 
 func (e *Eval) evalExprs(exprs ...node.Expr) []any {

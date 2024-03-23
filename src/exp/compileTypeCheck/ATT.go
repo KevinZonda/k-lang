@@ -3,16 +3,16 @@ package compileTypeCheck
 import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/tree"
-	. "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/compileTypeCheck/common"
-	TMem2 "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/compileTypeCheck/tmem"
+	. "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/exp/compileTypeCheck/common"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/exp/compileTypeCheck/tmem"
 )
 
 type ATT struct {
-	m *TMem2.Memory
+	m *TMem.Memory
 }
 
 func NewATT() *ATT {
-	return &ATT{m: TMem2.NewMemory()}
+	return &ATT{m: TMem.NewMemory()}
 }
 
 func (a *ATT) CheckAST(ast tree.Ast) {

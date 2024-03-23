@@ -1,7 +1,7 @@
 package minimalfunc
 
 import (
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/module"
+	module2 "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/tools/module"
 	"github.com/KevinZonda/GoX/pkg/iox"
 	"github.com/KevinZonda/GoX/pkg/panicx"
 )
@@ -12,23 +12,23 @@ func Mod(arg string, args []string) {
 		if len(args) != 1 {
 			panic("expect mod new [console|lib]")
 		}
-		var m module.Mod
+		var m module2.Mod
 		switch args[0] {
 		case "console":
-			m = module.NewConsoleMod()
+			m = module2.NewConsoleMod()
 			iox.WriteAllText("main.k",
 				`println('Hello World!')`)
 		case "lib":
-			m = module.NewMod()
+			m = module2.NewMod()
 		default:
 			panic("expect mod new [console|lib]")
 		}
 
-		err := iox.WriteAllText(module.DEFAULT_K_MOD, m.String())
+		err := iox.WriteAllText(module2.DEFAULT_K_MOD, m.String())
 		panicx.PanicIfNotNil(err, err)
 
 	case "restore", "download":
-		mod := module.LoadFromPath(module.DEFAULT_K_MOD)
+		mod := module2.LoadFromPath(module2.DEFAULT_K_MOD)
 		mod.Restore()
 	}
 }

@@ -3,9 +3,9 @@ package idle
 import (
 	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/fmtr"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/idle/gtks"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/main/buildconst"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/tools/fmtr"
+	gtks2 "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/tools/idle/gtks"
 	"github.com/KevinZonda/GoX/pkg/iox"
 	"github.com/gotk3/gotk3/gtk"
 	"io"
@@ -16,14 +16,14 @@ import (
 type EditorW struct {
 	*gtk.Window
 
-	CodeE    *gtks.CodeEditor
+	CodeE    *gtks2.CodeEditor
 	CodeView *gtk.ScrolledWindow
 
 	MenuBar *gtk.MenuBar
 	Toolbar *ToolBar
 	VBox    *gtk.Box
 
-	ReplE     *gtks.CodeEditor
+	ReplE     *gtks2.CodeEditor
 	ReplView  *gtk.ScrolledWindow
 	ReplEnter *gtk.Entry
 	ReplVBox  *gtk.Box
@@ -105,20 +105,20 @@ func NewEditorW() *EditorW {
 
 	fontSizeInt := 16
 
-	w.CodeE = gtks.NewCodeEditor("cpp", fontSizeInt)
-	w.CodeView = gtks.WrapToScrolledWindow(w.CodeE)
+	w.CodeE = gtks2.NewCodeEditor("cpp", fontSizeInt)
+	w.CodeView = gtks2.WrapToScrolledWindow(w.CodeE)
 	w.CodeE.OnChanged(func() {
 		w.SetChanged(true)
 	})
 
-	w.ReplE = gtks.NewCodeEditor("", fontSizeInt)
+	w.ReplE = gtks2.NewCodeEditor("", fontSizeInt)
 	w.ReplE.SetEditable(false)
 	w.ReplE.SetShowLineNumbers(false)
 	w.ReplE.SetWrapMode(gtk.WRAP_CHAR)
 	w.ReplE.Tags["red"] = w.ReplE.NewTextTag("red", "#ff0000")
 	w.ReplE.Tags["blue"] = w.ReplE.NewTextTag("blue", "#0000ff")
 
-	w.ReplView = gtks.WrapToScrolledWindow(w.ReplE)
+	w.ReplView = gtks2.WrapToScrolledWindow(w.ReplE)
 
 	w.Toolbar = w.NewToolBar()
 	w.MenuBar = w.NewMenuBar()
@@ -257,17 +257,17 @@ func (w *EditorW) NewToolBar() *ToolBar {
 	bar.Toolbar, _ = gtk.ToolbarNew()
 	bar.SetStyle(gtk.TOOLBAR_BOTH)
 
-	bar.RunBtn = gtks.ToolBtnWithIcon("Run", "media-playback-start", w.RunCode)
-	bar.StopBtn = gtks.ToolBtnWithIcon("Stop", "media-playback-stop", w.Stop)
-	bar.RestartBtn = gtks.ToolBtnWithIcon("Restart", "view-refresh", w.RerunCode)
-	bar.CleanBtn = gtks.ToolBtnWithIcon("Clean", "edit-clear", func() {
+	bar.RunBtn = gtks2.ToolBtnWithIcon("Run", "media-playback-start", w.RunCode)
+	bar.StopBtn = gtks2.ToolBtnWithIcon("Stop", "media-playback-stop", w.Stop)
+	bar.RestartBtn = gtks2.ToolBtnWithIcon("Restart", "view-refresh", w.RerunCode)
+	bar.CleanBtn = gtks2.ToolBtnWithIcon("Clean", "edit-clear", func() {
 		w.ReplE.SetText("")
 		w.ReplE.AppendEndUnsafe(buildconst.Msg() + "\n")
 		w.startPromptUnsafe()
 	})
-	bar.FmtBtn = gtks.ToolBtnWithIcon("Format", "format-indent-more", w.FormatCode)
+	bar.FmtBtn = gtks2.ToolBtnWithIcon("Format", "format-indent-more", w.FormatCode)
 	sep, _ := gtk.SeparatorToolItemNew()
-	bar.SaveBtn = gtks.ToolBtnWithIcon("Save", "document-save", w.Save)
+	bar.SaveBtn = gtks2.ToolBtnWithIcon("Save", "document-save", w.Save)
 
 	items := []gtk.IToolItem{
 		bar.SaveBtn, bar.FmtBtn, sep, bar.CleanBtn, bar.RestartBtn, bar.StopBtn, bar.RunBtn}
@@ -280,8 +280,8 @@ func (w *EditorW) NewToolBar() *ToolBar {
 func (w *EditorW) SaveAs() {
 	fc, _ := gtk.FileChooserNativeDialogNew("Save as file...", nil, gtk.FILE_CHOOSER_ACTION_SAVE, "_Save", "_Cancel")
 
-	fc.AddFilter(gtks.NewFileFilter("*.k", "Klang source file"))
-	fc.AddFilter(gtks.NewFileFilter("*.*", "All files"))
+	fc.AddFilter(gtks2.NewFileFilter("*.k", "Klang source file"))
+	fc.AddFilter(gtks2.NewFileFilter("*.*", "All files"))
 
 	resp := fc.NativeDialog.Run()
 	if gtk.ResponseType(resp) == gtk.RESPONSE_ACCEPT {

@@ -1,10 +1,8 @@
 package compileTypeCheck
 
-import (
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/compileTypeCheck/tmem"
-)
+import "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/exp/compileTypeCheck/tmem"
 
-func (e *ATT) frameStart(protect bool) *TMem.Layer {
+func (e *ATT) frameStart(protect bool) *TMem.TMem {
 	return e.m.PushEmpty(protect)
 }
 

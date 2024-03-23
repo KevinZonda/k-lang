@@ -1,7 +1,7 @@
 package funcs
 
 import (
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/fmtr"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/tools/fmtr"
 	"github.com/KevinZonda/GoX/pkg/iox"
 )
 

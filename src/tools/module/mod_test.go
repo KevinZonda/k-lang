@@ -2,7 +2,7 @@ package module_test
 
 import (
 	"fmt"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/module"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/tools/module"
 	"os"
 	"testing"
 )
