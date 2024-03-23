@@ -3,7 +3,6 @@ package gtks
 import (
 	"errors"
 	"io"
-	"sync"
 )
 
 type GtkCodeEditorPipeWriter struct {
@@ -19,7 +18,7 @@ func (w *GtkCodeEditorPipeWriter) Write(p []byte) (n int, err error) {
 	return len(p), nil
 }
 
-func (ce *CodeEditor) WriterPipe(l sync.Locker) io.WriteCloser {
+func (ce *CodeEditor) WriterPipe() io.WriteCloser {
 	return &GtkCodeEditorPipeWriter{
 		buf: ce,
 	}

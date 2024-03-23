@@ -55,13 +55,6 @@ func (w *EditorW) NewMenuBar() *gtk.MenuBar {
 	return mb
 }
 
-func ignoreErr[T any](v T, err error) T {
-	if err != nil {
-		panic(err)
-	}
-	return v
-}
-
 func HelpW() *gtk.AboutDialog {
 	d, _ := gtk.AboutDialogNew()
 	d.SetProgramName("K Language IDLE")

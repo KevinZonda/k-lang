@@ -1,7 +1,6 @@
 package idle
 
 import (
-	"bytes"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/lib/async"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
@@ -19,7 +18,8 @@ func (w *EditorW) RerunCode() {
 }
 
 func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (rst eval.DetailedRunResult) {
-	w.evalIn = &FakeStdIn{buf: &bytes.Buffer{}}
+	w.evalIn = NewFakeStdIn()
+
 	if w.isRunning {
 		return
 	}
@@ -43,7 +43,7 @@ func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (rst eval.
 		w.e = eval.New()
 	}
 	ev := w.e
-	stdout := w.ReplE.WriterPipe(w.gtkIO)
+	stdout := w.ReplE.WriterPipe()
 	ev.SetStdIn(w.evalIn)
 	ev.SetStdOut(stdout)
 	ev.SetStdErr(stdout)

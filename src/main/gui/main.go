@@ -7,6 +7,11 @@ import (
 )
 
 func main() {
+	startW()
+	gtk.Main()
+}
+
+func startW() {
 	//if runtime.GOOS == "linux" {
 	//	CreateDesktopIcon()
 	//}
@@ -23,6 +28,4 @@ func main() {
 	}
 
 	w.ShowAll()
-
-	gtk.Main()
 }
