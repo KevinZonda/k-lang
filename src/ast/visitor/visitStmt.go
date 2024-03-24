@@ -94,7 +94,6 @@ func (v *AntlrVisitor) visitAssignStmt(ctx parser.IAssignStmtContext) *node.Assi
 		assignee = append(assignee, &node.Assignee{
 			Type: v.visitType(ctx.Type_()),
 			Var:  v.visitVar(ctx.Var_()),
-			Ref:  ctx.Ref() != nil,
 		})
 		val = v.visitExprWithLambda(ctx.ExprWithLambda())
 	}

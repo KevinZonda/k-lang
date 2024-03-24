@@ -135,6 +135,12 @@ func (o *Object) String() string {
 	sb.WriteString(fmt.Sprint(o.Value()))
 	sb.WriteString(", Addr: ")
 	sb.WriteString(fmt.Sprintf("%p", o))
+	sb.WriteString(", Ref: ")
+	if o.Ref != nil {
+		sb.WriteString(fmt.Sprintf("%p", o.Ref))
+	} else {
+		sb.WriteString("nil")
+	}
 	sb.WriteString(" }")
 	return sb.String()
 }

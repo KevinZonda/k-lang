@@ -2,6 +2,7 @@ package eval
 
 import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	"reflect"
 )
 
@@ -38,6 +39,8 @@ func (e *Eval) evalExpr(n node.Expr, keepRef bool) ExprResult {
 		return exprVal(e.EvalIntLiteral(expr))
 	case *node.FloatLiteral:
 		return exprVal(e.EvalFloatLiteral(expr))
+	case *node.RefExpr:
+		return e.EvalRefExpr(expr)
 	case *node.StringLiteral:
 		return exprVal(e.EvalStringLiteral(expr))
 	case *node.BoolLiteral:
@@ -71,4 +74,14 @@ func (e *Eval) evalExpr(n node.Expr, keepRef bool) ExprResult {
 
 func (e *Eval) EvalExpr(n node.Expr) ExprResult {
 	return e.evalExpr(n, false)
+}
+
+func (e *Eval) EvalRefExpr(n *node.RefExpr) ExprResult {
+	v := e.evalExpr(n.Expr, true)
+	switch vT := v.Value.(type) {
+	case *obj.Object:
+		return exprVal(vT.CreateRef())
+	default:
+		return v
+	}
 }

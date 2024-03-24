@@ -41,7 +41,8 @@ lambda : Function LParen funcSignArgs RParen funcReturnType? codeBlock
 //    ;
 unaryOper : Add | Sub | Not;
 expr
-    : LHS=expr Dot RHS=expr
+    : Ref expr
+    | LHS=expr Dot RHS=expr
     | LHS=expr LSquare Index=expr Col? EndIndex=expr? RSquare
     | funcCall
     | CallExpr=expr LParen funcCallArgs? RParen
@@ -91,8 +92,8 @@ stmt
     | funcCall
     ;
 assignStmt
-    : type? var Assign Ref? exprWithLambda
-    | var Col type Assign Ref? exprWithLambda
+    : type? var Assign exprWithLambda
+    | var Col type Assign exprWithLambda
     | vars Assign commaExpr
     ;
 

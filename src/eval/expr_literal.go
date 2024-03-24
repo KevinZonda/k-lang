@@ -75,7 +75,13 @@ func (e *Eval) EvalIdentifier(n *node.Identifier, keepRef bool) any {
 		if keepRef {
 			return v
 		}
-		return v.Value()
+		val := v.Value()
+		switch valT := val.(type) {
+		case *obj.Object:
+			return valT.Value()
+		default:
+			return val
+		}
 	}
 	if e.FeatUnknownVarNil {
 		return nil

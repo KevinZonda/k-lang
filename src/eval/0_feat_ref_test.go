@@ -57,6 +57,67 @@ color {r: 0, g: 256, b: 0, a: 20}
 	tester.GeneralTest(false, t, code, expected)
 }
 
+func TestRefBinOper(t *testing.T) {
+	code := `
+x = 1
+y = &x
+z = y + 1
+println(z)
+`
+	expected := `2
+`
+	tester.GeneralTest(false, t, code, expected)
+}
+
+func TestDoubleRefUOper(t *testing.T) {
+	code := `
+x = 1
+y =& &x
+println(-y)
+`
+	expected := `-1
+`
+	tester.GeneralTest(false, t, code, expected)
+}
+
+func TestRefDel(t *testing.T) {
+	code := `
+x = 1
+y = &x
+y = 19
+println(y)
+`
+	expected := `19
+`
+	tester.GeneralTest(false, t, code, expected)
+}
+
+func TestRefLambdaCall(t *testing.T) {
+	code := `
+x = (y) => {
+    println(y + 1)
+}
+z = &x
+z(18)
+`
+	expected := `19
+`
+	tester.GeneralTest(false, t, code, expected)
+}
+
+func TestRefLambdaCall2(t *testing.T) {
+	code := `
+x = (y) => {
+    println(y + 1)
+}
+a = 18
+x(&a)
+`
+	expected := `19
+`
+	tester.GeneralTest(false, t, code, expected)
+}
+
 //func TestRefIgnore(t *testing.T) {
 //	code := `
 //x = 12

@@ -9,6 +9,7 @@ import (
 
 func (e *Eval) EvalUnaryExpr(n *node.UnaryOperExpr) any {
 	val := e.EvalExpr(n.Expr).EnsureValue()
+	val = e.unboxToEnd(val)
 	e.currentToken = n.GetToken()
 
 	factor := 1

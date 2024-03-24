@@ -13,6 +13,8 @@ func clone(v any) any {
 		return nil
 	}
 	switch vT := v.(type) {
+	case *obj.Object:
+		return vT //FIXME: ref?
 	case *obj.StructField:
 		sf := obj.NewStruct(vT.ParentEval)
 		sf.TypeAs = vT.TypeAs
@@ -60,7 +62,7 @@ func (e *Eval) evalExprOrRef(n node.Expr, ref bool) any {
 
 func (e *Eval) EvalAssignStmt(n *node.AssignStmt) {
 	if len(n.Assignee) == 1 {
-		v := e.evalExprOrRef(n.Value, n.Assignee[0].Ref)
+		v := e.evalExprOrRef(n.Value, false)
 		e.EvalAssignStmtX(n, n.Assignee[0], v)
 		return
 	}
@@ -222,6 +224,15 @@ func (e *Eval) unboxObj(from any) (any, bool) {
 		return fromT.Value(), true
 	}
 	return from, false
+}
+
+func (e *Eval) unboxToEnd(from any) any {
+	switch vT := from.(type) {
+	case *obj.Object:
+		return e.unboxToEnd(vT.Value())
+	default:
+		return from
+	}
 }
 
 func (e *Eval) evalObjByIndex(from any, indexes []node.Expr) any {

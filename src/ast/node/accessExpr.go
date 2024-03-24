@@ -31,3 +31,16 @@ func (a *IndexExpr) TokenValue() string {
 func (a *IndexExpr) GetToken() token.Token {
 	return a.Token
 }
+
+type RefExpr struct {
+	Token token.Token
+	Expr  Expr
+}
+
+func (a *RefExpr) expr() {}
+func (a *RefExpr) TokenValue() string {
+	return a.Token.Value
+}
+func (a *RefExpr) GetToken() token.Token {
+	return a.Token
+}

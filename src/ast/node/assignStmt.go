@@ -23,5 +23,4 @@ func (a *AssignStmt) GetToken() token.Token {
 type Assignee struct {
 	Type *Type
 	Var  *Variable
-	Ref  bool
 }
