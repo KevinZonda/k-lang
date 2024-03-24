@@ -78,6 +78,20 @@ func ExpectPanic(ts *testing.T, code string, expected func(exp string) bool) {
 
 }
 
+func PanicFx(ts *testing.T, code func(), expected func(exp string) bool) {
+	defer func() {
+		if r := recover(); r != nil {
+			if !expected(r.(string)) {
+				ts.Fatalf("got %s", r)
+			}
+		}
+	}()
+	code()
+}
+
+func PanicExFxNotEmptyString(exp string) bool {
+	return exp != ""
+}
 func NoPanic(ts *testing.T, code string) {
 	ast, errs := parserHelper.Ast(code)
 	if len(errs) > 0 {

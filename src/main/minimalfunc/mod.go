@@ -30,5 +30,7 @@ func Mod(arg string, args []string) {
 	case "restore", "download":
 		mod := module.LoadFromPath(module.DEFAULT_K_MOD)
 		mod.Restore()
+	default:
+		panic("expect mod [new|restore]")
 	}
 }

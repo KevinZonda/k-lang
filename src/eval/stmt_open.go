@@ -150,8 +150,12 @@ func normaliseName(n string) string {
 		n = n[:len(n)-2]
 	}
 	sb := strings.Builder{}
-	for _, c := range n {
-		if c != '_' && (c < 'a' || c > 'z') && (c < 'A' || c > 'Z') {
+	for i, c := range n {
+		if i == 0 && (c > '0' && c < '9') {
+			sb.WriteRune('_')
+			continue
+		}
+		if c != '_' && (c < 'a' || c > 'z') && (c < 'A' || c > 'Z') && (c < '0' || c > '9') {
 			sb.WriteRune('_')
 		} else {
 			sb.WriteRune(c)
