@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=K Language IDLE
+Comment=K Language's light-weigh editor
+GenericName=Text Editor
+Exec=%s
+Type=Application
+Categories=TextEditor;Development;IDE;
+Keywords=idle;k;editor;

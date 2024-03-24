@@ -18,6 +18,7 @@ func initRunEnv() {
 func destroyRunEnv() {
 	os.Remove(MINIFUNC_RUN_TEST_FILE)
 	os.Remove(MINIFUNC_RUN_TEST_MOD)
+	os.RemoveAll("vendor")
 }
 
 func TestRun(t *testing.T) {
