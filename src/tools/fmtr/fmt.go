@@ -99,7 +99,7 @@ func Fmt(code string) (string, parserHelper.CodeErrors) {
 				makeIdent(sb, ident)
 			}
 			sb.WriteString(cur.GetText())
-		case parser.V2LexerComment:
+		case parser.V2LexerComment, parser.V2LexerBlkComment:
 			if !sb.EndsWith("\n") && !sb.EndsWithSpaces() {
 				sb.WriteString(" ")
 			}

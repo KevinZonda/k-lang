@@ -62,7 +62,8 @@ Assign    : ':=' | '=' | '<-';
 
 Ref : '&';
 Identifier: [a-zA-Z_][a-zA-Z_0-9]* ;
-Comment   : ('#' | '//') ~[\r\n]* -> channel(2); // channel 2 is for comments
+Comment   : ('#' | '//') ~[\r\n]* -> channel(2);
+BlkComment : '/*' .*? '*/' -> channel(2); // channel 2 is for comments
 WS: [ \t\f]+ -> skip ;
 
 NewLine   : ('\r'? '\n' | '\r')+ -> channel(1);

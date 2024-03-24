@@ -47,8 +47,8 @@ func v2parserParserInit() {
 		"Question", "To", "Struct", "Map", "Function", "Return", "Case", "Default",
 		"Open", "As", "Try", "Catch", "If", "Else", "For", "Match", "Break",
 		"Continue", "True", "False", "Nil", "IntegerLiteral", "NumberLiteral",
-		"StringLiteral", "Not", "Assign", "Ref", "Identifier", "Comment", "WS",
-		"NewLine",
+		"StringLiteral", "Not", "Assign", "Ref", "Identifier", "Comment", "BlkComment",
+		"WS", "NewLine",
 	}
 	staticData.RuleNames = []string{
 		"program", "structBlock", "funcBlock", "codeBlock", "declareBlock",
@@ -63,7 +63,7 @@ func v2parserParserInit() {
 	}
 	staticData.PredictionContextCache = antlr.NewPredictionContextCache()
 	staticData.serializedATN = []int32{
-		4, 1, 55, 633, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
+		4, 1, 56, 633, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
 		4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 2, 9, 7, 9, 2, 10, 7,
 		10, 2, 11, 7, 11, 2, 12, 7, 12, 2, 13, 7, 13, 2, 14, 7, 14, 2, 15, 7, 15,
 		2, 16, 7, 16, 2, 17, 7, 17, 2, 18, 7, 18, 2, 19, 7, 19, 2, 20, 7, 20, 2,
@@ -134,7 +134,7 @@ func v2parserParserInit() {
 		24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58,
 		60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80, 82, 84, 86, 88, 90, 92, 0,
 		8, 2, 0, 8, 8, 26, 26, 2, 0, 21, 22, 49, 49, 2, 0, 19, 20, 23, 23, 1, 0,
-		21, 22, 1, 0, 10, 15, 1, 0, 16, 17, 1, 0, 43, 48, 2, 0, 9, 9, 55, 55, 698,
+		21, 22, 1, 0, 10, 15, 1, 0, 16, 17, 1, 0, 43, 48, 2, 0, 9, 9, 56, 56, 698,
 		0, 108, 1, 0, 0, 0, 2, 113, 1, 0, 0, 0, 4, 117, 1, 0, 0, 0, 6, 121, 1,
 		0, 0, 0, 8, 139, 1, 0, 0, 0, 10, 148, 1, 0, 0, 0, 12, 156, 1, 0, 0, 0,
 		14, 173, 1, 0, 0, 0, 16, 197, 1, 0, 0, 0, 18, 213, 1, 0, 0, 0, 20, 215,
@@ -447,8 +447,9 @@ const (
 	V2ParserRef            = 51
 	V2ParserIdentifier     = 52
 	V2ParserComment        = 53
-	V2ParserWS             = 54
-	V2ParserNewLine        = 55
+	V2ParserBlkComment     = 54
+	V2ParserWS             = 55
+	V2ParserNewLine        = 56
 )
 
 // V2Parser rules.
