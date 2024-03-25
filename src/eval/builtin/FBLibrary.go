@@ -19,14 +19,19 @@ func (F FBLibrary) IsIODep() bool {
 func (F FBLibrary) FuncCall(name string, args []any) obj.ILibraryCall {
 	if f, ok := F.V[name]; ok {
 		hasParam := false
+		paramEmpty := false
 		for _, arg := range f.Args {
 			if arg.Param {
 				hasParam = true
+				paramEmpty = arg.ParamEmpty
 				break
 			}
 		}
-		if hasParam && len(args) < len(f.Args) || !hasParam && len(args) != len(f.Args) {
-			panic("Invalid number of arguments")
+		if hasParam && len(args) < len(f.Args) ||
+			!hasParam && len(args) != len(f.Args) {
+			if !paramEmpty {
+				panic("Invalid number of arguments")
+			}
 		}
 		v := f.EvalBinary(args)
 		switch len(v) {
