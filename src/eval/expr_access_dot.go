@@ -57,6 +57,9 @@ func (e *Eval) EvalPropertyAfterScope(scope any, property node.Expr) ExprResult 
 		}
 		panic("No Property Found: " + actualPpt)
 	case obj.ILibrary:
+		if fx := leftT.GetFunc(actualPpt); fx != nil {
+			return exprVal(fx)
+		}
 		objs := leftT.GetObjList()
 		if len(objs) == 0 {
 			panic("No Object Found In Library")
@@ -86,8 +89,10 @@ func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) ExprRe
 
 		return scopeT.EvalFuncCall(funcCall)
 	case obj.ILibrary:
-		v := scopeT.FuncCall(_fc.Caller.Value, e.evalExprs(_fc.Args...))
-		return ExprResult{HasValue: v.HasValue(), Value: v.Value()}
+		fx := scopeT.GetFunc(funcCall.Caller.Value)
+		return e.EvalFuncBlock(fx, funcCall.Args, nil)
+		//v := scopeT.FuncCall(_fc.Caller.Value, e.evalExprs(_fc.Args...))
+		//return ExprResult{HasValue: v.HasValue(), Value: v.Value()}
 	case *obj.StructField:
 		if scopeT.ParentEval != nil && scopeT.ParentEval != e {
 			if strings.HasPrefix(funcCall.Caller.Value, "_") {

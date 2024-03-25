@@ -10,6 +10,7 @@ import (
 type ILibrary interface {
 	FuncCall(name string, args []any) ILibraryCall
 	GetObjList() map[string]*Object
+	GetFunc(name string) *node.FuncBlock
 }
 
 type ILibraryCall interface {

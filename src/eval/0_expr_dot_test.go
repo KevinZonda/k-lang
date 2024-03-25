@@ -53,7 +53,7 @@ console.writeln("HI!")
 `
 	expected := `HI!
 `
-	tester.GeneralTest(false, t, code, expected)
+	tester.GeneralTest(true, t, code, expected)
 }
 
 func TestDotExprStructLambda(t *testing.T) {

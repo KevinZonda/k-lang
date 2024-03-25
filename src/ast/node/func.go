@@ -53,6 +53,22 @@ func cast(t *Type, v any) any {
 }
 
 func (f *FuncBlock) EvalBinary(args []any) []any {
+	hasParam := false
+	paramEmpty := false
+	for _, arg := range f.Args {
+		if arg.Param {
+			hasParam = true
+			paramEmpty = arg.ParamEmpty
+			break
+		}
+	}
+	if hasParam && len(args) < len(f.Args) ||
+		!hasParam && len(args) != len(f.Args) {
+		if !paramEmpty {
+			panic("Invalid number of arguments")
+		}
+	}
+
 	var argsV []reflect.Value
 	isParam := false
 	var param []any = nil
