@@ -11,8 +11,16 @@ type FBLibrary struct {
 }
 
 func (F FBLibrary) FuncCall(b obj.StdIO, name string, args []any) obj.ILibraryCall {
+
 	if f, ok := F.V[name]; ok {
-		if len(args) != len(f.Args) {
+		hasParam := false
+		for _, arg := range f.Args {
+			if arg.Param {
+				hasParam = true
+				break
+			}
+		}
+		if hasParam && len(args) < len(f.Args) || !hasParam && len(args) != len(f.Args) {
 			panic("Invalid number of arguments")
 		}
 		v := f.EvalBinary(args)

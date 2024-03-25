@@ -16,14 +16,29 @@ type FuncBlock struct {
 }
 
 func (f *FuncBlock) EvalBinary(args []any) []any {
-	argsV := make([]reflect.Value, len(f.Args))
+	var argsV []reflect.Value
+	isParam := false
+	hasParam := false
+	var param []any = nil
 	for i, arg := range args {
-		if arg == nil {
-			argsV[i] = reflect.Zero(reflect.TypeOf((*int)(nil)).Elem()) // trick to pass nil val or get ZeroValue Panic
+		if !isParam && f.Args[i].Param {
+			isParam = true
+			hasParam = true
+		}
+		if isParam {
+			param = append(param, arg)
 			continue
 		}
-		argsV[i] = reflect.ValueOf(arg)
+		if arg == nil {
+			argsV = append(argsV, reflect.Zero(reflect.TypeOf((*int)(nil)).Elem())) // trick to pass nil val or get ZeroValue Panic
+			continue
+		}
+		argsV = append(argsV, reflect.ValueOf(arg))
 	}
+	if hasParam {
+		argsV = append(argsV, reflect.ValueOf(param))
+	}
+
 	vals := reflect.ValueOf(f.BinaryFx).Call(argsV)
 	switch len(vals) {
 	case 0:
@@ -55,9 +70,10 @@ func (f *FuncBlock) String() string {
 }
 
 type FuncArg struct {
-	Type *Type
-	Name *Identifier
-	Ref  bool
+	Type  *Type
+	Name  *Identifier
+	Ref   bool
+	Param bool
 }
 
 type CodeBlock struct {
