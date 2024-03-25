@@ -5,38 +5,35 @@ import (
 	"strings"
 )
 
-var libMap = map[string]obj.ILibrary{}
+var cache = map[string]library{}
 
-func GetLibrary(name string) obj.ILibrary {
-	if lib, ok := libMap[name]; ok {
+func GetLibrary(name string, io obj.StdIO) obj.ILibrary {
+	if lib, ok := cache[name]; ok {
 		return lib
 	}
 	if strings.HasPrefix(name, "std/") {
 		name = name[4:]
 	}
-	var lib obj.ILibrary
+	var lib library
 	switch name {
 	case "string":
 		lib = NewStdStringLib()
 	case "console":
-		lib = NewStdConsoleLib()
+		lib = NewStdConsoleLib(io)
 	case "exec":
 		lib = NewStdExecLib()
 	case "time":
 		lib = NewStdTimeLib()
 	case "math":
 		lib = NewStdMathLib()
-	case "simpleX":
-		lib = SimpleX()
 	}
-	if lib != nil {
-		libMap[name] = lib
+	if lib != nil && !lib.IsIODep() {
+		cache[name] = lib
 	}
 	return lib
 }
 
-func ensureArgsLen(args []any, n int) {
-	if len(args) != n {
-		panic("Wrong number of arguments")
-	}
+type library interface {
+	obj.ILibrary
+	IsIODep() bool
 }

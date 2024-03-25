@@ -8,7 +8,7 @@ import (
 )
 
 type ILibrary interface {
-	FuncCall(b StdIO, name string, args []any) ILibraryCall
+	FuncCall(name string, args []any) ILibraryCall
 	GetObjList() map[string]*Object
 }
 

@@ -7,11 +7,16 @@ import (
 )
 
 type FBLibrary struct {
-	V map[string]*node.FuncBlock
+	V     map[string]*node.FuncBlock
+	IO    obj.StdIO
+	IODep bool
 }
 
-func (F FBLibrary) FuncCall(b obj.StdIO, name string, args []any) obj.ILibraryCall {
+func (F FBLibrary) IsIODep() bool {
+	return F.IODep
+}
 
+func (F FBLibrary) FuncCall(name string, args []any) obj.ILibraryCall {
 	if f, ok := F.V[name]; ok {
 		hasParam := false
 		for _, arg := range f.Args {
@@ -38,15 +43,6 @@ func (F FBLibrary) FuncCall(b obj.StdIO, name string, args []any) obj.ILibraryCa
 
 func (F FBLibrary) GetObjList() map[string]*obj.Object {
 	return nil
-}
-
-func SimpleX() *FBLibrary {
-	return &FBLibrary{
-		map[string]*node.FuncBlock{
-			"add": FxToFuncBlock(func(a int, b int) int { return a + b }),
-			"T":   FxToFuncBlock(func(a any) bool { return a == nil }),
-		},
-	}
 }
 
 func NewTypeN(name string) *node.Type {

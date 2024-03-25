@@ -2,37 +2,48 @@ package builtin
 
 import (
 	"bufio"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 )
 
-type StdConsoleLib struct{}
+type StdConsoleLib struct {
+	FBLibrary
+}
 
-func NewStdConsoleLib() *StdConsoleLib {
-	return &StdConsoleLib{}
+func NewStdConsoleLib(b obj.StdIO) *StdConsoleLib {
+	l := FBLibrary{
+		IODep: true,
+		IO:    b,
+	}
+	printF := FxToFuncBlock(func(a []any) {
+		Print(l.IO, a)
+	})
+	printF.Args[0].Param = true
+
+	printLnF := FxToFuncBlock(func(a []any) {
+		Println(l.IO, a)
+	})
+	printLnF.Args[0].Param = true
+
+	l.V = map[string]*node.FuncBlock{
+		"readln": FxToFuncBlock(func() string {
+			reader := bufio.NewReader(l.IO.GetStdin())
+			text, err := reader.ReadString('\n')
+			if err != nil {
+				panic(err)
+			}
+			return text
+		}),
+		"write":   printF,
+		"writeln": printLnF,
+	}
+	return &StdConsoleLib{
+		FBLibrary: l,
+	}
 }
 
 func (c *StdConsoleLib) GetObjList() map[string]*obj.Object {
 	return nil
-}
-
-func (c *StdConsoleLib) FuncCall(b obj.StdIO, caller string, args []any) obj.ILibraryCall {
-	switch caller {
-	case "readln":
-		ensureArgsLen(args, 0)
-		reader := bufio.NewReader(b.GetStdin())
-		text, err := reader.ReadString('\n')
-		if err != nil {
-			panic(err)
-		}
-		return resultVal(text)
-	case "write":
-		Print(b, args)
-		return resultNoVal()
-	case "writeln":
-		Println(b, args)
-		return resultNoVal()
-	}
-	panic("Unknown function: " + caller)
 }
 
 var _ obj.ILibrary = (*StdConsoleLib)(nil)

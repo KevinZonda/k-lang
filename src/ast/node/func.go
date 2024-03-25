@@ -55,26 +55,24 @@ func cast(t *Type, v any) any {
 func (f *FuncBlock) EvalBinary(args []any) []any {
 	var argsV []reflect.Value
 	isParam := false
-	hasParam := false
 	var param []any = nil
 	for i, arg := range args {
 		if !isParam && f.Args[i].Param {
 			isParam = true
-			hasParam = true
-		} else {
-			arg = cast(f.Args[i].Type, arg)
 		}
 		if isParam {
 			param = append(param, arg)
 			continue
 		}
+
+		arg = cast(f.Args[i].Type, arg)
 		if arg == nil {
 			argsV = append(argsV, reflect.Zero(reflect.TypeOf((*int)(nil)).Elem())) // trick to pass nil val or get ZeroValue Panic
 			continue
 		}
 		argsV = append(argsV, reflect.ValueOf(arg))
 	}
-	if hasParam {
+	if isParam {
 		argsV = append(argsV, reflect.ValueOf(param))
 	}
 

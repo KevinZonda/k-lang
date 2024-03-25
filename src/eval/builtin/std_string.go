@@ -15,7 +15,7 @@ func (s *StdStringLib) GetObjList() map[string]*obj.Object {
 	return nil
 }
 
-func NewStdStringLib() obj.ILibrary {
+func NewStdStringLib() *StdStringLib {
 	return &StdStringLib{
 		FBLibrary: FBLibrary{
 			V: map[string]*node.FuncBlock{

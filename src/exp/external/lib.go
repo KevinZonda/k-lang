@@ -14,7 +14,7 @@ func NewExternelLibrary(l common.Server, pack string) *ExternelLibrary {
 	return &ExternelLibrary{l: l, pack: pack}
 }
 
-func (e ExternelLibrary) FuncCall(b obj.StdIO, name string, args []any) obj.ILibraryCall {
+func (e ExternelLibrary) FuncCall(name string, args []any) obj.ILibraryCall {
 	i := e.l.InvokeFunc(name, args...)
 	if !i.Success {
 		panic("Failed to call function")

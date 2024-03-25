@@ -85,7 +85,7 @@ func (e *Eval) loadBuiltInFeature(name string) bool {
 }
 
 func (e *Eval) loadBuiltInLibrary(name, as string) (ok bool) {
-	lib := builtin.GetLibrary(name)
+	lib := builtin.GetLibrary(name, e.GetIO())
 	if lib == nil {
 		return false
 	}
