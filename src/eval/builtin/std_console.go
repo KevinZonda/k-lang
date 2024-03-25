@@ -19,11 +19,13 @@ func NewStdConsoleLib(b obj.StdIO) *StdConsoleLib {
 		Print(l.IO, a)
 	})
 	printF.Args[0].Param = true
+	printF.Args[0].ParamEmpty = true
 
 	printLnF := FxToFuncBlock(func(a []any) {
 		Println(l.IO, a)
 	})
 	printLnF.Args[0].Param = true
+	printLnF.Args[0].ParamEmpty = true
 
 	l.V = map[string]*node.FuncBlock{
 		"readln": FxToFuncBlock(func() string {

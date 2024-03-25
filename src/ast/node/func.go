@@ -76,6 +76,16 @@ func (f *FuncBlock) EvalBinary(args []any) []any {
 		argsV = append(argsV, reflect.ValueOf(param))
 	}
 
+	if len(argsV) == 0 {
+		if len(f.Args) > 0 {
+			if f.Args[0].ParamEmpty {
+				argsV = append(argsV, reflect.ValueOf([]any{}))
+			} else {
+				panic("INTERNAL ERR: PARAM EMPTY NOT ALLOWED")
+			}
+		}
+	}
+
 	vals := reflect.ValueOf(f.BinaryFx).Call(argsV)
 	switch len(vals) {
 	case 0:
@@ -107,10 +117,11 @@ func (f *FuncBlock) String() string {
 }
 
 type FuncArg struct {
-	Type  *Type
-	Name  *Identifier
-	Ref   bool
-	Param bool
+	Type       *Type
+	Name       *Identifier
+	Ref        bool
+	Param      bool
+	ParamEmpty bool
 }
 
 type CodeBlock struct {
