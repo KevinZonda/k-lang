@@ -15,6 +15,43 @@ type FuncBlock struct {
 	BinaryFx any
 }
 
+func cast(t *Type, v any) any {
+	if t == nil {
+		return v
+	}
+	if t.IsPlainType(TypeInt) {
+		switch vT := v.(type) {
+		case float64:
+			return int(vT)
+		case int:
+			return vT
+		default:
+			panic("Not Possible Type Transformation")
+		}
+	}
+	if t.IsPlainType(TypeNum) {
+		switch vT := v.(type) {
+		case float64:
+			return vT
+		case int:
+			return float64(vT)
+		default:
+
+			panic("Not Possible Type Transformation")
+		}
+	}
+	if t.IsPlainType(TypeString) {
+		switch vT := v.(type) {
+		case string:
+			return vT
+		default:
+			panic("Not Possible Type Transformation")
+		}
+	}
+
+	return v
+}
+
 func (f *FuncBlock) EvalBinary(args []any) []any {
 	var argsV []reflect.Value
 	isParam := false
@@ -24,6 +61,8 @@ func (f *FuncBlock) EvalBinary(args []any) []any {
 		if !isParam && f.Args[i].Param {
 			isParam = true
 			hasParam = true
+		} else {
+			arg = cast(f.Args[i].Type, arg)
 		}
 		if isParam {
 			param = append(param, arg)

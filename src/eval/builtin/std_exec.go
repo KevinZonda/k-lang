@@ -27,7 +27,6 @@ func (c *StdExecLib) GetObjList() map[string]*obj.Object {
 	return nil
 }
 
-// TODO: param
 func exec_cmd(args []any) string {
 	var _args []string
 	for _, arg := range args {
