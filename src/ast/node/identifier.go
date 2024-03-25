@@ -16,3 +16,7 @@ func (i *Identifier) TokenValue() string {
 func (i *Identifier) GetToken() token.Token {
 	return i.Token
 }
+
+func NewIdentifier(value string) *Identifier {
+	return &Identifier{Token: token.Token{}, Value: value}
+}

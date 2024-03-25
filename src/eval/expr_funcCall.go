@@ -139,6 +139,24 @@ type EvalFuncBlockEvent struct {
 
 func (e *Eval) EvalFuncBlock(fn *node.FuncBlock, args []node.Expr, evt *EvalFuncBlockEvent) ExprResult {
 	e.currentToken = fn.GetToken()
+	if fn.BinaryFx != nil {
+		argsV := make([]any, len(args))
+		for i, funcArg := range fn.Args {
+			v := e.EvalExpr(args[i]).EnsureValue()
+			v = e.TypeCast(funcArg.Type, v)
+			argsV[i] = v
+		}
+
+		vals := fn.EvalBinary(argsV)
+		switch len(vals) {
+		case 0:
+			return exprNoVal()
+		case 1:
+			return exprVal(vals[0])
+		default:
+			return exprVal(vals)
+		}
+	}
 	topFrame := memory.NewLayer(false)
 	if evt != nil && evt.OnNewFrameCreated != nil {
 		evt.OnNewFrameCreated(topFrame)

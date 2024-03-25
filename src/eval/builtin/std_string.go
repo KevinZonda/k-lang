@@ -1,62 +1,54 @@
 package builtin
 
 import (
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	"strconv"
 	"strings"
 )
 
-type StdStringLib struct{}
+type StdStringLib struct {
+	FBLibrary
+}
 
 func (s *StdStringLib) GetObjList() map[string]*obj.Object {
 	return nil
 }
 
 func NewStdStringLib() obj.ILibrary {
-	return &StdStringLib{}
-}
-
-func (s *StdStringLib) FuncCall(b obj.StdIO, caller string, args []any) obj.ILibraryCall {
-	switch caller {
-	case "len":
-		ensureArgsLen(args, 1)
-		return resultVal(len([]rune(args[0].(string))))
-	case "fromAscii":
-		ensureArgsLen(args, 1)
-		return resultVal(string(rune(args[0].(int))))
-	case "trim":
-		ensureArgsLen(args, 1)
-		return resultVal(strings.TrimSpace(args[0].(string)))
-	case "trimLeft":
-		ensureArgsLen(args, 1)
-		return resultVal(strings.TrimLeft(args[0].(string), " \t\n\r"))
-	case "trimRight":
-		ensureArgsLen(args, 1)
-		return resultVal(strings.TrimRight(args[0].(string), " \t\n\r"))
-	case "split":
-		ensureArgsLen(args, 2)
-		sps := strings.Split(args[0].(string), args[1].(string))
-		var res []any
-		for _, sp := range sps {
-			res = append(res, sp)
-		}
-		return resultVal(res)
-	case "int":
-		ensureArgsLen(args, 1)
-		i, e := strconv.ParseInt(args[0].(string), 10, 64)
-		if e != nil {
-			panic(e)
-		}
-		return resultVal(int(i))
-	case "float":
-		ensureArgsLen(args, 1)
-		f, e := strconv.ParseFloat(args[0].(string), 64)
-		if e != nil {
-			panic(e)
-		}
-		return resultVal(f)
+	return &StdStringLib{
+		FBLibrary: FBLibrary{
+			V: map[string]*node.FuncBlock{
+				"len":       FxToFuncBlock(func(a string) int { return len([]rune(a)) }),
+				"fromAscii": FxToFuncBlock(func(a int) string { return string(rune(a)) }),
+				"trim":      FxToFuncBlock(strings.TrimSpace),
+				"trimLeft":  FxToFuncBlock(func(a string) string { return strings.TrimLeft(a, " \t\n\r") }),
+				"trimRight": FxToFuncBlock(func(a string) string { return strings.TrimRight(a, " \t\n\r") }),
+				"split": FxToFuncBlock(func(a string, b string) []any {
+					sps := strings.Split(a, b)
+					var res []any
+					for _, sp := range sps {
+						res = append(res, sp)
+					}
+					return res
+				}),
+				"int": FxToFuncBlock(func(a string) int {
+					i, e := strconv.ParseInt(a, 10, 64)
+					if e != nil {
+						panic(e)
+					}
+					return int(i)
+				}),
+				"num": FxToFuncBlock(func(a string) float64 {
+					f, e := strconv.ParseFloat(a, 64)
+					if e != nil {
+						panic(e)
+					}
+					return f
+				}),
+			},
+		},
 	}
-	panic("Unknown function: " + caller)
 }
 
 var _ obj.ILibrary = (*StdStringLib)(nil)
