@@ -28,7 +28,7 @@ index : LSquare expr RSquare;
 indexes : index+;
 
 lambda : Function LParen funcSignArgs RParen funcReturnType? codeBlock
-       | LParen funcSignArgs RParen funcReturnType? To codeBlock;
+       | LParen funcSignArgs RParen funcReturnType? To (codeBlock | exprWithLambda);
 
 //boolExpr
 //    : expr (Equals | NotEq | Greater | Less | GreaterEq | LessEq) expr

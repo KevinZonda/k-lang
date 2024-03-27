@@ -20,6 +20,18 @@ func (v *AntlrVisitor) visitLambda(ctx parser.ILambdaContext) *node.LambdaExpr {
 		Args:    v.visitFuncSignArgs(ctx.FuncSignArgs()),
 		RetType: v.visitFuncReturnType(ctx.FuncReturnType()),
 	}
+	if ctx.ExprWithLambda() != nil {
+		expr := v.visitExprWithLambda(ctx.ExprWithLambda())
+		if expr != nil {
+			fb.Body = &node.CodeBlock{
+				Token: expr.GetToken(),
+				Nodes: []node.Node{&node.ReturnStmt{
+					Token: expr.GetToken(),
+					Value: []node.Expr{expr},
+				}},
+			}
+		}
+	}
 	return fb
 }
 
