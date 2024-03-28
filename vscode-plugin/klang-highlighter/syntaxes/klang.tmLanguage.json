@@ -14,7 +14,7 @@
 		"keywords": {
 			"patterns": [{
 				"name": "keyword.control.klang",
-				"match": "\\b(if|else|struct|fn|match|case|for|break|continue|return|open|as|:=)\\b"
+				"match": "\\b(if|else|struct|fn|match|case|for|break|continue|return|open|as)\\b"
 			}]
 		},
 		"operator": {
@@ -37,8 +37,13 @@
 			]
 		},
 		"comment": {
-			"match": "(#.*)",
+			"match": "(#.*)|(//.*)|(/\\*.*\\*/)",
 			"name": "comment.line.number-sign.klang"
+		},
+		"block_comment": {
+			"name": "comment.block.klang",
+			"begin": "/\\*",
+			"end": "\\*/"
 		},
 		"number": {
 			"match": "\\b(\\d(.d*)?)\\b",

@@ -1,3 +1,4 @@
+rm -r vscode-plugin/klang-highlighter/*.vsix
 cd vscode-plugin/klang-highlighter
 npm install
 vsce package

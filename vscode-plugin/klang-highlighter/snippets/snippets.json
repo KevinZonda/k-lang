@@ -17,6 +17,15 @@
         ],
         "description": "Create an if statement"
     },
+    "elif": {
+        "prefix": "elif",
+        "body": [
+            "else if (${1:condition}) {",
+            "    ${2:ifTrue}",
+            "}"
+        ],
+        "description": "Create an elif statement"
+    },
     "else": {
         "prefix": "else",
         "body": [
@@ -51,12 +60,12 @@
         "body": [
             "${1:variable} := ${2:value};"
         ],
-        "description": "Create a for loop"
+        "description": "Create a variable"
     },
     "open": {
         "prefix": "open",
         "body": [
-            "open ${1:file}"
+            "open \"${1:file}\" as ${2:name}"
         ]
     }
 
