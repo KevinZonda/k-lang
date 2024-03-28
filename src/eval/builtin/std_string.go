@@ -11,14 +11,10 @@ type StdStringLib struct {
 	FBLibrary
 }
 
-func (s *StdStringLib) GetObjList() map[string]*obj.Object {
-	return nil
-}
-
 func NewStdStringLib() *StdStringLib {
 	return &StdStringLib{
 		FBLibrary: FBLibrary{
-			V: map[string]*node.FuncBlock{
+			F: map[string]*node.FuncBlock{
 				"len":       FxToFuncBlock(func(a string) int { return len([]rune(a)) }),
 				"fromAscii": FxToFuncBlock(func(a int) string { return string(rune(a)) }),
 				"trim":      FxToFuncBlock(strings.TrimSpace),

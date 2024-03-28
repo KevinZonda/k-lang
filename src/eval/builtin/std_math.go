@@ -10,20 +10,17 @@ import (
 
 type StdMathLib struct {
 	FBLibrary
-	m    map[string]*obj.Object
 	seed *int64
 }
 
 func NewStdMathLib() *StdMathLib {
-	o := map[string]*obj.Object{
-		"pi": obj.NewImmutableObj(obj.Value, math.Pi),
-		"e":  obj.NewImmutableObj(obj.Value, math.E),
-	}
-	c := &StdMathLib{
-		m: o,
-	}
+	c := &StdMathLib{}
 	c.FBLibrary = FBLibrary{
-		V: map[string]*node.FuncBlock{
+		P: map[string]*obj.Object{
+			"pi": obj.NewImmutableObj(obj.Value, math.Pi),
+			"e":  obj.NewImmutableObj(obj.Value, math.E),
+		},
+		F: map[string]*node.FuncBlock{
 			"cos":   FxToFuncBlock(math.Cos),
 			"sin":   FxToFuncBlock(math.Sin),
 			"tan":   FxToFuncBlock(math.Tan),
@@ -114,10 +111,6 @@ func NewStdMathLib() *StdMathLib {
 		},
 	}
 	return c
-}
-
-func (c *StdMathLib) GetObjList() map[string]*obj.Object {
-	return c.m
 }
 
 var _ obj.ILibrary = (*StdMathLib)(nil)

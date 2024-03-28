@@ -7,24 +7,16 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 )
 
-type ExternelLibrary struct {
+type ExternalLibrary struct {
 	l    common.Server
 	pack string
 }
 
-func NewExternelLibrary(l common.Server, pack string) *ExternelLibrary {
-	return &ExternelLibrary{l: l, pack: pack}
+func NewExternalLibrary(l common.Server, pack string) *ExternalLibrary {
+	return &ExternalLibrary{l: l, pack: pack}
 }
 
-func (e ExternelLibrary) FuncCall(name string, args []any) obj.ILibraryCall {
-	i := e.l.InvokeFunc(name, args...)
-	if !i.Success {
-		panic("Failed to call function")
-	}
-	return i
-}
-
-func (e ExternelLibrary) GetFunc(name string) *node.FuncBlock {
+func (e ExternalLibrary) GetFunc(name string) *node.FuncBlock {
 	fx := builtin.FxToFuncBlock(func(args []any) any {
 		i := e.l.InvokeFunc(name, args...)
 		if !i.Success {
@@ -37,8 +29,12 @@ func (e ExternelLibrary) GetFunc(name string) *node.FuncBlock {
 	return fx
 }
 
-func (e ExternelLibrary) GetObjList() map[string]*obj.Object {
+func (e ExternalLibrary) GetObj(name string) *obj.Object {
 	return nil
 }
 
-var _ obj.ILibrary = &ExternelLibrary{}
+func (e ExternalLibrary) GetObjList() map[string]*obj.Object {
+	return nil
+}
+
+var _ obj.ILibrary = &ExternalLibrary{}

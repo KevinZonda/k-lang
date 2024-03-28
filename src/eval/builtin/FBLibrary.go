@@ -7,38 +7,50 @@ import (
 )
 
 type FBLibrary struct {
-	V     map[string]*node.FuncBlock
+	F     map[string]*node.FuncBlock
+	P     map[string]*obj.Object
 	IO    obj.StdIO
 	IODep bool
 }
 
-func (F FBLibrary) IsIODep() bool {
-	return F.IODep
+func (f FBLibrary) IsIODep() bool {
+	return f.IODep
 }
 
 func (f FBLibrary) GetFunc(name string) *node.FuncBlock {
-	if fx, ok := f.V[name]; ok {
+	if fx, ok := f.F[name]; ok {
 		return fx
 	}
 	return nil
 }
 
-func (F FBLibrary) FuncCall(name string, args []any) obj.ILibraryCall {
-	if f, ok := F.V[name]; ok {
-		v := f.EvalBinary(args)
-		switch len(v) {
-		case 0:
-			return resultNoVal()
-		case 1:
-			return resultVal(v[0])
-		default:
-			return resultVal(v)
-		}
+func (f FBLibrary) GetObj(name string) *obj.Object {
+	if len(f.P) == 0 {
+		return nil
 	}
-	panic("Function not found")
+	if o, ok := f.P[name]; ok {
+		return o
+	}
+	return nil
+
 }
 
-func (F FBLibrary) GetObjList() map[string]*obj.Object {
+//func (f FBLibrary) FuncCall(name string, args []any) obj.ILibraryCall {
+//	if f, ok := f.V[name]; ok {
+//		v := f.EvalBinary(args)
+//		switch len(v) {
+//		case 0:
+//			return resultNoVal()
+//		case 1:
+//			return resultVal(v[0])
+//		default:
+//			return resultVal(v)
+//		}
+//	}
+//	panic("Function not found")
+//}
+
+func (f FBLibrary) GetObjList() map[string]*obj.Object {
 	return nil
 }
 

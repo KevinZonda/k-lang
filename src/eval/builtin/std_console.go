@@ -27,7 +27,7 @@ func NewStdConsoleLib(b obj.StdIO) *StdConsoleLib {
 	printLnF.Args[0].Param = true
 	printLnF.Args[0].ParamEmpty = true
 
-	l.V = map[string]*node.FuncBlock{
+	l.F = map[string]*node.FuncBlock{
 		"readln": FxToFuncBlock(func() string {
 			reader := bufio.NewReader(l.IO.GetStdin())
 			text, err := reader.ReadString('\n')
@@ -42,10 +42,6 @@ func NewStdConsoleLib(b obj.StdIO) *StdConsoleLib {
 	return &StdConsoleLib{
 		FBLibrary: l,
 	}
-}
-
-func (c *StdConsoleLib) GetObjList() map[string]*obj.Object {
-	return nil
 }
 
 var _ obj.ILibrary = (*StdConsoleLib)(nil)

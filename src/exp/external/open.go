@@ -13,7 +13,7 @@ func GetExternalLibrary(lib string) obj.ILibrary {
 		return nil
 	}
 	if strings.HasPrefix(lib, "https://") || strings.HasPrefix(lib, "http://") {
-		return NewExternelLibrary(httpExternal.NewLibrary(lib), "")
+		return NewExternalLibrary(httpExternal.NewLibrary(lib), "")
 	}
 	return nil
 }

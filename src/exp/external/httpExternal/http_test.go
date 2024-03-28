@@ -21,7 +21,7 @@ func TestServer(t *testing.T) {
 	l := &httpExternal.Library{EndPoint: "http://" + addr + "/simple"}
 	rst := l.InvokeFunc("add", 1, 2)
 	fmt.Println(rst)
-	x := external.NewExternelLibrary(l, "simple")
+	x := external.NewExternalLibrary(l, "simple")
 	fx := x.GetFunc("add")
 	fmt.Println(fx.EvalBinary([]any{1, 2}))
 	fx = x.GetFunc("hi")

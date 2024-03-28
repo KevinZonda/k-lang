@@ -8,8 +8,7 @@ import (
 )
 
 type ILibrary interface {
-	FuncCall(name string, args []any) ILibraryCall
-	GetObjList() map[string]*Object
+	GetObj(name string) *Object
 	GetFunc(name string) *node.FuncBlock
 }
 

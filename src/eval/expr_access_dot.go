@@ -60,11 +60,8 @@ func (e *Eval) EvalPropertyAfterScope(scope any, property node.Expr) ExprResult 
 		if fx := leftT.GetFunc(actualPpt); fx != nil {
 			return exprVal(fx)
 		}
-		objs := leftT.GetObjList()
-		if len(objs) == 0 {
-			panic("No Object Found In Library")
-		}
-		if o, ok := objs[actualPpt]; ok {
+		o := leftT.GetObj(actualPpt)
+		if o != nil {
 			return exprVal(o.Value())
 		}
 		panic("No Property Found In Library: " + actualPpt)
