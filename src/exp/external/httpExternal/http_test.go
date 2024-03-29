@@ -13,10 +13,10 @@ import (
 func TestServer(t *testing.T) {
 	p := initSvr()
 	addr := tester.FreeListenAddr()
-	cancel := async.AsyncFunc(func() {
+	cancel := async.Run(func() {
 		p.StartServer(addr)
 	})
-	defer async.CancelThenSpeep(100, cancel)
+	defer async.CancelThenSleep(100, cancel)
 
 	l := &httpExternal.Library{EndPoint: "http://" + addr + "/simple"}
 	rst := l.InvokeFunc("add", 1, 2)

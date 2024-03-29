@@ -30,10 +30,10 @@ func TestOpenStmt(t *testing.T) {
 	l.Close()
 	addr := l.Addr().String()
 	p := initSvr()
-	cancel := async.AsyncFunc(func() {
+	cancel := async.Run(func() {
 		p.Run(addr)
 	})
-	defer async.CancelThenSpeep(100, cancel)
+	defer async.CancelThenSleep(100, cancel)
 
 	code := fmt.Sprintf(`
 open "ext/http://%s/simple/p2" as simple
@@ -45,10 +45,10 @@ println(z)
 
 func TestOpenStmtOld(t *testing.T) {
 	addr := tester.FreeListenAddr()
-	cancel := async.AsyncFunc(func() {
+	cancel := async.Run(func() {
 		initOldSvr(addr)
 	})
-	defer async.CancelThenSpeep(100, cancel)
+	defer async.CancelThenSleep(100, cancel)
 
 	code := fmt.Sprintf(`
 open "ext/http://%s/simple" as simple

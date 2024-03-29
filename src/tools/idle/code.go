@@ -50,7 +50,7 @@ func (w *EditorW) runCode(code string, loadCtx bool, beginMsg string) (rst eval.
 
 	ch := make(chan eval.DetailedRunResult, 1)
 
-	cancel := async.AsyncFunc(func() {
+	cancel := async.Run(func() {
 		ch <- ev.DoSafely(ast)
 	})
 	w.cancelFunc = func() {

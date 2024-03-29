@@ -125,8 +125,10 @@ loopStmt
     | whileStyleFor
     ;
 
-cStyleFor : For LParen onInit=expr? Semi onCondition=expr? Semi onEnd=expr? RParen codeBlock;
-iterFor : For LParen type? Identifier Col expr RParen codeBlock;
+cStyleFor : For ((LParen cStyleForSign RParen) | cStyleForSign) codeBlock;
+cStyleForSign : onInit=expr? Semi onCondition=expr? Semi onEnd=expr?;
+iterFor  : For  ((LParen iterForSign RParen)   | iterForSign) codeBlock;
+iterForSign : type? Identifier Col expr;
 whileStyleFor : For expr? codeBlock;
 
 matchStmt

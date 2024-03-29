@@ -168,7 +168,15 @@ func (v *BaseV2ParserVisitor) VisitCStyleFor(ctx *CStyleForContext) interface{} 
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseV2ParserVisitor) VisitCStyleForSign(ctx *CStyleForSignContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseV2ParserVisitor) VisitIterFor(ctx *IterForContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseV2ParserVisitor) VisitIterForSign(ctx *IterForSignContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

@@ -22,12 +22,13 @@ func (v *AntlrVisitor) visitLoopStmt(ctx parser.ILoopStmtContext) node.Stmt {
 }
 
 func (v *AntlrVisitor) visitCStyleFor(ctx parser.ICStyleForContext) *node.CStyleFor {
+	sig := ctx.CStyleForSign()
 	n := node.CStyleFor{
 		Token:         token.FromAntlrToken(ctx.For().GetSymbol()).WithBegin(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		Body:          v.visitCodeBlock(ctx.CodeBlock()),
-		InitialExpr:   v.visitExpr(ctx.GetOnInit()),
-		ConditionExpr: v.visitExpr(ctx.GetOnCondition()),
-		AfterIterExpr: v.visitExpr(ctx.GetOnEnd()),
+		InitialExpr:   v.visitExpr(sig.GetOnInit()),
+		ConditionExpr: v.visitExpr(sig.GetOnCondition()),
+		AfterIterExpr: v.visitExpr(sig.GetOnEnd()),
 	}
 	return &n
 }
@@ -42,12 +43,13 @@ func (v *AntlrVisitor) visitWhileStyleFor(ctx parser.IWhileStyleForContext) *nod
 }
 
 func (v *AntlrVisitor) visitIterStyleFor(ctx parser.IIterForContext) *node.IterStyleFor {
+	sig := ctx.IterForSign()
 	n := node.IterStyleFor{
 		Token:    token.FromAntlrToken(ctx.For().GetSymbol()).WithBegin(ctx.GetStart()).WithEnd(ctx.GetStop()),
-		Variable: v.visitIdentifier(ctx.Identifier()),
-		Iterator: v.visitExpr(ctx.Expr()),
+		Variable: v.visitIdentifier(sig.Identifier()),
+		Iterator: v.visitExpr(sig.Expr()),
+		Type:     v.visitType(sig.Type_()),
 		Body:     v.visitCodeBlock(ctx.CodeBlock()),
-		Type:     v.visitType(ctx.Type_()),
 	}
 	return &n
 }

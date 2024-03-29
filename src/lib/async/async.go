@@ -5,13 +5,13 @@ import (
 	"time"
 )
 
-func AsyncFunc(f func()) func() {
+func Run(f func()) func() {
 	ctx, cancel := context.WithCancel(context.Background())
-	go DoWork(ctx, f)
+	go do(ctx, f)
 	return cancel
 }
 
-func DoWork(ctx context.Context, f func()) {
+func do(ctx context.Context, f func()) {
 	select {
 	case <-ctx.Done():
 		return
@@ -22,7 +22,7 @@ func DoWork(ctx context.Context, f func()) {
 	}
 }
 
-func CancelThenSpeep(sleepMs int, cancel ...func()) {
+func CancelThenSleep(sleepMs int, cancel ...func()) {
 	for _, c := range cancel {
 		c()
 	}
