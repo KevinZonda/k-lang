@@ -38,6 +38,9 @@ func (v *AntlrVisitor) visitStmt(ctx parser.IStmtContext) node.Stmt {
 	if ctx.OpenStmt() != nil {
 		return v.visitOpenStmt(ctx.OpenStmt())
 	}
+	if ctx.UOperStmt() != nil {
+		return v.visitUOperStmt(ctx.UOperStmt())
+	}
 	v.appendErr(ctx, "unknown stmt: "+ctx.GetText(), nil)
 	return nil
 }
