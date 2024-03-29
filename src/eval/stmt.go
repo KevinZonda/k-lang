@@ -3,6 +3,7 @@ package eval
 import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	"reflect"
 )
 
@@ -35,9 +36,32 @@ func (e *Eval) EvalStmt(n node.Stmt) {
 		e.EvalOpenStmt(nT)
 	case *node.DeclareStmt:
 		e.EvalDeclareStmt(nT)
+	case *node.UnaryOperStmt:
+		e.EvalUnaryOperStmt(nT)
 	default:
 		panic("not implemented for eval stmt type: " + reflect.TypeOf(n).String())
 	}
+}
+
+func (e *Eval) EvalUnaryOperStmt(n *node.UnaryOperStmt) {
+	e.currentToken = n.GetToken()
+	rst := e.evalExpr(n.Identifier, true).EnsureValue()
+	o, ok := rst.(*obj.Object)
+	if !ok || !o.Is(obj.Value) {
+		panic("Unary Operator Statement can only be applied to objects")
+	}
+	switch vT := o.Value().(type) {
+	case int:
+		switch n.Oper {
+		case "++":
+			o.SetValue(vT + 1)
+		case "--":
+			o.SetValue(vT - 1)
+		}
+	default:
+		panic("Unary Operator Statement can only be applied to int")
+	}
+
 }
 
 func (e *Eval) EvalBreakStmt(n *node.BreakStmt) {

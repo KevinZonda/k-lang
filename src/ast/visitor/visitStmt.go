@@ -42,6 +42,24 @@ func (v *AntlrVisitor) visitStmt(ctx parser.IStmtContext) node.Stmt {
 	return nil
 }
 
+func (v *AntlrVisitor) visitUOperStmt(ctx parser.IUOperStmtContext) *node.UnaryOperStmt {
+	oper := ""
+	if ctx.AddAdd() != nil {
+		oper = "++"
+	} else if ctx.SubSub() != nil {
+		oper = "--"
+	} else {
+		v.appendErr(ctx, "unknown unary operator", nil)
+		return nil
+	}
+	return &node.UnaryOperStmt{
+		Token:      token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
+		Identifier: v.visitIdentifier(ctx.Identifier()),
+		Oper:       oper,
+	}
+
+}
+
 func (v *AntlrVisitor) visitJumpStmt(ctx parser.IJumpStmtContext) node.Stmt {
 	if ctx.Return() != nil {
 		var retV []node.Expr

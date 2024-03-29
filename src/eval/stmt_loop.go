@@ -118,13 +118,8 @@ func (e *Eval) EvalCStyleFrStmt(n *node.CStyleFor) {
 	e.loopFrame()
 	defer e.frameEnd()
 
-	if n.InitialExpr != nil {
-		switch initExpr := n.InitialExpr.(type) {
-		case node.Stmt:
-			e.EvalStmt(initExpr)
-		case node.Expr:
-			e.EvalExpr(initExpr)
-		}
+	if n.InitialStmt != nil {
+		e.EvalStmt(n.InitialStmt)
 	}
 	for {
 		if n.ConditionExpr != nil {
@@ -135,7 +130,7 @@ func (e *Eval) EvalCStyleFrStmt(n *node.CStyleFor) {
 		}
 		isContinue, isBreak, isReturn := e.loopDelegate(n.Body)
 		if isContinue {
-			e.EvalExpr(n.AfterIterExpr)
+			e.EvalStmt(n.AfterIterStmt)
 		}
 		if isContinue {
 			continue
@@ -143,6 +138,6 @@ func (e *Eval) EvalCStyleFrStmt(n *node.CStyleFor) {
 		if isReturn || isBreak {
 			return
 		}
-		e.EvalExpr(n.AfterIterExpr)
+		e.EvalStmt(n.AfterIterStmt)
 	}
 }

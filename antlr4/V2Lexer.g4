@@ -26,6 +26,8 @@ Sub       : '-';
 Mod       : '%' | 'mod';
 Dot       : '.';
 Question  : '?';
+AddAdd    : '++';
+SubSub    : '--';
 
 To : '->' | '=>';
 

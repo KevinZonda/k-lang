@@ -79,9 +79,6 @@ func (v *AntlrVisitor) visitExpr(ctx parser.IExprContext) node.Expr {
 	if ctx.Ref() != nil {
 		return v.visitRefExpr(ctx)
 	}
-	if ctx.AssignStmt() != nil {
-		return v.visitAssignStmt(ctx.AssignStmt())
-	}
 	if ctx.GetOP() != nil {
 		return v.visitBinaryExpr(ctx)
 	}

@@ -57,9 +57,6 @@ func (e *Eval) evalExpr(n node.Expr, keepRef bool) ExprResult {
 		return e.EvalFuncCall(expr)
 	case *node.LambdaExpr:
 		return exprVal(e.EvalLambdaExpr(expr))
-	case *node.AssignStmt:
-		e.EvalAssignStmt(expr)
-		return exprNoVal()
 	case *node.StructLiteral:
 		return exprVal(e.EvalStructLiteral(expr))
 	case *node.IndexExpr:

@@ -74,8 +74,9 @@ func (o *Object) SetValue(v any) {
 		return
 	}
 	if o.Ref != nil {
-		o.Ref.val = v
-		o.Ref.autoKind()
+		//o.Ref.val = v
+		//o.Ref.autoKind()
+		o.Ref.SetValue(v)
 		return
 	}
 	o.val = v

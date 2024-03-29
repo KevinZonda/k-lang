@@ -4,9 +4,9 @@ import "git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
 
 type CStyleFor struct {
 	Token         token.Token
-	InitialExpr   Node
+	InitialStmt   Stmt
 	ConditionExpr Expr
-	AfterIterExpr Expr
+	AfterIterStmt Stmt
 	Body          *CodeBlock
 }
 

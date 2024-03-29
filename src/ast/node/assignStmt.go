@@ -15,7 +15,6 @@ func (a *AssignStmt) TokenValue() string {
 }
 
 func (a *AssignStmt) stmt() {}
-func (a *AssignStmt) expr() {}
 func (a *AssignStmt) GetToken() token.Token {
 	return a.Token
 }

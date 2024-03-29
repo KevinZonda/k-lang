@@ -76,8 +76,10 @@ const (
 	Sub
 	Mod
 	Dot
-	To
 	Question
+	AddAdd
+	SubSub
+	To
 	Struct
 	Map
 	Function
@@ -105,6 +107,7 @@ const (
 	Ref
 	Identifier
 	Comment
+	BlkComment
 	WS
 	NewLine
 )

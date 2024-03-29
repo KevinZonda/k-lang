@@ -58,7 +58,6 @@ expr
     | literal
     | initializer
     | expr indexes
-    | assignStmt
     ;
 
 exprWithLambda : lambda | expr | CallExpr=lambda LParen funcCallArgs? RParen;
@@ -86,11 +85,15 @@ stmt
     | ifStmt
     | loopStmt
     | matchStmt
+    | uOperStmt
     | codeBlock
     | tryCatchSmt
     | openStmt
     | funcCall
     ;
+
+uOperStmt : Identifier (AddAdd | SubSub);
+
 assignStmt
     : type? var Assign exprWithLambda
     | var Col type Assign exprWithLambda
@@ -126,7 +129,7 @@ loopStmt
     ;
 
 cStyleFor : For ((LParen cStyleForSign RParen) | cStyleForSign) codeBlock;
-cStyleForSign : onInit=expr? Semi onCondition=expr? Semi onEnd=expr?;
+cStyleForSign : onInit=stmt? Semi onCondition=expr? Semi onEnd=stmt?;
 iterFor  : For  ((LParen iterForSign RParen)   | iterForSign) codeBlock;
 iterForSign : type? Identifier Col expr;
 whileStyleFor : For expr? codeBlock;

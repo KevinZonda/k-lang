@@ -26,9 +26,9 @@ func (v *AntlrVisitor) visitCStyleFor(ctx parser.ICStyleForContext) *node.CStyle
 	n := node.CStyleFor{
 		Token:         token.FromAntlrToken(ctx.For().GetSymbol()).WithBegin(ctx.GetStart()).WithEnd(ctx.GetStop()),
 		Body:          v.visitCodeBlock(ctx.CodeBlock()),
-		InitialExpr:   v.visitExpr(sig.GetOnInit()),
+		InitialStmt:   v.visitStmt(sig.GetOnInit()),
 		ConditionExpr: v.visitExpr(sig.GetOnCondition()),
-		AfterIterExpr: v.visitExpr(sig.GetOnEnd()),
+		AfterIterStmt: v.visitStmt(sig.GetOnEnd()),
 	}
 	return &n
 }
