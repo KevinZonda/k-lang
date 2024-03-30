@@ -6,7 +6,7 @@ import (
 
 func Lsp(addr string) {
 	if addr == "" {
-		addr = "127.0.0.1:11451"
+		addr = "127.0.0.1:11550"
 	}
 	srv := lsp.NewLsp()
 	err := srv.RunTCP(addr)

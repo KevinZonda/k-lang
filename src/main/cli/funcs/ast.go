@@ -7,6 +7,10 @@ import (
 )
 
 func Ast(input string, output string) {
+	if output == "" {
+		ShowAst(input)
+		return
+	}
 	txt, err := iox.ReadAllText(input)
 	if err != nil {
 		panic("Error: cannot read file:" + input)

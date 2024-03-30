@@ -22,12 +22,10 @@ func main() {
 		funcs.Ast(args.GetStrOr(0, shared.Input), args.GetStrOr(1, shared.Output))
 	case "repl":
 		(&minimalfunc.Repl{}).Repl(args.GetStrOr(0, shared.Input))
-	case "compile":
-		funcs.Compile(args.GetStrOr(0, shared.Input), args.GetStrOr(1, shared.Output))
+	//case "compile":
+	//	funcs.Compile(args.GetStrOr(0, shared.Input), args.GetStrOr(1, shared.Output))
 	case "run":
 		minimalfunc.Run(args.GetStrOr(0, shared.Input))
-	case "2ast":
-		funcs.ShowAst(args.GetStrOr(0, shared.Input))
 	case "help":
 		funcs.Help()
 	case "lsp":
