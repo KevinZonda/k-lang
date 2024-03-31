@@ -55,7 +55,7 @@ False : 'false' ;
 Nil : 'nil' ;
 
 IntegerLiteral : [0-9]+ ;
-NumberLiteral  : [0-9]+ ('.' [0-9]+)? | '.' [0-9]+;
+NumberLiteral  : [0-9]* '.' [0-9]+;
 StringLiteral  : [$@]? '"' (~["] | '\\"')* '"' | [$@]? '\'' (~['] | '\\\'')* '\'' ;
 
 
