@@ -59,11 +59,12 @@ func NewTypeN(name string) *node.Type {
 }
 
 func FxToFuncBlock(f any) *node.FuncBlock {
+	vf := reflect.ValueOf(f)
 	return &node.FuncBlock{
 		Name:     node.NewIdentifier(""),
 		Args:     fxToArgs(f),
 		RetType:  fxToRetT(f),
-		BinaryFx: f,
+		BinaryFx: &vf,
 	}
 }
 

@@ -12,7 +12,7 @@ type FuncBlock struct {
 	Args     []*FuncArg
 	RetType  []*Type
 	Body     *CodeBlock
-	BinaryFx any
+	BinaryFx *reflect.Value
 }
 
 func cast(t *Type, v any) any {
@@ -102,7 +102,7 @@ func (f *FuncBlock) EvalBinary(args []any) []any {
 		}
 	}
 
-	vals := reflect.ValueOf(f.BinaryFx).Call(argsV)
+	vals := f.BinaryFx.Call(argsV)
 	switch len(vals) {
 	case 0:
 		return nil
