@@ -99,10 +99,8 @@ func (r *Repl) Repl(input string) {
 		}
 
 		if !r.dontPrintIt {
-			if rst.HasReturn {
-				fmt.Println("<", rst.ReturnValue)
-			} else if rst.IsLastExpr {
-				fmt.Println("<", rst.LastExprVal)
+			if val, ok := rst.Value(); ok {
+				fmt.Println("<", val)
 			}
 		}
 

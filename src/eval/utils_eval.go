@@ -28,6 +28,17 @@ type DetailedRunResult struct {
 	stderr       io.Writer
 }
 
+// Value returns the value of the last expression or the return value of the function
+func (rst DetailedRunResult) Value() (val any, ok bool) {
+	if rst.HasReturn {
+		return rst.ReturnValue, true
+	}
+	if rst.IsLastExpr {
+		return rst.LastExprVal, true
+	}
+	return nil, false
+}
+
 func (rst DetailedRunResult) PrintPanic() DetailedRunResult {
 	if !rst.IsPanic {
 		return rst

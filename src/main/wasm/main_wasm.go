@@ -108,10 +108,8 @@ func runRepl(stdout writer, code string) any {
 		}
 		return nil
 	}
-	if rst.HasReturn {
-		return rst.ReturnValue
-	}
-	return rst.LastExprVal
+	val := rst.Value()
+	return val
 }
 
 func RunCodeStream(this js.Value, args []js.Value) any {

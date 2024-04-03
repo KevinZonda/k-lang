@@ -126,6 +126,13 @@ const (
 )
 
 func (o *Object) String() string {
+	if VizAny {
+		return o.Visualize()
+	}
+	return o.RawString()
+}
+
+func (o *Object) RawString() string {
 	if o == nil {
 		return "<nil object>"
 	}
@@ -188,4 +195,15 @@ func (o *Object) Is(kinds ...Kind) bool {
 		}
 	}
 	return false
+}
+
+func (o *Object) Visualize() string {
+	switch o.Kind {
+	case Value:
+		switch o.Value().(type) {
+		case *StructField:
+			return TreeAnyW("struct", o, false).String()
+		}
+	}
+	return o.RawString()
 }
