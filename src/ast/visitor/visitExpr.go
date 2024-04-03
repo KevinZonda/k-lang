@@ -11,6 +11,14 @@ func (v *AntlrVisitor) visitExprWithLambda(ctx parser.IExprWithLambdaContext) no
 	if ctx == nil {
 		return nil
 	}
+	if ctx.GetTriCond() != nil {
+		return &node.TrinaryOperExpr{
+			Token:   token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
+			Cond:    v.visitExpr(ctx.GetTriCond()),
+			IfTrue:  v.visitExprWithLambda(ctx.GetIfTrue()),
+			IfFalse: v.visitExprWithLambda(ctx.GetIfFalse()),
+		}
+	}
 	if ctx.GetCallExpr() != nil {
 		return &node.FuncCall{
 			Token:    token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
@@ -78,6 +86,15 @@ func (v *AntlrVisitor) visitExpr(ctx parser.IExprContext) node.Expr {
 	}
 	if ctx.Ref() != nil {
 		return v.visitRefExpr(ctx)
+	}
+	if ctx.GetTriCond() != nil {
+		return &node.TrinaryOperExpr{
+			Token:   token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
+			Cond:    v.visitExpr(ctx.GetTriCond()),
+			IfTrue:  v.visitExpr(ctx.GetIfTrue()),
+			IfFalse: v.visitExpr(ctx.GetIfFalse()),
+		}
+
 	}
 	if ctx.GetOP() != nil {
 		return v.visitBinaryExpr(ctx)

@@ -27,3 +27,22 @@ func (i *BinaryOperExpr) GetToken() token.Token {
 }
 
 var _ Expr = (*BinaryOperExpr)(nil)
+
+type TrinaryOperExpr struct {
+	Token   token.Token
+	Cond    Expr
+	IfTrue  Expr
+	IfFalse Expr
+}
+
+func (a *TrinaryOperExpr) expr() {}
+func (i *TrinaryOperExpr) TokenValue() string {
+	return "?"
+}
+func (i *TrinaryOperExpr) String() string {
+	return fmt.Sprintf("{Cond=%s\nIfTrue=%s\nIfFalse=%s}\n", i.Cond, i.IfTrue, i.IfFalse)
+}
+
+func (i *TrinaryOperExpr) GetToken() token.Token {
+	return i.Token
+}

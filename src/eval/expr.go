@@ -33,6 +33,8 @@ func (e *Eval) evalExpr(n node.Expr, keepRef bool) ExprResult {
 		return e.EvalDotExpr(expr)
 	case *node.BinaryOperExpr:
 		return exprVal(e.EvalBinOperExpr(expr))
+	case *node.TrinaryOperExpr:
+		return exprVal(e.EvalTrinaryOperExpr(expr))
 	case *node.UnaryOperExpr:
 		return exprVal(e.EvalUnaryExpr(expr))
 	case *node.IntLiteral:

@@ -32,3 +32,12 @@ func (e *Eval) EvalUnaryExpr(n *node.UnaryOperExpr) any {
 		panic("eval unary expr not supported type: " + reflect.TypeOf(val).String())
 	}
 }
+
+func (e *Eval) EvalTrinaryOperExpr(n *node.TrinaryOperExpr) any {
+	e.currentToken = n.GetToken()
+	cond := e.EvalExpr(n.Cond).EnsureValue().(bool)
+	if cond {
+		return e.EvalExpr(n.IfTrue).EnsureValue()
+	}
+	return e.EvalExpr(n.IfFalse).EnsureValue()
+}

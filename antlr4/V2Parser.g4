@@ -58,9 +58,12 @@ expr
     | literal
     | initializer
     | expr indexes
+    | TriCond=expr Question IfTrue=expr Col IfFalse=expr
     ;
 
-exprWithLambda : lambda | expr | CallExpr=lambda LParen funcCallArgs? RParen;
+exprWithLambda : lambda | expr
+               | TriCond=expr Question IfTrue=exprWithLambda Col IfFalse=exprWithLambda
+               | CallExpr=lambda LParen funcCallArgs? RParen;
 
 funcCall : Identifier LParen funcCallArgs? RParen ;
 funcCallArgs : exprWithLambda (Comma exprWithLambda)*;
