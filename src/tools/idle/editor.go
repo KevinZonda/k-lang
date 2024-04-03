@@ -226,12 +226,8 @@ func (w *EditorW) InvokeUserRepl() {
 	w.ReplE.AppendEndUnsafe(cmd + "\n")
 
 	rst := w.runCode(cmd, true, "")
-	var val any
-	if rst.HasReturn {
-		val = rst.ReturnValue
-	} else if rst.IsLastExpr {
-		val = rst.LastExprVal
-	} else {
+	val, ok := rst.Value()
+	if !ok {
 		goto end
 	}
 	w.ReplE.SmartNewLineUnsafe()

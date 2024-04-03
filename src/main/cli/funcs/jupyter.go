@@ -73,8 +73,9 @@ func (i *replBasedInterpreter) Eval(code string) (values []any, err error) {
 	if rst.IsPanic {
 		return nil, fmt.Errorf(rst.PanicMsg)
 	}
-	if rst.IsLastExpr && rst.LastExprVal != nil {
-		values = append(values, rst.LastExprVal)
+	val, ok := rst.Value()
+	if ok && val != nil {
+		values = append(values, val)
 	}
 	return values, nil
 }

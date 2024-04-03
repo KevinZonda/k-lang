@@ -8,7 +8,6 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/memory"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/reserved"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
-	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/tools/visualizer"
 )
 
 func (e *Eval) evalExprs(exprs ...node.Expr) []any {
@@ -75,11 +74,11 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) ExprResult {
 			case 0:
 				return exprVal("")
 			case 1:
-				return exprVal(visualizer.TreeAny(nil, "", args[0]).String())
+				return exprVal(obj.TreeAnyW("", args[0], true).String())
 			default:
 				rst := ""
 				for i, arg := range args {
-					rst += fmt.Sprintf("arg %d: %v\n", i, visualizer.TreeAny(nil, "", arg).String())
+					rst += fmt.Sprintf("arg %d: %v\n", i, obj.TreeAnyW("", arg, true).String())
 				}
 				return exprVal(rst)
 			}

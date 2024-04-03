@@ -1,7 +1,6 @@
 package visualizer_test
 
 import (
-	"encoding/json"
 	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
@@ -35,18 +34,12 @@ y.val = struct {
 	e.DoSafely(ast)
 	m := e.GetMemory()
 	obj, _ := m.Bottom().Get("x")
-	j := visualizer.TreeAny(nil, "x", obj)
+	j := visualizer.TreeAnyW("x", obj, false)
 	// jout(j)
 
 	fmt.Println(j.String())
 
 	k := visualizer.Visualize("x", obj)
 	fmt.Println(k.StringIdent(0))
-
-}
-
-func jout(v any) {
-	bs, _ := json.MarshalIndent(v, "", "  ")
-	fmt.Println(string(bs))
 
 }
