@@ -108,7 +108,7 @@ func runRepl(stdout writer, code string) any {
 		}
 		return nil
 	}
-	val := rst.Value()
+	val, _ := rst.Value()
 	return val
 }
 
