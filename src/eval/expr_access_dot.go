@@ -37,7 +37,7 @@ func (e *Eval) EvalPropertyAfterScope(scope any, property node.Expr) ExprResult 
 	default:
 		panic("Not Implemented EvalPropertyAfterScope " + reflect.TypeOf(property).String())
 	}
-	scope, _ = e.unboxObj(scope)
+	scope, _ = obj.Unbox(scope)
 	switch leftT := scope.(type) {
 	case *obj.StructField:
 		if leftT.ParentEval != nil && leftT.ParentEval != e {
@@ -52,7 +52,7 @@ func (e *Eval) EvalPropertyAfterScope(scope any, property node.Expr) ExprResult 
 			panic("No Access To Private Function: " + actualPpt)
 		}
 		if o, ok := leftT.memory.Bottom().Get(actualPpt); ok {
-			v, _ := leftT.unboxObj(o)
+			v, _ := obj.Unbox(o)
 			return exprVal(v)
 		}
 		panic("No Property Found: " + actualPpt)
@@ -76,7 +76,7 @@ func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) ExprRe
 	_fc.Caller = funcCall.Caller
 	_fc.Args = funcCall.Args
 	_fc.Token = funcCall.Token
-	scope, _ = e.unboxObj(scope)
+	scope, _ = obj.Unbox(scope)
 
 	switch scopeT := scope.(type) {
 	case *Eval:

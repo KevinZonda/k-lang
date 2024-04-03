@@ -3,6 +3,7 @@ package visualizer_test
 import (
 	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/tools/visualizer"
 	"testing"
@@ -33,13 +34,13 @@ y.val = struct {
 	ast, _ := parserHelper.Ast(code)
 	e.DoSafely(ast)
 	m := e.GetMemory()
-	obj, _ := m.Bottom().Get("x")
-	j := visualizer.TreeAnyW("x", obj, false)
+	obj2, _ := m.Bottom().Get("x")
+	j := obj.TreeAnyW("x", obj2, false)
 	// jout(j)
 
 	fmt.Println(j.String())
 
-	k := visualizer.Visualize("x", obj)
+	k := visualizer.Visualize("x", obj2)
 	fmt.Println(k.StringIdent(0))
 
 }

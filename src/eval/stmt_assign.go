@@ -92,9 +92,9 @@ func (e *Eval) EvalAssignStmtX(n *node.AssignStmt, assignee *node.Assignee, valu
 	var from any = e
 
 	for i, bvar := range nVar.Value[:len(nVar.Value)-1] {
-		from, _ = e.unboxObj(from)
+		from, _ = obj.Unbox(from)
 		from = e.evalObjByField(from, i == 0, bvar.Name.Value)
-		from, _ = e.unboxObj(from)
+		from, _ = obj.Unbox(from)
 		from = e.evalObjByIndex(from, bvar.Index)
 	}
 	// fmt.Println("FROM", reflect.TypeOf(from))
@@ -175,9 +175,9 @@ func (e *Eval) EvalAssignStmtX(n *node.AssignStmt, assignee *node.Assignee, valu
 		// TODO: TEST
 		// TODO: INDEX!
 		from = e.evalObjByField(from, len(nVar.Value) == 0, lastVar.Name.Value)
-		from, _ = e.unboxObj(from)
+		from, _ = obj.Unbox(from)
 		from = e.evalObjByIndex(from, lastVar.Index[0:len(lastVar.Index)-1])
-		from, _ = e.unboxObj(from)
+		from, _ = obj.Unbox(from)
 		e.assignObjIndexValue(from, lastVar.Index[len(lastVar.Index)-1], v)
 	}
 
@@ -215,33 +215,13 @@ func (e *Eval) evalObjByField(from any, canFromLocalVar bool, field string) any 
 	return nil
 }
 
-func (e *Eval) unboxObj(from any) (any, bool) {
-	if from == nil {
-		return nil, false
-	}
-	switch fromT := from.(type) {
-	case *obj.Object:
-		return fromT.Value(), true
-	}
-	return from, false
-}
-
-func (e *Eval) unboxToEnd(from any) any {
-	switch vT := from.(type) {
-	case *obj.Object:
-		return e.unboxToEnd(vT.Value())
-	default:
-		return from
-	}
-}
-
 func (e *Eval) evalObjByIndex(from any, indexes []node.Expr) any {
 	if len(indexes) == 0 {
 		return from
 	}
 
 	for _, idxExpr := range indexes {
-		from, _ = e.unboxObj(from)
+		from, _ = obj.Unbox(from)
 		idx := e.EvalExpr(idxExpr).EnsureValue()
 		switch fromT := from.(type) {
 		case []any:

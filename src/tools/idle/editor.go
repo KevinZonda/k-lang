@@ -226,7 +226,7 @@ func (w *EditorW) InvokeUserRepl() {
 	w.ReplE.AppendEndUnsafe(cmd + "\n")
 
 	rst := w.runCode(cmd, true, "")
-	val, ok := rst.Value()
+	val, ok := rst.VizValue()
 	if !ok {
 		goto end
 	}

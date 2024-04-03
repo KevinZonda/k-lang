@@ -99,7 +99,7 @@ func (r *Repl) Repl(input string) {
 		}
 
 		if !r.dontPrintIt {
-			if val, ok := rst.Value(); ok {
+			if val, ok := rst.VizValue(); ok {
 				fmt.Println("<", val)
 			}
 		}

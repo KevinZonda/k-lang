@@ -13,6 +13,22 @@ func TreeAnyW(name string, o any, ignoreFx bool) treeprint.Tree {
 	return treeAny(&context{addrs: map[string]bool{}}, t, name, o, ignoreFx)
 }
 
+func TreeAnyT(name string, o any, ignoreFx bool) any {
+	o = UnboxToEnd(o)
+	switch t := o.(type) {
+	case int, float64, string, bool:
+		return t
+	case IVisualize:
+		return t.Visualize()
+	default:
+		return TreeAnyW(name, o, ignoreFx).String()
+	}
+}
+
+type IVisualize interface {
+	Visualize() string
+}
+
 func treeAny(ctx *context, t treeprint.Tree, name string, o any, ignoreFx bool) treeprint.Tree {
 	if o == nil {
 		t.SetValue(name + ": <nil>")
@@ -31,11 +47,6 @@ func treeAny(ctx *context, t treeprint.Tree, name string, o any, ignoreFx bool) 
 	case map[any]any:
 		t.SetValue(name + ": map")
 		for k, v := range vT {
-			switch kT := k.(type) {
-			case IRawString:
-				treeAny(ctx, t.AddBranch(""), kT.RawString(), v, ignoreFx)
-				continue
-			}
 			treeAny(ctx, t.AddBranch(""), fmt.Sprint(k), v, ignoreFx)
 		}
 		return t
@@ -56,10 +67,6 @@ func treeAny(ctx *context, t treeprint.Tree, name string, o any, ignoreFx bool) 
 	default:
 		return nil
 	}
-}
-
-type IRawString interface {
-	RawString() string
 }
 
 func (c *context) addAddr(addr any) {

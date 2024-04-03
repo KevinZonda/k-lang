@@ -126,13 +126,6 @@ const (
 )
 
 func (o *Object) String() string {
-	if VizAny {
-		return o.Visualize()
-	}
-	return o.RawString()
-}
-
-func (o *Object) RawString() string {
 	if o == nil {
 		return "<nil object>"
 	}
@@ -205,5 +198,7 @@ func (o *Object) Visualize() string {
 			return TreeAnyW("struct", o, false).String()
 		}
 	}
-	return o.RawString()
+	return o.String()
 }
+
+var _ IVisualize = &StructField{}

@@ -68,17 +68,17 @@ func (e *Eval) EvalFuncCall(fc *node.FuncCall) ExprResult {
 	funcName := fc.Caller.Value
 	fx, ok := e.memory.Get(funcName)
 	if !ok || !(fx.Is(obj.Func, obj.Lambda)) {
-		if (funcName == "visualize" || funcName == "visualise") && e.visualise {
+		if funcName == "visualize" || funcName == "visualise" {
 			args := e.evalExprsRef(fc.Args...)
 			switch len(args) {
 			case 0:
 				return exprVal("")
 			case 1:
-				return exprVal(obj.TreeAnyW("", args[0], true).String())
+				return exprVal(obj.TreeAnyT("", args[0], true))
 			default:
 				rst := ""
 				for i, arg := range args {
-					rst += fmt.Sprintf("arg %d: %v\n", i, obj.TreeAnyW("", arg, true).String())
+					rst += fmt.Sprintf("arg %d: %s\n", i, obj.TreeAnyT("", arg, true))
 				}
 				return exprVal(rst)
 			}

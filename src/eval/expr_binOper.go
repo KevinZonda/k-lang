@@ -4,6 +4,7 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval/binaryOperEval"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 )
 
 func (e *Eval) EvalBinOperExpr(n *node.BinaryOperExpr) any {
@@ -15,8 +16,8 @@ func (e *Eval) EvalBinOperExpr(n *node.BinaryOperExpr) any {
 		return false
 	}
 	right := e.EvalExpr(n.Right).EnsureValue()
-	left = e.unboxToEnd(left)
-	right = e.unboxToEnd(right)
+	left = obj.UnboxToEnd(left)
+	right = obj.UnboxToEnd(right)
 	e.currentToken = n.GetToken()
 	return binaryOperEval.BinaryOper(n.Token.Kind, left, right)
 }

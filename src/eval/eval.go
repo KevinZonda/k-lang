@@ -23,8 +23,6 @@ type Eval struct {
 
 	FeatUnknownVarNil bool
 	FeatRefAll        bool
-
-	visualise bool
 }
 
 func (e *Eval) SetPath(path string) {
@@ -53,7 +51,7 @@ func New() *Eval {
 }
 
 func (e *Eval) WithVisualize() *Eval {
-	e.visualise = true
+	obj.VizAny = true
 	return e
 }
 

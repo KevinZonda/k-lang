@@ -26,13 +26,6 @@ func (s *StructField) With(key string, value any) *StructField {
 }
 
 func (s *StructField) String() string {
-	if VizAny {
-		return s.Visualize()
-
-	}
-	return s.RawString()
-}
-func (s *StructField) RawString() string {
 	if s == nil {
 		return "<nil struct>"
 	}
@@ -67,3 +60,5 @@ func (s *StructField) RawString() string {
 func (s *StructField) Visualize() string {
 	return TreeAnyW("struct", s, false).String()
 }
+
+var _ IVisualize = &StructField{}

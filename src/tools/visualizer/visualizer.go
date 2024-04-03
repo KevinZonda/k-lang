@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
-	"github.com/xlab/treeprint"
 	"reflect"
 	"strings"
 )
@@ -42,12 +41,6 @@ func VisualizeAny(name string, o any) *VNode {
 		return &VNode{Val: vT, Name: name}
 	}
 }
-
-func TreeAnyW(name string, o any, ignoreFx bool) treeprint.Tree {
-	return obj.TreeAnyW(name, o, ignoreFx)
-}
-
-
 
 func Visualize(name string, o *obj.Object) *VNode {
 	if o == nil {

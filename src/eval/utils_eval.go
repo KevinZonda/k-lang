@@ -39,6 +39,17 @@ func (rst DetailedRunResult) Value() (val any, ok bool) {
 	return nil, false
 }
 
+func (rst DetailedRunResult) VizValue() (val any, ok bool) {
+	valA, ok := rst.Value()
+	if !ok {
+		return "", false
+	}
+	if obj.VizAny {
+		return obj.TreeAnyT("", valA, false), true
+	}
+	return fmt.Sprint(valA), true
+}
+
 func (rst DetailedRunResult) PrintPanic() DetailedRunResult {
 	if !rst.IsPanic {
 		return rst

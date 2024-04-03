@@ -77,8 +77,9 @@ func (e *Eval) loadBuiltInFeature(name string) bool {
 	case "feat/refAll":
 		e.FeatRefAll = val
 	case "feat/visualise", "feat/visualize":
-		e.visualise = val
+		obj.VizAny = val
 	default:
+		panic("Unknown feature: " + name)
 		return false
 	}
 	return true

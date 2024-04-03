@@ -2,6 +2,7 @@ package eval
 
 import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/token"
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	"reflect"
 
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
@@ -9,7 +10,7 @@ import (
 
 func (e *Eval) EvalUnaryExpr(n *node.UnaryOperExpr) any {
 	val := e.EvalExpr(n.Expr).EnsureValue()
-	val = e.unboxToEnd(val)
+	val = obj.UnboxToEnd(val)
 	e.currentToken = n.GetToken()
 
 	factor := 1
