@@ -24,23 +24,23 @@ type DetailedRunResult struct {
 	PanicMsg     string
 	CurrentToken token.Token
 	LastExprVal  any
-	IsLastExpr   bool
+	HasLastExpr  bool
 	stderr       io.Writer
 }
 
-// Value returns the value of the last expression or the return value of the function
-func (rst DetailedRunResult) Value() (val any, ok bool) {
+// value returns the value of the last expression or the return value of the function
+func (rst DetailedRunResult) value() (val any, ok bool) {
 	if rst.HasReturn {
 		return rst.ReturnValue, true
 	}
-	if rst.IsLastExpr {
+	if rst.HasLastExpr {
 		return rst.LastExprVal, true
 	}
 	return nil, false
 }
 
 func (rst DetailedRunResult) VizValue() (val any, ok bool) {
-	valA, ok := rst.Value()
+	valA, ok := rst.value()
 	if !ok {
 		return "", false
 	}

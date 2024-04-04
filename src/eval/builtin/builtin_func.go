@@ -10,7 +10,7 @@ func Print(b obj.StdIO, v []any) any {
 	for _, arg := range v {
 		switch arg.(type) {
 		default:
-			fmt.Fprint(b.GetStdout(), arg)
+			fmt.Fprint(b.GetStdOut(), arg)
 		}
 	}
 	return nil
@@ -20,7 +20,7 @@ func Println(b obj.StdIO, v []any) any {
 	for _, arg := range v {
 		Print(b, []any{arg})
 	}
-	fmt.Fprintln(b.GetStdout())
+	fmt.Fprintln(b.GetStdOut())
 	return nil
 }
 

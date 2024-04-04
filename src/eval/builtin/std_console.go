@@ -29,7 +29,7 @@ func NewStdConsoleLib(b obj.StdIO) *StdConsoleLib {
 
 	l.F = map[string]*node.FuncBlock{
 		"readln": FxToFuncBlock(func() string {
-			reader := bufio.NewReader(l.IO.GetStdin())
+			reader := bufio.NewReader(l.IO.GetStdIn())
 			text, err := reader.ReadString('\n')
 			if err != nil {
 				panic(err)

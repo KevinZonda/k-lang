@@ -3,7 +3,6 @@ package obj
 import (
 	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/ast/node"
-	"io"
 	"strings"
 )
 
@@ -17,16 +16,9 @@ type ILibraryCall interface {
 	Value() any
 }
 
-type StdIO interface {
-	GetStdin() io.Reader
-	GetStdout() io.Writer
-	GetStderr() io.Writer
-}
-
 type Object struct {
-	Kind Kind
-	val  any
-	// TODO: Type
+	Kind      Kind
+	val       any
 	Ref       *Object
 	Type      *node.Type
 	Immutable bool

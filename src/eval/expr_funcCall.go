@@ -213,7 +213,7 @@ end:
 }
 
 func (e *Eval) Mem() {
-	e.memory.Println(e.std.StdOut, e.PtrAddr())
+	e.memory.Println(e.std.GetStdOut(), e.PtrAddr())
 }
 
 func (e *Eval) MemStr() string {

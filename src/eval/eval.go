@@ -16,7 +16,7 @@ type Eval struct {
 	memory       *memory.Memory
 	basePath     string
 	currentToken token.Token
-	std          IO
+	std          obj.StdIO
 
 	FeatStaticType bool
 	FeatVerbose    bool
@@ -46,7 +46,7 @@ func New() *Eval {
 
 	return &Eval{
 		memory: memory.NewMemory(),
-		std:    NewIO(),
+		std:    obj.DefaultIO(),
 	}
 }
 
@@ -83,7 +83,7 @@ func (e *Eval) runAst(ast tree.Ast, breaks ...string) DetailedRunResult {
 			if idx != len(ast)-1 {
 				continue
 			}
-			result.IsLastExpr = exprR.HasValue
+			result.HasLastExpr = exprR.HasValue
 			result.LastExprVal = exprR.Value
 		case node.Stmt:
 			e.EvalStmt(nT)
@@ -126,7 +126,7 @@ func (e *Eval) Do(ast tree.Ast) DetailedRunResult {
 
 func (e *Eval) DoSafely(ast tree.Ast) (rst DetailedRunResult) {
 	if len(ast) == 0 {
-		rst.stderr = e.GetStdErr()
+		rst.stderr = e.std.GetStdErr()
 		return
 	}
 	defer func() {

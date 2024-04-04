@@ -1,50 +1,30 @@
 package eval
 
 import (
+	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/obj"
 	"io"
-	"os"
 )
 
 // region STD {IN, OUT, ERR}
 
 func (e *Eval) LoadStdFromOS() {
-	e.std.StdOut = os.Stdout
-	e.std.StdIn = os.Stdin
-	e.std.StdErr = os.Stderr
+	e.std = obj.DefaultIO()
 }
 
 func (e *Eval) SetStdOut(out io.Writer) {
-	e.std.StdOut = out
+	e.std.SetStdOut(out)
 }
 
 func (e *Eval) SetStdIn(in io.Reader) {
-	e.std.StdIn = in
+	e.std.SetStdIn(in)
 }
 
 func (e *Eval) SetStdErr(err io.Writer) {
-	e.std.StdErr = err
+	e.std.SetStdErr(err)
 }
 
-func (e *Eval) GetStdOut() io.Writer {
-	return e.std.StdOut
-}
-
-func (e *Eval) GetStdIn() io.Reader {
-	return e.std.StdIn
-}
-
-func (e *Eval) GetStdErr() io.Writer {
-	return e.std.StdErr
-}
-
-func (e *Eval) GetIO() IO {
+func (e *Eval) GetIO() obj.StdIO {
 	return e.std
-}
-
-func (e *Eval) ResetStd() {
-	e.std.StdOut = os.Stdout
-	e.std.StdIn = os.Stdin
-	e.std.StdErr = os.Stderr
 }
 
 //endregion
