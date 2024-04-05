@@ -19,10 +19,13 @@ func (v *AntlrVisitor) visitExprWithLambda(ctx parser.IExprWithLambdaContext) no
 			IfFalse: v.visitExprWithLambda(ctx.GetIfFalse()),
 		}
 	}
+	if ctx.LParen() != nil {
+		return v.visitExprWithLambda(ctx.ExprWithLambda(0))
+	}
 	if ctx.GetCallExpr() != nil {
 		return &node.FuncCall{
 			Token:    token.FromAntlrToken(ctx.GetStart()).WithEnd(ctx.GetStop()),
-			CallExpr: v.visitLambda(ctx.GetCallExpr()),
+			CallExpr: v.visitExprWithLambda(ctx.GetCallExpr()),
 			Args:     v.visitFuncCallArgs(ctx.FuncCallArgs()),
 		}
 	}
