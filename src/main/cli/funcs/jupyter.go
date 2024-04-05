@@ -9,7 +9,6 @@ import (
 	"github.com/KevinZonda/go-jupyter"
 	"log"
 	"runtime"
-	"strings"
 )
 
 func JupyterKernel(file string) {
@@ -49,17 +48,9 @@ func (i *replBasedInterpreter) CompleteWords(code string, cursorPos int) (prefix
 }
 
 func (i *replBasedInterpreter) Eval(code string) (values []any, err error) {
-	parser := parserHelper.FromString(code)
-	ast := parser.Ast()
-
-	if len(parser.Errors()) > 0 {
-		sb := strings.Builder{}
-		for _, e := range parser.Errors() {
-			sb.WriteString("[Error] ")
-			sb.WriteString(e.Error())
-			sb.WriteString("\n")
-		}
-		return nil, fmt.Errorf(strings.TrimSpace(sb.String()))
+	ast, errs := parserHelper.Ast(code)
+	if len(errs) > 0 {
+		return nil, fmt.Errorf(errs.String())
 	}
 
 	if i.e == nil {

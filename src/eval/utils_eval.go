@@ -67,5 +67,5 @@ func (rst DetailedRunResult) PanicString() string {
 		return ""
 	}
 	tk := rst.CurrentToken
-	return fmt.Sprintf("%s at position L%d,%d-L%d,%d\n", rst.PanicMsg, tk.BeginLine, tk.BeginColumn, tk.EndLine, tk.EndColumn)
+	return fmt.Sprintf("%s at position L%d,%d-L%d,%d", rst.PanicMsg, tk.BeginLine, tk.BeginColumn, tk.EndLine, tk.EndColumn)
 }
