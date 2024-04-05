@@ -64,7 +64,7 @@ expr
 exprWithLambda : lambda | expr
                | TriCond=expr Question IfTrue=exprWithLambda Col IfFalse=exprWithLambda
                | CallExpr=exprWithLambda LParen funcCallArgs? RParen
-               | LParen exprWithLambda RParen;
+               | LParen ParenExpr=exprWithLambda RParen;
 
 funcCall : Identifier LParen funcCallArgs? RParen ;
 funcCallArgs : exprWithLambda (Comma exprWithLambda)*;

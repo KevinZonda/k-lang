@@ -4694,6 +4694,9 @@ type IExprWithLambdaContext interface {
 	// GetIfFalse returns the IfFalse rule contexts.
 	GetIfFalse() IExprWithLambdaContext
 
+	// GetParenExpr returns the ParenExpr rule contexts.
+	GetParenExpr() IExprWithLambdaContext
+
 	// SetCallExpr sets the CallExpr rule contexts.
 	SetCallExpr(IExprWithLambdaContext)
 
@@ -4705,6 +4708,9 @@ type IExprWithLambdaContext interface {
 
 	// SetIfFalse sets the IfFalse rule contexts.
 	SetIfFalse(IExprWithLambdaContext)
+
+	// SetParenExpr sets the ParenExpr rule contexts.
+	SetParenExpr(IExprWithLambdaContext)
 
 	// Getter signatures
 	Lambda() ILambdaContext
@@ -4723,11 +4729,12 @@ type IExprWithLambdaContext interface {
 
 type ExprWithLambdaContext struct {
 	antlr.BaseParserRuleContext
-	parser   antlr.Parser
-	CallExpr IExprWithLambdaContext
-	TriCond  IExprContext
-	IfTrue   IExprWithLambdaContext
-	IfFalse  IExprWithLambdaContext
+	parser    antlr.Parser
+	CallExpr  IExprWithLambdaContext
+	TriCond   IExprContext
+	IfTrue    IExprWithLambdaContext
+	IfFalse   IExprWithLambdaContext
+	ParenExpr IExprWithLambdaContext
 }
 
 func NewEmptyExprWithLambdaContext() *ExprWithLambdaContext {
@@ -4765,6 +4772,8 @@ func (s *ExprWithLambdaContext) GetIfTrue() IExprWithLambdaContext { return s.If
 
 func (s *ExprWithLambdaContext) GetIfFalse() IExprWithLambdaContext { return s.IfFalse }
 
+func (s *ExprWithLambdaContext) GetParenExpr() IExprWithLambdaContext { return s.ParenExpr }
+
 func (s *ExprWithLambdaContext) SetCallExpr(v IExprWithLambdaContext) { s.CallExpr = v }
 
 func (s *ExprWithLambdaContext) SetTriCond(v IExprContext) { s.TriCond = v }
@@ -4772,6 +4781,8 @@ func (s *ExprWithLambdaContext) SetTriCond(v IExprContext) { s.TriCond = v }
 func (s *ExprWithLambdaContext) SetIfTrue(v IExprWithLambdaContext) { s.IfTrue = v }
 
 func (s *ExprWithLambdaContext) SetIfFalse(v IExprWithLambdaContext) { s.IfFalse = v }
+
+func (s *ExprWithLambdaContext) SetParenExpr(v IExprWithLambdaContext) { s.ParenExpr = v }
 
 func (s *ExprWithLambdaContext) Lambda() ILambdaContext {
 	var t antlr.RuleContext
@@ -4983,7 +4994,10 @@ func (p *V2Parser) exprWithLambda(_p int) (localctx IExprWithLambdaContext) {
 		}
 		{
 			p.SetState(341)
-			p.exprWithLambda(0)
+
+			var _x = p.exprWithLambda(0)
+
+			localctx.(*ExprWithLambdaContext).ParenExpr = _x
 		}
 		{
 			p.SetState(342)

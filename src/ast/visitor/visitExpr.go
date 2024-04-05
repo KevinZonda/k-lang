@@ -19,8 +19,8 @@ func (v *AntlrVisitor) visitExprWithLambda(ctx parser.IExprWithLambdaContext) no
 			IfFalse: v.visitExprWithLambda(ctx.GetIfFalse()),
 		}
 	}
-	if ctx.LParen() != nil {
-		return v.visitExprWithLambda(ctx.ExprWithLambda(0))
+	if ctx.GetParenExpr() != nil {
+		return v.visitExprWithLambda(ctx.GetParenExpr())
 	}
 	if ctx.GetCallExpr() != nil {
 		return &node.FuncCall{
