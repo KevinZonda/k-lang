@@ -22,7 +22,7 @@ type Repl struct {
 func (r *Repl) internalCmd(line string) bool {
 	switch line {
 	case ":exit", ":quit", ":q", ":e":
-		os.Exit(0)
+		buildconst.Exit(0)
 	case ":clear", ":c":
 		fmt.Print("\033[H\033[2J")
 		fmt.Println(buildconst.Msg())
@@ -62,7 +62,7 @@ func (r *Repl) Repl(input string) {
 		if len(errs) > 0 {
 			fmt.Fprintln(os.Stderr, errs.String())
 		} else if r.context.DoSafely(ast).PrintPanic().IsPanic {
-			os.Exit(1)
+			buildconst.Exit(1)
 		}
 	}
 	fmt.Println(buildconst.Msg())
@@ -73,7 +73,8 @@ func (r *Repl) Repl(input string) {
 	for {
 		line, err := rl.Readline()
 		if err != nil {
-			os.Exit(1)
+			buildconst.Exit(1)
+			return
 		}
 
 		if r.internalCmd(line) {

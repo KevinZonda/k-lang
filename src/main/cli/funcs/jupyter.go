@@ -24,7 +24,7 @@ func JupyterKernel(file string) {
 		}
 	}
 
-	jupyter.RunKernel(newReplInterpreter(), connInfo, jupyter.KernelInfo{
+	jupyter.RunKernel(NewReplInterpreter(), connInfo, jupyter.KernelInfo{
 		ProtocolVersion:       jupyter.ProtocolVersion,
 		Implementation:        "minikernel",
 		ImplementationVersion: "0.0.1",
@@ -39,15 +39,15 @@ func JupyterKernel(file string) {
 	})
 }
 
-type replBasedInterpreter struct {
+type ReplBasedInterpreter struct {
 	e *eval.Eval
 }
 
-func (i *replBasedInterpreter) CompleteWords(code string, cursorPos int) (prefix string, completions []string, tail string) {
+func (i *ReplBasedInterpreter) CompleteWords(code string, cursorPos int) (prefix string, completions []string, tail string) {
 	return "", nil, ""
 }
 
-func (i *replBasedInterpreter) Eval(code string) (values []any, err error) {
+func (i *ReplBasedInterpreter) Eval(code string) (values []any, err error) {
 	ast, errs := parserHelper.Ast(code)
 	if len(errs) > 0 {
 		return nil, fmt.Errorf(errs.String())
@@ -71,10 +71,10 @@ func (i *replBasedInterpreter) Eval(code string) (values []any, err error) {
 	return values, nil
 }
 
-func newReplInterpreter() *replBasedInterpreter {
-	return &replBasedInterpreter{
+func NewReplInterpreter() *ReplBasedInterpreter {
+	return &ReplBasedInterpreter{
 		e: eval.New().WithVisualize(),
 	}
 }
 
-var _ jupyter.Interpreter = (*replBasedInterpreter)(nil)
+var _ jupyter.Interpreter = (*ReplBasedInterpreter)(nil)

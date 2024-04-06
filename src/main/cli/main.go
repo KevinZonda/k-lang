@@ -45,7 +45,7 @@ func main() {
 		}
 		fmt.Fprintln(os.Stderr, "Not recognised command: "+strings.Join(os.Args[1:], " "))
 		fmt.Fprintln(os.Stderr, "Use `help` to see all commands")
-		os.Exit(1)
+		buildconst.Exit(1)
 
 	}
 }
@@ -66,4 +66,8 @@ func (a cmdArgs) GetStrOr(i int, ss *string) string {
 		}
 	}
 	return shared.GetStr(ss)
+}
+
+func M() {
+	main()
 }

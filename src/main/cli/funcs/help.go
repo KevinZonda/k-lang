@@ -2,9 +2,7 @@ package funcs
 
 import "fmt"
 
-func Help() {
-	fmt.Print(
-		`Usage of Interpreter:
+const HelpMsg = `Usage of Interpreter:
   
   Subcommands:
    *  [--input] <inputPath>:
@@ -33,5 +31,8 @@ func Help() {
 
    *  help:
       Show this help message.
-`)
+`
+
+func Help() {
+	fmt.Print(HelpMsg)
 }

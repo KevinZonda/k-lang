@@ -5,6 +5,7 @@ import (
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/lib/tester"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
+	"os"
 	"testing"
 )
 
@@ -23,22 +24,22 @@ break
 	e := eval.New()
 	fmt.Println(e.PtrAddr())
 	e.LoadStdFromOS()
-	tester.Assert(t, e.GetStdIn(), e.GetIO().GetStdin())
-	tester.Assert(t, e.GetStdErr(), e.GetIO().GetStderr())
-	tester.Assert(t, e.GetStdOut(), e.GetIO().GetStdout())
+	tester.Assert(t, e.GetIO().GetStdIn(), os.Stdin)
+	tester.Assert(t, e.GetIO().GetStdErr(), os.Stderr)
+	tester.Assert(t, e.GetIO().GetStdOut(), os.Stdout)
 
 	e.GetMemory()
-	tester.Assert(t, e.GetStdIn(), e.GetIO().GetStdin())
-	tester.Assert(t, e.GetStdErr(), e.GetIO().GetStderr())
-	tester.Assert(t, e.GetStdOut(), e.GetIO().GetStdout())
 
 	e.SetStdIn(nil)
 	e.SetStdErr(nil)
 	e.SetStdOut(nil)
-	e.ResetStd()
-	tester.Assert(t, e.GetStdIn(), e.GetIO().GetStdin())
-	tester.Assert(t, e.GetStdErr(), e.GetIO().GetStderr())
-	tester.Assert(t, e.GetStdOut(), e.GetIO().GetStdout())
+	tester.Assert(t, e.GetIO().GetStdIn(), os.Stdin)
+	tester.Assert(t, e.GetIO().GetStdErr(), os.Stderr)
+	tester.Assert(t, e.GetIO().GetStdOut(), os.Stdout)
+	e.LoadStdFromOS()
+	tester.Assert(t, e.GetIO().GetStdIn(), os.Stdin)
+	tester.Assert(t, e.GetIO().GetStdErr(), os.Stderr)
+	tester.Assert(t, e.GetIO().GetStdOut(), os.Stdout)
 
 	e.WithVisualize()
 	e.SetPath("")

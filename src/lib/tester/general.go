@@ -1,6 +1,7 @@
 package tester
 
 import (
+	"fmt"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/eval"
 	"git.cs.bham.ac.uk/projects-2023-24/xxs166/src/parserHelper"
 	"strings"
@@ -81,7 +82,14 @@ func ExpectPanic(ts *testing.T, code string, expected func(exp string) bool) {
 func PanicFx(ts *testing.T, code func(), expected func(exp string) bool) {
 	defer func() {
 		if r := recover(); r != nil {
-			if !expected(r.(string)) {
+			var err string
+			switch rT := r.(type) {
+			case string:
+				err = rT
+			default:
+				err = fmt.Sprint(r)
+			}
+			if !expected(err) {
 				ts.Fatalf("got %s", r)
 			}
 		}
