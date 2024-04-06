@@ -109,7 +109,7 @@ func NoPanic(ts *testing.T, code string) {
 	e := eval.New()
 	rst := e.DoSafely(ast)
 	if rst.IsPanic {
-		ts.Fatal("PANIC WITH:", rst.PanicMsg)
+		ts.Fatal("PANIC WITH:", rst.PanicString())
 		return
 	}
 }

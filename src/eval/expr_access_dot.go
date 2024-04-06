@@ -87,6 +87,9 @@ func (e *Eval) EvalFuncCallAfterScope(scope any, funcCall *node.FuncCall) ExprRe
 		return scopeT.EvalFuncCall(funcCall)
 	case obj.ILibrary:
 		fx := scopeT.GetFunc(funcCall.Caller.Value)
+		if fx == nil {
+			panic("No Function Found: " + funcCall.Caller.Value)
+		}
 		return e.EvalFuncBlock(fx, funcCall.Args, nil)
 		//v := scopeT.FuncCall(_fc.Caller.Value, e.evalExprs(_fc.Args...))
 		//return ExprResult{HasValue: v.HasValue(), Value: v.Value()}

@@ -21,6 +21,7 @@ func NewStdMathLib() *StdMathLib {
 			"e":  obj.NewImmutableObj(obj.Value, math.E),
 		},
 		F: map[string]*node.FuncBlock{
+			"abs":   FxToFuncBlock(math.Abs),
 			"cos":   FxToFuncBlock(math.Cos),
 			"sin":   FxToFuncBlock(math.Sin),
 			"tan":   FxToFuncBlock(math.Tan),
@@ -38,6 +39,7 @@ func NewStdMathLib() *StdMathLib {
 			"exp2":  FxToFuncBlock(math.Exp2),
 			"expm1": FxToFuncBlock(math.Expm1),
 			"log":   FxToFuncBlock(math.Log),
+			"ln":    FxToFuncBlock(math.Log),
 			"log2":  FxToFuncBlock(math.Log2),
 			"log10": FxToFuncBlock(math.Log10),
 			"log1p": FxToFuncBlock(math.Log1p),
@@ -81,6 +83,7 @@ func NewStdMathLib() *StdMathLib {
 					rand.Shuffle(len(a), func(i, j int) {
 						a[i], a[j] = a[j], a[i]
 					})
+					return
 				}
 				r := rand.New(rand.NewSource(*c.seed))
 				r.Shuffle(len(a), func(i, j int) {
@@ -101,7 +104,7 @@ func NewStdMathLib() *StdMathLib {
 				}
 				return int(*c.seed)
 			}),
-			"unsetRandSeed": FxToFuncBlock(func() {
+			"resetRandSeed": FxToFuncBlock(func() {
 				c.seed = nil
 			}),
 			"randSeedTime": FxToFuncBlock(func() {
