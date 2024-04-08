@@ -1,5 +1,7 @@
 # Final Year Project
 
+> Instruction to run the code, [click here](Instruction.md)
+
 ## Repository Structure
 
 ```tree
