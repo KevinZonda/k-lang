@@ -1,4 +1,10 @@
-# Final Year Project
+# K Language
+
+> [!NOTE]  
+> This was also my FYP (Final Year Project, aka thesis) of my undergraduate at the University of Birmingham.  
+> The latest version (commit hash) I submitted to the University is `97f26d656a9ff409bae506240da118cb8b10f53f`.
+> I also tagged it as [fyp](https://github.com/KevinZonda/k-lang/tree/fyp).  
+> You can also access it at uni's GitLab (if you have permission) at <https://git.cs.bham.ac.uk/projects-2023-24/xxs166>)
 
 > Instruction to run the code, [click here](Instruction.md)
 
