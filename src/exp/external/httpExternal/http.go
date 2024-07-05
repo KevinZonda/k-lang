@@ -37,13 +37,13 @@ func (l *Library) InvokeFunc(fxName string, args ...interface{}) common.InvokeRe
 		Args:     args,
 	}.IO())
 	rsp, err := l.hc.Do(req)
-	panicx.PanicIfNotNil(err, err)
+	panicx.NotNilErr(err)
 	defer rsp.Body.Close()
 	body, err := io.ReadAll(rsp.Body)
-	panicx.PanicIfNotNil(err, err)
+	panicx.NotNilErr(err)
 	var rspT common.InvokeResult
 	err = json.Unmarshal(body, &rspT)
-	panicx.PanicIfNotNil(err, err)
+	panicx.NotNilErr(err)
 
 	return rspT
 }

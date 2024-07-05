@@ -3,7 +3,7 @@ module git.cs.bham.ac.uk/projects-2023-24/xxs166/src
 go 1.22.2
 
 require (
-	github.com/KevinZonda/GoX v0.0.15
+	github.com/KevinZonda/GoX v0.0.18
 	github.com/KevinZonda/go-jupyter v1.0.12
 	github.com/andybalholm/brotli v1.1.0
 	github.com/antlr4-go/antlr/v4 v4.13.0

@@ -25,7 +25,7 @@ func Mod(arg string, args []string) {
 		}
 
 		err := iox.WriteAllText(module.DEFAULT_K_MOD, m.String())
-		panicx.PanicIfNotNil(err, err)
+		panicx.NotNilErr(err)
 
 	case "restore", "download":
 		mod := module.LoadFromPath(module.DEFAULT_K_MOD)

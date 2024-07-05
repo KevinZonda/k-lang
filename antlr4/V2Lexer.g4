@@ -33,7 +33,7 @@ To : '->' | '=>';
 
 Struct   : 'struct';
 Map      : 'map';
-Function : 'fn';
+Function : 'fn' | 'func';
 
 Return  : 'return';
 Case    : 'case';

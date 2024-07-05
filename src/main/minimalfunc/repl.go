@@ -26,7 +26,7 @@ func (r *Repl) internalCmd(line string) bool {
 	case ":clear", ":c":
 		fmt.Print("\033[H\033[2J")
 		fmt.Println(buildconst.Msg())
-	case ":history":
+	case ":history", ":h":
 		for idx, h := range r.history {
 			fmt.Println("[", idx, "] -> ", h)
 		}
@@ -56,7 +56,7 @@ func (r *Repl) Repl(input string) {
 
 	if input != "" {
 		str, e := iox.ReadAllText(input)
-		panicx.PanicIfNotNil(e, e)
+		panicx.NotNilErr(e)
 
 		ast, errs := parserHelper.Ast(str)
 		if len(errs) > 0 {
@@ -68,7 +68,7 @@ func (r *Repl) Repl(input string) {
 	fmt.Println(buildconst.Msg())
 
 	rl, err := consoleReader.New("> ")
-	panicx.PanicIfNotNil(err, err)
+	panicx.NotNilErr(err)
 
 	for {
 		line, err := rl.Readline()

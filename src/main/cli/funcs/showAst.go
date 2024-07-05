@@ -11,7 +11,7 @@ import (
 
 func ShowAst(input string) {
 	bs, e := iox.ReadAllByte(input)
-	panicx.PanicIfNotNil(e, e)
+	panicx.NotNilErr(e)
 	var ast tree.Ast
 	if compressor.IsCompressed(bs) {
 		var ce compressor.CompressorError

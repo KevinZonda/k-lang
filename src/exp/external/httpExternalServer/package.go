@@ -67,7 +67,7 @@ func createFuncHandler(f reflect.Value, fxArg common.FuncArgs) func(ctx *gin.Con
 	return func(ctx *gin.Context) {
 		var req httpExternal.FuncCallRequest
 		err := ctx.BindJSON(&req)
-		panicx.PanicIfNotNil(err, err)
+		panicx.NotNilErr(err)
 
 		req.Args = common.ConvertArg(req.Args, fxArg)
 		var args []reflect.Value

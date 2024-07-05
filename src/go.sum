@@ -1,7 +1,7 @@
 github.com/JohnCGriffin/overflow v0.0.0-20211019200055-46fa312c352c h1:RGWPOewvKIROun94nF7v2cua9qP+thov/7M50KEoeSU=
 github.com/JohnCGriffin/overflow v0.0.0-20211019200055-46fa312c352c/go.mod h1:X0CRv0ky0k6m906ixxpzmDRLvX58TFUKS2eePweuyxk=
-github.com/KevinZonda/GoX v0.0.15 h1:u+G41/srg8c6bmI6Oqw9iBwYiSQk9FKp9fv/YBZadFk=
-github.com/KevinZonda/GoX v0.0.15/go.mod h1:WHV3YUyG+ou3wuUgwO4SRhMiKxLTVK5inajmtR1MUXo=
+github.com/KevinZonda/GoX v0.0.18 h1:tOjT7HjRHcBS87Ef2sGM1dJSIOrZQK4lr1GLbLUZmms=
+github.com/KevinZonda/GoX v0.0.18/go.mod h1:MGnB0SQRtm9LAr2uP5DxOBtXf96+cD+cBQ50jmMih2A=
 github.com/KevinZonda/go-jupyter v1.0.12 h1:NXZB87INDQ55rWUQZEHugwPAcSew9aLwQnvVag8HOSg=
 github.com/KevinZonda/go-jupyter v1.0.12/go.mod h1:gdKZz+bZSwb7VUZvLhaxX2ERRn3LUmZRq37KdKAk5pA=
 github.com/agnivade/levenshtein v1.1.1 h1:QY8M92nrzkmr798gCo3kmMyqXFzdQVpxLlGPRBij0P8=

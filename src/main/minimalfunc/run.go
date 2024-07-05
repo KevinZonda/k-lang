@@ -14,7 +14,7 @@ import (
 func Run(input string) {
 	if input == "" || input == "." || strings.HasSuffix(input, ".mod") {
 		bs, e := iox.ReadAllText(module.DEFAULT_K_MOD)
-		panicx.PanicIfNotNil(e, e)
+		panicx.NotNilErr(e)
 		mod := module.LoadFromText(string(bs))
 		input = mod.Entry
 		if input == "" {
@@ -23,7 +23,7 @@ func Run(input string) {
 	}
 	bs, e := iox.ReadAllByte(input)
 
-	panicx.PanicIfNotNil(e, e)
+	panicx.NotNilErr(e)
 	var ast tree.Ast
 
 	if compressor.IsCompressed(bs) {

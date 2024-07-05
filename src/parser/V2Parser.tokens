@@ -81,7 +81,6 @@ NewLine=58
 '--'=27
 'struct'=29
 'map'=30
-'fn'=31
 'return'=32
 'case'=33
 'default'=34
