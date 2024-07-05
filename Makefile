@@ -25,6 +25,14 @@ else
 	./scripts/src.sh
 endif
 
+publish:
+ifeq ($(OS),Windows_NT)
+	@echo '=== NOT SUPPORT ==='
+else
+	echo '=== Source Code Builder ==='
+	./scripts/publish.sh
+endif
+
 mini:
 ifeq ($(OS),Windows_NT)
 	@echo '=== Source Code Builder ==='
