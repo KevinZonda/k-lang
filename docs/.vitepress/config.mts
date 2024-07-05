@@ -21,7 +21,9 @@ export default defineConfig({
       {
         text: 'Syntax', 
         items: [
+          { text: 'Define Variable', link: '/syntax/define-var' },
           { text: 'Loop', link: '/syntax/loop' },
+          { text: 'Essential Intenal Functions', link: '/syntax/ess-internal-fx'}
         ] 
       },
       {
