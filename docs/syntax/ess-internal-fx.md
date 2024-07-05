@@ -65,7 +65,7 @@ If you want to print a new line with `print`, you may use `\n` inside the string
 
 ## `range(x)`
 
-The `range` function is used to create a range of numbers. It is very useful when you want to iterate over a list of numbers. The `range(x)` will create a range from 0 to x-1, in math we write it as $[0, x)$ (or $[0, x-1)$).
+The `range` function is used to create a range of numbers. It is very useful when you want to iterate over a list of numbers. The `range(x)` will create a range from 0 to x-1, in math we write it as $[0, x)$ (or $[0, x-1]$).
 
 Here is an example of how to use the `range` function:
 

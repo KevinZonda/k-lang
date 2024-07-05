@@ -2,15 +2,53 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  locales: {
+    root: {
+      label: 'English',
+      lang: 'en'
+    },
+    zh: {
+      label: '中文',
+      lang: 'zh',
+      title: "K 语言文档",
+      themeConfig: {
+        nav: [
+          { text: '文档主页', link: '/' },
+          { text: '快速开始', link: '/get-started' },
+        ],
+        sidebar: [
+        {
+          text: '快速开始', items: [
+            { text: '快速开始', link: '/zh/get-started' },
+          ]
+        },
+        {
+        text: '语法', 
+        items: [
+          { text: '定义变量', link: '/zh/syntax/define-var' },
+          { text: '循环', link: '/zh/syntax/loop' },
+          { text: '基本的内置函数', link: '/zh/syntax/ess-internal-fx'}
+        ] 
+      },
+      {
+        text: '编辑器集成',
+        items: [
+          { text: 'Jupyter', link: '/zh/editor/jupyter' },
+          { text: 'VSCode', link: '/zh/editor/vscode' },
+        ] 
+      },
+    ],
+      }
+    }
+  },
   title: "K Language Document",
   description: "K Language Document",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Get Started', link: '/get-started' }
+      { text: 'Get Started', link: '/get-started' },
     ],
-
     sidebar: [
       {
         text: 'Get Started',
