@@ -23,12 +23,13 @@ export default defineConfig({
           ]
         },
         {
-        text: '语法', 
-        items: [
-          { text: '定义变量', link: '/zh/syntax/define-var' },
-          { text: '循环', link: '/zh/syntax/loop' },
-          { text: '基本的内置函数', link: '/zh/syntax/ess-internal-fx'}
-        ] 
+          text: '语法', 
+          items: [
+            { text: '定义变量', link: '/zh/syntax/define-var' },
+            { text: '基本的内置函数', link: '/zh/syntax/ess-internal-fx'},
+            { text: '注释', link: '/zh/syntax/comment' },
+            { text: '循环', link: '/zh/syntax/loop' }
+          ] 
       },
       {
         text: '编辑器集成',
