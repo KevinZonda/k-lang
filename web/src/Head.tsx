@@ -21,7 +21,10 @@ export const highlightColor = '#3182ce';
 export function NavBar() {
     return <Flex padding={'50px'}  paddingBottom={0}>
         <Spacer></Spacer>
-        <Link color='black' href='https://docs.k-lang.org' _hover={{color: highlightColor, textDecoration: 'underline'}}>Docs</Link>
+        <Link style={{marginLeft: '6px', marginRight: '6px'}} color='black' href='https://docs.k-lang.org' _hover={{color: highlightColor, textDecoration: 'underline'}}>Docs</Link>
+        <Link style={{marginLeft: '6px', marginRight: '6px'}} color='black' href='https://ftp.k-lang.org' _hover={{color: highlightColor, textDecoration: 'underline'}}>FTP</Link>
+        <Link style={{marginLeft: '6px', marginRight: '6px'}} color='black' href='https://playground.k-lang.org' _hover={{color: highlightColor, textDecoration: 'underline'}}>Try</Link>
+        <Link style={{marginLeft: '6px', marginRight: '6px'}} color={highlightColor} href='https://k-lang.org/download' _hover={{color: highlightColor, textDecoration: 'underline'}}>Download</Link>
     </Flex>
 }
 
