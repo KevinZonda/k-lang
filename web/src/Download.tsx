@@ -21,33 +21,33 @@ interface DownloadProp {
 
 const featuredDownload: DownloadProp[] = [
   {
-    url: '',
+    url: 'https://ftp.k-lang.org/latest/standard/k-std-windows-amd64.exe',
     platform: 'Microsoft Windows',
     badge: 'Standard',
     arch: 'x64',
   }, {
-    url: '',
+    url: 'https://ftp.k-lang.org/latest/standard/k-std-darwin-arm64',
     platform: 'Apple macOS',
     badge: 'Standard',
     arch: 'arm64',
   }, {
-    url: '',
+    url: 'https://ftp.k-lang.org/latest/standard/k-std-darwin-amd64',
     platform: 'Apple macOS',
     badge: 'Standard',
-    arch: 'x86_64',
+    arch: 'x64',
   }, {
-    url: '',
+    url: 'https://ftp.k-lang.org/latest/standard/k-std-linux-amd64',
     platform: 'Linux',
     badge: 'Standard',
-    arch: 'x86_64',
+    arch: 'x64',
   }
 ]
 
 function DownloadBox({url, platform, badge, desc, arch}: DownloadProp) {
   return <Box bg='rgb(237, 242, 247)' p={4} flexGrow={1} flexShrink={1} flexBasis={0}>
-    <Text as={'b'}>{platform} {arch && " (" + arch + ")"} <Badge colorScheme='green'>{badge}</Badge></Text>
+    <Text as={'b'}>{platform} {arch && " (" + arch + ")"} <br/><Badge colorScheme='green'>{badge}</Badge></Text>
     <Text>{desc}</Text>
-    <Link href={url}>Download</Link>
+    <Link href={url} style={{color: highlightColor}}>Download</Link>
   </Box>
 }
 
@@ -98,6 +98,7 @@ interface DlItem {
   Kind: string
   Hash: string
   Url: string
+  DownloadKind: string
 }
 
 const dlT : DlItem[] = [
@@ -106,19 +107,50 @@ const dlT : DlItem[] = [
     Arch: '64',
     Kind: 's',
     Hash: '',
-    Url: ''
+    Url: 'https://ftp.k-lang.org/latest/standard/k-std-windows-amd64.exe',
+    DownloadKind: 'binary'
+  }, {
+    Platform: 'w',
+    Arch: '86',
+    Kind: 's',
+    Hash: '',
+    Url: 'https://ftp.k-lang.org/latest/standard/k-std-windows-386.exe',
+    DownloadKind: 'binary'
+  }, {
+    Platform: 'w',
+    Arch: 'a64',
+    Kind: 's',
+    Hash: '',
+    Url: 'https://ftp.k-lang.org/latest/standard/k-std-windows-arm64.exe',
+    DownloadKind: 'binary'
   }, {
   Platform: 'm',
     Arch: '64',
     Kind: 's',
     Hash: '',
-    Url: ''
+    Url: 'https://ftp.k-lang.org/latest/standard/k-std-darwin-amd64',
+    DownloadKind: 'binary'
   }, {
     Platform: 'm',
     Arch: 'a64',
     Kind: 's',
     Hash: '',
-    Url: ''
+    Url: 'https://ftp.k-lang.org/latest/standard/k-std-darwin-arm64',
+    DownloadKind: 'binary'
+  }, {
+    Platform: 'l',
+    Arch: '64',
+    Kind: 's',
+    Hash: '',
+    Url: 'https://ftp.k-lang.org/latest/standard/k-std-linux-amd64',
+    DownloadKind: 'binary'
+  }, {
+    Platform: 'l',
+    Arch: 'a64',
+    Kind: 's',
+    Hash: '',
+    Url: 'https://ftp.k-lang.org/latest/standard/k-std-linux-arm64',
+    DownloadKind: 'binary'
   }
 ]
 
@@ -128,6 +160,7 @@ function DownloadTable() {
       <Thead>
         <Tr>
           <Th>Platform</Th>
+          <Th>File</Th>
           <Th>Architect</Th>
           <Th>Kind</Th>
           <Th>Hash</Th>
@@ -138,7 +171,8 @@ function DownloadTable() {
           dlT.map((v) => {
             return <Tr>
               <Td>{v.Platform === 'w' ? 'Microsoft Windows' : v.Platform == 'l' ? 'Linux' : v.Platform == 'm' ? 'Apple macOS' : v.Platform }</Td>
-              <Td>{v.Arch === '64' ? 'x64' : v.Arch === 'a64' ? 'arm64' : v.Arch}</Td>
+              <Td><Link style={{color: highlightColor, textDecoration: 'underline'}} href={v.Url}>{v.DownloadKind}</Link></Td>
+              <Td>{v.Arch === '64' ? 'x64' : v.Arch === 'a64' ? 'arm64' : v.Arch === '86' ? 'x86' : v.Arch}</Td>
               <Td><Badge colorScheme='green'>{v.Kind === 's' ? 'standard' : v.Kind === 'g' ? 'gui' : v.Kind === 'm' ? 'minimal' : v.Kind}</Badge></Td>
               <Td>{v.Hash === '' ? 'N/A' : v.Hash}</Td>
 
