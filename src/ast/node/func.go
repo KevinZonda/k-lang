@@ -140,6 +140,17 @@ type FuncArg struct {
 	ParamEmpty bool
 }
 
+func (a *FuncArg) String() string {
+	name := "Anonymous"
+	if a.Name != nil {
+		name = a.Name.Value
+	}
+	if a.Type == nil {
+		return name
+	}
+	return fmt.Sprintf("%s: %s", name, a.Type.Name)
+}
+
 type CodeBlock struct {
 	Token token.Token
 	Nodes []Node
