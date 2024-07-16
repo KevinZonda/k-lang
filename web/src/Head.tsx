@@ -55,7 +55,7 @@ export function Header() {
       <Container>
         <Wrap spacing='30px' justify='center'>
           <WrapItem>
-            <Button border={0} size='lg' colorScheme='blue' mt='24px' rightIcon={<ArrowForwardIcon/>}  onClick={() => window.open('https://playground.k-lang.org', "_blank")}>
+            <Button border={0} size='lg' colorScheme='blue' mt='24px' rightIcon={<ArrowForwardIcon/>}  onClick={() => window.open('https://try.k-lang.org', "_blank")}>
               Try it now
             </Button>
           </WrapItem>
