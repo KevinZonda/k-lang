@@ -23,8 +23,8 @@ export function NavBar() {
         <Spacer></Spacer>
         <Link style={{marginLeft: '6px', marginRight: '6px'}} color='black' href='https://docs.k-lang.org' _hover={{color: highlightColor, textDecoration: 'underline'}}>Docs</Link>
         <Link style={{marginLeft: '6px', marginRight: '6px'}} color='black' href='https://ftp.k-lang.org' _hover={{color: highlightColor, textDecoration: 'underline'}}>FTP</Link>
-        <Link style={{marginLeft: '6px', marginRight: '6px'}} color='black' href='https://playground.k-lang.org' _hover={{color: highlightColor, textDecoration: 'underline'}}>Try</Link>
-        <Link style={{marginLeft: '6px', marginRight: '6px'}} color={highlightColor} href='https://k-lang.org/download' _hover={{color: highlightColor, textDecoration: 'underline'}}>Download</Link>
+        <Link style={{marginLeft: '6px', marginRight: '6px'}} color='black' href='https://try.k-lang.org' _hover={{color: highlightColor, textDecoration: 'underline'}}>Try</Link>
+        <Link style={{marginLeft: '6px'}} color={highlightColor} href='https://k-lang.org/download' _hover={{color: highlightColor, textDecoration: 'underline'}}>Download</Link>
     </Flex>
 }
 
