@@ -11,6 +11,12 @@ type ILibrary interface {
 	GetFunc(name string) *node.FuncBlock
 }
 
+type BuiltInLibrary interface {
+	ILibrary
+	AllFuncs() map[string]*node.FuncBlock
+	AllObjs() map[string]*Object
+}
+
 type ILibraryCall interface {
 	HasValue() bool
 	Value() any

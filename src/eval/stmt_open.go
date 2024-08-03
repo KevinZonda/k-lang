@@ -91,6 +91,16 @@ func (e *Eval) loadBuiltInLibrary(name, as string) (ok bool) {
 		return false
 	}
 
+	if as == "." {
+		for k, v := range lib.AllFuncs() {
+			e.memory.Top().SetValue(k, v)
+		}
+		for k, v := range lib.AllObjs() {
+			e.memory.Top().SetValue(k, v)
+		}
+		return true
+	}
+
 	if as != "" {
 		name = as
 	}

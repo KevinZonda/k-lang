@@ -47,4 +47,4 @@ func NewStdStringLib() *StdStringLib {
 	}
 }
 
-var _ obj.ILibrary = (*StdStringLib)(nil)
+var _ obj.BuiltInLibrary = (*StdStringLib)(nil)

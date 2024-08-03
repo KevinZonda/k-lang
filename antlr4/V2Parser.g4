@@ -69,7 +69,7 @@ exprWithLambda : lambda | expr
 funcCall : Identifier LParen funcCallArgs? RParen ;
 funcCallArgs : exprWithLambda (Comma exprWithLambda)*;
 
-openStmt : Open StringLiteral (As Identifier)?;
+openStmt : Open StringLiteral (As AS=(Identifier | Dot))?;
 
 literal : Nil | True | False | IntegerLiteral | NumberLiteral | StringLiteral;
 initializer : arrayInitializer | mapInitializer;

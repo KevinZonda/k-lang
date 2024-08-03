@@ -44,4 +44,4 @@ func NewStdConsoleLib(b obj.StdIO) *StdConsoleLib {
 	}
 }
 
-var _ obj.ILibrary = (*StdConsoleLib)(nil)
+var _ obj.BuiltInLibrary = (*StdConsoleLib)(nil)

@@ -38,7 +38,7 @@ Function : 'fn' | 'func';
 Return  : 'return';
 Case    : 'case';
 Default : 'default';
-Open    : 'open';
+Open    : 'open' | 'import';
 As      : 'as';
 
 Try   : 'try';

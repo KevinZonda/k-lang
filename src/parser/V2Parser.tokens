@@ -84,7 +84,6 @@ NewLine=58
 'return'=32
 'case'=33
 'default'=34
-'open'=35
 'as'=36
 'try'=37
 'catch'=38

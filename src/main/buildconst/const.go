@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-const LanguageVersion = "0.3.18"
+const LanguageVersion = "0.3.20"
 const LanguageCodeName = "Pisces"
 
 var (

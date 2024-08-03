@@ -116,4 +116,4 @@ func NewStdMathLib() *StdMathLib {
 	return c
 }
 
-var _ obj.ILibrary = (*StdMathLib)(nil)
+var _ obj.BuiltInLibrary = (*StdMathLib)(nil)

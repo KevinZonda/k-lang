@@ -13,6 +13,14 @@ type FBLibrary struct {
 	IODep bool
 }
 
+func (f FBLibrary) AllFuncs() map[string]*node.FuncBlock {
+	return f.F
+}
+
+func (f FBLibrary) AllObjs() map[string]*obj.Object {
+	return f.P
+}
+
 func (f FBLibrary) IsIODep() bool {
 	return f.IODep
 }
@@ -118,4 +126,4 @@ func argT(fx reflect.Type) *node.Type {
 	panic("Invalid type: " + fx.String())
 }
 
-var _ obj.ILibrary = &FBLibrary{}
+var _ obj.BuiltInLibrary = &FBLibrary{}

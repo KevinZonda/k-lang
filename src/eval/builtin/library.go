@@ -7,7 +7,7 @@ import (
 
 var cache = map[string]library{}
 
-func GetLibrary(name string, io obj.StdIO) obj.ILibrary {
+func GetLibrary(name string, io obj.StdIO) obj.BuiltInLibrary {
 	if lib, ok := cache[name]; ok {
 		return lib
 	}
@@ -34,6 +34,6 @@ func GetLibrary(name string, io obj.StdIO) obj.ILibrary {
 }
 
 type library interface {
-	obj.ILibrary
+	obj.BuiltInLibrary
 	IsIODep() bool
 }

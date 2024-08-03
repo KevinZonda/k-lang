@@ -16,6 +16,9 @@ func (v *AntlrVisitor) visitOpenStmt(ctx parser.IOpenStmtContext) *node.OpenStmt
 	if ctx.As() == nil {
 		return o
 	}
+	if ctx.Dot() != nil {
+		o.As = "."
+	}
 	if as := v.visitIdentifier(ctx.Identifier()); as != nil {
 		o.As = as.Value
 	}
