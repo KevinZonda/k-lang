@@ -138,7 +138,7 @@
         if (retV !== null) {
             editor.setValue(editor.getValue() + '<<< ' + retV + '\n')
         }
-        // editor.setCursor(editor.lineCount())
+        editor.scrollTo(0, 9999999999)
         
         status('Ready')
     }
