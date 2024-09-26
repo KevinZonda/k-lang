@@ -11,8 +11,8 @@ func (t *Layer) String() string {
 
 func (t *Layer) ToString(prefix string) string {
 	w := &strings.Builder{}
-	for k, v := range t.m {
-		fmt.Fprintf(w, "%s%s: %v\n", prefix, k, v)
+	for pair := t.m.Newest(); pair != nil; pair = pair.Prev() {
+		fmt.Fprintf(w, "%s%s: %v\n", prefix, pair.Key, pair.Value)
 	}
 	return w.String()
 }

@@ -141,8 +141,8 @@ func (t *Memory) Squeeze() *Layer {
 	}
 	l := NewLayer(false)
 	for i := t.Len() - 1; i > 0; i-- {
-		for k, v := range t.q[i].m {
-			l.Set(k, v)
+		for pair := t.q[i].m.Oldest(); pair != nil; pair = pair.Next() {
+			l.Set(pair.Key, pair.Value)
 		}
 	}
 	return l
